@@ -17,7 +17,8 @@ makeModel <- function(
     measures = list(rmse, mse, mae, timetrain, expvar))
 
   # aggregated Performances
-  perfs = getBMRAggrPerformances(bmr, as.df = TRUE)
+  perfs = getBMRPerformances(bmr, as.df = TRUE)
+  aggPerfs = getBMRAggrPerformances(bmr, as.df = TRUE)
 
   # training the learner to create the model
   m = mlr::train(
@@ -25,17 +26,17 @@ makeModel <- function(
     task = task)
 
   # creating the residuals + predictions at stations dataframe
-  # residuals = data.frame(residuals(m$learner.model))
-  # colnames(residuals) = "residuals"
+  residuals = data.frame(residuals(m$learner.model))
+  colnames(residuals) = "residuals"
   predictions = data.frame(predict(m$learner.model))
   colnames(predictions) = "stations_pred"
 
   # create a list containing all the useful information
   modelInfo = list(
     model = m,
-    stations_pred = predictions
-    # residuals = residuals,
-    # perfs = perfs,
+    stations_pred = predictions,
+    perfs = list(iters = perfs, agg = aggPerfs),
+    residuals = residuals
     # summary = summary(m$learner.model)
   )
 

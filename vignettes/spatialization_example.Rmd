@@ -1,0 +1,69 @@
+---
+title: "A simple spatialization example using agrometeoR"
+author: "Thomas Goossens"
+date: "11/22/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
+```
+
+## Load the libraries
+
+```{r libraries}
+# loading mlr & agrometeoR
+library(mlr)
+library(agrometeoR)
+```
+
+
+## Create the machine learning task for a specific hour
+*Check the default values of the params in the references file to make sure you understand what is constructed* 
+```{r task}
+# create the task
+task = makeTask(date = "2017-03-04")
+# what are the variables ? 
+colnames(mlr::getTaskData(task$task))
+# what data do we have ? 
+head(getTaskData(task$task))
+task$insights
+```
+
+## Train a learner
+
+```{r train, message=FALSE, warning=FALSE, paged.print=TRUE}
+# instantiate a multiple li,near regression learner and specify that it must also provide se of preds
+learner = mlr::makeLearner("regr.lm", id = "multipleLinearReg", predict.type = "se" )
+# create the model by training the learner and also benchmark the learner with a LOO
+model = makeModel(task = task$task, learner = learner)
+# what are the model performances ? 
+model$perfs$agg
+# what about the residuals ? 
+plot(x =  getTaskData(task$task)[["tsa"]], model$residuals[[1]])
+```
+
+## Spatialize using the trained a learner
+
+```{r spatialize-setup, include=FALSE}
+# trick to avoir overwriting error with st_write - https://github.com/r-spatial/sf/issues/274
+files = list.files()
+if (!is.null(paste0(task$task$task.desc$id, ".geojson" %in% files))) {
+  file.remove(paste0(task$task$task.desc$id, ".geojson"))
+}
+```
+
+```{r spatialize, message=FALSE, warning=FALSE}
+# produce the spatialized geojson
+makeSpatialization(model = model$model, name = task$task$task.desc$id, path = "." )
+# read it
+data_spatialized = sf::st_read(dsn = paste0(task$task$task.desc$id, ".geojson"))
+```
+
+## Map the results
+```{r}
+# map it ! 
+plot(data_spatialized)
+```
+

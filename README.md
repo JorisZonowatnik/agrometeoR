@@ -3,9 +3,8 @@
 
 * install the development version from R : 
 ```devtools::install_github("pokyah/agrometeoR")```
-* bug tracking
-https://github.com/pokyah/agrometeorR/issues
-* detailed tutorial available in articles section
+* add your API key into your `~/.Renviron` file ==> `AGROMET_API_V1_KEY = <YOUR_TOKEN>`
+* detailed tutorials available in articles section
 
 ## Introduction
 

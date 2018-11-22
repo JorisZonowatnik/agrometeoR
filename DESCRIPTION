@@ -15,6 +15,7 @@ Imports: mlr (>= 2.12.1),
     httr,
     chron
 Suggests: rgeos,
+    sf,
     raster,
     jsonlite,
     rnaturalearth,
