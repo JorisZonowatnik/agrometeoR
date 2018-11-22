@@ -23,7 +23,7 @@ library(agrometeoR)
 *Check the default values of the params in the references file to make sure you understand what is constructed* 
 ```{r task}
 # create the task
-task = makeTask(date = "2017-03-04")
+task = makeTask(date = "2017-03-04T15:00:00Z")
 # what are the variables ? 
 colnames(mlr::getTaskData(task$task))
 # what data do we have ? 
@@ -46,7 +46,7 @@ plot(x =  getTaskData(task$task)[["tsa"]], model$residuals[[1]])
 
 ## Spatialize using the trained a learner
 
-```{r spatialize-setup, include=FALSE}
+```{r spatializeconfig, include=FALSE}
 # trick to avoir overwriting error with st_write - https://github.com/r-spatial/sf/issues/274
 files = list.files()
 if (!is.null(paste0(task$task$task.desc$id, ".geojson" %in% files))) {

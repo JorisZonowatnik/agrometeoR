@@ -15,6 +15,7 @@
 makeTask <- function(
   stations = paste0(as.character(stations.df$sid), collapse = ","),
   date,
+  id = gsub(pattern = ":", replacement = "",x = date),
   time,
   sensor = "tsa",
   dynExpl = NULL,
@@ -38,7 +39,7 @@ makeTask <- function(
   task = mlr::makeRegrTask(
     data = data,
     target = sensor,
-    id = date)
+    id = id)
 
   # drop some features
   task = mlr::dropFeatures(

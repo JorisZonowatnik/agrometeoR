@@ -5,9 +5,8 @@
 \title{internal function to call the agromet API to retrieve data}
 \usage{
 getData(user_token = Sys.getenv("AGROMET_API_V1_KEY"),
-  table_name = "cleandata", sensors = "tsa", sid = "all",
-  dfrom = Sys.Date() - 2, dto = Sys.Date() - 1, month_day = NULL,
-  api_v = "v2", test.bool = FALSE)
+  table_name = "cleandata", sensors = "tsa", sid = "all", dfrom = NULL,
+  dto = NULL, month_day = NULL, api_v = "v2", test.bool = FALSE)
 }
 \arguments{
 \item{user_token}{A character specifying your user token. Default reads your .Renviron file}

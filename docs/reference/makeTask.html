@@ -84,6 +84,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/benchmarking_example.html">Benchmarking example</a>
+    </li>
+    <li>
       <a href="../articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
     </li>
     <li>
@@ -137,8 +140,9 @@
     </div>
 
     <pre class="usage"><span class='fu'>makeTask</span>(<span class='kw'>stations</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/character'>as.character</a></span>(<span class='no'>stations.df</span>$<span class='no'>sid</span>), <span class='kw'>collapse</span> <span class='kw'>=</span> <span class='st'>","</span>),
-  <span class='no'>date</span>, <span class='no'>time</span>, <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>, <span class='kw'>dynExpl</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"sid"</span>, <span class='st'>"altitude"</span>,
-  <span class='st'>"slope"</span>, <span class='st'>"aspect"</span>, <span class='st'>"Agricultural_areas"</span>, <span class='st'>"Artificials_surfaces"</span>, <span class='st'>"Forest"</span>,
+  <span class='no'>date</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/grep'>gsub</a></span>(<span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>":"</span>, <span class='kw'>replacement</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>date</span>), <span class='no'>time</span>,
+  <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>, <span class='kw'>dynExpl</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"sid"</span>, <span class='st'>"altitude"</span>, <span class='st'>"slope"</span>,
+  <span class='st'>"aspect"</span>, <span class='st'>"Agricultural_areas"</span>, <span class='st'>"Artificials_surfaces"</span>, <span class='st'>"Forest"</span>,
   <span class='st'>"Herbaceous_vegetation"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -147,11 +151,6 @@
     <tr>
       <th>stations</th>
       <td><p>a character specifying the sid's of the stations to use separated by commas</p></td>
-    </tr>
-    <tr>
-      <th>date</th>
-      <td><p>a string specifying the date
-Must have the form "YYYY-MM-DD"</p></td>
     </tr>
     <tr>
       <th>time</th>
@@ -171,6 +170,11 @@ Any combinations of inca, ens</p></td>
       <th>drop</th>
       <td><p>a character vector specifying the explanattory variables you want to drop.
 Any combinations of "altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest","Herbaceous_vegetation"</p></td>
+    </tr>
+    <tr>
+      <th>dateTime</th>
+      <td><p>a string specifying the dateTime
+Must have the form "YYYY-MM-DDTHH:MM:SSZ"</p></td>
     </tr>
     </table>
     

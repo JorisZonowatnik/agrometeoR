@@ -5,15 +5,13 @@
 \title{make a mlr regr task for an hourly/daily set of records}
 \usage{
 makeTask(stations = paste0(as.character(stations.df$sid), collapse = ","),
-  date, time, sensor = "tsa", dynExpl = NULL, drop = c("sid", "altitude",
-  "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest",
+  date, id = gsub(pattern = ":", replacement = "", x = date), time,
+  sensor = "tsa", dynExpl = NULL, drop = c("sid", "altitude", "slope",
+  "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest",
   "Herbaceous_vegetation"))
 }
 \arguments{
 \item{stations}{a character specifying the sid's of the stations to use separated by commas}
-
-\item{date}{a string specifying the date
-Must have the form "YYYY-MM-DD"}
 
 \item{time}{a numeric specifying the hour. Must be between 0 and 23}
 
@@ -25,6 +23,9 @@ Any combinations of inca, ens}
 
 \item{drop}{a character vector specifying the explanattory variables you want to drop.
 Any combinations of "altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest","Herbaceous_vegetation"}
+
+\item{dateTime}{a string specifying the dateTime
+Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 }
 \value{
 an object of class list containing an mlr::makeRegrTask() and a sumamry dataframe of the task dataset

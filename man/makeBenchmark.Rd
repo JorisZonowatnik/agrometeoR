@@ -2,17 +2,17 @@
 % Please edit documentation in R/makeBenchmark.R
 \name{makeBenchmark}
 \alias{makeBenchmark}
-\title{make a mlr model + model metadata for a specific task using a specific learner}
+\title{make a mlr benchmark experiment for various learners on multiple tasks}
 \usage{
-makeBenchmark(task, learner)
+makeBenchmark(tasks, learners)
 }
 \arguments{
-\item{task}{an object of class mlr::makeRegrTask()}
+\item{tasks}{a list which elements are object of class mlr::makeRegrTask()}
 
-\item{learner}{an object of class mlr::makeLearner()}
+\item{learners}{a list which elements are object of class mlr::makeLearner()}
 }
 \value{
-an object of class mlr::train()
+an object of class mlr::makebenchmark()
 }
 \author{
 Thomas Goossens
