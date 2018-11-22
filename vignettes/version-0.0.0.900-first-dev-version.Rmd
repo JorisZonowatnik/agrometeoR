@@ -30,7 +30,7 @@ learner = mlr::makeLearner(cl = "regr.lm", id = "multiple-linear-reg", predict.t
 ## implemented features
 
 ## example
-```{r setup, include=FALSE}
+```{r example, eval=FALSE}
 library(agrometeoR)
 # create the regression task for a specific hour for a specific sensor
 task = makeTask(date = "2017-05-24", sensor = "tsa")

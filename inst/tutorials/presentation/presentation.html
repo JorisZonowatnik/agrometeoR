@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<meta name="progressive" content="true" />
+<meta name="allow-skip" content="true" />
+
+<title>FOSS4GBXL2018</title>
+
+
+<!-- highlightjs -->
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+
+
+<div class="pageContent band">
+<div class="bandContent page">
+
+<div class="topics">
+
+<style>
+.tutorial-exercise-output pre{
+    color:#43d615;
+    background-color:black;
+    border-radius: 10px;
+    padding: 20px;}
+}
+
+.ace_editor{
+    font-size:18px/normal;
+}
+
+.leaflet{
+    width:100%;
+}
+</style>
+<div id="section-hello" class="section level2">
+<h2>HELLO !</h2>
+<p>Welcome to this Session!</p>
+<blockquote>
+<p>Why and How to use R as an opensource GIS : The AGROMET project usecase</p>
+</blockquote>
+<p>presented by <em>Thomas Goossens</em></p>
+<p><svg style="height:0.8em;top:.04em;position:relative;fill:#75aadb;" viewBox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg> <span class="citation">@thomasgoossens1985</span></p>
+<p><svg style="height:0.8em;top:.04em;position:relative;fill:#75aadb;" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg> <span class="citation">@pokyah</span></p>
+<p><svg style="height:0.8em;top:.04em;position:relative;fill:#75aadb;" viewBox="0 0 512 512"><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"/></svg> <a href="mailto:hello.pokyah@gmail.com">hello.pokyah@gmail.com</a></p>
+<center>
+<p><img src="images/foss4gbe.svg" width="35%" /></p>
+<img src="images/craw_fr.png" width="35%" />
+</center>
+</div>
+<div id="section-project-presentation" class="section level2">
+<h2>PROJECT PRESENTATION</h2>
+<blockquote>
+<p>A very short introduction to the project</p>
+</blockquote>
+<div id="section-what" class="section level3">
+<h3>What?</h3>
+<svg style="height:50px;fill:#75aadb;" viewBox="0 0 512 512">
+<path d="M256 72c101.689 0 184 82.295 184 184 0 101.689-82.295 184-184 184-101.689 0-184-82.295-184-184 0-101.689 82.295-184 184-184m0-64C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 184c35.29 0 64 28.71 64 64s-28.71 64-64 64-64-28.71-64-64 28.71-64 64-64m0-64c-70.692 0-128 57.308-128 128s57.308 128 128 128 128-57.308 128-128-57.308-128-128-128z"/>
+</svg>
+<p>Providing <strong>hourly</strong> gridded weather data @ <strong>1km² resolution</strong> for Wallonia</p>
+</div>
+<div id="section-why" class="section level3">
+<h3>Why?</h3>
+<svg style="height:50px;fill:#75aadb;" viewBox="0 0 576 512">
+<path d="M546.2 9.7c-5.6-12.5-21.6-13-28.3-1.2C486.9 62.4 431.4 96 368 96h-80C182 96 96 182 96 288c0 7 .8 13.7 1.5 20.5C161.3 262.8 253.4 224 384 224c8.8 0 16 7.2 16 16s-7.2 16-16 16C132.6 256 26 410.1 2.4 468c-6.6 16.3 1.2 34.9 17.5 41.6 16.4 6.8 35-1.1 41.8-17.3 1.5-3.6 20.9-47.9 71.9-90.6 32.4 43.9 94 85.8 174.9 77.2C465.5 467.5 576 326.7 576 154.3c0-50.2-10.8-102.2-29.8-144.6z"/>
+</svg>
+<p>Feeding decision tools for agricultural warning systems based on crop monitoring models (<a href="https://ec.europa.eu/food/plant/pesticides/sustainable_use_pesticides_en">EU directive for Sustainable use of pesticides</a>)</p>
+</div>
+<div id="section-how" class="section level3">
+<h3>How?</h3>
+<svg style="height:50px;fill:#75aadb;" viewBox="0 0 512 512">
+<path d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"/>
+</svg>
+<p><strong>spatializing</strong> data from <a href="https://www.pameseb.be/">PAMESEB</a> Automatic Weather Station Network</p>
+</div>
+</div>
+<div id="section-gis-building-blocks" class="section level2">
+<h2>GIS BUILDING BLOCKS</h2>
+<div id="section-data" class="section level3">
+<h3>DATA</h3>
+<svg style="height:50px;fill:#75aadb;" viewBox="0 0 512 512">
+<path d="M488.6 250.2L392 214V105.5c0-15-9.3-28.4-23.4-33.7l-100-37.5c-8.1-3.1-17.1-3.1-25.3 0l-100 37.5c-14.1 5.3-23.4 18.7-23.4 33.7V214l-96.6 36.2C9.3 255.5 0 268.9 0 283.9V394c0 13.6 7.7 26.1 19.9 32.2l100 50c10.1 5.1 22.1 5.1 32.2 0l103.9-52 103.9 52c10.1 5.1 22.1 5.1 32.2 0l100-50c12.2-6.1 19.9-18.6 19.9-32.2V283.9c0-15-9.3-28.4-23.4-33.7zM358 214.8l-85 31.9v-68.2l85-37v73.3zM154 104.1l102-38.2 102 38.2v.6l-102 41.4-102-41.4v-.6zm84 291.1l-85 42.5v-79.1l85-38.8v75.4zm0-112l-102 41.4-102-41.4v-.6l102-38.2 102 38.2v.6zm240 112l-85 42.5v-79.1l85-38.8v75.4zm0-112l-102 41.4-102-41.4v-.6l102-38.2 102 38.2v.6z"/>
+</svg>
+<ul>
+<li>Weather data from the stations</li>
+<li>explanatory variables (DEM, land cover, etc)</li>
+<li>interpolation grid</li>
+<li>map backgrounds</li>
+</ul>
+</div>
+<div id="section-tools" class="section level3">
+<h3>TOOLS</h3>
+<svg style="height:50px;fill:#75aadb;" viewBox="0 0 512 512">
+<path d="M507.73 109.1c-2.24-9.03-13.54-12.09-20.12-5.51l-74.36 74.36-67.88-11.31-11.31-67.88 74.36-74.36c6.62-6.62 3.43-17.9-5.66-20.16-47.38-11.74-99.55.91-136.58 37.93-39.64 39.64-50.55 97.1-34.05 147.2L18.74 402.76c-24.99 24.99-24.99 65.51 0 90.5 24.99 24.99 65.51 24.99 90.5 0l213.21-213.21c50.12 16.71 107.47 5.68 147.37-34.22 37.07-37.07 49.7-89.32 37.91-136.73zM64 472c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24z"/>
+</svg>
+<ul>
+<li>API query</li>
+<li>Data manipulation</li>
+<li>interpolation algorithms (linear regression, ANN, kriging)</li>
+<li>algorithms output benchmarking</li>
+<li>dataviz/mapping tools</li>
+</ul>
+</div>
+</div>
+<div id="section-why-r" class="section level2">
+<h2>WHY R ?</h2>
+<svg style="height:50px;fill:#75aadb;" viewBox="0 0 581 512">
+<path d="M581 226.6C581 119.1 450.9 32 290.5 32S0 119.1 0 226.6C0 322.4 103.3 402 239.4 418.1V480h99.1v-61.5c24.3-2.7 47.6-7.4 69.4-13.9L448 480h112l-67.4-113.7c54.5-35.4 88.4-84.9 88.4-139.7zm-466.8 14.5c0-73.5 98.9-133 220.8-133s211.9 40.7 211.9 133c0 50.1-26.5 85-70.3 106.4-2.4-1.6-4.7-2.9-6.4-3.7-10.2-5.2-27.8-10.5-27.8-10.5s86.6-6.4 86.6-92.7-90.6-87.9-90.6-87.9h-199V361c-74.1-21.5-125.2-67.1-125.2-119.9zm225.1 38.3v-55.6c57.8 0 87.8-6.8 87.8 27.3 0 36.5-38.2 28.3-87.8 28.3zm-.9 72.5H365c10.8 0 18.9 11.7 24 19.2-16.1 1.9-33 2.8-50.6 2.9v-22.1z"/>
+</svg>
+<ul>
+<li>It’s FOSS !</li>
+<li>Already used by our weather specialist partners : <a href="www/Poster_Eumetnet_2017.pdf">RMI</a> + <a href="http://dailymeteo.org/Sluiter2014">KNMI</a></li>
+<li><a href="https://thenextweb.com/offers/2018/03/28/tech-giants-are-harnessing-r-programming-learn-it-and-get-hired-with-this-complete-training-bundle/">Increased popularity among tech companies</a></li>
+<li><a href="https://stackoverflow.blog/2017/10/10/impressive-growth-r/">Impressive growth</a> and active community</li>
+<li><em>There is a package for that</em> ™</li>
+<li>collaborative work &amp; science reproducibility</li>
+</ul>
+</div>
+<div id="section-code-libraries" class="section level2">
+<h2>CODE LIBRARIES</h2>
+<blockquote>
+<p>Libraries are packaged thematic R-softwares containing predefined sets of functions to help you save code</p>
+</blockquote>
+<ul>
+<li>R libraries are available on <a href="https://cran.r-project.org/">CRAN</a> and <svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>.</li>
+<li>one-line code to install these (<code>install.packages(&lt;PACKAGE_NAME&gt;)</code>).</li>
+<li>We need various libraries to acquire the required datasets (DEM, boundaries, weather stations data, etc…) and manipulate these.</li>
+<li>pre-installed for this demo</li>
+</ul>
+<div class="tutorial-exercise" data-label="librariesLoading" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>library(devtools)
+library(learnr)
+library(rgdal)
+library(sp)
+library(raster)
+library(sf)
+library(rgeos)
+library(fontawesome)
+library(leaflet)
+library(mlr)
+library(dplyr)
+library(ggplot2)
+library(FNN)
+library(agrometAPI)
+library(elevatr)
+library(rnaturalearth)
+library(rnaturalearthhires)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-data-acquisition" class="section level2">
+<h2>DATA ACQUISITION</h2>
+<div id="section-agromet-weather-stations-data" class="section level3">
+<h3>AGROMET WEATHER STATIONS DATA</h3>
+<blockquote>
+<p>We can get the temperature data from our stations using the <code>agrometAPI</code> library</p>
+</blockquote>
+<div class="tutorial-exercise" data-label="agrometAPIget" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># getting data from API (requires a token)
+rawdata = agrometAPI::get_data(dfrom = &quot;2018-10-01&quot;, dto = &quot;2018-10-01&quot;)
+rawdata = agrometAPI::type_data(rawdata)
+
+# Let&#39;s see how it looks
+rawdata</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-filtering-data" class="section level3">
+<h3>FILTERING DATA</h3>
+<blockquote>
+<p>Filtering is easy with <code>dplyr</code></p>
+</blockquote>
+<div class="tutorial-exercise" data-label="agrometAPIfilter" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># Let&#39;s Filter it using dplyr
+ourdataset = rawdata %&gt;%
+  dplyr::filter(!is.na(mtime)) %&gt;%
+  dplyr::filter(sid != 38 &amp; sid != 41) %&gt;%
+  dplyr::filter(!is.na(from)) %&gt;%
+  dplyr::filter(!is.na(to)) %&gt;%
+  dplyr::filter(!is.na(tsa)) %&gt;%
+  dplyr::filter(poste != &quot;China&quot;) %&gt;%
+  dplyr::filter(!type_name %in% c(&quot;PS2000&quot;,&quot;PESSL&quot;,&quot;BODATA&quot;,&quot;Sencrop&quot;,&quot;netdl1000&quot;,&quot;SYNOP&quot;)) %&gt;%
+  dplyr::select(c(sid, poste, longitude, latitude, altitude, mtime, tsa))
+
+# Let&#39;s see how it looks
+ourdataset</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-making-data-spatial" class="section level3">
+<h3>MAKING DATA SPATIAL</h3>
+<blockquote>
+<p>The new <code>sf</code> library allows to easily manipulate data with spatial attributes.</p>
+</blockquote>
+<p><strong>! Coordinate Reference System (<a href="https://epsg.io/">CRS</a>)</strong> See <a href="https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/OverviewCoordinateReferenceSystems.pdf">this</a> cheatsheet.</p>
+<div class="tutorial-exercise" data-label="agrometAPIspatial" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># making it spatial
+ourdataset = sf::st_as_sf(ourdataset, 
+  coords = c(&quot;longitude&quot;, &quot;latitude&quot;),
+  crs = 4326)
+
+# outputing the CRS to the console
+sf::st_crs(ourdataset)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-downloading-admin-boundaries" class="section level3">
+<h3>DOWNLOADING ADMIN BOUNDARIES</h3>
+<blockquote>
+<p>Many R libraries provide the ability to get admin boundaries. We use <code>rnaturalearth</code></p>
+</blockquote>
+<div class="tutorial-exercise" data-label="adminGet" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># downloading admin boundaries of Belgium
+belgium = sf::st_as_sf((rnaturalearth::ne_states(country = &#39;belgium&#39;)))
+# inspecting the data
+belgium
+# visualizin
+plot(belgium)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-filtering-to-only-keep-our-interest-zone" class="section level3">
+<h3>FILTERING TO ONLY KEEP OUR INTEREST ZONE</h3>
+<blockquote>
+<p>Let’s do it again with <code>dplyr</code></p>
+</blockquote>
+<div class="tutorial-exercise" data-label="adminFilter" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># Filtering Wallonia data
+wallonia = belgium %&gt;% dplyr::filter(region == &quot;Walloon&quot;)
+# visualizing
+plot(wallonia)
+# Checking the Coordinate Reference system
+sf::st_crs(wallonia)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-downloading-elevation-data---dem-raster" class="section level3">
+<h3>DOWNLOADING ELEVATION DATA - DEM RASTER</h3>
+<blockquote>
+<p>Again, many libraries provide ways to download such data. We use <code>elevatr</code></p>
+</blockquote>
+<p>Raster resolution is controlled by <code>z</code> param. See <a href="https://cran.r-project.org/web/packages/elevatr/vignettes/introduction_to_elevatr.html#get_raster_elevation_data">package documentation</a></p>
+<div class="tutorial-exercise" data-label="elevationGet" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># downloading DEM data and storing it in an object. Z = 5 ==&gt; about 3km² resolution
+elevation = elevatr::get_elev_raster(as(wallonia, &quot;Spatial&quot;), z = 5, src = &quot;aws&quot;)
+class(elevation)
+plot(elevation)
+# checking CRS
+raster::crs(elevation, asText = TRUE)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-cropping-with-our-interest-zone-borders" class="section level3">
+<h3>CROPPING WITH OUR INTEREST ZONE BORDERS</h3>
+<blockquote>
+<p>package <code>raster</code> has a function for this !</p>
+</blockquote>
+<div class="tutorial-exercise" data-label="elevationCrop" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># masking
+elevation = raster::mask(elevation, as(wallonia, &quot;Spatial&quot;))
+# ploting the elevation raster
+plot(elevation)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-interpolation-grid" class="section level3">
+<h3>INTERPOLATION GRID</h3>
+<blockquote>
+<p>Grid is quickly built with new <code>sf</code> library</p>
+</blockquote>
+<div class="tutorial-exercise" data-label="gridBuild" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># building the grid at 5 km² resolution
+grid = sf::st_sf(sf::st_make_grid(x = sf::st_transform(wallonia, crs = 3812),  cellsize = 5000, what = &quot;centers&quot;))
+# limit it to Wallonia and not full extent
+grid = sf::st_intersection(grid, sf::st_transform(wallonia, crs = 3812))
+# reproject it 
+grid = sf::st_transform(grid, crs = 4326)
+# visualizing 
+plot(grid)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-extracting-raster-data-at-the-locations-of-grid-points" class="section level3">
+<h3>Extracting raster data at the locations of grid points</h3>
+<blockquote>
+<p>Extracting explanatory variables (limited to elevation raster for this example).</p>
+</blockquote>
+<div class="tutorial-exercise" data-label="feedingExtract" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># extracting
+extracted &lt;- raster::extract(
+  elevation,
+  as(grid,&quot;Spatial&quot;),
+  fun = mean,
+  na.rm = FALSE,
+  df = TRUE
+)
+# renaming columns
+colnames(extracted) = c(&quot;ID&quot;, &quot;altitude&quot;)
+# inspecting
+extracted</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-injecting-into-our-grid" class="section level3">
+<h3>INJECTING INTO OUR GRID</h3>
+<blockquote>
+<p>Add the raster extracted data to our sf grid</p>
+</blockquote>
+<div class="tutorial-exercise" data-label="feedingInject" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># injecting
+grid$altitude = extracted$altitude
+# keeping only the altitude data
+grid = dplyr::select(grid, altitude)
+# visualizing
+plot(grid)
+# checking CRS
+sf::st_crs(grid)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+</div>
+<div id="section-data-visualization" class="section level2">
+<h2>DATA VISUALIZATION</h2>
+<div id="section-leaflet-map" class="section level3">
+<h3>LEAFLET MAP</h3>
+<blockquote>
+<p>Making our spatial data intelligible by mapping it using <code>leaflet</code></p>
+</blockquote>
+<div id="section-preparing-the-color-palettes-and-settings-for-mobile-phone-responsiveness" class="section level4">
+<h4>preparing the color palettes and settings for mobile phone responsiveness</h4>
+<div class="tutorial-exercise" data-label="leafletSettings" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>elevation.pal &lt;- colorNumeric(reverse = TRUE, &quot;RdYlGn&quot;, values(elevation),
+  na.color = &quot;transparent&quot;)
+temperature.pal &lt;- colorNumeric(reverse = TRUE, &quot;RdBu&quot;, domain=ourdataset$tsa,
+  na.color = &quot;transparent&quot;)
+responsiveness = &quot;\&#39;&lt;meta name=\&quot;viewport\&quot; content=\&quot;width=device-width, initial-scale=1.0\&quot;&gt;\&#39;&quot;</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-mapping-the-various-datasets" class="section level4">
+<h4>mapping the various datasets</h4>
+<div class="tutorial-exercise" data-label="leafletMap" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>map &lt;- leaflet() %&gt;% 
+     addProviderTiles(
+         providers$OpenStreetMap.BlackAndWhite, group = &quot;B&amp;W&quot;) %&gt;%
+     addProviderTiles(
+         providers$Esri.WorldImagery, group = &quot;Satelitte&quot;) %&gt;%
+     addRasterImage(
+         elevation, group = &quot;Elevation&quot;, colors = elevation.pal, opacity = 0.8) %&gt;%
+     addPolygons(
+         data = wallonia, group = &quot;Admin&quot;, color = &quot;#444444&quot;, weight = 1, smoothFactor = 0.5,
+         opacity = 1, fillOpacity = 0.1, fillColor = &quot;grey&quot;) %&gt;%
+     addCircleMarkers(
+         data = ourdataset,
+         group = &quot;Stations&quot;,
+         color = ~temperature.pal(tsa),
+         stroke = FALSE,
+        fillOpacity = 0.8,
+         label = ~htmltools::htmlEscape(as.character(tsa))) %&gt;%
+    addCircleMarkers(
+        data = grid,
+        group = &quot;Grid&quot;,
+        radius = 1,
+        color = &quot;orange&quot;,
+        stroke = FALSE, fillOpacity = 1) %&gt;%
+    addLegend(
+      values = values(elevation), group = &quot;Elevation&quot;,
+      position = &quot;bottomright&quot;, pal = elevation.pal,
+      title = &quot;Elevation (m)&quot;) %&gt;%
+     addLayersControl(
+         baseGroups = c(&quot;B&amp;W&quot;, &quot;Satelitte&quot;),
+         overlayGroups = c(&quot;Elevation&quot;, &quot;Admin&quot;, &quot;Stations&quot;, &quot;Grid&quot;),
+         options = layersControlOptions(collapsed = TRUE)
+     ) %&gt;%
+     addFullscreenControl() %&gt;%
+     hideGroup(c(&quot;Slope&quot;, &quot;Aspect&quot;)) %&gt;%
+     addEasyButton(easyButton(
+         icon = &quot;fa-crosshairs&quot;, title = &quot;Locate Me&quot;,
+         onClick = JS(&quot;function(btn, map){ map.locate({setView: true}); }&quot;))) %&gt;%
+     htmlwidgets::onRender(paste0(&quot;
+       function(el, x) {
+       $(&#39;head&#39;).append(&quot;,responsiveness,&quot;);
+       }&quot;))
+map</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+</div>
+</div>
+<div id="section-interpolation" class="section level2">
+<h2>INTERPOLATION</h2>
+<blockquote>
+<p>Spatialization or spatial interpolation creates a continuous surface from values measured at discrete locations to <strong>predict</strong> values at any location in the interest zone with the <strong>best accuracy</strong>.</p>
+</blockquote>
+<div id="section-approaches" class="section level3">
+<h3>2 approaches</h3>
+<blockquote>
+<p>To predict values at any location :</p>
+</blockquote>
+<ol style="list-style-type: decimal">
+<li><p><del>physical atmospherical models</del> (not straight forward to develop an explicit physical model describing how the output data can be derived from the input data)</p></li>
+<li><p><strong>supervised machine learning regression algorithms</strong> : given a set of continuous data, find the best relationship that represents the set of continuous data (common approach largely discussed in the academic litterature)</p></li>
+</ol>
+</div>
+<div id="section-supervised-machine-learning" class="section level3">
+<h3>Supervised Machine learning</h3>
+<blockquote>
+<p>We will go through a very simple example of machine learning usecase using <code>mlr</code> package</p>
+</blockquote>
+<p><code>mlr</code> is a <svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 581 512"><path d="M581 226.6C581 119.1 450.9 32 290.5 32S0 119.1 0 226.6C0 322.4 103.3 402 239.4 418.1V480h99.1v-61.5c24.3-2.7 47.6-7.4 69.4-13.9L448 480h112l-67.4-113.7c54.5-35.4 88.4-84.9 88.4-139.7zm-466.8 14.5c0-73.5 98.9-133 220.8-133s211.9 40.7 211.9 133c0 50.1-26.5 85-70.3 106.4-2.4-1.6-4.7-2.9-6.4-3.7-10.2-5.2-27.8-10.5-27.8-10.5s86.6-6.4 86.6-92.7-90.6-87.9-90.6-87.9h-199V361c-74.1-21.5-125.2-67.1-125.2-119.9zm225.1 38.3v-55.6c57.8 0 87.8-6.8 87.8 27.3 0 36.5-38.2 28.3-87.8 28.3zm-.9 72.5H365c10.8 0 18.9 11.7 24 19.2-16.1 1.9-33 2.8-50.6 2.9v-22.1z"/></svg> library that offers a standardized interface for all its machine learning algorithms. Full details &amp; capabilities on the <a href="https://mlr-org.github.io/mlr/index.html">website</a></p>
+<div class="figure">
+<img src="https://github.com/mlr-org/mlr/raw/master/man/figures/logo_navbar.png" />
+
+</div>
+</div>
+<div id="section-short-definition" class="section level3">
+<h3>short definition</h3>
+<p>From machinelearningmastery.com :</p>
+<blockquote>
+<p>Supervised learning is where you have input variables (x) and an output variable (Y) and you use an algorithm to learn the mapping function from the input to the output : Y = f(X) The goal is to approximate the mapping function so well that when you have new input data (x), you can predict the output variables (Y) for that data. It is called supervised learning because the process of an algorithm learning from the training dataset can be thought of as a teacher supervising the learning process</p>
+</blockquote>
+</div>
+<div id="section-defining-our-machine-learning-task" class="section level3">
+<h3>Defining our Machine Learning task</h3>
+<div class="tutorial-exercise" data-label="taskMLR" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># loading the mlr library
+library(mlr)
+# extract the lon and lat from the sf geometry
+coords = data.frame(sf::st_coordinates(ourdataset))
+# attributing our original dataset to another var (to avoid overwriting)
+ourTask = ourdataset
+# converting our dataset from sf to simple df
+sf::st_geometry(ourTask) &lt;- NULL
+# joining the coords
+ourTask = dplyr::bind_cols(ourTask, coords)
+# Dropping the non-explanatory features
+ourTask = dplyr::select(ourTask, -c(sid, poste, mtime))
+# defining our taks
+ourTask = mlr::makeRegrTask(id = &quot;FOSS4G_example&quot;, data = ourTask, target = &quot;tsa&quot;)
+# checking our data
+head(mlr::getTaskData(ourTask))</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-defining-our-learners-learning-algorithms" class="section level3">
+<h3>Defining our learners (learning algorithms)</h3>
+<div class="tutorial-exercise" data-label="learnersMLR" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># Defining our learners
+ourLearners = list(
+  l1 = mlr::makeLearner(cl = &quot;regr.lm&quot;, id = &quot;linearRegression&quot;),
+  l2 = mlr::makeLearner(cl = &quot;regr.fnn&quot;, id = &quot;FastNearestNeighbours&quot;),
+  l3 = mlr::makeLearner(cl = &quot;regr.nnet&quot;, id = &quot;NeuralNetwork&quot;, par.vals = list(size = 10)),
+  l4 = mlr::makeLearner(cl = &quot;regr.km&quot;, id = &quot;Kriging&quot;),
+  l5 = mlr::makeLearner(cl = &quot;regr.kknn&quot;, id = &quot;KNearestNeighborRegression&quot;))
+
+# 
+ourLearners</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-defining-our-resampling-strategy" class="section level3">
+<h3>Defining our resampling strategy</h3>
+<div class="tutorial-exercise" data-label="resamplMLR" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># Defining our learners
+ourResamplingStrategy = mlr::makeResampleDesc(&quot;LOO&quot;)
+ourResamplingStrategy</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-performing-our-benchmark" class="section level3">
+<h3>Performing our benchmark</h3>
+<blockquote>
+<p>Let’s find which learner provides the best results (the lowest RMSE) for our specific spatial interpolation problem</p>
+</blockquote>
+<div class="tutorial-exercise" data-label="bmrMLR" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>#seting seed to make benchmark reproductible
+# https://mlr-org.github.io/mlr/articles/tutorial/benchmark_experiments.html
+set.seed(5030)
+
+# performing the benchmark of our learners on our task
+ourbenchmark = mlr::benchmark(
+  learners = ourLearners,
+  tasks = ourTask,
+  resamplings = ourResamplingStrategy,
+  measures = list(rmse)
+)
+
+performances = mlr::getBMRAggrPerformances(bmr = ourbenchmark, as.df = TRUE)
+performances
+best.learner = data.frame(performances %&gt;% 
+    slice(which.min(rmse.test.rmse)))
+
+# Vizualizing the benchamrk result
+library(ggplot2)
+plotBMRBoxplots(
+  bmr = ourbenchmark,
+  measure = rmse,
+  order.lrns = mlr::getBMRLearnerIds(ourbenchmark)) +
+  aes(color = learner.id)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":false,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-training-the-best-learner" class="section level3">
+<h3>Training the best learner</h3>
+<blockquote>
+<p>let’s train our best (lowest RMSE) learner on our dataset</p>
+</blockquote>
+<div class="tutorial-exercise" data-label="trainMLR" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># extract the lon and lat from the sf geometry
+coords = data.frame(st_coordinates(grid))
+# attributing our original dataset to another var (to avoid overwriting)
+ourPredictionGrid = grid
+# converting our dataset from sf to simple df
+st_geometry(ourPredictionGrid) &lt;- NULL
+# joining the coords
+ourPredictionGrid = dplyr::bind_cols(ourPredictionGrid, coords)
+# removing NA rows from ourPredictionGrid (to avoid mlr bug : https://github.com/mlr-org/mlr/issues/1515)
+ourPredictionGrid = dplyr::filter(ourPredictionGrid, !is.na(altitude))
+
+# training the neural net on the dataset
+ourModel = mlr::train(
+  learner = mlr::getBMRLearners(bmr = ourbenchmark)[[as.character(best.learner$learner.id)]],
+  task = ourTask)
+
+ourModel</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":false,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-predicting-using-the-trained-learner" class="section level3">
+<h3>Predicting using the trained learner</h3>
+<blockquote>
+<p>Let’s predict the value of tsa at the locations of our grid</p>
+</blockquote>
+<div class="tutorial-exercise" data-label="predictMLR" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># using our model to make the prediction
+ourPrediction = predict(
+  object = ourModel,
+  newdata = ourPredictionGrid
+)$data
+
+# injecting the predicted values in the prediction grid
+ourPredictedGrid = dplyr::bind_cols(ourPredictionGrid, ourPrediction)
+
+# making the predicted grid a spatial object again
+ourPredictedGrid = sf::st_as_sf(ourPredictedGrid, coords = c(&quot;X&quot;, &quot;Y&quot;), crs = 4326)
+plot(ourPredictedGrid)
+
+# Let&#39;s fake a raster rendering for better rendering
+sfgrid = st_sf(sf::st_make_grid(x = sf::st_transform(wallonia, 3812),  cellsize = 5000, what = &quot;polygons&quot;))
+ourPredictedGrid = sf::st_transform(ourPredictedGrid, crs = 3812)
+ourPredictedGrid = sf::st_join(sfgrid, ourPredictedGrid)
+ourPredictedGrid = ourPredictedGrid %&gt;%
+  dplyr::filter(!is.na(response))</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":false,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-mapping-the-prediction" class="section level3">
+<h3>Mapping the prediction</h3>
+<blockquote>
+<p>Adding our prediction layer to leaflet map</p>
+</blockquote>
+<div class="tutorial-exercise" data-label="mapMLR" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># reprojecting to 4326 for leaflet
+ourPredictedGrid = sf::st_transform(ourPredictedGrid, 4326)
+
+# adding to our map
+map2 = map %&gt;% 
+  addPolygons(
+    data = ourPredictedGrid,
+    group = &quot;Predictions&quot;,
+    color = ~temperature.pal(response),
+    stroke = FALSE,
+    fillOpacity = 0.9,
+    label = ~htmltools::htmlEscape(as.character(response))) %&gt;%
+  addLegend(
+    values = ourPredictedGrid$response,
+    group = &quot;Predictions&quot;,
+    position = &quot;bottomleft&quot;, pal = temperature.pal,
+    title = &quot;predicted T (°C)&quot;) %&gt;%
+  addLayersControl(
+         baseGroups = c(&quot;B&amp;W&quot;, &quot;Satelitte&quot;),
+         overlayGroups = c(&quot;Stations&quot;, &quot;Predictions&quot;, &quot;Elevation&quot;, &quot;Admin&quot;, &quot;Grid&quot;),
+         options = layersControlOptions(collapsed = TRUE)
+     )
+map2</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":false,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+</div>
+<div id="section-integration" class="section level2">
+<h2>INTEGRATION</h2>
+<div id="section-exportation-to-various-formats" class="section level3">
+<h3>EXPORTATION TO VARIOUS FORMATS</h3>
+<blockquote>
+<p>We can easily write to various formats thanks to <code>sf</code> library. Also possible to write to POSTGIS db thanks to <code>rpostigis</code></p>
+</blockquote>
+<p>Let’s see how to write to geojson</p>
+<div class="tutorial-exercise" data-label="geojson" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code># extracting centroid from polygons for light geojson
+# this kind of operation require projected coordinates !
+spatialized = sf::st_transform(ourPredictedGrid, crs = 3812)
+spatialized$geometry &lt;- spatialized %&gt;% 
+  st_centroid() %&gt;% 
+  st_geometry()
+
+# back to 4326 for geojson standard
+spatialized = sf::st_transform(spatialized, crs = 4326)
+
+# exporting to geojson
+sf::st_write(obj = spatialized, dsn = &quot;spatialized.geojson&quot;)
+
+# let&#39;s read the geojson
+cat(readLines(&#39;spatialized.geojson&#39;), sep = &#39;\n&#39;)
+
+# deleting the file
+file.remove(&quot;spatialized.geojson&quot;)</code></pre>
+<script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
+</div>
+</div>
+<div id="section-integration-with-other-programming-language" class="section level3">
+<h3>INTEGRATION WITH OTHER PROGRAMMING LANGUAGE</h3>
+<blockquote>
+<p>We can easily run R code from bash (<code>Rscript</code> command), python (<code>py2</code> library), php (<a href="https://stats.stackexchange.com/questions/4279/how-can-i-integrate-r-with-php/4280">example</a>)</p>
+</blockquote>
+</div>
+</div>
+<div id="section-reproducible-research" class="section level2">
+<h2>REPRODUCIBLE RESEARCH</h2>
+<blockquote>
+<p>Reproducibility is the capacity of repeating an experiment in any place with any person. It is only assured by providing complete setup instructions and resources.</p>
+</blockquote>
+<div id="section-why-is-it-so-important" class="section level3">
+<h3>Why is it so important ?</h3>
+<ul>
+<li><a href="http://ropensci.github.io/reproducibility-guide/sections/introduction/" class="uri">http://ropensci.github.io/reproducibility-guide/sections/introduction/</a></li>
+<li><a href="http://blog.revolutionanalytics.com/2017/04/reproducible-data-science-with-r.html" class="uri">http://blog.revolutionanalytics.com/2017/04/reproducible-data-science-with-r.html</a></li>
+</ul>
+</div>
+<div id="section-how-can-we-achieve-this-with-r" class="section level3">
+<h3>How can we achieve this with R ?</h3>
+<ul>
+<li><a href="http://r-pkgs.had.co.nz/intro.html">R package</a> management system</li>
+<li><a href="https://ropenscilabs.github.io/r-docker-tutorial/">Docker</a> is your best friend for this purpose.</li>
+<li><code>Packrat</code> is a library for Reproducible package management for R for <strong>isolated</strong>, <strong>reproductible</strong> and <strong>portable</strong> work. More <a href="https://www.joelnitta.com/post/packrat/">here</a></li>
+</ul>
+</div>
+<div id="section-how-can-we-dockerize-an-r-app-called-shiny-app" class="section level3">
+<h3>How can we dockerize an R app (called shiny app) ?</h3>
+<ul>
+<li><a href="https://www.shinyproxy.io/deploying-apps/#run-shinyproxy" class="uri">https://www.shinyproxy.io/deploying-apps/#run-shinyproxy</a></li>
+<li><a href="https://github.com/o2r-project/containerit/blob/master/vignettes/containerit.Rmd" class="uri">https://github.com/o2r-project/containerit/blob/master/vignettes/containerit.Rmd</a></li>
+<li><a href="https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/" class="uri">https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/</a></li>
+<li><a href="http://tamaszilagyi.com/blog/dockerized-shiny-app-development/" class="uri">http://tamaszilagyi.com/blog/dockerized-shiny-app-development/</a></li>
+</ul>
+</div>
+</div>
+<div id="section-about" class="section level2">
+<h2>ABOUT</h2>
+<div id="section-what-is-the-author-spatial-background" class="section level3">
+<h3>WHAT IS THE AUTHOR SPATIAL BACKGROUND ?</h3>
+<blockquote>
+<p>Don’t be afraid to code. Yes, you can too !</p>
+</blockquote>
+<ul>
+<li>Master in Geography (2007) @ ==&gt; a looong time ago !</li>
+<li>Few years of research : climate change, ice cores ==&gt; no spatial skills</li>
+<li>2015 : first coding experience (JS) ==&gt; no spatial skills</li>
+<li>2016 : stateOftheMap, foss4gbxl, opensource GIS ==&gt;the beginning</li>
+<li>2017 : job as geostatistician <span class="citation">@CRAW</span> ==&gt; First experience with R</li>
+<li>2018 : giving a first talk <span class="citation">@foss4gbxl</span> about spatial with R !</li>
+</ul>
+</div>
+<div id="section-how-to-start-doing-gis-with-r" class="section level3">
+<h3>HOW TO START DOING GIS WITH R ?</h3>
+<blockquote>
+<p>Many ressources exist online. Books, videos, interactive tutorials, help forums, etc.</p>
+</blockquote>
+<ul>
+<li>Read the book <a href="https://geocompr.robinlovelace.net">geocomputation with R</a></li>
+<li>Follow the <a href="https://www.datacamp.com/courses/spatial-analysis-in-r-with-sf-and-raster?tap_a=5644-dce66f&amp;tap_s=10907-287229">datacamp interactive course</a></li>
+<li>Check my <a href="https://pokyah.github.io/geo-tools/">curated list of free tools and datasets on my blog</a>.</li>
+</ul>
+</div>
+<div id="section-colofon" class="section level3">
+<h3>COLOFON</h3>
+<blockquote>
+<p>You can also run this presentation at home</p>
+</blockquote>
+<ul>
+<li><p>This presentation was built using <code>learnr</code>, a package to create your own interactive tutorials thanks to <code>shiny</code>.</p></li>
+<li><p>It was deployed for free on <a href="https://shiny.rstudio.com/articles/shinyapps.html">shinyapps.io</a></p></li>
+</ul>
+<p><a href="https://github.com/pokyah/foss4GBXL2018">The source code is available on <svg style="height:50px;fill:#75aadb;" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></a></p>
+
+<script type="application/shiny-prerendered" data-context="server-start">
+library(devtools)
+library(dplyr)
+library(learnr)
+library(rgdal)
+library(raster)
+library(sp)
+library(sf)
+library(rgeos)
+library(fontawesome)
+library(leaflet)
+library(leaflet.extras)
+library(ggplot2)
+library(FNN)
+library(agrometAPI)
+library(elevatr)
+library(rnaturalearth)
+library(rnaturalearthhires)
+library(kknn)
+library(bst)
+library(DiceKriging)
+library(mlr)
+library(geojsonsf)
+library(ggplot2)
+load("FOSS4GBXL2018.RData")
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::register_http_handlers(session, metadata = NULL)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-librariesLoading-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-librariesLoading-code-editor`)), session)
+output$`tutorial-exercise-librariesLoading-output` <- renderUI({
+  `tutorial-exercise-librariesLoading-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-agrometAPIget-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-agrometAPIget-code-editor`)), session)
+output$`tutorial-exercise-agrometAPIget-output` <- renderUI({
+  `tutorial-exercise-agrometAPIget-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-agrometAPIfilter-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-agrometAPIfilter-code-editor`)), session)
+output$`tutorial-exercise-agrometAPIfilter-output` <- renderUI({
+  `tutorial-exercise-agrometAPIfilter-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-agrometAPIspatial-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-agrometAPIspatial-code-editor`)), session)
+output$`tutorial-exercise-agrometAPIspatial-output` <- renderUI({
+  `tutorial-exercise-agrometAPIspatial-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-adminGet-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-adminGet-code-editor`)), session)
+output$`tutorial-exercise-adminGet-output` <- renderUI({
+  `tutorial-exercise-adminGet-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-adminFilter-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-adminFilter-code-editor`)), session)
+output$`tutorial-exercise-adminFilter-output` <- renderUI({
+  `tutorial-exercise-adminFilter-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-elevationGet-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-elevationGet-code-editor`)), session)
+output$`tutorial-exercise-elevationGet-output` <- renderUI({
+  `tutorial-exercise-elevationGet-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-elevationCrop-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-elevationCrop-code-editor`)), session)
+output$`tutorial-exercise-elevationCrop-output` <- renderUI({
+  `tutorial-exercise-elevationCrop-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-gridBuild-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-gridBuild-code-editor`)), session)
+output$`tutorial-exercise-gridBuild-output` <- renderUI({
+  `tutorial-exercise-gridBuild-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-feedingExtract-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-feedingExtract-code-editor`)), session)
+output$`tutorial-exercise-feedingExtract-output` <- renderUI({
+  `tutorial-exercise-feedingExtract-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-feedingInject-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-feedingInject-code-editor`)), session)
+output$`tutorial-exercise-feedingInject-output` <- renderUI({
+  `tutorial-exercise-feedingInject-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-leafletSettings-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-leafletSettings-code-editor`)), session)
+output$`tutorial-exercise-leafletSettings-output` <- renderUI({
+  `tutorial-exercise-leafletSettings-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-leafletMap-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-leafletMap-code-editor`)), session)
+output$`tutorial-exercise-leafletMap-output` <- renderUI({
+  `tutorial-exercise-leafletMap-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-taskMLR-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-taskMLR-code-editor`)), session)
+output$`tutorial-exercise-taskMLR-output` <- renderUI({
+  `tutorial-exercise-taskMLR-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-learnersMLR-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-learnersMLR-code-editor`)), session)
+output$`tutorial-exercise-learnersMLR-output` <- renderUI({
+  `tutorial-exercise-learnersMLR-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-resamplMLR-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-resamplMLR-code-editor`)), session)
+output$`tutorial-exercise-resamplMLR-output` <- renderUI({
+  `tutorial-exercise-resamplMLR-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-bmrMLR-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-bmrMLR-code-editor`)), session)
+output$`tutorial-exercise-bmrMLR-output` <- renderUI({
+  `tutorial-exercise-bmrMLR-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-trainMLR-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-trainMLR-code-editor`)), session)
+output$`tutorial-exercise-trainMLR-output` <- renderUI({
+  `tutorial-exercise-trainMLR-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-predictMLR-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-predictMLR-code-editor`)), session)
+output$`tutorial-exercise-predictMLR-output` <- renderUI({
+  `tutorial-exercise-predictMLR-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-mapMLR-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-mapMLR-code-editor`)), session)
+output$`tutorial-exercise-mapMLR-output` <- renderUI({
+  `tutorial-exercise-mapMLR-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-geojson-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-geojson-code-editor`)), session)
+output$`tutorial-exercise-geojson-output` <- renderUI({
+  `tutorial-exercise-geojson-result`()
+})
+</script>
+ <!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="dependencies">
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["4.5.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/font-awesome-4.5.0"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/font-awesome.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]}]}
+</script>
+<!--/html_preserve-->
+</div>
+</div>
+
+</div> <!-- topics -->
+
+<div class="topicsContainer">
+<div class="topicsPositioner">
+<div class="band">
+<div class="bandContent topicsListContainer">
+
+<!-- begin doc-metadata -->
+<div id="doc-metadata">
+<h2 class="title toc-ignore" style="display:none;">FOSS4GBXL2018</h2>
+</div>
+<!-- end doc-metadata -->
+
+</div> <!-- bandContent.topicsListContainer -->
+</div> <!-- band -->
+</div> <!-- topicsPositioner -->
+</div> <!-- topicsContainer -->
+
+
+</div> <!-- bandContent page -->
+</div> <!-- pageContent band -->
+
+
+
+
+<script>
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+
+</html>

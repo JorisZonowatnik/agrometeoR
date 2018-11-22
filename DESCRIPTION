@@ -11,9 +11,10 @@ License: GPL-V3
 Encoding: UTF-8
 LazyData: LazyData: true
 Imports: mlr (>= 2.12.1),
-Suggests: agrometAPI,
     tidyverse,
-    rgeos,
+    httr,
+    chron
+Suggests: rgeos,
     raster,
     jsonlite,
     rnaturalearth,

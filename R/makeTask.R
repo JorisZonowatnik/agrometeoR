@@ -22,8 +22,8 @@ makeTask <- function(
 ){
 
   # make an API call to retrieve the dynamic data
-  data = agrometAPI::type_data(
-    agrometAPI::get_data(dfrom = date, dto = date, sensors = sensor, sid = stations )
+  data = typeData(
+    getData(dfrom = date, dto = date, sensors = sensor, sid = stations )
   )
 
   # remove useless columns

@@ -1,6 +1,7 @@
 #' @export
 #' @title make a mlr model + model metadata for a specific task using a specific learner
 #' @author Thomas Goossens
+#' @import mlr
 #' @param task an object of class mlr::makeRegrTask()
 #' @param learner an object of class mlr::makeLearner()
 #' @return an object of class mlr::train()

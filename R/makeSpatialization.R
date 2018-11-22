@@ -32,7 +32,7 @@ makeSpatialization <- function(
     sf::st_transform(4326)
 
   # exporting to geojson
-  sf::st_write(obj = pred_grid, dsn = paste0(path, name, ".geojson"))
+  sf::st_write(obj = pred_grid, dsn = paste0(path, "/", name, ".geojson"))
 
   # reading the geojson
   # cat(readLines('spatialized.geojson'), sep = '\n')

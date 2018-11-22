@@ -1,0 +1,647 @@
+---
+title: "FOSS4GBXL2018"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+<style>
+.tutorial-exercise-output pre{
+    color:#43d615;
+    background-color:black;
+    border-radius: 10px;
+    padding: 20px;}
+}
+
+.ace_editor{
+    font-size:18px/normal;
+}
+
+.leaflet{
+    width:100%;
+}
+</style>
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+library(devtools)
+library(dplyr)
+library(learnr)
+library(rgdal)
+library(raster)
+library(sp)
+library(sf)
+library(rgeos)
+library(fontawesome)
+library(leaflet)
+library(leaflet.extras)
+library(ggplot2)
+library(FNN)
+library(agrometAPI)
+library(elevatr)
+library(rnaturalearth)
+library(rnaturalearthhires)
+library(kknn)
+library(bst)
+library(DiceKriging)
+library(mlr)
+library(geojsonsf)
+library(ggplot2)
+load("FOSS4GBXL2018.RData")
+```
+
+## HELLO ! 
+
+Welcome to this Session! 
+
+> Why and How to use R as an opensource GIS : The AGROMET project usecase
+
+presented by *Thomas Goossens*
+
+ `r fontawesome::fa("linkedin", fill = "#75aadb")` @thomasgoossens1985  
+
+ `r fontawesome::fa("github", fill = "#75aadb")` @pokyah  
+
+ `r fontawesome::fa("envelope", fill = "#75aadb")` hello.pokyah@gmail.com
+
+
+<center>
+```{r foss4gbelogo, echo = FALSE, out.width = "35%"}
+knitr::include_graphics("images/foss4gbe.svg")
+```
+
+```{r crawlogo, echo = FALSE, out.width = "35%"}
+knitr::include_graphics("images/craw_fr.png")
+```
+</center>
+
+## PROJECT PRESENTATION
+
+> A very short introduction to the project
+
+### What? 
+
+`r fontawesome::fa("bullseye", height = "50px", fill = "#75aadb")`
+Providing __hourly__ gridded weather data @ __1km² resolution__ for Wallonia
+
+### Why? 
+
+`r fontawesome::fa("leaf", height = "50px", fill = "#75aadb")`
+
+Feeding decision tools for agricultural warning systems based on crop monitoring models ([EU directive for Sustainable use of pesticides](https://ec.europa.eu/food/plant/pesticides/sustainable_use_pesticides_en))
+
+### How? 
+
+`r fontawesome::fa("th", height = "50px", fill = "#75aadb")`
+__spatializing__ data from [PAMESEB](https://www.pameseb.be/) Automatic Weather Station Network
+
+## GIS BUILDING BLOCKS
+
+### DATA
+
+`r fa("cubes" , height = "50px", fill = "#75aadb")`
+
+* Weather data from the stations
+* explanatory variables (DEM, land cover, etc)
+* interpolation grid
+* map backgrounds
+
+### TOOLS
+
+`r fa("wrench" , height = "50px", fill = "#75aadb")`
+
+* API query
+* Data manipulation
+* interpolation algorithms (linear regression, ANN, kriging)
+* algorithms output benchmarking
+* dataviz/mapping tools
+
+## WHY R ?
+
+`r fa("r-project" , height = "50px", fill = "#75aadb")`
+* It's FOSS !
+* Already used by our weather specialist partners : 
+[RMI](www/Poster_Eumetnet_2017.pdf) + [KNMI](http://dailymeteo.org/Sluiter2014)
+* [Increased popularity among tech companies](https://thenextweb.com/offers/2018/03/28/tech-giants-are-harnessing-r-programming-learn-it-and-get-hired-with-this-complete-training-bundle/)
+* [Impressive growth](https://stackoverflow.blog/2017/10/10/impressive-growth-r/) and active community 
+* *There is a package for that* ™
+* collaborative work & science reproducibility
+
+## CODE LIBRARIES
+
+> Libraries are packaged thematic R-softwares containing predefined sets of functions to help you save code
+
+* R libraries are available on [CRAN](https://cran.r-project.org/) and `r fa("github")`.
+* one-line code to install these (`install.packages(<PACKAGE_NAME>)`).
+* We need various libraries to acquire the required datasets (DEM, boundaries, weather stations data, etc...) and manipulate these.
+* pre-installed for this demo
+
+```{r librariesLoading, exercise = TRUE}
+library(devtools)
+library(learnr)
+library(rgdal)
+library(sp)
+library(raster)
+library(sf)
+library(rgeos)
+library(fontawesome)
+library(leaflet)
+library(mlr)
+library(dplyr)
+library(ggplot2)
+library(FNN)
+library(agrometAPI)
+library(elevatr)
+library(rnaturalearth)
+library(rnaturalearthhires)
+```
+
+## DATA ACQUISITION
+
+### AGROMET WEATHER STATIONS DATA
+
+> We can get the temperature data from our stations using the `agrometAPI` library
+
+```{r agrometAPIget, exercise=TRUE}
+# getting data from API (requires a token)
+rawdata = agrometAPI::get_data(dfrom = "2018-10-01", dto = "2018-10-01")
+rawdata = agrometAPI::type_data(rawdata)
+
+# Let's see how it looks
+rawdata
+```
+
+### FILTERING DATA
+
+> Filtering is easy with `dplyr`
+
+```{r agrometAPIfilter, exercise=TRUE}
+# Let's Filter it using dplyr
+ourdataset = rawdata %>%
+  dplyr::filter(!is.na(mtime)) %>%
+  dplyr::filter(sid != 38 & sid != 41) %>%
+  dplyr::filter(!is.na(from)) %>%
+  dplyr::filter(!is.na(to)) %>%
+  dplyr::filter(!is.na(tsa)) %>%
+  dplyr::filter(poste != "China") %>%
+  dplyr::filter(!type_name %in% c("PS2000","PESSL","BODATA","Sencrop","netdl1000","SYNOP")) %>%
+  dplyr::select(c(sid, poste, longitude, latitude, altitude, mtime, tsa))
+
+# Let's see how it looks
+ourdataset
+```
+
+### MAKING DATA SPATIAL
+
+> The new `sf` library allows to easily manipulate data with spatial attributes.
+
+__! Coordinate Reference System ([CRS](https://epsg.io/))__
+See [this](https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/OverviewCoordinateReferenceSystems.pdf) cheatsheet.
+
+```{r agrometAPIspatial, exercise=TRUE}
+# making it spatial
+ourdataset = sf::st_as_sf(ourdataset, 
+  coords = c("longitude", "latitude"),
+  crs = 4326)
+
+# outputing the CRS to the console
+sf::st_crs(ourdataset)
+```
+
+### DOWNLOADING ADMIN BOUNDARIES
+
+> Many R libraries provide the ability to get admin boundaries. We use `rnaturalearth`
+
+```{r adminGet, exercise=TRUE}
+# downloading admin boundaries of Belgium
+belgium = sf::st_as_sf((rnaturalearth::ne_states(country = 'belgium')))
+# inspecting the data
+belgium
+# visualizin
+plot(belgium)
+```
+
+### FILTERING TO ONLY KEEP OUR INTEREST ZONE
+
+> Let's do it again with `dplyr`
+
+```{r adminFilter, exercise=TRUE}
+# Filtering Wallonia data
+wallonia = belgium %>% dplyr::filter(region == "Walloon")
+# visualizing
+plot(wallonia)
+# Checking the Coordinate Reference system
+sf::st_crs(wallonia)
+```
+
+### DOWNLOADING ELEVATION DATA - DEM RASTER
+
+> Again, many libraries provide ways to download such data. We use `elevatr`
+
+Raster resolution is controlled by `z` param. See [package documentation](https://cran.r-project.org/web/packages/elevatr/vignettes/introduction_to_elevatr.html#get_raster_elevation_data)
+
+```{r elevationGet, exercise=TRUE}
+# downloading DEM data and storing it in an object. Z = 5 ==> about 3km² resolution
+elevation = elevatr::get_elev_raster(as(wallonia, "Spatial"), z = 5, src = "aws")
+class(elevation)
+plot(elevation)
+# checking CRS
+raster::crs(elevation, asText = TRUE)
+```
+
+### CROPPING WITH OUR INTEREST ZONE BORDERS
+
+> package `raster` has a function for this !
+
+```{r elevationCrop, exercise=TRUE}
+# masking
+elevation = raster::mask(elevation, as(wallonia, "Spatial"))
+# ploting the elevation raster
+plot(elevation)
+```
+
+### INTERPOLATION GRID
+
+> Grid is quickly built with new `sf` library
+
+```{r gridBuild, exercise=TRUE}
+# building the grid at 5 km² resolution
+grid = sf::st_sf(sf::st_make_grid(x = sf::st_transform(wallonia, crs = 3812),  cellsize = 5000, what = "centers"))
+# limit it to Wallonia and not full extent
+grid = sf::st_intersection(grid, sf::st_transform(wallonia, crs = 3812))
+# reproject it 
+grid = sf::st_transform(grid, crs = 4326)
+# visualizing 
+plot(grid)
+```
+
+### Extracting raster data at the locations of grid points
+
+> Extracting explanatory variables (limited to elevation raster for this example). 
+
+```{r feedingExtract, exercise=TRUE}
+# extracting
+extracted <- raster::extract(
+  elevation,
+  as(grid,"Spatial"),
+  fun = mean,
+  na.rm = FALSE,
+  df = TRUE
+)
+# renaming columns
+colnames(extracted) = c("ID", "altitude")
+# inspecting
+extracted
+```
+
+### INJECTING INTO OUR GRID
+
+> Add the raster extracted data to our sf grid
+
+```{r feedingInject, exercise=TRUE}
+# injecting
+grid$altitude = extracted$altitude
+# keeping only the altitude data
+grid = dplyr::select(grid, altitude)
+# visualizing
+plot(grid)
+# checking CRS
+sf::st_crs(grid)
+```
+
+## DATA VISUALIZATION
+
+### LEAFLET MAP
+
+> Making our spatial data intelligible by mapping it using `leaflet`
+
+#### preparing the color palettes and settings for mobile phone responsiveness
+
+```{r, leafletSettings, exercise = TRUE}
+elevation.pal <- colorNumeric(reverse = TRUE, "RdYlGn", values(elevation),
+  na.color = "transparent")
+temperature.pal <- colorNumeric(reverse = TRUE, "RdBu", domain=ourdataset$tsa,
+  na.color = "transparent")
+responsiveness = "\'<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\'"
+```
+
+#### mapping the various datasets
+
+```{r, leafletMap, exercise = TRUE, width = "100%"}
+map <- leaflet() %>% 
+     addProviderTiles(
+         providers$OpenStreetMap.BlackAndWhite, group = "B&W") %>%
+     addProviderTiles(
+         providers$Esri.WorldImagery, group = "Satelitte") %>%
+     addRasterImage(
+         elevation, group = "Elevation", colors = elevation.pal, opacity = 0.8) %>%
+     addPolygons(
+         data = wallonia, group = "Admin", color = "#444444", weight = 1, smoothFactor = 0.5,
+         opacity = 1, fillOpacity = 0.1, fillColor = "grey") %>%
+     addCircleMarkers(
+         data = ourdataset,
+         group = "Stations",
+         color = ~temperature.pal(tsa),
+         stroke = FALSE,
+        fillOpacity = 0.8,
+         label = ~htmltools::htmlEscape(as.character(tsa))) %>%
+    addCircleMarkers(
+        data = grid,
+        group = "Grid",
+        radius = 1,
+        color = "orange",
+        stroke = FALSE, fillOpacity = 1) %>%
+    addLegend(
+      values = values(elevation), group = "Elevation",
+      position = "bottomright", pal = elevation.pal,
+      title = "Elevation (m)") %>%
+     addLayersControl(
+         baseGroups = c("B&W", "Satelitte"),
+         overlayGroups = c("Elevation", "Admin", "Stations", "Grid"),
+         options = layersControlOptions(collapsed = TRUE)
+     ) %>%
+     addFullscreenControl() %>%
+     hideGroup(c("Slope", "Aspect")) %>%
+     addEasyButton(easyButton(
+         icon = "fa-crosshairs", title = "Locate Me",
+         onClick = JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
+     htmlwidgets::onRender(paste0("
+       function(el, x) {
+       $('head').append(",responsiveness,");
+       }"))
+map
+```
+
+## INTERPOLATION
+
+> Spatialization or spatial interpolation creates a continuous surface from values measured at discrete locations to __predict__ values at any location in the interest zone with the __best accuracy__.
+
+### 2 approaches 
+
+> To predict values at any location : 
+
+1. ~~physical atmospherical models~~ (not straight forward to develop an explicit physical model describing how the output data can be derived from the input data)
+
+2. __supervised machine learning regression algorithms__ : given a set of continuous data, find the best relationship that represents the set of continuous data (common approach largely discussed in the academic litterature)
+
+### Supervised Machine learning
+
+> We will go through a very simple example of machine learning usecase using `mlr` package
+
+`mlr` is a `r fa("r-project")` library that offers a standardized interface for all its machine learning algorithms. Full details & capabilities on the [website](https://mlr-org.github.io/mlr/index.html)  
+
+
+![](https://github.com/mlr-org/mlr/raw/master/man/figures/logo_navbar.png)  
+
+### short definition
+
+From machinelearningmastery.com :
+
+> Supervised learning is where you have input variables (x) and an output variable (Y) and you use an algorithm to learn the mapping function from the input to the output : Y = f(X)
+The goal is to approximate the mapping function so well that when you have new input data (x), you can predict the output variables (Y) for that data.
+It is called supervised learning because the process of an algorithm learning from the training dataset can be thought of as a teacher supervising the learning process
+
+### Defining our Machine Learning task
+```{r taskMLR, exercise = TRUE}
+# loading the mlr library
+library(mlr)
+# extract the lon and lat from the sf geometry
+coords = data.frame(sf::st_coordinates(ourdataset))
+# attributing our original dataset to another var (to avoid overwriting)
+ourTask = ourdataset
+# converting our dataset from sf to simple df
+sf::st_geometry(ourTask) <- NULL
+# joining the coords
+ourTask = dplyr::bind_cols(ourTask, coords)
+# Dropping the non-explanatory features
+ourTask = dplyr::select(ourTask, -c(sid, poste, mtime))
+# defining our taks
+ourTask = mlr::makeRegrTask(id = "FOSS4G_example", data = ourTask, target = "tsa")
+# checking our data
+head(mlr::getTaskData(ourTask))
+```
+
+### Defining our learners (learning algorithms)
+```{r learnersMLR, exercise = TRUE}
+# Defining our learners
+ourLearners = list(
+  l1 = mlr::makeLearner(cl = "regr.lm", id = "linearRegression"),
+  l2 = mlr::makeLearner(cl = "regr.fnn", id = "FastNearestNeighbours"),
+  l3 = mlr::makeLearner(cl = "regr.nnet", id = "NeuralNetwork", par.vals = list(size = 10)),
+  l4 = mlr::makeLearner(cl = "regr.km", id = "Kriging"),
+  l5 = mlr::makeLearner(cl = "regr.kknn", id = "KNearestNeighborRegression"))
+
+# 
+ourLearners
+```
+
+### Defining our resampling strategy
+```{r resamplMLR, exercise = TRUE}
+# Defining our learners
+ourResamplingStrategy = mlr::makeResampleDesc("LOO")
+ourResamplingStrategy
+```
+
+### Performing our benchmark
+
+> Let's find which learner provides the best results (the lowest RMSE) for our specific spatial interpolation problem
+
+```{r bmrMLR, exercise = TRUE, message= FALSE}
+#seting seed to make benchmark reproductible
+# https://mlr-org.github.io/mlr/articles/tutorial/benchmark_experiments.html
+set.seed(5030)
+
+# performing the benchmark of our learners on our task
+ourbenchmark = mlr::benchmark(
+  learners = ourLearners,
+  tasks = ourTask,
+  resamplings = ourResamplingStrategy,
+  measures = list(rmse)
+)
+
+performances = mlr::getBMRAggrPerformances(bmr = ourbenchmark, as.df = TRUE)
+performances
+best.learner = data.frame(performances %>% 
+    slice(which.min(rmse.test.rmse)))
+
+# Vizualizing the benchamrk result
+library(ggplot2)
+plotBMRBoxplots(
+  bmr = ourbenchmark,
+  measure = rmse,
+  order.lrns = mlr::getBMRLearnerIds(ourbenchmark)) +
+  aes(color = learner.id)
+```
+
+### Training the best learner
+
+> let's train our best (lowest RMSE) learner on our dataset
+
+```{r trainMLR, exercise = TRUE, message= FALSE}
+# extract the lon and lat from the sf geometry
+coords = data.frame(st_coordinates(grid))
+# attributing our original dataset to another var (to avoid overwriting)
+ourPredictionGrid = grid
+# converting our dataset from sf to simple df
+st_geometry(ourPredictionGrid) <- NULL
+# joining the coords
+ourPredictionGrid = dplyr::bind_cols(ourPredictionGrid, coords)
+# removing NA rows from ourPredictionGrid (to avoid mlr bug : https://github.com/mlr-org/mlr/issues/1515)
+ourPredictionGrid = dplyr::filter(ourPredictionGrid, !is.na(altitude))
+
+# training the neural net on the dataset
+ourModel = mlr::train(
+  learner = mlr::getBMRLearners(bmr = ourbenchmark)[[as.character(best.learner$learner.id)]],
+  task = ourTask)
+
+ourModel
+```
+
+### Predicting using the trained learner
+
+> Let's predict the value of tsa at the locations of our grid
+
+```{r predictMLR, exercise = TRUE, message= FALSE}
+# using our model to make the prediction
+ourPrediction = predict(
+  object = ourModel,
+  newdata = ourPredictionGrid
+)$data
+
+# injecting the predicted values in the prediction grid
+ourPredictedGrid = dplyr::bind_cols(ourPredictionGrid, ourPrediction)
+
+# making the predicted grid a spatial object again
+ourPredictedGrid = sf::st_as_sf(ourPredictedGrid, coords = c("X", "Y"), crs = 4326)
+plot(ourPredictedGrid)
+
+# Let's fake a raster rendering for better rendering
+sfgrid = st_sf(sf::st_make_grid(x = sf::st_transform(wallonia, 3812),  cellsize = 5000, what = "polygons"))
+ourPredictedGrid = sf::st_transform(ourPredictedGrid, crs = 3812)
+ourPredictedGrid = sf::st_join(sfgrid, ourPredictedGrid)
+ourPredictedGrid = ourPredictedGrid %>%
+  dplyr::filter(!is.na(response))
+```
+
+### Mapping the prediction
+
+> Adding our prediction layer to leaflet map
+
+```{r mapMLR, exercise = TRUE, message= FALSE}
+# reprojecting to 4326 for leaflet
+ourPredictedGrid = sf::st_transform(ourPredictedGrid, 4326)
+
+# adding to our map
+map2 = map %>% 
+  addPolygons(
+    data = ourPredictedGrid,
+    group = "Predictions",
+    color = ~temperature.pal(response),
+    stroke = FALSE,
+    fillOpacity = 0.9,
+    label = ~htmltools::htmlEscape(as.character(response))) %>%
+  addLegend(
+    values = ourPredictedGrid$response,
+    group = "Predictions",
+    position = "bottomleft", pal = temperature.pal,
+    title = "predicted T (°C)") %>%
+  addLayersControl(
+         baseGroups = c("B&W", "Satelitte"),
+         overlayGroups = c("Stations", "Predictions", "Elevation", "Admin", "Grid"),
+         options = layersControlOptions(collapsed = TRUE)
+     )
+map2
+```
+
+## INTEGRATION
+
+### EXPORTATION TO VARIOUS FORMATS
+
+> We can easily write to various formats thanks to `sf` library. Also possible to write to POSTGIS db thanks to `rpostigis`
+
+Let's see how to write to geojson
+
+```{r geojson, exercise = TRUE}
+# extracting centroid from polygons for light geojson
+# this kind of operation require projected coordinates !
+spatialized = sf::st_transform(ourPredictedGrid, crs = 3812)
+spatialized$geometry <- spatialized %>% 
+  st_centroid() %>% 
+  st_geometry()
+
+# back to 4326 for geojson standard
+spatialized = sf::st_transform(spatialized, crs = 4326)
+
+# exporting to geojson
+sf::st_write(obj = spatialized, dsn = "spatialized.geojson")
+
+# let's read the geojson
+cat(readLines('spatialized.geojson'), sep = '\n')
+
+# deleting the file
+file.remove("spatialized.geojson")
+```
+
+### INTEGRATION WITH OTHER PROGRAMMING LANGUAGE
+
+> We can easily run R code from bash (`Rscript` command), python (`py2` library), php ([example](https://stats.stackexchange.com/questions/4279/how-can-i-integrate-r-with-php/4280))
+
+## REPRODUCIBLE RESEARCH
+
+> Reproducibility is the capacity of repeating an experiment in any place with any person. It is only assured by providing complete setup instructions and resources.
+
+###  Why is it so important ? 
+
+* http://ropensci.github.io/reproducibility-guide/sections/introduction/
+* http://blog.revolutionanalytics.com/2017/04/reproducible-data-science-with-r.html
+
+### How can we achieve this with R ?
+
+* [R package](http://r-pkgs.had.co.nz/intro.html) management system
+* [Docker](https://ropenscilabs.github.io/r-docker-tutorial/) is your best friend for this purpose.
+* `Packrat` is a library for Reproducible package management for R for __isolated__, __reproductible__ and __portable__ work. More [here](https://www.joelnitta.com/post/packrat/)
+
+### How can we dockerize an R app (called shiny app) ? 
+
+* https://www.shinyproxy.io/deploying-apps/#run-shinyproxy
+* https://github.com/o2r-project/containerit/blob/master/vignettes/containerit.Rmd
+* https://jlintusaari.github.io/2018/07/how-to-compile-rmarkdown-documents-using-docker/
+* http://tamaszilagyi.com/blog/dockerized-shiny-app-development/
+
+## ABOUT
+
+### WHAT IS THE AUTHOR SPATIAL BACKGROUND ? 
+
+> Don't be afraid to code. Yes, you can too !
+
+* Master in Geography (2007) @ ==> a looong time ago ! 
+* Few years of research : climate change, ice cores ==> no spatial skills
+* 2015 : first coding experience (JS) ==> no spatial skills
+* 2016 : stateOftheMap, foss4gbxl, opensource GIS ==>the beginning
+* 2017 : job as geostatistician @CRAW ==> First experience with R 
+* 2018 : giving a first talk @foss4gbxl about spatial with R !
+
+
+### HOW TO START DOING GIS WITH R ? 
+
+> Many ressources exist online. Books, videos, interactive tutorials, help forums, etc.
+
+* Read the book [geocomputation with R](https://geocompr.robinlovelace.net)
+* Follow the [datacamp interactive course](https://www.datacamp.com/courses/spatial-analysis-in-r-with-sf-and-raster?tap_a=5644-dce66f&tap_s=10907-287229)
+* Check my [curated list of free tools and datasets on my blog](https://pokyah.github.io/geo-tools/).
+
+
+### COLOFON
+
+> You can also run this presentation at home
+
+* This presentation was built using `learnr`, a package to create your own interactive tutorials thanks to `shiny`.
+
+* It was deployed for free on [shinyapps.io](https://shiny.rstudio.com/articles/shinyapps.html)
+
+[The source code is available on `r fa("github" , height = "50px", fill = "#75aadb")`](https://github.com/pokyah/foss4GBXL2018)
+
+
+
+
