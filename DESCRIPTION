@@ -4,7 +4,7 @@ Title: Spatial interpolation for Agromet
 Version: 0.0.0.9000
 Authors@R: person("Thomas", "Goossens", email = "hello.pokyah@gmail.com",
   role = c("aut", "cre"))
-URL: https://github.com/pokyah/agrometeorR
+URL: https://pokyah.github.io/agrometeoR
 BugReports: https://github.com/pokyah/agrometeorR/issues
 Description: Makes a spatial (hourly/daily) interpolation of AGROMET weather parameters using machine learning
 License: GPL-V3

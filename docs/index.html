@@ -53,6 +53,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
+    </li>
+    <li>
       <a href="articles/simple_example.html">example</a>
     </li>
     <li>
@@ -73,14 +76,7 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/pokyah/agrometeorR">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -91,44 +87,66 @@
       
       </header><div class="row">
   <div class="contents col-md-9">
-
-<div id="aims" class="section level2">
-<h2 class="hasAnchor">
-<a href="#aims" class="anchor"></a>Aims</h2>
-<p>This package aims to make weather spatilization of an hourly record of a passed weather parameter based on the records stored by the PAMESEB automatic weather station network. As output this function produces a json file containing the spatialized data. You can then use it with e.g. a leaflet map.</p>
-</div>
-<div id="internal-datasets" class="section level2">
-<h2 class="hasAnchor">
-<a href="#internal-datasets" class="anchor"></a>Internal datasets</h2>
-<p>The functions of the package make heavy use of internal datasets :</p>
+<div id="agrometeor" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#agrometeor" class="anchor"></a>AgrometeoR</h1></div>
 <ul>
-<li>wallonia.sf =&gt; polygon that contains the borders of wallonia</li>
-<li>grid.df =&gt; a dataframe containing the static explanatory variables @ grid points</li>
-<li>stations.df =&gt; a dataframe containing the static explanatory variables @ stations points</li>
-<li>grid.sf =&gt; a sf dataframe containing the station locations</li>
-<li>stations.sf =&gt; a sf dataframe containing the grid points locations</li>
+<li>install the development version from R : <code><a href="https://www.rdocumentation.org/packages/devtools/topics/install_github">devtools::install_github("pokyah/agrometeoR")</a></code>
+</li>
+<li>bug tracking <a href="https://github.com/pokyah/agrometeorR/issues" class="uri">https://github.com/pokyah/agrometeorR/issues</a>
+</li>
+<li>detailed tutorial available in articles section</li>
+</ul>
+<div id="introduction" class="section level2">
+<h2 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h2>
+<p>The aim of the Agromet project is to provide a near real-time hourly gridded datasets of weather parameters at the resolution of 1 km² for the whole region of Wallonia characterized by a quality indicator. This package constitutes the core of the spatialization process of the weather data. It makes an heavy use of <a href="https://mlr.mlr-org.com/index.html">mlr</a> package and its unified interface.</p>
+</div>
+<div id="features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#features" class="anchor"></a>Features</h2>
+<ul>
+<li>query the agromet DB using an API</li>
+<li>spatialize an hourly our daily (soon) dataset using a specified learner and output a geojson file</li>
+<li>conduct benchmark experiment to compare and rank various learners, hyperparameters and features (explanatory variables) according to your desired performance metrics</li>
+<li>quickly create an interactive leaflet map for data vizualization (soon)</li>
+<li>an interactive tutorial about R as a GIS</li>
 </ul>
 </div>
-<div id="crs" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#crs" class="anchor"></a>CRS</h1></div>
-<p>Lambert 2008 - EPSG = 3812</p>
-<p>The script used to generate these objects is available under <code>./raw-data/makeData.R</code></p>
+<div id="target-variables" class="section level2">
+<h2 class="hasAnchor">
+<a href="#target-variables" class="anchor"></a>target variables</h2>
+<p>The target weather parameter values at the stations are</p>
 </div>
-<div id="how-to-install-the-package" class="section level1">
-<h1 class="hasAnchor">
-<a href="#how-to-install-the-package" class="anchor"></a>How to install the package ?</h1>
-<p>Within R : <code><a href="https://www.rdocumentation.org/packages/devtools/topics/install_github">devtools::install_github("pokyah/agrometeoR", ref="master")</a></code></p>
+<div id="explanatory-variables" class="section level2">
+<h2 class="hasAnchor">
+<a href="#explanatory-variables" class="anchor"></a>explanatory variables</h2>
+<div id="static" class="section level3">
+<h3 class="hasAnchor">
+<a href="#static" class="anchor"></a>static</h3>
+<p>All the static explanatory variables were prepared both for the stations locations and the RMI inca grid points locations. The script used to generate these datasets is available under <code>./data-raw/makeData.R</code></p>
+<p>The currently available static explanatory variables are :</p>
+<p><code>elevation</code>, <code>aspect</code>, <code>slope</code>, <code>Y</code> (lat), <code>X</code> (lon), <code>Agricultural_areas</code>, <code>Artificials_surfaces</code>, <code>Forest</code>, <code>Herbaceous_vegetation</code>, <code>Water</code></p>
+<p>The script used to generate the static explanatory variables datasets (<code>grid.df</code> and <code>stations.df</code>) are available under <code>./raw-data/makeData.R</code></p>
 </div>
-
+<div id="dynamic" class="section level3">
+<h3 class="hasAnchor">
+<a href="#dynamic" class="anchor"></a>dynamic</h3>
+<p>These are not yet implemented as they require a working API to make queries in our Agromet DB.</p>
+</div>
+</div>
+<div id="learners" class="section level2">
+<h2 class="hasAnchor">
+<a href="#learners" class="anchor"></a>learners</h2>
+<p>The package will allow you to use a configuration where you can list the various learning algorithms you want to use to spatialize data</p>
+</div>
+</div>
   </div>
 
   <div class="col-md-3" id="sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/pokyah/agrometeorR">https://​github.com/​pokyah/​agrometeorR</a>
-</li>
 <li>Report a bug at <br><a href="https://github.com/pokyah/agrometeorR/issues">https://​github.com/​pokyah/​agrometeorR/​issues</a>
 </li>
 </ul>
