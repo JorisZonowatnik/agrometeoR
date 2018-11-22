@@ -146,7 +146,7 @@ corine = sf::st_intersection(sf::st_transform(corine, 3812), sf::st_buffer(sf::s
 # Download legend for CLC
 download.file("http://www.eea.europa.eu/data-and-maps/data/corine-land-cover-2006-raster-1/corine-land-cover-classes-and/clc_legend.csv/at_download/file",
   destfile = "./data-raw/extdata/CLC/clc_legend.csv")
-corine.lgd = read.csv(file = "./extdata/CLC/clc_legend.csv", header = TRUE, sep = ",")
+corine.lgd = read.csv(file = "./data-raw/extdata/CLC/clc_legend.csv", header = TRUE, sep = ",")
 corine.lgd$CLC_CODE = as.numeric(corine.lgd$CLC_CODE)
 # Legend codes present in Wallonia
 lgd.codes = data.frame(unique(corine$code_12))
@@ -444,7 +444,7 @@ stations.df = stations.df %>%
 sf::st_geometry(stations.df) = NULL
 
 # saving in ./R/sysdata.rda
-devtools::use_data(wallonia, stations.sf, grid.sf, grid.df, stations.df, internal = TRUE)
+devtools::use_data(wallonia, stations.sf, grid.sf, grid.df, stations.df, internal = TRUE, overwrite = TRUE)
 
 # remove all the created objects from the workspace
 rm(list = ls())
