@@ -9,3 +9,4 @@
 ## TODO in next version ##
 
 * option to specify an hour (now it only retrieves data from midnight)
+* add the ability to choose a learner among a selection of preconfigured
