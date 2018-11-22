@@ -32,8 +32,8 @@ getData <- function(
   table_name = "cleandata",
   sensors = "tsa",
   sid = "all",
-  dfrom = Sys.Date()-2,
-  dto = Sys.Date()-1,
+  dfrom = NULL,
+  dto = NULL,
   month_day = NULL,
   api_v = "v2",
   test.bool = FALSE
@@ -55,7 +55,7 @@ getData <- function(
     api_table_url.chr <- paste(baseURL.chr, api_v, table_name, sensors, sid, dfrom, dto, sep="/")
   }
   if (table_name == "station"){
-    api_table_url.chr <- paste(baseURL.chr, api_v, table_name, sid,  sep="/")
+    api_table_url.chr <- paste(baseURL.chr, api_v, table_name, sid, sep = "/")
   }
   if (table_name == "cleandata"){
     api_table_url.chr <- paste(baseURL.chr, api_v, table_name, sensors, sid, dfrom, dto, sep="/")

@@ -444,7 +444,10 @@ stations.df = stations.df %>%
 sf::st_geometry(stations.df) = NULL
 
 # saving in ./R/sysdata.rda
-devtools::use_data(wallonia, stations.sf, grid.sf, grid.df, stations.df, internal = TRUE, overwrite = TRUE)
+devtools::use_data(wallonia, stations.sf, grid.sf, grid.df, stations.df, internal = FALSE, overwrite = TRUE)
+
+# saving all the objects in a session file
+save.image("dev.RData")
 
 # remove all the created objects from the workspace
 rm(list = ls())

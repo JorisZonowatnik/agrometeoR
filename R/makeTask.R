@@ -2,8 +2,8 @@
 #' @title make a mlr regr task for an hourly/daily set of records
 #' @author Thomas Goossens
 #' @param stations a character specifying the sid's of the stations to use separated by commas
-#' @param date a string specifying the date
-#' Must have the form "YYYY-MM-DD"
+#' @param dateTime a string specifying the dateTime
+#' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
 #' @param time a numeric specifying the hour. Must be between 0 and 23
 #' @param sensor a character specifying the sensor data you want to spatialize.
 #' One of tsa, hct, hra

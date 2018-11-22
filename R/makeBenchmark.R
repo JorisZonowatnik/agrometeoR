@@ -1,13 +1,13 @@
 #' @export
-#' @title make a mlr model + model metadata for a specific task using a specific learner
+#' @title make a mlr benchmark experiment for various learners on multiple tasks
 #' @author Thomas Goossens
 #' @import mlr
-#' @param task an object of class mlr::makeRegrTask()
-#' @param learner an object of class mlr::makeLearner()
-#' @return an object of class mlr::train()
+#' @param tasks a list which elements are object of class mlr::makeRegrTask()
+#' @param learners a list which elements are object of class mlr::makeLearner()
+#' @return an object of class mlr::makebenchmark()
 makeBenchmark <- function(
-  task,
-  learner){
+  tasks,
+  learners){
 
   # benchmark
   bmr = mlr::benchmark(
