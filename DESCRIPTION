@@ -10,10 +10,13 @@ Description: Makes a spatial (hourly/daily) interpolation of AGROMET weather par
 License: GPL-V3
 Encoding: UTF-8
 LazyData: LazyData: true
-Imports: mlr (>= 2.12.1),
+Imports: mlr,
+    gstat,
     tidyverse,
     httr,
-    chron
+    chron,
+    leaflet,
+    leaflet.extras
 Suggests: rgeos,
     sf,
     raster,
@@ -21,5 +24,5 @@ Suggests: rgeos,
     rnaturalearth,
     rnaturalearthhires,
     elevatr
-Remotes: github::pokyah/agrometAPI@master
+Remotes: github::pokyah/mlr@gstat
 RoxygenNote: 6.0.1
