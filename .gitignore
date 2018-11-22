@@ -1,6 +1,9 @@
 # Packrat lib
 packrat/lib*/
 
+# Packrat src
+packrat/src*/
+
 # Big ext-data files
 data-raw/extdata/
 
@@ -10,6 +13,9 @@ data-raw/extdata/
 
 # Session Data files
 .RData
+
+# package Dev/testing Data files
+dev.RData
 
 # Example code in package build process
 *-Ex.R
@@ -41,3 +47,4 @@ vignettes/*.pdf
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
 .Rproj.user
+packrat/src/
