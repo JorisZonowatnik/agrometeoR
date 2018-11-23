@@ -1,46 +1,43 @@
 #' @export
-#' @title make a mlr benchmark experiment for various learners on multiple tasks
+#' @title make a multicore parallelized mlr benchmark experiment for various learners on multiple tasks
 #' @author Thomas Goossens
 #' @import mlr
+#' @param cores an integer specifying the number of cores to use for the benchamrk
 #' @param tasks a list which elements are object of class mlr::makeRegrTask()
 #' @param learners a list which elements are object of class mlr::makeLearner()
-#' @return an object of class mlr::makebenchmark()
+#' @param resampling  a character specifying the type of mlr's CV. Default = LOO
+#' @return a list with an object of class mlr::benchmark()
 makeBenchmark <- function(
+  cores = 4,
   tasks,
-  learners){
+  learners,
+  resamplings = "LOO"){
+
+  # enable parallelization
+  parallelStart(mode = "multicore", 4)
 
   # benchmark
   bmr = mlr::benchmark(
-    learners = learner,
+    learners = learners,
     tasks = task,
-    resamplings = mlr::makeResampleDesc("LOO"),
-    measures = list(rmse, mse, mae, timetrain, expvar))
+    resamplings = mlr::makeResampleDesc(resampling),
+    measures = list(rmse, mse, mae, timetrain))
 
-  # aggregated Performances
+  # perfs + aggregated Performances
   perfs = getBMRPerformances(bmr, as.df = TRUE)
   aggPerfs = getBMRAggrPerformances(bmr, as.df = TRUE)
 
-  # training the learner to create the model
-  m = mlr::train(
-    learner = learner,
-    task = task)
-
-  # creating the residuals + predictions at stations dataframe
-  residuals = data.frame(residuals(m$learner.model))
-  colnames(residuals) = "residuals"
-  predictions = data.frame(predict(m$learner.model))
-  colnames(predictions) = "stations_pred"
-
   # create a list containing all the useful information
-  modelInfo = list(
-    model = m,
-    stations_pred = predictions,
-    perfs = list(iters = perfs, agg = aggPerfs),
-    residuals = residuals
+  benchmarkResults = list(
+    perfs = perfs,
+    aggPerfs = aggperfs
     # summary = summary(m$learner.model)
   )
 
+  # stop the parallelized computing
+  parallelStop()
+
   # return the model and its information contained in the list
-  return(modelInfo)
+  return(benchmarkResults)
 }
 

@@ -2,17 +2,21 @@
 % Please edit documentation in R/makeBenchmark.R
 \name{makeBenchmark}
 \alias{makeBenchmark}
-\title{make a mlr benchmark experiment for various learners on multiple tasks}
+\title{make a multicore parallelized mlr benchmark experiment for various learners on multiple tasks}
 \usage{
-makeBenchmark(tasks, learners)
+makeBenchmark(cores = 4, tasks, learners, resamplings = "LOO")
 }
 \arguments{
+\item{cores}{an integer specifying the number of cores to use for the benchamrk}
+
 \item{tasks}{a list which elements are object of class mlr::makeRegrTask()}
 
 \item{learners}{a list which elements are object of class mlr::makeLearner()}
+
+\item{resampling}{a character specifying the type of mlr's CV. Default = LOO}
 }
 \value{
-an object of class mlr::makebenchmark()
+a list with an object of class mlr::benchmark()
 }
 \author{
 Thomas Goossens

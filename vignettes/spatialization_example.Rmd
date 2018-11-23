@@ -23,12 +23,11 @@ library(agrometeoR)
 *Check the default values of the params in the references file to make sure you understand what is constructed* 
 ```{r task}
 # create the task
-task = makeTask(date = "2017-03-04T15:00:00Z")
+tasks = makeTasks(dfrom = "2017-03-04T15:00:00Z", dto = "2017-03-04T15:00:00Z")
 # what are the variables ? 
-colnames(mlr::getTaskData(task$task))
+colnames(mlr::getTaskData(tasks$`2017-03-04 150000`))
 # what data do we have ? 
-head(getTaskData(task$task))
-task$insights
+head(getTaskData(tasks$`2017-03-04 150000`))
 ```
 
 ## Train a learner
@@ -37,11 +36,11 @@ task$insights
 # instantiate a multiple li,near regression learner and specify that it must also provide se of preds
 learner = mlr::makeLearner("regr.lm", id = "multipleLinearReg", predict.type = "se" )
 # create the model by training the learner and also benchmark the learner with a LOO
-model = makeModel(task = task$task, learner = learner)
+model = makeModel(task = tasks$`2017-03-04 150000`, learner = learner)
 # what are the model performances ? 
 model$perfs$agg
 # what about the residuals ? 
-plot(x =  getTaskData(task$task)[["tsa"]], model$residuals[[1]])
+plot(x =  getTaskData(tasks$`2017-03-04 150000`)[["tsa"]], model$residuals[[1]])
 ```
 
 ## Spatialize using the trained a learner
@@ -49,16 +48,16 @@ plot(x =  getTaskData(task$task)[["tsa"]], model$residuals[[1]])
 ```{r spatializeconfig, include=FALSE}
 # trick to avoir overwriting error with st_write - https://github.com/r-spatial/sf/issues/274
 files = list.files()
-if (!is.null(paste0(task$task$task.desc$id, ".geojson" %in% files))) {
-  file.remove(paste0(task$task$task.desc$id, ".geojson"))
+if (!is.null(paste0(tasks$`2017-03-04 150000`$task.desc$id, ".geojson" %in% files))) {
+  file.remove(paste0(tasks$`2017-03-04 150000`$task.desc$id, ".geojson"))
 }
 ```
 
 ```{r spatialize, message=FALSE, warning=FALSE}
 # produce the spatialized geojson
-makeSpatialization(model = model$model, name = task$task$task.desc$id, path = "." )
+makeSpatialization(model = model$model, name = tasks$`2017-03-04 150000`$task.desc$id, path = "." )
 # read it
-data_spatialized = sf::st_read(dsn = paste0(task$task$task.desc$id, ".geojson"))
+data_spatialized = sf::st_read(dsn = paste0(tasks$`2017-03-04 150000`$task.desc$id, ".geojson"))
 ```
 
 ## Map the results

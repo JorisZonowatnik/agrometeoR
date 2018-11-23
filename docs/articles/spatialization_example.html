@@ -129,17 +129,17 @@
 <a href="#create-the-machine-learning-task-for-a-specific-hour" class="anchor"></a>Create the machine learning task for a specific hour</h2>
 <p><em>Check the default values of the params in the references file to make sure you understand what is constructed</em></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create the task</span>
-task =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeTask">makeTask</a></span>(<span class="dt">date =</span> <span class="st">"2017-03-04T15:00:00Z"</span>)</code></pre></div>
+tasks =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeTasks">makeTasks</a></span>(<span class="dt">dfrom =</span> <span class="st">"2017-03-04T15:00:00Z"</span>, <span class="dt">dto =</span> <span class="st">"2017-03-04T15:00:00Z"</span>)</code></pre></div>
 <pre><code>## Your API URL call is :  https://app.pameseb.be/agromet/api/v2/cleandata/tsa/1,4,7,9,10,13,14,15,17,18,19,23,24,25,26,27,29,30,32,33,34,35,37,38,39,40,41,42,61/2017-03-04T15:00:00Z/2017-03-04T15:00:00Z  
 ## The API responded with a status code 200. 
 ##  Data has been downloaded 
 ## Data is stored in a list with 2 df elements. 
 ##  stations_meta.df contains the metadata and records.df contains the stations records.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># what are the variables ? </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(mlr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(task<span class="op">$</span>task))</code></pre></div>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(mlr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(tasks<span class="op">$</span><span class="st">`</span><span class="dt">2017-03-04 150000</span><span class="st">`</span>))</code></pre></div>
 <pre><code>## [1] "elevation" "X"         "Y"         "tsa"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># what data do we have ? </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(task<span class="op">$</span>task))</code></pre></div>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(tasks<span class="op">$</span><span class="st">`</span><span class="dt">2017-03-04 150000</span><span class="st">`</span>))</code></pre></div>
 <pre><code>##   elevation        X        Y  tsa
 ## 1  475.4301 721240.2 568849.6  8.4
 ## 2  343.1246 714221.2 543453.8  7.1
@@ -147,14 +147,6 @@ task =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentat
 ## 4  497.0389 753130.6 581716.9 11.2
 ## 5  389.6670 734687.9 580969.6 11.0
 ## 6  259.5348 641664.8 588814.6  9.0</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">task<span class="op">$</span>insights</code></pre></div>
-<pre><code>##    elevation            X                Y               tsa      
-##  Min.   : 49.25   Min.   :574629   Min.   :525914   Min.   : 6.7  
-##  1st Qu.:147.34   1st Qu.:678027   1st Qu.:588815   1st Qu.:10.6  
-##  Median :242.39   Median :712454   Median :621625   Median :11.3  
-##  Mean   :270.45   Mean   :704007   Mean   :611498   Mean   :11.0  
-##  3rd Qu.:348.51   3rd Qu.:737506   3rd Qu.:636932   3rd Qu.:12.0  
-##  Max.   :623.48   Max.   :783160   Max.   :656366   Max.   :14.3</code></pre>
 </div>
 <div id="train-a-learner" class="section level2">
 <h2 class="hasAnchor">
@@ -162,29 +154,29 @@ task =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentat
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># instantiate a multiple li,near regression learner and specify that it must also provide se of preds</span>
 learner =<span class="st"> </span>mlr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/makeLearner">makeLearner</a></span>(<span class="st">"regr.lm"</span>, <span class="dt">id =</span> <span class="st">"multipleLinearReg"</span>, <span class="dt">predict.type =</span> <span class="st">"se"</span> )
 <span class="co"># create the model by training the learner and also benchmark the learner with a LOO</span>
-model =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeModel">makeModel</a></span>(<span class="dt">task =</span> task<span class="op">$</span>task, <span class="dt">learner =</span> learner)
+model =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeModel">makeModel</a></span>(<span class="dt">task =</span> tasks<span class="op">$</span><span class="st">`</span><span class="dt">2017-03-04 150000</span><span class="st">`</span>, <span class="dt">learner =</span> learner)
 <span class="co"># what are the model performances ? </span>
 model<span class="op">$</span>perfs<span class="op">$</span>agg</code></pre></div>
-<pre><code>##              task.id        learner.id rmse.test.rmse mse.test.mean
-## 1 2017-03-04T150000Z multipleLinearReg      0.8650726     0.7483506
+<pre><code>##             task.id        learner.id rmse.test.rmse mse.test.mean
+## 1 2017-03-04 150000 multipleLinearReg      0.8650726     0.7483506
 ##   mae.test.mean timetrain.test.mean expvar.test.mean
-## 1     0.7437658         0.001482759               NA</code></pre>
+## 1     0.7437658         0.001586207               NA</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># what about the residuals ? </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">x =</span>  <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(task<span class="op">$</span>task)[[<span class="st">"tsa"</span>]], model<span class="op">$</span>residuals[[<span class="dv">1</span>]])</code></pre></div>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">x =</span>  <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(tasks<span class="op">$</span><span class="st">`</span><span class="dt">2017-03-04 150000</span><span class="st">`</span>)[[<span class="st">"tsa"</span>]], model<span class="op">$</span>residuals[[<span class="dv">1</span>]])</code></pre></div>
 <p><img src="spatialization_example_files/figure-html/train-1.png" width="700"></p>
 </div>
 <div id="spatialize-using-the-trained-a-learner" class="section level2">
 <h2 class="hasAnchor">
 <a href="#spatialize-using-the-trained-a-learner" class="anchor"></a>Spatialize using the trained a learner</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># produce the spatialized geojson</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeSpatialization">makeSpatialization</a></span>(<span class="dt">model =</span> model<span class="op">$</span>model, <span class="dt">name =</span> task<span class="op">$</span>task<span class="op">$</span>task.desc<span class="op">$</span>id, <span class="dt">path =</span> <span class="st">"."</span> )</code></pre></div>
-<pre><code>## Writing layer `2017-03-04T150000Z' to data source `./2017-03-04T150000Z.geojson' using driver `GeoJSON'
+<span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeSpatialization">makeSpatialization</a></span>(<span class="dt">model =</span> model<span class="op">$</span>model, <span class="dt">name =</span> tasks<span class="op">$</span><span class="st">`</span><span class="dt">2017-03-04 150000</span><span class="st">`</span><span class="op">$</span>task.desc<span class="op">$</span>id, <span class="dt">path =</span> <span class="st">"."</span> )</code></pre></div>
+<pre><code>## Writing layer `2017-03-04 150000' to data source `./2017-03-04 150000.geojson' using driver `GeoJSON'
 ## features:       33243
 ## fields:         2
 ## geometry type:  Point</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read it</span>
-data_spatialized =<span class="st"> </span>sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_read">st_read</a></span>(<span class="dt">dsn =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(task<span class="op">$</span>task<span class="op">$</span>task.desc<span class="op">$</span>id, <span class="st">".geojson"</span>))</code></pre></div>
-<pre><code>## Reading layer `OGRGeoJSON' from data source `/home/rstudio/Documents/code/pokyah/agrometeoR/vignettes/2017-03-04T150000Z.geojson' using driver `GeoJSON'
+data_spatialized =<span class="st"> </span>sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_read">st_read</a></span>(<span class="dt">dsn =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(tasks<span class="op">$</span><span class="st">`</span><span class="dt">2017-03-04 150000</span><span class="st">`</span><span class="op">$</span>task.desc<span class="op">$</span>id, <span class="st">".geojson"</span>))</code></pre></div>
+<pre><code>## Reading layer `OGRGeoJSON' from data source `/home/rstudio/Documents/code/pokyah/agrometeoR/vignettes/2017-03-04 150000.geojson' using driver `GeoJSON'
 ## Simple feature collection with 33243 features and 2 fields
 ## geometry type:  POINT
 ## dimension:      XY

@@ -7,10 +7,24 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
+```
+
+## Load the libraries
+
+```{r libraries}
+# loading mlr & agrometeoR
+library(mlr)
+library(agrometeoR)
 ```
 
 
-## Load the libraries
+## create the tasks
+```{r tasks}
+
+
+```
+
 
 
 

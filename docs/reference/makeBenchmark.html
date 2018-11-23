@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>make a mlr benchmark experiment for various learners on multiple tasks — makeBenchmark • agrometeoR</title>
+<title>make a multicore parallelized mlr benchmark experiment for various learners on multiple tasks — makeBenchmark • agrometeoR</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="make a mlr benchmark experiment for various learners on multiple tasks — makeBenchmark" />
+<meta property="og:title" content="make a multicore parallelized mlr benchmark experiment for various learners on multiple tasks — makeBenchmark" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -136,7 +136,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>make a mlr benchmark experiment for various learners on multiple tasks</h1>
+    <h1>make a multicore parallelized mlr benchmark experiment for various learners on multiple tasks</h1>
     <small class="dont-index">Source: <a href='https://github.com/pokyah/agrometeoR/blob/master/R/makeBenchmark.R'><code>R/makeBenchmark.R</code></a></small>
     <div class="hidden name"><code>makeBenchmark.Rd</code></div>
     </div>
@@ -145,11 +145,15 @@
 
     </div>
 
-    <pre class="usage"><span class='fu'>makeBenchmark</span>(<span class='no'>tasks</span>, <span class='no'>learners</span>)</pre>
+    <pre class="usage"><span class='fu'>makeBenchmark</span>(<span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='no'>tasks</span>, <span class='no'>learners</span>, <span class='kw'>resamplings</span> <span class='kw'>=</span> <span class='st'>"LOO"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>cores</th>
+      <td><p>an integer specifying the number of cores to use for the benchamrk</p></td>
+    </tr>
     <tr>
       <th>tasks</th>
       <td><p>a list which elements are object of class mlr::makeRegrTask()</p></td>
@@ -158,11 +162,15 @@
       <th>learners</th>
       <td><p>a list which elements are object of class mlr::makeLearner()</p></td>
     </tr>
+    <tr>
+      <th>resampling</th>
+      <td><p>a character specifying the type of mlr's CV. Default = LOO</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an object of class mlr::makebenchmark()</p>
+    <p>a list with an object of class mlr::benchmark()</p>
     
 
   </div>
