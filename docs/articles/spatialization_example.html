@@ -56,6 +56,9 @@
       <a href="../articles/benchmarking_example.html">Benchmarking example</a>
     </li>
     <li>
+      <a href="../articles/gstat_integration_mlr.html">Integration of gstat into mlr</a>
+    </li>
+    <li>
       <a href="../articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
     </li>
     <li>
@@ -162,7 +165,7 @@ model<span class="op">$</span>perfs<span class="op">$</span>agg</code></pre></di
 <pre><code>##              task.id        learner.id rmse.test.rmse mse.test.mean
 ## 1 2017-03-04T150000Z multipleLinearReg      0.8650726     0.7483506
 ##   mae.test.mean timetrain.test.mean expvar.test.mean
-## 1     0.7437658         0.001689655               NA</code></pre>
+## 1     0.7437658         0.001551724               NA</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># what about the residuals ? </span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">x =</span>  <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(task<span class="op">$</span>task)[[<span class="st">"tsa"</span>]], model<span class="op">$</span>residuals[[<span class="dv">1</span>]])</code></pre></div>
 <p><img src="spatialization_example_files/figure-html/train-1.png" width="700"></p>
