@@ -1,0 +1,8 @@
+---
+title: "Using packrat"
+author: "Thomas Goossens"
+date: "11/23/2018"
+output: html_document
+---
+http://distancesampling.org/developer/develop/dev-packrat.html
+https://github.com/r-lib/pkgdown/issues/488
