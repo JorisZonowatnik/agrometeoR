@@ -35,6 +35,11 @@ makeTasks <- function(
   data = stations.df %>%
     dplyr::left_join(data, by = "sid")
 
+  # rename X and Y to x and y for mlr (gstat learner compatibility)
+  data = data %>%
+    dplyr::rename("x" = "X") %>%
+    dplyr::rename("y" = "Y")
+
   # group by mtime and make lists of dataframes
   data = split(data, data$mtime)
 

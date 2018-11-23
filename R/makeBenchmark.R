@@ -14,13 +14,13 @@ makeBenchmark <- function(
   resamplings = "LOO"){
 
   # enable parallelization
-  parallelStart(mode = "multicore", 4)
+  # parallelStart(mode = "multicore", 4)
 
   # benchmark
   bmr = mlr::benchmark(
     learners = learners,
-    tasks = task,
-    resamplings = mlr::makeResampleDesc(resampling),
+    tasks = tasks,
+    resamplings = mlr::makeResampleDesc(resamplings),
     measures = list(rmse, mse, mae, timetrain))
 
   # perfs + aggregated Performances
@@ -29,13 +29,14 @@ makeBenchmark <- function(
 
   # create a list containing all the useful information
   benchmarkResults = list(
+    bmr = bmr,
     perfs = perfs,
-    aggPerfs = aggperfs
+    aggPerfs = aggPerfs
     # summary = summary(m$learner.model)
   )
 
   # stop the parallelized computing
-  parallelStop()
+  # parallelStop()
 
   # return the model and its information contained in the list
   return(benchmarkResults)

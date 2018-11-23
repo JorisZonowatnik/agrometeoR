@@ -14,18 +14,27 @@ devtools::load_all()
 
 ```{r libraries}
 # loading mlr & agrometeoR
-library(mlr)
 library(agrometeoR)
 ```
 
 
 ## create the tasks
 ```{r tasks}
-
+# create the task
+tasks = makeTasks(dfrom = "2017-03-04T00:00:00Z", dto = "2017-03-04T23:00:00Z")
 
 ```
 
+## benchmark some learners on a subset of these tasks
+```{r benchmark, message=FALSE, warning=FALSE}
+# loading the learners preconfigured with the package
+data("learners")
+bmr = makeBenchmark(tasks = tasks[1:3], learners = learners)
+```
 
+## vizualize performance 
+```{r}
+plotBMRBoxplots(bmr$bmr, pretty.names = FALSE)
+plotBMRSummary(bmr$bmr, pretty.names = FALSE)
+```
 
-
-## Create multiple tasks

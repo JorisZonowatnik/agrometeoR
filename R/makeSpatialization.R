@@ -13,15 +13,20 @@ makeSpatialization <- function(
   name,
   path = getwd()){
 
+  # rename X and Y to x and y for mlr (gstat learner compatibility)
+  grid = grid %>%
+    dplyr::rename("x" = "X") %>%
+    dplyr::rename("y" = "Y")
+
   # predicting on the grid
   pred = predict(model, newdata = grid)
   pred_grid = grid %>%
-    dplyr::select(X,Y) %>%
+    dplyr::select(x,y) %>%
     dplyr::bind_cols(pred$data)
 
   # convert to spatial object
   pred_grid = pred_grid %>%
-    sf::st_as_sf(coords = c("X","Y"))
+    sf::st_as_sf(coords = c("x","y"))
 
   # set crs
   pred_grid = pred_grid %>%
