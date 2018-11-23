@@ -2,38 +2,28 @@
 #' @title make a mlr regr task for an hourly/daily set of records
 #' @author Thomas Goossens
 #' @param stations a character specifying the sid's of the stations to use separated by commas
-#' @param dfrom a datetime string specifying the dateTime
-#' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
-#' @param dto a datetime string specifying the dateTime
-#' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
-#' @param sensor a character specifying the sensor data you want to spatialize.
-#' One of tsa, hct, hra
-#' @param dynExpl a character vector specifying the dynamic explanatory variables you want to add.
+#' @param dataset a dataframe containing all the hourly/daily records you want to transform a list of mlr tasks
+#' @param dynExpl a character vector specifying the dynamic explanatory variables you want to add to the task.
 #' Any combinations of inca, ens
-#' @param drop a character vector specifying the explanattory variables you want to drop.
-#' Any combinations of "altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest","Herbaceous_vegetation"
-#' @return an object of class list containing an mlr::makeRegrTask() and a sumamry dataframe of the task dataset
+#' @param staticExpl a character vector specifying the static explanatory variables you want to add to the taks.
+#' Any combinations of "X", "Y", altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation"
+#' @return an object of class list containing elements of class mlr::makeRegrTask()
 makeTasks <- function(
-  stations = paste0(as.character(stations.df$sid), collapse = ","),
-  dfrom,
-  dto,
-  sensor = "tsa",
-  dynExpl = NULL,
-  drop = c("sid", "altitude", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest","Herbaceous_vegetation")
+  dataset,
+  staticExpl,
+  dynExpl
 ){
 
-  # make an API call to retrieve the dynamic data
-  data = typeData(
-    getData(dfrom = dfrom, dto = dto, sensors = sensor, sid = stations )
-  )
-
   # remove useless columns
-  data = data %>%
+  dataset = dataset %>%
     dplyr::select(c("sid", sensor, "mtime"))
 
   # join with explanatory vars
-  data = stations.df %>%
-    dplyr::left_join(data, by = "sid")
+  dataset = dataset %>%
+    dplyr::left_join(
+      stations.df %>%
+        dplyr::select(staticExpl),
+      by = "sid")
 
   # rename X and Y to x and y for mlr (gstat learner compatibility)
   data = data %>%
