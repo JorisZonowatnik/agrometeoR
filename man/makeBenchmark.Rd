@@ -4,7 +4,8 @@
 \alias{makeBenchmark}
 \title{make a multicore parallelized mlr benchmark experiment for various learners on multiple tasks}
 \usage{
-makeBenchmark(cores = 4, tasks, learners, resamplings = "LOO")
+makeBenchmark(parallel = TRUE, cores = 4, tasks, learners,
+  resamplings = "LOO")
 }
 \arguments{
 \item{cores}{an integer specifying the number of cores to use for the benchamrk}
@@ -16,7 +17,7 @@ makeBenchmark(cores = 4, tasks, learners, resamplings = "LOO")
 \item{resampling}{a character specifying the type of mlr's CV. Default = LOO}
 }
 \value{
-a list with an object of class mlr::benchmark()
+a list wihch elements are objects of class mlr::benchmark()
 }
 \author{
 Thomas Goossens

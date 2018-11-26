@@ -6,15 +6,18 @@
 #' @param tasks a list which elements are object of class mlr::makeRegrTask()
 #' @param learners a list which elements are object of class mlr::makeLearner()
 #' @param resampling  a character specifying the type of mlr's CV. Default = LOO
-#' @return a list with an object of class mlr::benchmark()
+#' @return a list wihch elements are objects of class mlr::benchmark()
 makeBenchmark <- function(
+  parallel = TRUE,
   cores = 4,
   tasks,
   learners,
   resamplings = "LOO"){
 
-  # enable parallelization
-  # parallelStart(mode = "multicore", 4)
+  # enable parallelization with level = mlr.resample
+  if (!isTRUE(parallel)) {
+    parallelStart(mode = "multicore", cpus = 4, level = "mlr.resample")
+  }
 
   # benchmark
   bmr = mlr::benchmark(
@@ -22,6 +25,11 @@ makeBenchmark <- function(
     tasks = tasks,
     resamplings = mlr::makeResampleDesc(resamplings),
     measures = list(rmse, mse, mae, timetrain))
+
+  # stop the parallelized computing
+  if (!isTRUE(parallel)) {
+    parallelStop()
+  }
 
   # perfs + aggregated Performances
   perfs = getBMRPerformances(bmr, as.df = TRUE)
@@ -35,8 +43,7 @@ makeBenchmark <- function(
     # summary = summary(m$learner.model)
   )
 
-  # stop the parallelized computing
-  # parallelStop()
+
 
   # return the model and its information contained in the list
   return(benchmarkResults)

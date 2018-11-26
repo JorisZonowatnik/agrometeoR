@@ -2,6 +2,7 @@
 
 export(getData)
 export(makeBenchmark)
+export(makeDataset)
 export(makeModel)
 export(makeSpatialization)
 export(makeTasks)

@@ -129,24 +129,11 @@
 <a href="#create-the-machine-learning-task-for-a-specific-hour" class="anchor"></a>Create the machine learning task for a specific hour</h2>
 <p><em>Check the default values of the params in the references file to make sure you understand what is constructed</em></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create the task</span>
-tasks =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeTasks">makeTasks</a></span>(<span class="dt">dfrom =</span> <span class="st">"2017-03-04T15:00:00Z"</span>, <span class="dt">dto =</span> <span class="st">"2017-03-04T15:00:00Z"</span>)</code></pre></div>
-<pre><code>## Your API URL call is :  https://app.pameseb.be/agromet/api/v2/cleandata/tsa/1,4,7,9,10,13,14,15,17,18,19,23,24,25,26,27,29,30,32,33,34,35,37,38,39,40,41,42,61/2017-03-04T15:00:00Z/2017-03-04T15:00:00Z  
-## The API responded with a status code 200. 
-##  Data has been downloaded 
-## Data is stored in a list with 2 df elements. 
-##  stations_meta.df contains the metadata and records.df contains the stations records.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># what are the variables ? </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(mlr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(tasks<span class="op">$</span><span class="st">`</span><span class="dt">2017-03-04 150000</span><span class="st">`</span>))</code></pre></div>
-<pre><code>## [1] "elevation" "x"         "y"         "tsa"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># what data do we have ? </span>
+tasks =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeTasks">makeTasks</a></span>(<span class="dt">dataset =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeDataset">makeDataset</a></span>(<span class="dt">dfrom =</span> <span class="st">"2017-03-04T15:00:00Z"</span>, <span class="dt">dto =</span> <span class="st">"2017-03-04T15:00:00Z"</span>, <span class="dt">sensor =</span> <span class="st">"tsa"</span>), <span class="dt">target =</span> <span class="st">"tsa"</span>)
+<span class="co"># what are the variables ? </span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(mlr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(tasks<span class="op">$</span><span class="st">`</span><span class="dt">2017-03-04 150000</span><span class="st">`</span>))
+<span class="co"># what data do we have ? </span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(tasks<span class="op">$</span><span class="st">`</span><span class="dt">2017-03-04 150000</span><span class="st">`</span>))</code></pre></div>
-<pre><code>##   elevation        x        y  tsa
-## 1  475.4301 721240.2 568849.6  8.4
-## 2  343.1246 714221.2 543453.8  7.1
-## 3  348.5109 750500.7 550825.6  8.9
-## 4  497.0389 753130.6 581716.9 11.2
-## 5  389.6670 734687.9 580969.6 11.0
-## 6  259.5348 641664.8 588814.6  9.0</code></pre>
 </div>
 <div id="train-a-learner" class="section level2">
 <h2 class="hasAnchor">
@@ -160,7 +147,7 @@ model<span class="op">$</span>perfs<span class="op">$</span>agg</code></pre></di
 <pre><code>##             task.id        learner.id rmse.test.rmse mse.test.mean
 ## 1 2017-03-04 150000 multipleLinearReg      0.8650726     0.7483506
 ##   mae.test.mean timetrain.test.mean expvar.test.mean
-## 1     0.7437658         0.001655172               NA</code></pre>
+## 1     0.7437658         0.001517241               NA</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># what about the residuals ? </span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">x =</span>  <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(tasks<span class="op">$</span><span class="st">`</span><span class="dt">2017-03-04 150000</span><span class="st">`</span>)[[<span class="st">"tsa"</span>]], model<span class="op">$</span>residuals[[<span class="dv">1</span>]])</code></pre></div>
 <p><img src="spatialization_example_files/figure-html/train-1.png" width="700"></p>

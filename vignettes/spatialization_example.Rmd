@@ -21,9 +21,9 @@ library(agrometeoR)
 
 ## Create the machine learning task for a specific hour
 *Check the default values of the params in the references file to make sure you understand what is constructed* 
-```{r task}
+```{r task, results='hide'}
 # create the task
-tasks = makeTasks(dfrom = "2017-03-04T15:00:00Z", dto = "2017-03-04T15:00:00Z")
+tasks = makeTasks(dataset = makeDataset(dfrom = "2017-03-04T15:00:00Z", dto = "2017-03-04T15:00:00Z", sensor = "tsa"), target = "tsa")
 # what are the variables ? 
 colnames(mlr::getTaskData(tasks$`2017-03-04 150000`))
 # what data do we have ? 
