@@ -14,9 +14,9 @@ Imports: mlr,
     gstat,
     tidyverse,
     httr,
-    chron
+    chron,
+    sf
 Suggests: rgeos,
-    sf,
     raster,
     jsonlite,
     rnaturalearth,
