@@ -9,7 +9,7 @@ BugReports: https://github.com/pokyah/agrometeorR/issues
 Description: Makes a spatial (hourly/daily) interpolation of AGROMET weather parameters using machine learning
 License: GPL-V3
 Encoding: UTF-8
-LazyData: LazyData: true
+LazyData: true
 Imports: mlr,
     gstat,
     tidyverse,
