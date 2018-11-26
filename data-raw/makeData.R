@@ -2,7 +2,8 @@
 ## LIBRARIES
 #####
 
-library(agrometAPI)
+# library(agrometAPI)
+
 library(tidyverse)
 library(lubridate)
 library(rgdal)
@@ -13,6 +14,7 @@ library(rnaturalearth)
 library(rnaturalearthhires)
 library(jsonlite)
 library(elevatr)
+devtools::load_all()
 
 
 #####
@@ -413,7 +415,7 @@ stations.sf = stations.sf %>%
 # devtools::use_data(stations.sf, overwrite = TRUE)
 
 #####
-## SAVING ALL THE OBJECTS INTO PACKAGE INTERNAL DATA stored in sysdata.rda
+## SAVING ALL THE OBJECTS TO PACKAGE DATA
 # doc : http://r-pkgs.had.co.nz/data.html
 #####
 

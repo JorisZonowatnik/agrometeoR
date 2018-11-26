@@ -5,11 +5,14 @@
 \title{make a dataframe of stations records}
 \usage{
 makeDataset(stations = paste0(as.character(stations.df$sid), collapse = ","),
-  dfrom, dto, sensor = "tsa", staticExpl = c("X", "Y", "elevation"),
-  dynExpl = NULL)
+  json = NULL, dfrom = NULL, dto = NULL, sensor = "tsa",
+  staticExpl = c("X", "Y", "elevation"), dynExpl = NULL)
 }
 \arguments{
 \item{stations}{a character specifying the sid's of the stations to use separated by commas}
+
+\item{json}{a character specifying the path of a json file constructed from a batch db export.
+If NULL the API will be called.}
 
 \item{dfrom}{a datetime string specifying the dateTime
 Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
