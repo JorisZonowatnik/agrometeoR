@@ -14,7 +14,7 @@ devtools::load_all()
 
 ```{r libraries}
 # loading mlr & agrometeoR
-library(mlr)
+# library(mlr)
 library(agrometeoR)
 ```
 

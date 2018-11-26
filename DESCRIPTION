@@ -14,9 +14,7 @@ Imports: mlr,
     gstat,
     tidyverse,
     httr,
-    chron,
-    leaflet,
-    leaflet.extras
+    chron
 Suggests: rgeos,
     sf,
     raster,
