@@ -15,7 +15,10 @@ Imports: mlr,
     tidyverse,
     httr,
     chron,
-    sf
+    sf,
+    leaflet,
+    leaflet.extras,
+    geojsonio
 Suggests: rgeos,
     raster,
     jsonlite,

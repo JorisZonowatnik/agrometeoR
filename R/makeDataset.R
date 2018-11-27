@@ -1,6 +1,7 @@
 #' @export
 #' @title make a dataframe of stations records
 #' @author Thomas Goossens
+#' @param token a character specifying your agrometAPI token
 #' @param stations a character specifying the sid's of the stations to use separated by commas
 #' @param json a character specifying the path of a json file constructed from a batch db export.
 #' If NULL the API will be called.
@@ -16,6 +17,7 @@
 #' Any combinations of "X", "Y", altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation"
 #' @return an object of class dataframe containing the desired records
 makeDataset <- function(
+  token = NULL,
   stations = paste0(as.character(stations.df$sid), collapse = ","),
   json = NULL,
   dfrom = NULL,
@@ -28,7 +30,7 @@ makeDataset <- function(
   if (is.null(json)) {
     # make an API call to retrieve the dynamic data
     dataset = typeData(
-      getData(dfrom = dfrom, dto = dto, sensors = sensor, sid = stations ))
+      getData(user_token = token, dfrom = dfrom, dto = dto, sensors = sensor, sid = stations ))
 
   } else{
     # read the json FILE

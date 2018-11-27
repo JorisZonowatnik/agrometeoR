@@ -4,12 +4,15 @@
 \alias{makeSpatialization}
 \title{spatialize to geojson (EPSG = 4326) a gridded dataset using a mlr model}
 \usage{
-makeSpatialization(model, grid = grid.df, name, path = getwd())
+makeSpatialization(model, grid = grid.df, file = FALSE, name = NULL,
+  path = getwd())
 }
 \arguments{
 \item{model}{an object of class mlr::train() that contains the prediction model}
 
 \item{grid}{an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained}
+
+\item{file}{a boolean specifying wether the saptiliazed dat should be written as a geojson file or simply output into the console.}
 
 \item{name}{a character specifying the name you want to give to the file.}
 
