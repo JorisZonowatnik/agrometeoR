@@ -17,7 +17,7 @@
 #' Any combinations of "X", "Y", altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation"
 #' @return an object of class dataframe containing the desired records
 makeDataset <- function(
-  user_token = NULL,
+  user_token = Sys.getenv("AGROMET_API_V1_KEY"),
   stations = paste0(as.character(stations.df$sid), collapse = ","),
   json = NULL,
   dfrom = NULL,
