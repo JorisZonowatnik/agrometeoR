@@ -18,7 +18,8 @@ Imports: mlr,
     sf,
     leaflet,
     leaflet.extras,
-    geojsonio
+    geojsonio,
+    geojsonlint
 Suggests: rgeos,
     raster,
     jsonlite,

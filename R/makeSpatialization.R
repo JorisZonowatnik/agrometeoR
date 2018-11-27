@@ -48,8 +48,6 @@ makeSpatialization <- function(
     return()
   }
 
-
-
   # reading the geojson
   # cat(readLines('spatialized.geojson'), sep = '\n')
 
