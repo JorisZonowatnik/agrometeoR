@@ -6,13 +6,13 @@
 #' @param grid an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained
 #' @param file a boolean specifying wether the saptiliazed dat should be written as a geojson file or simply output into the console.
 #' @param path a character specifying the path where you want your geosonfile to be stored. Default = wd
-#' @param name a character specifying the name you want to give to the file.
+#' @param filename a character specifying the name you want to give to the file.
 #' @return a geojson object containing the spatialized data
 makeSpatialization <- function(
   model,
   grid = grid.df,
   file = FALSE,
-  name = NULL,
+  filename = NULL,
   path = getwd()){
 
   # rename X and Y to x and y for mlr (gstat learner compatibility)
@@ -40,7 +40,7 @@ makeSpatialization <- function(
 
   if (isTRUE(file)) {
     # exporting to geojson
-    sf::st_write(obj = pred_grid, dsn = paste0(path, "/", name, ".geojson"))
+    sf::st_write(obj = pred_grid, dsn = paste0(path, "/", filename, ".geojson"))
   } else {
     geojson = geojsonio::geojson_json(pred_grid)
     cat(geojson)
