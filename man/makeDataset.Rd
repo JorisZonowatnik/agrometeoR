@@ -4,13 +4,12 @@
 \alias{makeDataset}
 \title{make a dataframe of stations records}
 \usage{
-makeDataset(token = NULL, stations = paste0(as.character(stations.df$sid),
-  collapse = ","), json = NULL, dfrom = NULL, dto = NULL,
-  sensor = "tsa", staticExpl = c("X", "Y", "elevation"), dynExpl = NULL)
+makeDataset(user_token = Sys.getenv("AGROMET_API_V1_KEY"),
+  stations = paste0(as.character(stations.df$sid), collapse = ","),
+  json = NULL, dfrom = NULL, dto = NULL, sensor = "tsa",
+  staticExpl = c("X", "Y", "elevation"), dynExpl = NULL)
 }
 \arguments{
-\item{token}{a character specifying your agrometAPI token}
-
 \item{stations}{a character specifying the sid's of the stations to use separated by commas}
 
 \item{json}{a character specifying the path of a json file constructed from a batch db export.
@@ -30,6 +29,8 @@ Any combinations of "X", "Y", altitude", "elevation", "slope", "aspect", "Agricu
 
 \item{dynExpl}{a character vector specifying the dynamic explanatory variables you want to add to the task.
 Any combinations of inca, ens}
+
+\item{token}{a character specifying your agrometAPI token}
 }
 \value{
 an object of class dataframe containing the desired records
