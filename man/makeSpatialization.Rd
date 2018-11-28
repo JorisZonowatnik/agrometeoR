@@ -4,7 +4,7 @@
 \alias{makeSpatialization}
 \title{spatialize to geojson (EPSG = 4326) a gridded dataset using a mlr model}
 \usage{
-makeSpatialization(model, grid = grid.df, file = FALSE, name = NULL,
+makeSpatialization(model, grid = grid.df, file = FALSE, filename = NULL,
   path = getwd())
 }
 \arguments{
@@ -14,7 +14,7 @@ makeSpatialization(model, grid = grid.df, file = FALSE, name = NULL,
 
 \item{file}{a boolean specifying wether the saptiliazed dat should be written as a geojson file or simply output into the console.}
 
-\item{name}{a character specifying the name you want to give to the file.}
+\item{filename}{a character specifying the name you want to give to the file.}
 
 \item{path}{a character specifying the path where you want your geosonfile to be stored. Default = wd}
 }

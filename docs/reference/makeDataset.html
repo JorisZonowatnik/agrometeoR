@@ -90,10 +90,16 @@
       <a href="../articles/gstat_integration_mlr.html">Integration of gstat into mlr</a>
     </li>
     <li>
+      <a href="../articles/networks_intercomparison.html">Networks Intercomparison</a>
+    </li>
+    <li>
       <a href="../articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
     </li>
     <li>
       <a href="../articles/spatialization_example.html">A simple spatialization example using agrometeoR</a>
+    </li>
+    <li>
+      <a href="../articles/two_years_benchmark.html">a 2 years benchmark</a>
     </li>
     <li>
       <a href="../articles/using_packrat.html">Using packrat</a>
@@ -145,9 +151,10 @@
 
     </div>
 
-    <pre class="usage"><span class='fu'>makeDataset</span>(<span class='kw'>stations</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/character'>as.character</a></span>(<span class='no'>stations.df</span>$<span class='no'>sid</span>), <span class='kw'>collapse</span> <span class='kw'>=</span> <span class='st'>","</span>),
-  <span class='no'>dfrom</span>, <span class='no'>dto</span>, <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>, <span class='kw'>staticExpl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"X"</span>, <span class='st'>"Y"</span>, <span class='st'>"elevation"</span>),
-  <span class='kw'>dynExpl</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>makeDataset</span>(<span class='kw'>user_token</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Sys.getenv'>Sys.getenv</a></span>(<span class='st'>"AGROMET_API_V1_KEY"</span>),
+  <span class='kw'>stations</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/character'>as.character</a></span>(<span class='no'>stations.df</span>$<span class='no'>sid</span>), <span class='kw'>collapse</span> <span class='kw'>=</span> <span class='st'>","</span>),
+  <span class='kw'>json</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dfrom</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dto</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>,
+  <span class='kw'>staticExpl</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"X"</span>, <span class='st'>"Y"</span>, <span class='st'>"elevation"</span>), <span class='kw'>dynExpl</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -155,6 +162,11 @@
     <tr>
       <th>stations</th>
       <td><p>a character specifying the sid's of the stations to use separated by commas</p></td>
+    </tr>
+    <tr>
+      <th>json</th>
+      <td><p>a character specifying the path of a json file constructed from a batch db export.
+If NULL the API will be called.</p></td>
     </tr>
     <tr>
       <th>dfrom</th>
@@ -180,6 +192,10 @@ Any combinations of "X", "Y", altitude", "elevation", "slope", "aspect", "Agricu
       <th>dynExpl</th>
       <td><p>a character vector specifying the dynamic explanatory variables you want to add to the task.
 Any combinations of inca, ens</p></td>
+    </tr>
+    <tr>
+      <th>token</th>
+      <td><p>a character specifying your agrometAPI token</p></td>
     </tr>
     </table>
     
