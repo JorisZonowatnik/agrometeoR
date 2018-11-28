@@ -4,14 +4,14 @@
 \alias{makeTasks}
 \title{make one or multiple mlr regr task(s) for sets of hourly/daily records}
 \usage{
-makeTasks(dataset, drop = c("sid", "mtime"), target)
+makeTasks(dataset, drop = NULL, target)
 }
 \arguments{
 \item{dataset}{a dataframe containing all the hourly/daily records you want to transform to a list of mlr tasks}
 
 \item{drop}{a character vector specifying the explanatory variables you wan to drop.}
 
-\item{target}{a charchter specifying the neame of the target variable}
+\item{target}{a charchter specifying the name of the target variable}
 
 \item{stations}{a character specifying the sid's of the stations to use separated by commas}
 }
