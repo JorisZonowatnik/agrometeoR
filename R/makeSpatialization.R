@@ -41,11 +41,9 @@ makeSpatialization <- function(
   if (isTRUE(file)) {
     # exporting to geojson
     sf::st_write(obj = pred_grid, dsn = paste0(path, "/", name, ".geojson"))
-    return()
   } else {
     geojson = geojsonio::geojson_json(pred_grid)
     cat(geojson)
-    return()
   }
 
   # reading the geojson
