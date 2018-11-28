@@ -43,7 +43,7 @@ makeSpatialization <- function(
     sf::st_write(obj = pred_grid, dsn = paste0(path, "/", filename, ".geojson"))
   } else {
     geojson = geojsonio::geojson_json(pred_grid)
-    cat(geojson)
+    return(geojson)
   }
 
   # reading the geojson
