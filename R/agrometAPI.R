@@ -69,7 +69,7 @@ getData <- function(
   if (table_name == "get_rawdata_dssf"){
     api_table_url.chr <- paste(baseURL.chr, api_v, table_name, dfrom, dto, "dailygeojson", sep="/")
   }
-  cat(paste("Your API URL call is : ", api_table_url.chr, " \n"))
+  message(paste("Your API URL call is : ", api_table_url.chr, " \n"))
 
   # Add your user token into the HTTP authentication header and call API (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
   api_table_req.resp <- httr::GET(api_table_url.chr, httr::add_headers("Authorization" = paste("Token", user_token, sep=" ")))
@@ -77,7 +77,7 @@ getData <- function(
   if (api_table_req.resp$status_code!=200){
     stop(paste0("The API responded with an error ", api_table_req.resp$status_code, ". Function execution halted. \n Please check your token and the validity + order of the parameters you provided. API documentation available at https://app.pameseb.be/fr/pages/api_call_test/" ))
   }
-  cat(paste0("The API responded with a status code ", api_table_req.resp$status_code, ". \n Data has been downloaded \n"))
+  message(paste0("The API responded with a status code ", api_table_req.resp$status_code, ". \n Data has been downloaded \n"))
 
   # Getting the JSON data from the API response
   api_results_json.chr <- httr::content(api_table_req.resp, as = "text", encoding = "UTF-8")
@@ -125,14 +125,7 @@ getData <- function(
   # Group in a list
   results <- list(stations_meta.df = stations_meta.df, records.df = results.df)
 
-  # Present a quick overview of the results in the console
-  # cat("Overview of the queried results : \n")
-  # print.data.frame(head(results_and_stations_meta.l$records.df))
-
   # Return the results and the station_meta dataframes stored in as a list
-  cat(paste0(
-    "Data is stored in a list with 2 df elements. \n ",
-    "stations_meta.df contains the metadata and records.df contains the stations records."))
   return(results)
 }
 

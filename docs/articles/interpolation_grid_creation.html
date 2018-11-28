@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Networks Intercomparison • agrometeoR</title>
+<title>Creation of the interpolation Grid • agrometeoR</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Networks Intercomparison">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Creation of the interpolation Grid">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -113,71 +113,43 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Networks Intercomparison</h1>
+      <h1>Creation of the interpolation Grid</h1>
                         <h4 class="author">Thomas Goossens</h4>
             
-            <h4 class="date">11/27/2018</h4>
+            <h4 class="date">11/28/2018</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/pokyah/agrometeoR/blob/master/vignettes/networks_intercomparison.Rmd"><code>vignettes/networks_intercomparison.Rmd</code></a></small>
-      <div class="hidden name"><code>networks_intercomparison.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/pokyah/agrometeoR/blob/master/vignettes/interpolation_grid_creation.Rmd"><code>vignettes/interpolation_grid_creation.Rmd</code></a></small>
+      <div class="hidden name"><code>interpolation_grid_creation.Rmd</code></div>
 
     </div>
 
     
     
-<div id="load-the-libraries" class="section level2">
-<h2 class="hasAnchor">
-<a href="#load-the-libraries" class="anchor"></a>Load the libraries</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># loading mlr &amp; agrometeoR</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(agrometeoR)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mlr)</code></pre></div>
-<pre><code>## Loading required package: ParamHelpers</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(parallelMap)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(microbenchmark)</code></pre></div>
-</div>
-<div id="create-the-tasks" class="section level2">
-<h2 class="hasAnchor">
-<a href="#create-the-tasks" class="anchor"></a>create the tasks</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create the task</span>
-<span class="co"># tasks = makeTasks(dataset = makeDataset(dfrom = "2017-03-04T00:00:00Z", dto = "2017-03-04T23:00:00Z", sensor = "tsa"), target = "tsa")</span></code></pre></div>
-</div>
-<div id="benchmark-some-learners-on-a-subset-of-these-tasks" class="section level2">
-<h2 class="hasAnchor">
-<a href="#benchmark-some-learners-on-a-subset-of-these-tasks" class="anchor"></a>benchmark some learners on a subset of these tasks</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># loading the learners preconfigured with the package</span>
-<span class="co"># data("learners")</span>
-<span class="co"># bmr = makeBenchmark(tasks = tasks[1:3], learners = learners)</span></code></pre></div>
-</div>
-<div id="vizualize-performance" class="section level2">
-<h2 class="hasAnchor">
-<a href="#vizualize-performance" class="anchor"></a>vizualize performance</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plotBMRBoxplots(bmr$bmr, pretty.names = FALSE)</span>
-<span class="co"># plotBMRSummary(bmr$bmr, pretty.names = FALSE)</span></code></pre></div>
-</div>
-<div id="check-if-parallelization-improves-computing-speed" class="section level2">
-<h2 class="hasAnchor">
-<a href="#check-if-parallelization-improves-computing-speed" class="anchor"></a>Check if parallelization improves computing speed</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># with parallel computing</span>
-<span class="co"># parallel = microbenchmark(makeBenchmark(tasks = tasks[1:3], learners = learners, parallel = TRUE), times = 1)</span>
-<span class="co"># single = microbenchmark(makeBenchmark(tasks = tasks[1:3], learners = learners, parallel = FALSE), times = 1)</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># parallel$time &lt; single$time</span>
-<span class="co"># parallel$time</span>
-<span class="co"># single$time</span></code></pre></div>
-</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># this is generated in data-raw/makeData.R and uses raw data provided by RMI</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(grid.sf)
+grid.sf =<span class="st"> </span>grid.sf[<span class="st">"px"</span>]
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(grid.sf)</code></pre></div>
+<pre><code>## Simple feature collection with 6 features and 1 field
+## geometry type:  POINT
+## dimension:      XY
+## bbox:           xmin: 550013.6 ymin: 665990 xmax: 554013.6 ymax: 666990
+## epsg (SRID):    3812
+## proj4string:    +proj=lcc +lat_1=49.83333333333334 +lat_2=51.16666666666666 +lat_0=50.797815 +lon_0=4.359215833333333 +x_0=649328 +y_0=665262 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
+##         px                geometry
+## 155 164266 POINT (552013.6 666990)
+## 156 164267 POINT (553013.6 666990)
+## 157 164268 POINT (554013.6 666990)
+## 237 164865 POINT (550013.6 665990)
+## 238 164866 POINT (551013.6 665990)
+## 239 164867 POINT (552013.6 665990)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_write">st_write</a></span>(<span class="dt">obj =</span> grid.sf, <span class="dt">dsn =</span> <span class="st">"incagrid.geojson"</span>)</code></pre></div>
+<pre><code>## Writing layer `incagrid' to data source `incagrid.geojson' using driver `GeoJSON'
+## features:       21433
+## fields:         1
+## geometry type:  Point</code></pre>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#load-the-libraries">Load the libraries</a></li>
-      <li><a href="#create-the-tasks">create the tasks</a></li>
-      <li><a href="#benchmark-some-learners-on-a-subset-of-these-tasks">benchmark some learners on a subset of these tasks</a></li>
-      <li><a href="#vizualize-performance">vizualize performance</a></li>
-      <li><a href="#check-if-parallelization-improves-computing-speed">Check if parallelization improves computing speed</a></li>
-      </ul>
-</div>
       </div>
 
 </div>

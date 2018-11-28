@@ -1,0 +1,28 @@
+---
+title: "Creation of the interpolation Grid"
+author: "Thomas Goossens"
+date: "11/28/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
+```
+
+```{r spatializeconfig, include=FALSE}
+# trick to avoir overwriting error with st_write - https://github.com/r-spatial/sf/issues/274
+files = list.files()
+if (!is.null("incagrid.geojson" %in% files)) {
+  file.remove("incagrid.geojson")
+}
+```
+
+```{r}
+# this is generated in data-raw/makeData.R and uses raw data provided by RMI
+data(grid.sf)
+grid.sf = grid.sf["px"]
+head(grid.sf)
+sf::st_write(obj = grid.sf, dsn = "incagrid.geojson")
+```
+

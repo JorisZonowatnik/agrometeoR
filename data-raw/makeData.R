@@ -2,8 +2,6 @@
 ## LIBRARIES
 #####
 
-# library(agrometAPI)
-
 library(tidyverse)
 library(lubridate)
 library(rgdal)
@@ -78,11 +76,11 @@ inca.hourly.1month = inca.hourly.1month %>%
 
 # Read data from the API exported json file downloaded from PAMESEB FTP & create a dataframe
 records = jsonlite::fromJSON(
-    "./data-raw/extdata/AGROMET/cleandataSensorstsa-ensForallFm2015-11-11To2018-06-30.json") # available on AGROMET FTP
+    "./data-raw/extdata/AGROMET/twoYears.json") # available on AGROMET FTP
 records.data = records$results
 records.meta = records$references$stations
 records.l <- list(metadata = records.meta, data = records.data)
-records.data <- agrometAPI::type_data(records.l, "cleandata")
+records.data <- typeData(records.l, "cleandata")
 # Filtering records to keep only the useful ones (removing non relevant stations)
 records.data = records.data %>%
   filter(network_name == "pameseb") %>%
@@ -423,7 +421,9 @@ stations.sf = stations.sf %>%
 grid.df = grid.static
 stations.df = stations.static
 
-# adding lat/lon data from from grid.sf to grid
+# adding lat/lon data from from grid.sf to grid & limiting to Wallonia without buffer
+grid.sf = sf::st_intersection(sf::st_transform(grid.sf, 3812), sf::st_transform(wallonia, 3812))
+
 grid.df = grid.df %>%
   dplyr::left_join(
     (data.frame(st_coordinates(st_transform(grid.sf, 3812))) %>%
@@ -449,10 +449,10 @@ sf::st_geometry(stations.df) = NULL
 devtools::use_data(wallonia, stations.sf, grid.sf, grid.df, stations.df, internal = FALSE, overwrite = TRUE)
 
 # saving all the objects in a session file
-save.image("dev.RData")
+# save.image("dev.RData")
 
 # remove all the created objects from the workspace
-rm(list = ls())
+# rm(list = ls())
 
 #+ ---------------------------------
 #' ## Terms of service
