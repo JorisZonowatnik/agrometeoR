@@ -46,7 +46,9 @@ makeSpatialization <- function(
     spatialized = spatialized %>%
       dplyr::bind_cols(data.frame(coords))
 
+    #
     message("Success ! Data are spatialized")
+
     # return the spatialized dataframe
     return(spatialized)
   },
