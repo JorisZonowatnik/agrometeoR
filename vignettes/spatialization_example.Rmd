@@ -63,7 +63,7 @@ head(spatialized)
 ## Map the results
 ```{r}
 # make it a spatial object
-spatialized.sf = sf::st_as_sf(spatialized, coords = c("x","y"))
+spatialized.sf = sf::st_as_sf(spatialized, coords = c("X","Y"))
 # map it ! 
 plot(spatialized.sf)
 ```

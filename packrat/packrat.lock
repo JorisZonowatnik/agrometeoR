@@ -22,6 +22,11 @@ Source: CRAN
 Version: 1.66.0-1
 Hash: 4cc8883584b955ed01f38f68bc03af6d
 
+Package: BlandAltmanLeh
+Source: CRAN
+Version: 0.3.1
+Hash: f9ec29ca698ed6f5519a427f9087725e
+
 Package: DBI
 Source: CRAN
 Version: 0.8
@@ -89,24 +94,16 @@ Source: CRAN
 Version: 0.12.16
 Hash: 8cc9dc88c11acdcf8a6dec4a0f1500bc
 
+Package: V8
+Source: CRAN
+Version: 1.5
+Hash: e4ea7ccc287949fea8920457f0368c10
+Requires: Rcpp, curl, jsonlite
+
 Package: XML
 Source: CRAN
 Version: 3.98-1.11
 Hash: 93ca736e34d01f5952dc770fbfa5fa62
-
-Package: agrometAPI
-Source: github
-Version: 0.1.0
-GithubRepo: agrometAPI
-GithubUsername: pokyah
-GithubRef: master
-GithubSha1: c87c078449be2929cecfc9e3fe6483554817a397
-RemoteHost: https://api.github.com
-RemoteRepo: agrometAPI
-RemoteUsername: pokyah
-RemoteSha: c87c078449be2929cecfc9e3fe6483554817a397
-Hash: 911ca8f37ff4b001284733d489d14408
-Requires: chron, dplyr, httr, jsonlite, purrr
 
 Package: assertthat
 Source: CRAN
@@ -331,6 +328,25 @@ Version: 1.2.2
 Hash: 13fc5f1102262c0b0fc947f4c3b933b1
 Requires: Rcpp
 
+Package: geojson
+Source: CRAN
+Version: 0.2.0
+Hash: a1aa785fa64296f9f0d8b40c55a1538d
+Requires: jqr, jsonlite, lazyeval, magrittr, protolite, sp
+
+Package: geojsonio
+Source: CRAN
+Version: 0.6.0
+Hash: 6cb56e61dc04c13cf88bbcb718dc9acf
+Requires: V8, geojson, httr, jqr, jsonlite, magrittr, maptools, readr,
+    rgdal, rgeos, sf, sp
+
+Package: geojsonlint
+Source: CRAN
+Version: 0.2.0
+Hash: 867b5e4320d9fac14c4d6f7abe732f9f
+Requires: V8, httr, jsonlite, jsonvalidate
+
 Package: ggplot2
 Source: CRAN
 Version: 2.2.1
@@ -427,10 +443,22 @@ Source: CRAN
 Version: 0.15.1
 Hash: 26e23563c50548f8588a112a4baaa297
 
+Package: jqr
+Source: CRAN
+Version: 1.0.0
+Hash: ae7237a3a2461f330c0dbe57e62cad48
+Requires: lazyeval, magrittr
+
 Package: jsonlite
 Source: CRAN
 Version: 1.5
 Hash: 9c51936d8dd00b2f1d4fe9d10499694c
+
+Package: jsonvalidate
+Source: CRAN
+Version: 1.0.0
+Hash: 16d43b5a0a0a9bdef9105c9c3d0b9738
+Requires: V8
 
 Package: knitr
 Source: CRAN
@@ -483,6 +511,12 @@ Source: CRAN
 Version: 1.5
 Hash: bdc4d48c3135e8f3b399536ddf160df4
 
+Package: maptools
+Source: CRAN
+Version: 0.9-2
+Hash: 2dfbad6ef57f83a91e4e9d4ccc0807cd
+Requires: foreign, lattice, sp
+
 Package: markdown
 Source: CRAN
 Version: 0.8
@@ -494,6 +528,11 @@ Source: CRAN
 Version: 1.1.0
 Hash: 410fcd334bc626db100237cc1370f2e9
 Requires: digest
+
+Package: microbenchmark
+Source: CRAN
+Version: 1.4-4
+Hash: a42147966106d4a16d5e4823da6dc1e4
 
 Package: mime
 Source: CRAN
@@ -662,6 +701,12 @@ Source: CRAN
 Version: 1.0.1
 Hash: 6dfc334ebb6374630084e676c96a9d71
 Requires: R6, Rcpp, later, magrittr, rlang
+
+Package: protolite
+Source: CRAN
+Version: 1.7
+Hash: 8f88de5234f31e0b9a5fc029d7c4e80f
+Requires: Rcpp, jsonlite
 
 Package: psych
 Source: CRAN

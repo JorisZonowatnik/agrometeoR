@@ -11,21 +11,20 @@ License: GPL-V3
 Encoding: UTF-8
 LazyData: true
 Imports: mlr,
-    gstat,
-    tidyverse,
-    httr,
-    chron,
-    sf,
-    leaflet,
-    leaflet.extras,
-    geojsonio,
-    geojsonlint,
-    jsonlite
-Suggests: rgeos,
-    raster,
-    jsonlite,
-    rnaturalearth,
-    rnaturalearthhires,
-    elevatr
-Remotes: github::pokyah/mlr@gstat
+    gstat (== 1.1-6),
+    tidyverse (== 1.2.1),
+    chron (== 2.3-52),
+    sf (== 0.6-1),
+    leaflet (== 2.0.0),
+    leaflet.extras (== 1.0.0),
+    geojsonio (== 0.6.0),
+    geojsonlint (== 0.2.0),
+    jsonlite (== 1.5)
+Suggests: rgeos (== 0.3-26),
+    raster (== 2.6-7),
+    rnaturalearth (== 0.1.0),
+    rnaturalearthhires (== 0.2.0),
+    elevatr (== 0.1.4)
+Remotes: github::pokyah/mlr@gstat,
+    github::ropensci/rnaturalearthhires@master
 RoxygenNote: 6.0.1
