@@ -20,6 +20,24 @@ makeSpatialization <- function(
     dplyr::select(x, y, px) %>%
     dplyr::bind_cols(pred$data)
 
+  # convert to spatial object to change CRS
+  spatialized = spatialized %>%
+    sf::st_as_sf(coords = c("x","y"))
+
+  # set crs
+  spatialized = spatialized %>%
+    sf::st_set_crs(3812)
+
+  # convert to CRS = 4326 (geojson standard)
+  spatialized = spatialized %>%
+    sf::st_transform(4326)
+
+  # making it df again with x and y cols
+  coords = sf::st_coordinates(spatialized)
+  sf::st_geometry(spatialized) = NULL
+  spatialized = spatialized %>%
+    dplyr::bind_cols(data.frame(coords))
+
   # return the spatialized dataframe
   return(spatialized)
 }

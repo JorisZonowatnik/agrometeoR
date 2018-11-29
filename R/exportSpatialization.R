@@ -19,47 +19,30 @@ exportSpatialization <- function(
   geojson = FALSE,
   write = FALSE){
 
-  # convert to spatial object to change CRS
- spatialized = spatialized %>%
-    sf::st_as_sf(coords = c("x","y"))
-
-  # set crs
- spatialized = spatialized %>%
-    sf::st_set_crs(3812)
-
-  # convert to CRS = 4326 (geojson standard)
- spatialized = spatialized %>%
-    sf::st_transform(4326)
+  spatializedNoCoords = spatialized %>%
+    dplyr::select(c("px", "response" ,"se"))
 
  if (isTRUE(csv)) {
-   coords = sf::st_coordinates(spatialized,)
-   sf::st_geometry(spatialized) = NULL
-   spatialized = spatialized %>%
-     dplyr::bind_cols(data.frame(coords))
    if (isTRUE(write)) {
-     write.csv(data.frame(spatialized), paste0(path, "/", filename, ".csv"))
+     write.csv(data.frame(spatializedNoCoords), paste0(path, "/", filename, ".csv"), row.names = FALSE)
    } else{
      csv.con = textConnection("csv.con", "w")
-     write.csv(spatialized, csv.con)
+     write.csv(spatializedNoCoords, csv.con, row.names = FALSE)
      cat(textConnectionValue(csv.con))
      close(csv.con)
    }
  }
 
  if (isTRUE(json)) {
-   coords = sf::st_coordinates(spatialized)
-   sf::st_geometry(spatialized) = NULL
-   spatialized = spatialized %>%
-     dplyr::bind_cols(coords)
    if (isTRUE(write)) {
-     jsonlite::write_json(x = spatialized, path = paste0(path, "/", filename, ".json"))
+     jsonlite::write_json(x = spatializedNoCoords, path = paste0(path, "/", filename, ".json"))
    } else{
-     cat(spatialized)
+     cat(spatializedNoCoords)
    }
  }
 
  if (isTRUE(geojson)) {
-   spatialized.geojson = geojsonio::geojson_json(spatialized)
+   spatialized.geojson = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
    if (isTRUE(write)){
      geojsonio::geojson_write(spatialized.geojson, path = path, filename = filename)
      # sf::st_write(obj = spatialized, dsn = paste0(path, "/", filename, ".geojson"))
