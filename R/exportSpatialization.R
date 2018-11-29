@@ -12,7 +12,7 @@
 
 exportSpatialization <- function(
   spatialized,
-  path,
+  path = getwd(),
   filename,
   csv = FALSE,
   json = FALSE,
@@ -44,8 +44,7 @@ exportSpatialization <- function(
  if (isTRUE(geojson)) {
    spatialized.geojson = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
    if (isTRUE(write)){
-     geojsonio::geojson_write(spatialized.geojson, path = path, filename = filename)
-     # sf::st_write(obj = spatialized, dsn = paste0(path, "/", filename, ".geojson"))
+     geojsonio::geojson_write(spatialized.geojson, file = paste0(path, "/", filename, ".geojson"))
    } else{
      cat(spatialized.geojson)
    }
