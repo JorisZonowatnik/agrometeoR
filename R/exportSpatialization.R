@@ -37,6 +37,7 @@ exportSpatialization <- function(
    if (isTRUE(write)) {
      jsonlite::write_json(x = spatializedNoCoords, path = paste0(path, "/", filename, ".json"))
    } else{
+     spatializedNoCoords = jsonlite::toJSON(spatializedNoCoords)
      cat(spatializedNoCoords)
    }
  }
