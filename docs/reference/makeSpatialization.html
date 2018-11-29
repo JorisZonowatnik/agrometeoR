@@ -154,8 +154,7 @@
 
     </div>
 
-    <pre class="usage"><span class='fu'>makeSpatialization</span>(<span class='no'>model</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='no'>grid.df</span>, <span class='kw'>file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>filename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>path</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/getwd'>getwd</a></span>())</pre>
+    <pre class="usage"><span class='fu'>makeSpatialization</span>(<span class='no'>model</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='no'>grid.df</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,23 +167,11 @@
       <th>grid</th>
       <td><p>an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained</p></td>
     </tr>
-    <tr>
-      <th>file</th>
-      <td><p>a boolean specifying wether the saptiliazed dat should be written as a geojson file or simply output into the console.</p></td>
-    </tr>
-    <tr>
-      <th>filename</th>
-      <td><p>a character specifying the name you want to give to the file.</p></td>
-    </tr>
-    <tr>
-      <th>path</th>
-      <td><p>a character specifying the path where you want your geosonfile to be stored. Default = wd</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a geojson object containing the spatialized data</p>
+    <p>a dataframe containing the spatialized data</p>
     
 
   </div>

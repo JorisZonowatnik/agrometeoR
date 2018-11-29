@@ -55,14 +55,16 @@ if (!is.null(paste0(tasks$`20170304150000`$task.desc$id, ".geojson" %in% files))
 
 ```{r spatialize, message=FALSE, warning=FALSE}
 # produce the spatialized geojson
-makeSpatialization(model = model$model, filename = tasks$`20170304150000`$task.desc$id, path = ".", file = TRUE )
+spatialized = makeSpatialization(model = model$model)
 # read it
-data_spatialized = sf::st_read(dsn = paste0(tasks$`20170304150000`$task.desc$id, ".geojson"))
+head(spatialized)
 ```
 
 ## Map the results
 ```{r}
+# make it a spatial object
+spatialized.sf = sf::st_as_sf(spatialized, coords = c("x","y"))
 # map it ! 
-plot(data_spatialized)
+plot(spatialized.sf)
 ```
 

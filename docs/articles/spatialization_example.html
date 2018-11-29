@@ -159,7 +159,7 @@ model<span class="op">$</span>perfs<span class="op">$</span>agg</code></pre></di
 <pre><code>##          task.id        learner.id rmse.test.rmse mse.test.mean
 ## 1 20170304150000 multipleLinearReg      0.8650726     0.7483506
 ##   mae.test.mean timetrain.test.mean expvar.test.mean
-## 1     0.7437658         0.002034483               NA</code></pre>
+## 1     0.7437658         0.001517241               NA</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># what about the residuals ? </span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">x =</span>  <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(tasks<span class="op">$</span><span class="st">`</span><span class="dt">20170304150000</span><span class="st">`</span>)[[<span class="st">"tsa"</span>]], model<span class="op">$</span>residuals[[<span class="dv">1</span>]])</code></pre></div>
 <p><img src="spatialization_example_files/figure-html/train-1.png" width="700"></p>
@@ -168,26 +168,24 @@ model<span class="op">$</span>perfs<span class="op">$</span>agg</code></pre></di
 <h2 class="hasAnchor">
 <a href="#spatialize-using-the-trained-a-learner" class="anchor"></a>Spatialize using the trained a learner</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># produce the spatialized geojson</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeSpatialization">makeSpatialization</a></span>(<span class="dt">model =</span> model<span class="op">$</span>model, <span class="dt">filename =</span> tasks<span class="op">$</span><span class="st">`</span><span class="dt">20170304150000</span><span class="st">`</span><span class="op">$</span>task.desc<span class="op">$</span>id, <span class="dt">path =</span> <span class="st">"."</span>, <span class="dt">file =</span> <span class="ot">TRUE</span> )</code></pre></div>
-<pre><code>## Writing layer `20170304150000' to data source `./20170304150000.geojson' using driver `GeoJSON'
-## features:       33243
-## fields:         2
-## geometry type:  Point</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read it</span>
-data_spatialized =<span class="st"> </span>sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_read">st_read</a></span>(<span class="dt">dsn =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(tasks<span class="op">$</span><span class="st">`</span><span class="dt">20170304150000</span><span class="st">`</span><span class="op">$</span>task.desc<span class="op">$</span>id, <span class="st">".geojson"</span>))</code></pre></div>
-<pre><code>## Reading layer `OGRGeoJSON' from data source `/home/rstudio/Documents/code/pokyah/agrometeoR/vignettes/20170304150000.geojson' using driver `GeoJSON'
-## Simple feature collection with 33243 features and 2 fields
-## geometry type:  POINT
-## dimension:      XY
-## bbox:           xmin: 2.781178 ymin: 49.4953 xmax: 6.405919 ymax: 50.85122
-## epsg (SRID):    4326
-## proj4string:    +proj=longlat +datum=WGS84 +no_defs</code></pre>
+spatialized =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeSpatialization">makeSpatialization</a></span>(<span class="dt">model =</span> model<span class="op">$</span>model)
+<span class="co"># read it</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(spatialized)</code></pre></div>
+<pre><code>##          x        y     px  response        se
+## 1 551013.6 671990.0 161260  9.247168 0.5826573
+## 2 552013.6 671990.0 161261  9.232991 0.5856638
+## 3 553013.6 671990.0 161262  9.265007 0.5824496
+## 4 554013.6 671990.0 161263  9.334063 0.5742412
+## 5 555013.6 671990.0 161264  9.369147 0.5706346
+## 6 740012.9 671989.4 161449 16.080197 0.4378295</code></pre>
 </div>
 <div id="map-the-results" class="section level2">
 <h2 class="hasAnchor">
 <a href="#map-the-results" class="anchor"></a>Map the results</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># map it ! </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(data_spatialized)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># make it a spatial object</span>
+spatialized.sf =<span class="st"> </span>sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_as_sf">st_as_sf</a></span>(spatialized, <span class="dt">coords =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"x"</span>,<span class="st">"y"</span>))
+<span class="co"># map it ! </span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(spatialized.sf)</code></pre></div>
 <p><img src="spatialization_example_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 </div>
   </div>
