@@ -13,41 +13,59 @@
 exportSpatialization <- function(
   spatialized,
   path = getwd(),
-  filename,
+  filename = NULL,
   csv = FALSE,
   json = FALSE,
   geojson = FALSE,
   write = FALSE){
 
-  spatializedNoCoords = spatialized %>%
-    dplyr::select(c("px", "response" ,"se"))
+  out = tryCatch({
+    if (!isTRUE(csv) && !isTRUE(json) && !isTRUE(geojson)) {
+      stop()
+    }
+    if (is.null(filename)) {
+      filename = "myfile"
+      warning("No filename specified. Settings filename to 'myfile'")
+    }
+    spatializedNoCoords = spatialized %>%
+      dplyr::select(c("px", "response" ,"se"))
 
- if (isTRUE(csv)) {
-   if (isTRUE(write)) {
-     write.csv(data.frame(spatializedNoCoords), paste0(path, "/", filename, ".csv"), row.names = FALSE)
-   } else{
-     csv.con = textConnection("csv.con", "w")
-     write.csv(spatializedNoCoords, csv.con, row.names = FALSE)
-     cat(textConnectionValue(csv.con))
-     close(csv.con)
-   }
- }
+    if (isTRUE(csv)) {
+      if (isTRUE(write)) {
+        write.csv(data.frame(spatializedNoCoords), paste0(path, "/", filename, ".csv"), row.names = FALSE)
+      } else{
+        csv.con = textConnection("csv.con", "w")
+        write.csv(spatializedNoCoords, csv.con, row.names = FALSE)
+        cat(textConnectionValue(csv.con))
+        close(csv.con)
+      }
+    }
+    if (isTRUE(json)) {
+      if (isTRUE(write)) {
+        jsonlite::write_json(x = spatializedNoCoords, path = paste0(path, "/", filename, ".json"))
+      } else{
+        cat(spatializedNoCoords)
+      }
+    }
+    if (isTRUE(geojson)) {
+      spatialized.geojson = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
+      if (isTRUE(write)) {
+        geojsonio::geojson_write(spatialized.geojson, file = paste0(path, "/", filename, ".geojson"))
+      } else{
+        cat(spatialized.geojson)
+      }
+    }
+  },
+    error = function(cond){
+      message("AgrometeoR Error : No output format specified. Please change the value of json, csv or geojson ti TRUE")
+      # message(cond)
+      return(NA)
+    },
+    warning = function(cond){
 
- if (isTRUE(json)) {
-   if (isTRUE(write)) {
-     jsonlite::write_json(x = spatializedNoCoords, path = paste0(path, "/", filename, ".json"))
-   } else{
-     cat(spatializedNoCoords)
-   }
- }
+    },
+    finally = {
 
- if (isTRUE(geojson)) {
-   spatialized.geojson = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
-   if (isTRUE(write)){
-     geojsonio::geojson_write(spatialized.geojson, file = paste0(path, "/", filename, ".geojson"))
-   } else{
-     cat(spatialized.geojson)
-   }
- }
+    })
+  return(out)
 }
-

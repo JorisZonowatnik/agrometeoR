@@ -4,8 +4,8 @@
 \alias{exportSpatialization}
 \title{export a spatialized object either to json or geojson}
 \usage{
-exportSpatialization(spatialized, path = getwd(), filename, csv = FALSE,
-  json = FALSE, geojson = FALSE, write = FALSE)
+exportSpatialization(spatialized, path = getwd(), filename = NULL,
+  csv = FALSE, json = FALSE, geojson = FALSE, write = FALSE)
 }
 \arguments{
 \item{spatialized}{a dataframe containing the gridded predicted values}

@@ -9,36 +9,62 @@ makeSpatialization <- function(
   model,
   grid = grid.df){
 
-  # rename X and Y to x and y for mlr (gstat learner compatibility)
-  grid = grid %>%
-    dplyr::rename("x" = "X") %>%
-    dplyr::rename("y" = "Y")
+  # Error handling wrapper
+  # https://stackoverflow.com/questions/12193779/how-to-write-trycatch-in-r
 
-  # predicting on the grid
-  pred = predict(model, newdata = grid)
-  spatialized = grid %>%
-    dplyr::select(x, y, px) %>%
-    dplyr::bind_cols(pred$data)
+  out = tryCatch({
+    if (!isTRUE(class(model) == "WrappedModel") || !(toupper(model$features) %in% toupper(colnames(grid.df))) ) {
+      stop()
+    }
+    message("Predicting on grid...")
+    # rename X and Y to x and y for mlr (gstat learner compatibility)
+    grid = grid %>%
+      dplyr::rename("x" = "X") %>%
+      dplyr::rename("y" = "Y")
 
-  # convert to spatial object to change CRS
-  spatialized = spatialized %>%
-    sf::st_as_sf(coords = c("x","y"))
+    # predicting on the grid
+    pred = predict(model, newdata = grid)
+    spatialized = grid %>%
+      dplyr::select(x, y, px) %>%
+      dplyr::bind_cols(pred$data)
 
-  # set crs
-  spatialized = spatialized %>%
-    sf::st_set_crs(3812)
+    # convert to spatial object to change CRS
+    spatialized = spatialized %>%
+      sf::st_as_sf(coords = c("x","y"))
 
-  # convert to CRS = 4326 (geojson standard)
-  spatialized = spatialized %>%
-    sf::st_transform(4326)
+    # set crs
+    spatialized = spatialized %>%
+      sf::st_set_crs(3812)
 
-  # making it df again with x and y cols
-  coords = sf::st_coordinates(spatialized)
-  sf::st_geometry(spatialized) = NULL
-  spatialized = spatialized %>%
-    dplyr::bind_cols(data.frame(coords))
+    # convert to CRS = 4326 (geojson standard)
+    spatialized = spatialized %>%
+      sf::st_transform(4326)
 
-  # return the spatialized dataframe
-  return(spatialized)
+    # making it df again with x and y cols
+    coords = sf::st_coordinates(spatialized)
+    sf::st_geometry(spatialized) = NULL
+    spatialized = spatialized %>%
+      dplyr::bind_cols(data.frame(coords))
+
+    message("Success ! Data are spatialized")
+    # return the spatialized dataframe
+    return(spatialized)
+  },
+  error = function(cond){
+    message("AgrometeoR Error : Model is not of class WrappedModel or predictions grid does not contain the same vars as the one used to build the model")
+    # message("Here's the original error message:")
+    # message(cond)
+    return(NA)
+  },
+  warning = function(cond){
+    message("AgrometeoR Warning :")
+    # message("Here's the original error message:")
+    # message(cond)
+    return(NULL)
+  },
+  finally = {
+
+  })
+  return(out)
 }
 
