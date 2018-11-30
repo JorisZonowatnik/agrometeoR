@@ -3,7 +3,7 @@
 
 ## Introduction 
 
-This R Package is dedicated to "Automatic Weather Station" (AWS) Network data spatialization. It is currently being developed by the [CRA-W](http://www.cra.wallonie.be) in the context of the [Agromet Project](./articles/presentation-agromet-project.html).
+This R Package is dedicated to "Automatic Weather Station" (AWS) Network data spatialization. It is currently being developed by the [CRA-W](http://www.cra.wallonie.be) in the context of the [Agromet Project](./vignettes/presentation-agromet-project.Rmd).
 
 In short, the aim of the Agromet project is to provide a near real-time hourly gridded datasets of weather parameters (Air temperature, rainfall, relative humidity and leaves wetness) at the resolution of 1 km² for the whole region of Wallonia
 
@@ -73,26 +73,33 @@ install.packages(devtools)
 install.packages(packrat)
 ```
 
-4. Create a folder for your project and enable packrat for this folder
+4. Create a folder for your project. In bash 
 
+```bash
+mkdir <YOUR_PROJECT>
+```
 
+5. Enable packrat for this folder. Open your R console in this folder and initialize packrat :
 
+```r
+packrat::init()
+```
 
-5. Install the agrometeoR package. In your R console : 
+You are now in packrat mode for this folder. All the package you will install from this folder will be installed in the folder private library (see packrat doc for more information).
+
+6. Install the agrometeoR package. In your R console : 
 
 ```r
 devtools::install_github("pokyah/agrometeoR", ref = "master")
 ```
 
-This command will automatically install all the required R packages needed to make this package work (these are specified in the [DESCRIPTION](./DESCRIPTION) file of the package) into your project packrat private library
+This command will also automatically install all the required R packages needed to make this package work (these are specified in the [DESCRIPTION](./DESCRIPTION) file of the package) into your project packrat private library.
 
+7. Add your AGROMET API key. At the root of your project foldern create a `.Renviron` file and paste the following line : 
 
+`AGROMET_API_V1_KEY = <YOUR_TOKEN>`
 
-
-* add your API key into your `~/.Renviron` file ==> `AGROMET_API_V1_KEY = <YOUR_TOKEN>`
-* detailed tutorials available in articles section
-
-
+You are now ready to go ! 
 
 ## Features
 
