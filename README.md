@@ -95,7 +95,7 @@ devtools::install_github("pokyah/agrometeoR", ref = "master")
 
 This command will also automatically install all the required R packages needed to make this package work (these are specified in the [DESCRIPTION](./DESCRIPTION) file of the package) into your project packrat private library.
 
-7. Add your AGROMET API key. At the root of your project foldern create a `.Renviron` file and paste the following line : 
+7. Add your AGROMET API key. At the root of your project folder, create a `.Renviron` file and paste the following line : 
 
 `AGROMET_API_V1_KEY = <YOUR_TOKEN>`
 
@@ -103,13 +103,19 @@ You are now ready to go !
 
 ## Features
 
-* query the agromet DB using an API
-* spatialize an hourly our daily (soon) dataset using a specified learner and output a geojson file
-* conduct benchmark experiment to compare and rank various learners, hyperparameters and features (explanatory variables) according to your desired performance metrics
-* quickly create an interactive leaflet map for data vizualization (soon)
-* an interactive tutorial about R as a GIS
+### Main functionalities
 
-## target variables
+* Query the agromet DB using the AGROMET API
+* Spatialize hourly our daily (soon) dataset using a specified learner
+* Export your spatialized data to various formats (csv, json, geojson)
+* Conduct benchmark experiment to compare and rank various learners, hyperparameters and features (explanatory variables) according to your desired performance metrics
+* Quickly create an interactive leaflet map for data vizualization (soon)
+* Compare stations 2 by 2 using a [blandAltman analysis](https://pokyah.github.io/AWS-Humain-comparison/reporting/Humain-SC-presentation.html#/a-potential-explanation-station-design)
+* Interactive tutorial about the use of R as a GIS
+
+## Datasets
+
+The package is provided with multiple datasets required to build the explanatory variables used for weather param predictions.
 
 The target weather parameter values at the stations are 
 
