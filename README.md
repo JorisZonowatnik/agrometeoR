@@ -106,7 +106,8 @@ You are now ready to go !
 ### Main functionalities
 
 * Query the agromet DB using the AGROMET API
-* Spatialize hourly our daily (soon) dataset using a specified learner
+* Create explanatory datasets both for training and predicting
+* Spatialize hourly our daily (soon) dataset using any of the 60 + [mlr learners](https://mlr.mlr-org.com/articles/tutorial/integrated_learners.html#regression-60)
 * Export your spatialized data to various formats (csv, json, geojson)
 * Conduct benchmark experiment to compare and rank various learners, hyperparameters and features (explanatory variables) according to your desired performance metrics
 * Quickly create an interactive leaflet map for data vizualization (soon)
