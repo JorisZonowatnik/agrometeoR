@@ -20,10 +20,11 @@ exportSpatialization <- function(
 
   out = tryCatch({
     if (!format %in% c("csv","json","geojson")) {
-      stop()
+      warning("Bad format specified. Setting format to .csv")
+      format = "csv"
     }
     if (isTRUE(write) && is.null(filename)) {
-      warning()
+      warning("Write set to true but no filename specified. Setting filename to 'myfile'")
     }
     spatializedNoCoords = spatialized %>%
       dplyr::select(c("px", "response" ,"se"))
@@ -75,7 +76,7 @@ exportSpatialization <- function(
       return(NA)
     },
     warning = function(cond){
-      message("AgrometeoR warning : No filename specified. Setting filename to 'myfile'")
+      message(cond)
       # Choose a return value in case of warning
       return(null)
     },
