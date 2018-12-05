@@ -13,7 +13,7 @@ LazyData: true
 Imports: mlr,
     gstat (== 1.1-6),
     tidyverse (== 1.2.1),
-    chron (== 2.3-52),
+    chron (>= 2.3-52),
     sf (== 0.6-1),
     leaflet (== 2.0.0),
     leaflet.extras (== 1.0.0),
