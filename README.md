@@ -23,7 +23,9 @@ You will also of course need R to make the package works !
 
 ### Instructions
 
-1. Install The Debian dependencies required. To do this, simply open a termina, paste and execute the following line : 
+#### Install The Debian dependencies required.
+
+To do this, simply open a termina, paste and execute the following line : 
 
 ```bash
 # installation of OS dependencies
@@ -57,7 +59,9 @@ sudo apt-get update \
     && sudo rm -rf /var/lib/apt/lists/ \ 
     && sudo rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
 ```
-2. Install R, if not yet installed on your machine
+#### Install R
+
+if not yet installed on your machine, simply use : 
 
 ```bash
 sudo apt install dirmngr
@@ -66,28 +70,36 @@ sudo apt update
 sudo apt install r-base
 ```
 
-3. Install the two system wide required packages : devtools (to install packages from github) and packrat (to install all the other packages in a sandbox environment). To do so, open your R console and type the following : 
+#### Install the two system wide required packages
+
+`devtools` (to install packages from github) and `packrat` (to install all the other packages in a sandbox environment). To do so, open your R console and type the following : 
 
 ```r
 install.packages(devtools)
 install.packages(packrat)
 ```
 
-4. Create a folder for your project. In bash 
+#### Create a folder for your project.
+
+In your console :  
 
 ```bash
 mkdir <YOUR_PROJECT>
 ```
 
-5. Enable packrat for this folder. Open your R console in this folder and initialize packrat :
+#### Enable packrat for this folder.
+
+Open your R console in this folder and initialize packrat :
 
 ```r
 packrat::init()
 ```
 
-You are now in packrat mode for this folder. All the package you will install from this folder will be installed in the folder private library (see packrat doc for more information).
+You are now in packrat mode for this folder. All the package you will install from this folder will be installed in the folder private library (see [packrat doc](https://rstudio.github.io/packrat/) for more information).
 
-6. Install the agrometeoR package. In your R console : 
+#### Install the agrometeoR package.
+
+In your R console : 
 
 ```r
 devtools::install_github("pokyah/agrometeoR", ref = "master")
@@ -95,7 +107,9 @@ devtools::install_github("pokyah/agrometeoR", ref = "master")
 
 This command will also automatically install all the required R packages needed to make this package work (these are specified in the [DESCRIPTION](./DESCRIPTION) file of the package) into your project packrat private library.
 
-7. Add your AGROMET API key. At the root of your project folder, create a `.Renviron` file and paste the following line : 
+#### Add your AGROMET API key.
+
+This API key is required to get data from the PAMESEB database. At the root of your project folder, create a `.Renviron` file and paste the following line : 
 
 `AGROMET_API_V1_KEY = <YOUR_TOKEN>`
 
