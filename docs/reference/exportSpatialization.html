@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>export a spatialized object either to json or geojson — exportSpatialization • agrometeoR</title>
+<title>export a spatialized object either to csv, json or geojson — exportSpatialization • agrometeoR</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,9 @@
 
 
 
-<meta property="og:title" content="export a spatialized object either to json or geojson — exportSpatialization" />
+<meta property="og:title" content="export a spatialized object either to csv, json or geojson — exportSpatialization" />
+
+<meta property="og:description" content="you can both store the encoded string in a variable and in a file by specifying write = TRUE" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -145,17 +147,19 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>export a spatialized object either to json or geojson</h1>
+    <h1>export a spatialized object either to csv, json or geojson</h1>
     <small class="dont-index">Source: <a href='https://github.com/pokyah/agrometeoR/blob/master/R/exportSpatialization.R'><code>R/exportSpatialization.R</code></a></small>
     <div class="hidden name"><code>exportSpatialization.Rd</code></div>
     </div>
 
     <div class="ref-description">
-
+    
+    <p>you can both store the encoded string in a variable and in a file by specifying write = TRUE</p>
+    
     </div>
 
-    <pre class="usage"><span class='fu'>exportSpatialization</span>(<span class='no'>spatialized</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/getwd'>getwd</a></span>(), <span class='no'>filename</span>, <span class='kw'>csv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>json</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>geojson</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>write</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>exportSpatialization</span>(<span class='no'>spatialized</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/getwd'>getwd</a></span>(), <span class='kw'>filename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>format</span> <span class='kw'>=</span> <span class='st'>"csv"</span>, <span class='kw'>write</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,6 +177,10 @@
       <td><p>a character specifying the name you want to give to the file.</p></td>
     </tr>
     <tr>
+      <th>write</th>
+      <td><p>a boolean specifying if fomatted data must be written to file (TRUE) or printed to console (FALSE)</p></td>
+    </tr>
+    <tr>
       <th>csv</th>
       <td><p>a boolean specifying if data must be exported as csv. Default = FALSE</p></td>
     </tr>
@@ -184,11 +192,11 @@
       <th>geojson</th>
       <td><p>a boolean specifying if data must be exported as geojson. Default = FALSE</p></td>
     </tr>
-    <tr>
-      <th>write</th>
-      <td><p>a boolean specifying if fomatted data must be written to file (TRUE) or printed to console (FALSE)</p></td>
-    </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>a character containing the data encoded in the required format. Default = csv</p>
     
 
   </div>
@@ -196,7 +204,9 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
 
     <h2>Author</h2>
     <p>Thomas Goossens</p>
