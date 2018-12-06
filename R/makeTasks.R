@@ -12,7 +12,7 @@ makeTasks <- function(
   target
 ){
   out = tryCatch({
-    output = NA
+    output = NULL
     bool = FALSE
 
     withCallingHandlers({

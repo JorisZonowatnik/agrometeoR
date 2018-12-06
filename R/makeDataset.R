@@ -28,7 +28,7 @@ makeDataset <- function(
 ){
 
   out = tryCatch({
-    output = NA
+    output = NULL
     bool = FALSE
 
     withCallingHandlers({

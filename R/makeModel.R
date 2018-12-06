@@ -9,10 +9,11 @@ makeModel <- function(
   task,
   learner){
  out = tryCatch({
-   output = NA
+   output = NULL
    bool = FALSE
 
    withCallingHandlers({
+     # message
      message("Training the learner to build a model...")
 
      # benchmark
@@ -38,7 +39,7 @@ makeModel <- function(
      colnames(predictions) = "stations_pred"
 
      # create a list containing all the useful information
-     modelInfo = list(
+     model = list(
        trained = m,
        stations_pred = predictions,
        perfs = list(iters = perfs, agg = aggPerfs),
@@ -46,11 +47,10 @@ makeModel <- function(
        # summary = summary(m$learner.model)
      )
 
-     output = modelInfo
-
      # success message
      message("Success ! Model created")
      bool = TRUE
+     output = model
    },
    warning = function(cond){
      message("AgrometeoR Warning :")
