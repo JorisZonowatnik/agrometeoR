@@ -4,6 +4,12 @@ packrat/lib*/
 # Packrat src
 packrat/src*/
 
+# tutorial Packrat lib
+inst/tutorials/presentation/packrat/lib*/
+
+# tutorial Packrat src
+inst/tutorials/presentation/packrat/src*/
+
 # Big ext-data files
 data-raw/extdata/
 

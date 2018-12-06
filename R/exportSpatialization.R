@@ -19,6 +19,7 @@ exportSpatialization <- function(
   write = FALSE){
 
   out = tryCatch({
+
     if (!format %in% c("csv","json","geojson")) {
       warning("Bad format specified. Setting format to .csv")
       format = "csv"
@@ -28,6 +29,7 @@ exportSpatialization <- function(
     }
     spatializedNoCoords = spatialized %>%
       dplyr::select(c("px", "response" ,"se"))
+
 
     if (format == "csv") {
       message("Encoding data to csv...")

@@ -5,7 +5,7 @@ Version: 0.0.0.9000
 Authors@R: person("Thomas", "Goossens", email = "hello.pokyah@gmail.com",
   role = c("aut", "cre"))
 URL: https://pokyah.github.io/agrometeoR, https://github.com/pokyah/agrometeoR
-BugReports: https://github.com/pokyah/agrometeorR/issues
+BugReports: https://github.com/pokyah/agrometeoR/issues
 Description: Makes a spatial (hourly/daily) interpolation of AGROMET weather parameters using machine learning
 License: GPL-V3
 Encoding: UTF-8
@@ -13,7 +13,7 @@ LazyData: true
 Imports: mlr,
     gstat (== 1.1-6),
     tidyverse (== 1.2.1),
-    chron (== 2.3-52),
+    chron (>= 2.3-52),
     sf (== 0.6-1),
     leaflet (== 2.0.0),
     leaflet.extras (== 1.0.0),
