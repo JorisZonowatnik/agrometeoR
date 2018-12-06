@@ -12,7 +12,7 @@ makeModel(task, learner)
 \item{learner}{an object of class mlr::makeLearner()}
 }
 \value{
-an object of class mlr::train()
+a list containing a boolean and an object of class mlr::train()
 }
 \author{
 Thomas Goossens

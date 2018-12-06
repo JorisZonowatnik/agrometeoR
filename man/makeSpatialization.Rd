@@ -12,7 +12,7 @@ makeSpatialization(model, grid = grid.df)
 \item{grid}{an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained}
 }
 \value{
-a dataframe containing the spatialized data
+a list containing a boolean and a dataframe containing the spatialized data
 }
 \author{
 Thomas Goossens

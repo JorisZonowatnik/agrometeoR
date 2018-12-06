@@ -10,7 +10,7 @@
 #' @param json a boolean specifying if data must be exported as json. Default = FALSE
 #' @param geojson a boolean specifying if data must be exported as geojson. Default = FALSE
 #' @param write a boolean specifying if fomatted data must be written to file (TRUE) or printed to console (FALSE)
-#' @return a character containing the data encoded in the required format. Default = csv
+#' @return a list containing a boolean and a character containing the data encoded in the required format. Default = csv
 exportSpatialization <- function(
   spatialized,
   path = getwd(),

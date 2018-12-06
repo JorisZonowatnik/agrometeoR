@@ -4,68 +4,70 @@
 #' @importFrom magrittr %>%
 #' @param model an object of class mlr::train() that contains the prediction model
 #' @param grid an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained
-#' @return a dataframe containing the spatialized data
+#' @return a list containing a boolean and a dataframe containing the spatialized data
 makeSpatialization <- function(
   model,
   grid = grid.df){
 
-  # Error handling wrapper
-  # https://stackoverflow.com/questions/12193779/how-to-write-trycatch-in-r
-
   out = tryCatch({
-    if (!isTRUE(class(model) == "WrappedModel") || !(toupper(model$features) %in% toupper(colnames(grid.df))) ) {
-      stop()
-    }
-    message("Predicting on grid...")
-    # rename X and Y to x and y for mlr (gstat learner compatibility)
-    grid = grid %>%
-      dplyr::rename("x" = "X") %>%
-      dplyr::rename("y" = "Y")
+    output = NA
+    bool = FALSE
 
-    # predicting on the grid
-    pred = predict(model, newdata = grid)
-    spatialized = grid %>%
-      dplyr::select(x, y, px) %>%
-      dplyr::bind_cols(pred$data)
+    withCallingHandlers({
+      if (!isTRUE(class(model) == "WrappedModel")) {
+        stop("Provided model must be of class WrappedModel")
+      }
 
-    # convert to spatial object to change CRS
-    spatialized = spatialized %>%
-      sf::st_as_sf(coords = c("x","y"))
+      if (!isTRUE(all(toupper(model$features) %in% toupper(colnames(grid.df))))) {
+        stop("The features used to build your model are not present in your prediction grid")
+      }
 
-    # set crs
-    spatialized = spatialized %>%
-      sf::st_set_crs(3812)
+      # rename X and Y to x and y for mlr (gstat learner compatibility)
+      grid = grid %>%
+        dplyr::rename("x" = "X") %>%
+        dplyr::rename("y" = "Y")
 
-    # convert to CRS = 4326 (geojson standard)
-    spatialized = spatialized %>%
-      sf::st_transform(4326)
+      # predicting on the grid
+      message("Predicting on grid...")
+      pred = predict(model, newdata = grid)
+      spatialized = grid %>%
+        dplyr::select(x, y, px) %>%
+        dplyr::bind_cols(pred$data)
 
-    # making it df again with x and y cols
-    coords = sf::st_coordinates(spatialized)
-    sf::st_geometry(spatialized) = NULL
-    spatialized = spatialized %>%
-      dplyr::bind_cols(data.frame(coords))
+      # convert to spatial object to change CRS
+      spatialized = spatialized %>%
+        sf::st_as_sf(coords = c("x","y"))
 
-    #
-    message("Success ! Data are spatialized")
+      # set crs
+      spatialized = spatialized %>%
+        sf::st_set_crs(3812)
 
-    # return the spatialized dataframe
-    return(spatialized)
+      # convert to CRS = 4326 (geojson standard)
+      spatialized = spatialized %>%
+        sf::st_transform(4326)
+
+      # making it df again with x and y cols
+      coords = sf::st_coordinates(spatialized)
+      sf::st_geometry(spatialized) = NULL
+      output = spatialized %>%
+        dplyr::bind_cols(data.frame(coords))
+
+      # success message and boolean
+      message("Success ! Data spatialized")
+      bool = TRUE
+    },
+    warning = function(cond){
+      message("AgrometeoR Warning :")
+      message(cond)
+    })
   },
   error = function(cond){
-    message("AgrometeoR Error : Model is not of class WrappedModel or predictions grid does not contain the same vars as the one used to build the model")
-    # message("Here's the original error message:")
-    # message(cond)
-    return(NA)
-  },
-  warning = function(cond){
-    message("AgrometeoR Warning :")
-    # message("Here's the original error message:")
-    # message(cond)
-    return(NULL)
+    message("AgrometeoR Error : makeSpatialization failed. Here is the original error message : ")
+    message(paste0(cond, "\n"))
+    message("Setting value of output to NA")
   },
   finally = {
-
+    return(list(bool = bool, output = output))
   })
   return(out)
 }

@@ -23,7 +23,7 @@ exportSpatialization(spatialized, path = getwd(), filename = NULL,
 \item{geojson}{a boolean specifying if data must be exported as geojson. Default = FALSE}
 }
 \value{
-a character containing the data encoded in the required format. Default = csv
+a list containing a boolean and a character containing the data encoded in the required format. Default = csv
 }
 \description{
 you can both store the encoded string in a variable and in a file by specifying write = TRUE
