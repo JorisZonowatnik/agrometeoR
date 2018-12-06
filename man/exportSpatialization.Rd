@@ -2,10 +2,10 @@
 % Please edit documentation in R/exportSpatialization.R
 \name{exportSpatialization}
 \alias{exportSpatialization}
-\title{export a spatialized object either to json or geojson}
+\title{export a spatialized object either to csv, json or geojson}
 \usage{
-exportSpatialization(spatialized, path = getwd(), filename, csv = FALSE,
-  json = FALSE, geojson = FALSE, write = FALSE)
+exportSpatialization(spatialized, path = getwd(), filename = NULL,
+  format = "csv", write = FALSE)
 }
 \arguments{
 \item{spatialized}{a dataframe containing the gridded predicted values}
@@ -14,13 +14,19 @@ exportSpatialization(spatialized, path = getwd(), filename, csv = FALSE,
 
 \item{filename}{a character specifying the name you want to give to the file.}
 
+\item{write}{a boolean specifying if fomatted data must be written to file (TRUE) or printed to console (FALSE)}
+
 \item{csv}{a boolean specifying if data must be exported as csv. Default = FALSE}
 
 \item{json}{a boolean specifying if data must be exported as json. Default = FALSE}
 
 \item{geojson}{a boolean specifying if data must be exported as geojson. Default = FALSE}
-
-\item{write}{a boolean specifying if fomatted data must be written to file (TRUE) or printed to console (FALSE)}
+}
+\value{
+a character containing the data encoded in the required format. Default = csv
+}
+\description{
+you can both store the encoded string in a variable and in a file by specifying write = TRUE
 }
 \author{
 Thomas Goossens
