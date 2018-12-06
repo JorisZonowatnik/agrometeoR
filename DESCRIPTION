@@ -20,11 +20,13 @@ Imports: mlr,
     geojsonio (== 0.6.0),
     geojsonlint (== 0.2.0),
     jsonlite (== 1.5)
-Suggests: rgeos (== 0.3-26),
+Suggests: 
+    rgeos (== 0.3-26),
     raster (== 2.6-7),
     rnaturalearth (== 0.1.0),
     rnaturalearthhires (== 0.2.0),
-    elevatr (== 0.1.4)
+    elevatr (== 0.1.4),
+    testthat (== 2.0.0)
 Remotes: github::pokyah/mlr@gstat,
     github::ropensci/rnaturalearthhires@master
 RoxygenNote: 6.0.1
