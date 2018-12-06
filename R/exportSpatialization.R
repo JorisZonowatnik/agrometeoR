@@ -20,16 +20,20 @@ exportSpatialization <- function(
 
   out = tryCatch({
 
+    output = NA
+    bool = FALSE
+
     if (!format %in% c("csv","json","geojson")) {
-      warning("Bad format specified. Setting format to .csv")
+      message("Bad format specified. Setting format to default .csv format")
       format = "csv"
     }
     if (isTRUE(write) && is.null(filename)) {
-      warning("Write set to true but no filename specified. Setting filename to 'myfile'")
+      message("Write set to true but no filename specified. Setting filename to 'myfile'")
+      filename = "myfile"
     }
+
     spatializedNoCoords = spatialized %>%
       dplyr::select(c("px", "response" ,"se"))
-
 
     if (format == "csv") {
       message("Encoding data to csv...")
@@ -39,11 +43,11 @@ exportSpatialization <- function(
       } else{
         csv.con = textConnection("csv.con", "w")
         write.csv(spatializedNoCoords, csv.con, row.names = FALSE)
-        csvString = textConnectionValue(csv.con)
+        output = textConnectionValue(csv.con)
         #cat(csvString)
         close(csv.con)
         message("Success ! Data encoded")
-        return(csvString)
+        bool = TRUE
       }
     }
 
@@ -53,38 +57,36 @@ exportSpatialization <- function(
         jsonlite::write_json(x = spatializedNoCoords, path = paste0(path, "/", filename, format))
         message(paste0("File written to", path, "/", filename, format))
       } else{
-        jsonString = jsonlite::toJSON(spatializedNoCoords)
+        output = jsonlite::toJSON(spatializedNoCoords)
         #cat(jsonString)
         message("Success ! Data encoded")
-        return(jsonString)
+        bool = TRUE
       }
     }
     if (format == "geojson") {
       message("Encoding data to geojson...")
-      geojsonString = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
+      output = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
       if (isTRUE(write)) {
-        geojsonio::geojson_write(geojsonString, file = paste0(path, "/", filename, ".geojson"))
+        geojsonio::geojson_write(output, file = paste0(path, "/", filename, ".geojson"))
         message(paste0("File written to", path, "/", filename, format))
       }else{
         #cat(geojsonString)
         message("Success ! Data encoded")
-        return(geojsonString)
+        bool = TRUE
       }
     }
   },
-    error = function(cond){
-      message("AgrometeoR Error : No proper output format specified. Please specify either json, csv or geojson")
-      # message(cond)
-      return(NA)
+    error = function(err){
+      message("AgrometeoR Error : exportSpatialization failed. Here is the original error message : ")
+      message(paste0(err, "\n"))
+      message("Setting value of output to NA")
+      return(list(bool, output))
     },
     warning = function(cond){
       message(cond)
-      # Choose a return value in case of warning
-      return(null)
     },
     finally = {
-
-
+      return(list(bool = bool, output = output))
     })
   return(out)
 }
