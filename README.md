@@ -156,7 +156,7 @@ These are not yet implemented as they require a working API to make queries in o
 
 ## learners
 
-The package will allow you to use a configuration where you can list the various learning algorithms you want to use to spatialize data
+The package will allow you to use a configuration file where you can list the various learning algorithms you want to use to spatialize data
 
 
 
