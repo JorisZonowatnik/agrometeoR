@@ -16,7 +16,7 @@ makeTasks(dataset, drop = NULL, target)
 \item{stations}{a character specifying the sid's of the stations to use separated by commas}
 }
 \value{
-an object of class list containing elements of class mlr::makeRegrTask()
+a list containing a boolean and a list which elements are of class mlr::makeRegrTask()
 }
 \author{
 Thomas Goossens

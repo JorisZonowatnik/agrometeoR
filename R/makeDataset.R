@@ -15,7 +15,7 @@
 #' Any combinations of inca, ens
 #' @param staticExpl a character vector specifying the static explanatory variables you want to add to the taks.
 #' Any combinations of "X", "Y", altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation"
-#' @return an object of class dataframe containing the desired records
+#' @return a list containing a boolean and a dataframe containing the desired records
 makeDataset <- function(
   user_token = Sys.getenv("AGROMET_API_V1_KEY"),
   stations = paste0(as.character(stations.df$sid), collapse = ","),
@@ -27,43 +27,66 @@ makeDataset <- function(
   dynExpl = NULL
 ){
 
-  if (is.null(json)) {
-    # make an API call to retrieve the dynamic data
-    dataset = typeData(
-      getData(user_token = user_token, dfrom = dfrom, dto = dto, sensors = sensor, sid = stations ))
+  out = tryCatch({
+    output = NA
+    bool = FALSE
 
-  } else{
-    # read the json FILE
-    dataset = jsonlite::fromJSON(json)
-    dataset.data = dataset$results
-    dataset.meta = dataset$references$stations
-    dataset = list(metadata = dataset.meta, data = dataset.data)
-    dataset = typeData(dataset, "cleandata")
+    withCallingHandlers({
+      if (is.null(json)) {
+        # make an API call to retrieve the dynamic data
+        message("Calling Agromet API...")
+        dataset = typeData(
+          getData(user_token = user_token, dfrom = dfrom, dto = dto, sensors = sensor, sid = stations ))
 
-    dataset = dataset %>%
-      dplyr::filter(network_name == "pameseb") %>%
-      dplyr::filter(type_name != "Sencrop") %>%
-      dplyr::filter(state == "Ok") %>%
-      tidyr::drop_na()
-  }
+      } else{
+        # read the json FILE
+        message("Reading JSON file...")
+        dataset = jsonlite::fromJSON(json)
+        dataset.data = dataset$results
+        dataset.meta = dataset$references$stations
+        dataset = list(metadata = dataset.meta, data = dataset.data)
+        dataset = typeData(dataset, "cleandata")
 
-  # Keep only the relevant columns
-  dataset = dataset %>%
-    dplyr::select("sid", "mtime", sensor)
+        dataset = dataset %>%
+          dplyr::filter(network_name == "pameseb") %>%
+          dplyr::filter(type_name != "Sencrop") %>%
+          dplyr::filter(state == "Ok") %>%
+          tidyr::drop_na()
+      }
 
-  # join with static explanatory vars
-  dataset = dataset %>%
-    dplyr::left_join(
-      stations.df %>%
-        dplyr::select(c("sid", staticExpl)),
-      by = "sid")
+      # Keep only the relevant columns
+      message("Making dataset...")
+      dataset = dataset %>%
+        dplyr::select("sid", "mtime", sensor)
 
-  # rename X and Y to x and y for mlr (gstat learner compatibility)
-  dataset = dataset %>%
-    dplyr::rename("y" = "Y") %>%
-    dplyr::rename("x" = "X")
+      # join with static explanatory vars
+      dataset = dataset %>%
+        dplyr::left_join(
+          stations.df %>%
+            dplyr::select(c("sid", staticExpl)),
+          by = "sid")
 
-  # return data
-  return(dataset)
+      # rename X and Y to x and y for mlr (gstat learner compatibility
+      output = dataset %>%
+        dplyr::rename("y" = "Y") %>%
+        dplyr::rename("x" = "X")
 
+      message("Success ! Dataset created")
+      bool = TRUE
+
+    },
+      warning = function(cond){
+        message("AgrometeoR Warning :")
+        message(cond)
+      })},
+    error = function(cond){
+      message("AgrometeoR error : makeDataset failed. Here is the original error message : ")
+      message(paste0(cond, "\n"))
+      message("Setting value of output to NA")
+    },
+    finally = {
+      return(list(bool = bool, output = output))
+    }
+  )
+  return(out)
 }
