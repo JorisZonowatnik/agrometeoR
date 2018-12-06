@@ -20,7 +20,7 @@ exportSpatialization <- function(
 
   out = tryCatch({
 
-    output = NA
+    output = NULL
     bool = FALSE
 
     if (!format %in% c("csv","json","geojson")) {
