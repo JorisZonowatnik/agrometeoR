@@ -8,21 +8,63 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 devtools::load_all()
+library(dplyr)
+library(sf)
 ```
 
 ```{r spatializeconfig, include=FALSE}
 # trick to avoir overwriting error with st_write - https://github.com/r-spatial/sf/issues/274
 files = list.files()
-if (!is.null("incagrid.geojson" %in% files)) {
-  file.remove("incagrid.geojson")
+if (!is.null("incagridExplVars.geojson" %in% files)) {
+  file.remove("incagridExplVars.geojson")
 }
 ```
 
-```{r}
+## Introduction
+
+The produced dataset will be injected into the postgres DB.
+The incagrid for Wallonia has been built from data provided by RMI. 
+Like all the other datasets of the package, the code used to generate the grid is available under ./data-raw
+
+## loading the grid points 
+```{r load-grid}
 # this is generated in data-raw/makeData.R and uses raw data provided by RMI
 data(grid.sf)
 grid.sf = grid.sf["px"]
 head(grid.sf)
-sf::st_write(obj = grid.sf, dsn = "incagrid.geojson")
 ```
 
+We see that this `grid.sf` dataset contains the RMI `px` reference and the location of the grid points stored in the geometry attribute.
+
+We will now inject the static explanatory variables `aspect`, `slope` and `elevation`
+
+## adding explanatory variables to the grid
+
+The explanatory static variabels are stored into the `grid.df` dataset. It also contains the `px` attribute that will allow us to make the join with the `grid.sf` object.
+
+```{r join-explanatory}
+# loading the explanatroy var dataset
+data("grid.df")
+# removing X and Y cols
+grid.df = grid.df %>%
+  dplyr::select(1:8)
+# excerpt of the data 
+head(grid.df)
+# joining to grid.sf
+grid.sf = grid.sf %>%
+  dplyr::left_join(grid.df, by = "px")
+# excerpt of the data 
+head(grid.sf)
+```
+
+## Writing to file
+
+We can now write our spatial object that contains the explanatory variables to a geojson file.
+
+```{r write to file}
+# transforming to proj EPSG = 4326 (geojson standard)
+grid.sf = sf::st_transform(grid.sf, 4326)
+sf::st_write(obj = grid.sf, dsn = "incagridExplVars.geojson")
+```
+
+You can download this geojson file [here](https://github.com/pokyah/agrometeoR/blob/master/vignettes/incagridExplVars.geojson)
