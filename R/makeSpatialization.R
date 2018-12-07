@@ -49,7 +49,7 @@ makeSpatialization <- function(
       # making it df again with x and y cols
       coords = sf::st_coordinates(spatialized)
       sf::st_geometry(spatialized) = NULL
-      output = spatialized %>%
+      output$value = spatialized %>%
         dplyr::bind_cols(data.frame(coords))
 
       # success message and boolean
@@ -62,9 +62,13 @@ makeSpatialization <- function(
     })
   },
   error = function(cond){
-    message("AgrometeoR Error : makeSpatialization failed. Here is the original error message : ")
-    message(paste0(cond, "\n"))
-    message("Setting value of output to NA")
+    error = paste0(
+      "AgrometeoR Error : makeSpatialization failed. Here is the original error message : ",
+      cond,
+      "\n",
+      "value of output set to NULL")
+    output$error = error
+    message(error)
   },
   finally = {
     return(list(bool = bool, output = output))

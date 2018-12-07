@@ -43,7 +43,7 @@ exportSpatialization <- function(
       } else{
         csv.con = textConnection("csv.con", "w")
         write.csv(spatializedNoCoords, csv.con, row.names = FALSE)
-        output = textConnectionValue(csv.con)
+        output$value = textConnectionValue(csv.con)
         #cat(csvString)
         close(csv.con)
         message("Success ! Data encoded")
@@ -57,7 +57,7 @@ exportSpatialization <- function(
         jsonlite::write_json(x = spatializedNoCoords, path = paste0(path, "/", filename, format))
         message(paste0("File written to", path, "/", filename, format))
       } else{
-        output = jsonlite::toJSON(spatializedNoCoords)
+        output$value = jsonlite::toJSON(spatializedNoCoords)
         #cat(jsonString)
         message("Success ! Data encoded")
         bool = TRUE
@@ -65,9 +65,9 @@ exportSpatialization <- function(
     }
     if (format == "geojson") {
       message("Encoding data to geojson...")
-      output = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
+      output$value = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
       if (isTRUE(write)) {
-        geojsonio::geojson_write(output, file = paste0(path, "/", filename, ".geojson"))
+        geojsonio::geojson_write(output$value, file = paste0(path, "/", filename, ".geojson"))
         message(paste0("File written to", path, "/", filename, format))
       }else{
         #cat(geojsonString)
@@ -77,10 +77,13 @@ exportSpatialization <- function(
     }
   },
     error = function(err){
-      message("AgrometeoR Error : exportSpatialization failed. Here is the original error message : ")
-      message(paste0(err, "\n"))
-      message("Setting value of output to NA")
-      return(list(bool, output))
+      error = paste0(
+        "AgrometeoR Error : exportSpatialization failed. Here is the original error message : ",
+        cond,
+        "\n",
+        "value of output set to NULL")
+      output$error = error
+      message(error)
     },
     warning = function(cond){
       message(cond)

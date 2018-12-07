@@ -39,7 +39,7 @@ makeTasks <- function(
       )
       # naming tasks
       names(tasks) = names(dataset)
-      output = tasks
+      output$value = tasks
 
       # success message and boolean
       message("Success ! Task(s) created ")
@@ -55,6 +55,7 @@ makeTasks <- function(
         "AgrometeoR Error : makeTasks failed. Here is the original error message : ",
         cond,
         "value of output set to NULL")
+      message(error)
       output$error = error
     },
     finally = {
