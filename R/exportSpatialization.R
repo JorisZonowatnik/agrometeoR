@@ -23,12 +23,15 @@ exportSpatialization <- function(
     output = list(value = NULL, error = NULL)
     bool = FALSE
 
+    if (!class(spatialized) == "data.frame") {
+      stop("argument spatialized must have class data.frame. ")
+    }
+
     if (!format %in% c("csv","json","geojson")) {
-      message("Bad format specified. Setting format to default .csv format")
-      format = "csv"
+      stop("Bad export format specified. Must be one of csv, json or geojson. ")
     }
     if (isTRUE(write) && is.null(filename)) {
-      message("Write set to true but no filename specified. Setting filename to 'myfile'")
+      warning("Write set to true but no filename specified. Setting filename to 'myfile'. ")
       filename = "myfile"
     }
 
