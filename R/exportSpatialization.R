@@ -24,7 +24,7 @@ exportSpatialization <- function(
     bool = FALSE
 
     if (!class(spatialized) == "data.frame") {
-      stop("argument spatialized must have class data.frame. ")
+      stop("Argument spatialized must have class data.frame. ")
     }
 
     if (!format %in% c("csv","json","geojson")) {

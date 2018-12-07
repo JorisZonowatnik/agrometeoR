@@ -11,9 +11,7 @@ makeTasks(dataset, drop = NULL, target)
 
 \item{drop}{a character vector specifying the explanatory variables you wan to drop.}
 
-\item{target}{a charchter specifying the name of the target variable}
-
-\item{stations}{a character specifying the sid's of the stations to use separated by commas}
+\item{target}{a charachter specifying the name of the target variable}
 }
 \value{
 a list containing a boolean and a list which elements are of class mlr::makeRegrTask()

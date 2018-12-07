@@ -13,15 +13,15 @@ makeSpatialization <- function(
     output = list(value = NULL, error = NULL)
     bool = FALSE
 
+    if (!isTRUE(class(model) == "WrappedModel")) {
+      stop("Provided model must be of class WrappedModel")
+    }
+
+    if (!isTRUE(all(toupper(model$features) %in% toupper(colnames(grid.df))))) {
+      stop("The features used to build your model are not present in your prediction grid")
+    }
+
     withCallingHandlers({
-      if (!isTRUE(class(model) == "WrappedModel")) {
-        stop("Provided model must be of class WrappedModel")
-      }
-
-      if (!isTRUE(all(toupper(model$features) %in% toupper(colnames(grid.df))))) {
-        stop("The features used to build your model are not present in your prediction grid")
-      }
-
       # rename X and Y to x and y for mlr (gstat learner compatibility)
       grid = grid %>%
         dplyr::rename("x" = "X") %>%

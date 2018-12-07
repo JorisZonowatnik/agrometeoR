@@ -164,7 +164,7 @@ myModel<span class="op">$</span>output<span class="op">$</span>value<span class=
 <pre><code>##          task.id        learner.id rmse.test.rmse mse.test.mean
 ## 1 20170304150000 multipleLinearReg      0.8650726     0.7483506
 ##   mae.test.mean timetrain.test.mean
-## 1     0.7437658         0.001344828</code></pre>
+## 1     0.7437658         0.001827586</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># what about the residuals ? </span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">x =</span>  <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(myTasks<span class="op">$</span>output<span class="op">$</span>value<span class="op">$</span><span class="st">`</span><span class="dt">20170304150000</span><span class="st">`</span>)[[<span class="st">"tsa"</span>]], myModel<span class="op">$</span>output<span class="op">$</span>value<span class="op">$</span>residuals[[<span class="dv">1</span>]])</code></pre></div>
 <p><img src="spatialization_example_files/figure-html/train-1.png" width="700"></p>
