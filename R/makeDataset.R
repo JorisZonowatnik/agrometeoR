@@ -13,8 +13,8 @@
 #' One of tsa, hct, hra
 #' @param dynExpl a character vector specifying the dynamic explanatory variables you want to add to the task.
 #' Any combinations of inca, ens
-#' @param staticExpl a character vector specifying the static explanatory variables you want to add to the taks.
-#' Any combinations of "X", "Y", altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation"
+#' @param staticExpl a character vector specifying the static explanatory variables you want to add to the tasks.
+#' Any combinations of "altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided
 #' @return a list containing a boolean and a dataframe containing the desired records
 makeDataset <- function(
   user_token = Sys.getenv("AGROMET_API_V1_KEY"),
@@ -23,7 +23,7 @@ makeDataset <- function(
   dfrom = NULL,
   dto = NULL,
   sensor = "tsa",
-  staticExpl = c("X", "Y", "elevation"),
+  staticExpl = "elevation",
   dynExpl = NULL
 ){
 
@@ -33,11 +33,45 @@ makeDataset <- function(
 
     withCallingHandlers({
 
-      if (is.null(user_token)){
-        stop("AgrometeoR Error in makeDataset : Please provide a user_token")
+      # check if usertoken provided
+      if (is.null(user_token)) {
+        stop("AgrometeoR Error in makeDataset : Please provide a valid user_token. \n")
       }
 
-      # if (grep(x = dfrom, pattern = "/\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)/")){
+      # check if sensor provided is OK
+      if (!sensor %in% c("tsa", "hra", "hct")) {
+        stop(paste0(
+          "The sensor ",
+          "\"", sensor, "\"",
+          " you have provided is not allowed. \n"))
+      }
+
+      # check if staticExpl provided is ok
+      if (!all(staticExpl %in% c("elevation"))) {
+        good_staticExpl = staticExpl[staticExpl %in% c("elevation")]
+        bad_staticExpl = staticExpl[!staticExpl %in% c("elevation")]
+        staticExpl = good_staticExpl
+        stop(paste0(
+          "The explanatory variable ",
+          "\"", bad_staticExpl, "\"",
+          " you have provided is not allowed. \n"))
+      }
+
+      # check if queried stations exist. If a station does not exist, removed from query
+      if (!isTRUE(all(strsplit(stations, ",")[[1]]  %in% (as.character(stations.df$sid))))) {
+        good_stations = strsplit(stations, ",")[[1]][strsplit(stations, ",")[[1]] %in% (as.character(stations.df$sid))]
+        bad_stations = strsplit(stations, ",")[[1]][!strsplit(stations, ",")[[1]] %in% (as.character(stations.df$sid))]
+        # stations = paste(good_stations, sep = ",")
+        stop(paste0(
+          "The station(s) with sid ",
+          paste(bad_stations, sep = ","),
+          " you have provided not allowed. \n"
+        ))
+      }
+
+      # check for isodatetime
+      # https://www.w3.org/TR/NOTE-datetime
+      # if (grep(x = dfrom, pattern = "/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z)/")){
       #
       # }
 
@@ -72,7 +106,7 @@ makeDataset <- function(
       dataset = dataset %>%
         dplyr::left_join(
           stations.df %>%
-            dplyr::select(c("sid", staticExpl)),
+            dplyr::select(c("sid", "X", "Y", staticExpl)),
           by = "sid")
 
       # rename X and Y to x and y for mlr (gstat learner compatibility
@@ -93,7 +127,7 @@ makeDataset <- function(
         "AgrometeoR Error : makeDataset failed. Here is the original error message : ",
         cond,
         "\n",
-        "value of output set to NULL")
+        "Value of output set to NULL")
       output$error = error
       message(error)
     },
