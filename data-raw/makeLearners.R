@@ -22,13 +22,13 @@ learners = list(
   lrn.gstat.ts1 = makeLearner(
     cl = "regr.gstat",
     id = "ts1",
-    par.vals = list(degree = 1),
+    par.vals = list(degree = 1, debug.level = 0),
     predict.type = "se"),
 
   lrn.gstat.ts2 = makeLearner(
     cl = "regr.gstat",
     id = "ts2",
-    par.vals = list(degree = 2),
+    par.vals = list(degree = 2, debug.level = 0),
     predict.type = "se"),
 
   lrn.gstat.ok = makeFilterWrapper(
@@ -39,7 +39,8 @@ learners = list(
         range = 800,
         psill = 200000,
         model.manual = "Sph",
-        nugget = 0),
+        nugget = 0,
+        debug.level = 0),
       predict.type = "se"),
     fw.method = "linear.correlation",
     fw.mandatory.feat = c("y", "x"),
@@ -53,7 +54,8 @@ learners = list(
         range = 800,
         psill = 200000,
         model.manual = "Sph",
-        nugget = 0),
+        nugget = 0,
+        debug.level = 0),
       predict.type = "se"),
     fw.method = "linear.correlation",
     fw.mandatory.feat = c("y", "x", "elevation"),
@@ -64,7 +66,8 @@ learners = list(
       cl = "regr.gstat",
       id = "nn1",
       par.vals = list(
-        nmax = 1),
+        nmax = 1,
+        debug.level = 0),
       predict.type = "se"),
     fw.method = "linear.correlation",
     fw.mandatory.feat = c("y", "x"),
