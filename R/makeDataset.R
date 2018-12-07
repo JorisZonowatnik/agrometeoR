@@ -31,49 +31,49 @@ makeDataset <- function(
     output = list(value = NULL, error = NULL)
     bool = FALSE
 
+    # check if usertoken provided
+    if (is.null(user_token)) {
+      stop("AgrometeoR Error in makeDataset : Please provide a valid user_token. \n")
+    }
+
+    # check if sensor provided is OK
+    if (!sensor %in% c("tsa", "hra", "hct")) {
+      stop(paste0(
+        "The sensor ",
+        "\"", sensor, "\"",
+        " you have provided is not allowed. \n"))
+    }
+
+    # check if staticExpl provided is ok
+    if (!all(staticExpl %in% c("elevation"))) {
+      good_staticExpl = staticExpl[staticExpl %in% c("elevation")]
+      bad_staticExpl = staticExpl[!staticExpl %in% c("elevation")]
+      staticExpl = good_staticExpl
+      stop(paste0(
+        "The explanatory variable ",
+        "\"", bad_staticExpl, "\"",
+        " you have provided is not allowed. \n"))
+    }
+
+    # check if queried stations exist. If a station does not exist, removed from query
+    if (!isTRUE(all(strsplit(stations, ",")[[1]]  %in% (as.character(stations.df$sid))))) {
+      good_stations = strsplit(stations, ",")[[1]][strsplit(stations, ",")[[1]] %in% (as.character(stations.df$sid))]
+      bad_stations = strsplit(stations, ",")[[1]][!strsplit(stations, ",")[[1]] %in% (as.character(stations.df$sid))]
+      # stations = paste(good_stations, sep = ",")
+      stop(paste0(
+        "The station(s) with sid ",
+        paste(bad_stations, sep = ","),
+        " you have provided not allowed. \n"
+      ))
+    }
+
+    # check for isodatetime
+    # https://www.w3.org/TR/NOTE-datetime
+    # if (grep(x = dfrom, pattern = "/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z)/")){
+    #
+    # }
+
     withCallingHandlers({
-
-      # check if usertoken provided
-      if (is.null(user_token)) {
-        stop("AgrometeoR Error in makeDataset : Please provide a valid user_token. \n")
-      }
-
-      # check if sensor provided is OK
-      if (!sensor %in% c("tsa", "hra", "hct")) {
-        stop(paste0(
-          "The sensor ",
-          "\"", sensor, "\"",
-          " you have provided is not allowed. \n"))
-      }
-
-      # check if staticExpl provided is ok
-      if (!all(staticExpl %in% c("elevation"))) {
-        good_staticExpl = staticExpl[staticExpl %in% c("elevation")]
-        bad_staticExpl = staticExpl[!staticExpl %in% c("elevation")]
-        staticExpl = good_staticExpl
-        stop(paste0(
-          "The explanatory variable ",
-          "\"", bad_staticExpl, "\"",
-          " you have provided is not allowed. \n"))
-      }
-
-      # check if queried stations exist. If a station does not exist, removed from query
-      if (!isTRUE(all(strsplit(stations, ",")[[1]]  %in% (as.character(stations.df$sid))))) {
-        good_stations = strsplit(stations, ",")[[1]][strsplit(stations, ",")[[1]] %in% (as.character(stations.df$sid))]
-        bad_stations = strsplit(stations, ",")[[1]][!strsplit(stations, ",")[[1]] %in% (as.character(stations.df$sid))]
-        # stations = paste(good_stations, sep = ",")
-        stop(paste0(
-          "The station(s) with sid ",
-          paste(bad_stations, sep = ","),
-          " you have provided not allowed. \n"
-        ))
-      }
-
-      # check for isodatetime
-      # https://www.w3.org/TR/NOTE-datetime
-      # if (grep(x = dfrom, pattern = "/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z)/")){
-      #
-      # }
 
       if (is.null(json)) {
         # make an API call to retrieve the dynamic data
