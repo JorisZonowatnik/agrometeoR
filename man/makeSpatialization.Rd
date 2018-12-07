@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeSpatialization.R
 \name{makeSpatialization}
 \alias{makeSpatialization}
-\title{spatialize to geojson (EPSG = 4326) a gridded dataset using a mlr model}
+\title{spatialize a gridded dataset using a mlr model}
 \usage{
 makeSpatialization(model, grid = grid.df)
 }
