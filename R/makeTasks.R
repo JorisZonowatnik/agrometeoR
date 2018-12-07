@@ -1,9 +1,8 @@
 #' @export
 #' @title make one or multiple mlr regr task(s) for sets of hourly/daily records
 #' @author Thomas Goossens
-#' @param stations a character specifying the sid's of the stations to use separated by commas
 #' @param dataset a dataframe containing all the hourly/daily records you want to transform to a list of mlr tasks
-#' @param target a charchter specifying the name of the target variable
+#' @param target a charachter specifying the name of the target variable
 #' @param drop a character vector specifying the explanatory variables you wan to drop.
 #' @return a list containing a boolean and a list which elements are of class mlr::makeRegrTask()
 makeTasks <- function(
@@ -14,6 +13,21 @@ makeTasks <- function(
   out = tryCatch({
     output = list(value = NULL, error = NULL)
     bool = FALSE
+
+    if (!class(dataset) == "data.frame") {
+      stop(paste(
+        "The argument dataset must have class 'data.frame'. ",
+        "\n"
+      ))
+    }
+
+    if (!target %in% colnames(dataset)) {
+      stop(paste(
+        "Your dataset does not contain a variable that matches your target argument "
+        , target,
+        "\n"
+      ))
+    }
 
     withCallingHandlers({
 
