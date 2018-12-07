@@ -39,7 +39,7 @@ exportSpatialization <- function(
       message("Encoding data to csv...")
       if (isTRUE(write)) {
         write.csv(data.frame(spatializedNoCoords), paste0(path, "/", filename, format), row.names = FALSE)
-        message(paste0("File written to", path, "/", filename, format))
+        message(paste0("File written to", path, "/", filename, ".", format))
       } else{
         csv.con = textConnection("csv.con", "w")
         write.csv(spatializedNoCoords, csv.con, row.names = FALSE)
@@ -55,7 +55,7 @@ exportSpatialization <- function(
       message("Encoding data to json...")
       if (isTRUE(write)) {
         jsonlite::write_json(x = spatializedNoCoords, path = paste0(path, "/", filename, format))
-        message(paste0("File written to", path, "/", filename, format))
+        message(paste0("File written to", path, "/", filename, ".", format))
       } else{
         output$value = jsonlite::toJSON(spatializedNoCoords)
         #cat(jsonString)
@@ -68,7 +68,7 @@ exportSpatialization <- function(
       output$value = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
       if (isTRUE(write)) {
         geojsonio::geojson_write(output$value, file = paste0(path, "/", filename, ".geojson"))
-        message(paste0("File written to", path, "/", filename, format))
+        message(paste0("File written to", path, "/", filename, ".", format))
       }else{
         #cat(geojsonString)
         message("Success ! Data encoded")
