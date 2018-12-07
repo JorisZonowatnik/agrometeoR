@@ -12,7 +12,7 @@ makeTasks <- function(
   target
 ){
   out = tryCatch({
-    output = NULL
+    output = list(value = NULL, error = NULL)
     bool = FALSE
 
     withCallingHandlers({
@@ -51,9 +51,11 @@ makeTasks <- function(
       })
   },
     error = function(cond){
-      message("AgrometeoR Error : makeTasks failed. Here is the original error message : ")
-      message(paste0(cond, "\n"))
-      message("Setting value of output to NA")
+      error = paste0(
+        "AgrometeoR Error : makeTasks failed. Here is the original error message : ",
+        cond,
+        "value of output set to NULL")
+      output$error = error
     },
     finally = {
       return(list(bool = bool, output = output))

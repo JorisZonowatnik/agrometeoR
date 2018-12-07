@@ -10,7 +10,7 @@ makeSpatialization <- function(
   grid = grid.df){
 
   out = tryCatch({
-    output = NULL
+    output = list(value = NULL, error = NULL)
     bool = FALSE
 
     withCallingHandlers({

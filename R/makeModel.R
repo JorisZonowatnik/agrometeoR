@@ -9,7 +9,7 @@ makeModel <- function(
   task,
   learner){
  out = tryCatch({
-   output = NULL
+   output = list(value = NULL, error = NULL)
    bool = FALSE
 
    withCallingHandlers({
