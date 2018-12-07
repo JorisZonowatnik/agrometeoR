@@ -68,7 +68,7 @@ makeTasks <- function(
       error = paste0(
         "AgrometeoR Error : makeTasks failed. Here is the original error message : ",
         cond,
-        "value of output set to NULL")
+        "Value of output set to NULL.")
       message(error)
       output$error = error
     },
