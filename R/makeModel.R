@@ -12,6 +12,14 @@ makeModel <- function(
    output = list(value = NULL, error = NULL)
    bool = FALSE
 
+   if (!length(which(class(task) %in% "RegrTask")) > 0){
+    stop("The argument task must have class 'RegrTask'. For more information, see mlr package documentation. ")
+   }
+
+   if (!length(which(class(learner) %in% "Learner")) > 0){
+     stop("The argument task must have class 'Learner'. For more information, see mlr package documentation. ")
+   }
+
    withCallingHandlers({
      # message
      message("Training the learner to build a model...")
@@ -21,7 +29,8 @@ makeModel <- function(
        learners = learner,
        tasks = task,
        resamplings = mlr::makeResampleDesc("LOO"),
-       measures = list(rmse, mse, mae, timetrain))
+       measures = list(rmse, mse, mae, timetrain),
+       show.info = FALSE)
 
      # aggregated Performances
      perfs = getBMRPerformances(bmr, as.df = TRUE)
