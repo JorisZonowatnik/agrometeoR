@@ -47,10 +47,13 @@ makeModel <- function(
        # summary = summary(m$learner.model)
      )
 
+     # storing to output
+     output$value = model
+
      # success message
      message("Success ! Model created")
      bool = TRUE
-     output = model
+
    },
    warning = function(cond){
      message("AgrometeoR Warning :")
@@ -58,9 +61,13 @@ makeModel <- function(
    })
  },
    error = function(cond){
-     message("AgrometeoR Error : makeSpatialization failed. Here is the original error message : ")
-     message(paste0(cond, "\n"))
-     message("Setting value of output to NA")
+     error = paste0(
+       "AgrometeoR Error : makeModel failed. Here is the original error message : ",
+       cond,
+       "\n",
+       "value of output set to NULL")
+     output$error = error
+     message(error)
    },
    finally = {
      return(list(bool = bool, output = output))

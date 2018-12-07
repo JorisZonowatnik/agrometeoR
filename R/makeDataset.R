@@ -32,6 +32,15 @@ makeDataset <- function(
     bool = FALSE
 
     withCallingHandlers({
+
+      if (is.null(user_token)){
+        stop("AgrometeoR Error in makeDataset : Please provide a user_token")
+      }
+
+      # if (grep(x = dfrom, pattern = "/\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)/")){
+      #
+      # }
+
       if (is.null(json)) {
         # make an API call to retrieve the dynamic data
         message("Calling Agromet API...")
@@ -67,7 +76,7 @@ makeDataset <- function(
           by = "sid")
 
       # rename X and Y to x and y for mlr (gstat learner compatibility
-      output = dataset %>%
+      output$value = dataset %>%
         dplyr::rename("y" = "Y") %>%
         dplyr::rename("x" = "X")
 
@@ -80,9 +89,13 @@ makeDataset <- function(
         message(cond)
       })},
     error = function(cond){
-      message("AgrometeoR error : makeDataset failed. Here is the original error message : ")
-      message(paste0(cond, "\n"))
-      message("Setting value of output to NA")
+      error = paste0(
+        "AgrometeoR Error : makeDataset failed. Here is the original error message : ",
+        cond,
+        "\n",
+        "value of output set to NULL")
+      output$error = error
+      message(error)
     },
     finally = {
       return(list(bool = bool, output = output))

@@ -14,38 +14,68 @@ makeBenchmark <- function(
   learners,
   resamplings = "LOO"){
 
-  # enable parallelization with level = mlr.resample
-  if (!isTRUE(parallel)) {
-    parallelStart(mode = "multicore", cpus = 4, level = "mlr.resample")
-  }
+  out = tryCatch({
+    output = list(value = NULL, error = NULL)
+    bool = FALSE
 
-  # benchmark
-  bmr = mlr::benchmark(
-    learners = learners,
-    tasks = tasks,
-    resamplings = mlr::makeResampleDesc(resamplings),
-    measures = list(rmse, mse, mae, timetrain))
+    withCallingHandlers({
 
-  # stop the parallelized computing
-  if (!isTRUE(parallel)) {
-    parallelStop()
-  }
+      # message
+      message("Running benchmark...")
 
-  # perfs + aggregated Performances
-  perfs = getBMRPerformances(bmr, as.df = TRUE)
-  aggPerfs = getBMRAggrPerformances(bmr, as.df = TRUE)
+      # enable parallelization with level = mlr.resample
+      if (isTRUE(parallel)) {
+        parallelStart(mode = "multicore", cpus = cores, level = "mlr.resample")
+      }
 
-  # create a list containing all the useful information
-  benchmarkResults = list(
-    bmr = bmr,
-    perfs = perfs,
-    aggPerfs = aggPerfs
-    # summary = summary(m$learner.model)
-  )
+      # benchmark
+      bmr = mlr::benchmark(
+        learners = learners,
+        tasks = tasks,
+        resamplings = mlr::makeResampleDesc(resamplings),
+        measures = list(rmse, mse, mae, timetrain))
 
+      # stop the parallelized computing
+      if (isTRUE(parallel)) {
+        parallelStop()
+      }
 
+      # perfs + aggregated Performances
+      perfs = getBMRPerformances(bmr, as.df = TRUE)
+      aggPerfs = getBMRAggrPerformances(bmr, as.df = TRUE)
 
-  # return the model and its information contained in the list
-  return(benchmarkResults)
+      # create a list containing all the useful information
+      output$value = list(
+        bmr = bmr,
+        perfs = perfs,
+        aggPerfs = aggPerfs
+        # summary = summary(m$learner.model)
+      )
+
+      # success message and boolean
+      message("Success ! Benchmark conducted")
+      bool = TRUE
+    },
+    warning = function(cond){
+      message("AgrometeoR Warning :")
+      message(cond)
+    })
+  },
+    error = function(cond){
+      error = paste0(
+        "AgrometeoR Error : makeBenchmark failed. Here is the original error message : ",
+        cond,
+        "\n",
+        "value of output set to NULL")
+      output$error = error
+      message(error)
+    },
+    finally = {
+      return(list(bool = bool, output = output))
+    })
+  return(out)
+
 }
+
+
 
