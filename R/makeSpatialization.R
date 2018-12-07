@@ -1,5 +1,5 @@
 #' @export
-#' @title spatialize to geojson (EPSG = 4326) a gridded dataset using a mlr model
+#' @title spatialize a gridded dataset using a mlr model
 #' @author Thomas Goossens
 #' @importFrom magrittr %>%
 #' @param model an object of class mlr::train() that contains the prediction model
