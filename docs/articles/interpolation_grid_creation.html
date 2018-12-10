@@ -143,16 +143,16 @@ grid.sf =<span class="st"> </span>grid.sf[<span class="st">"px"</span>]
 <pre><code>## Simple feature collection with 6 features and 1 field
 ## geometry type:  POINT
 ## dimension:      XY
-## bbox:           xmin: 550013.6 ymin: 665990 xmax: 554013.6 ymax: 666990
+## bbox:           xmin: 550013.6 ymin: 665990 xmax: 741012.9 ymax: 666990
 ## epsg (SRID):    3812
 ## proj4string:    +proj=lcc +lat_1=49.83333333333334 +lat_2=51.16666666666666 +lat_0=50.797815 +lon_0=4.359215833333333 +x_0=649328 +y_0=665262 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
-##         px                geometry
-## 155 164266 POINT (552013.6 666990)
-## 156 164267 POINT (553013.6 666990)
-## 157 164268 POINT (554013.6 666990)
-## 237 164865 POINT (550013.6 665990)
-## 238 164866 POINT (551013.6 665990)
-## 239 164867 POINT (552013.6 665990)</code></pre>
+##         px                  geometry
+## 155 164266   POINT (552013.6 666990)
+## 156 164267   POINT (553013.6 666990)
+## 157 164268   POINT (554013.6 666990)
+## 224 164455 POINT (741012.9 666989.5)
+## 237 164865   POINT (550013.6 665990)
+## 238 164866   POINT (551013.6 665990)</code></pre>
 <p>We see that this <code>grid.sf</code> dataset contains the RMI <code>px</code> reference and the location of the grid points stored in the geometry attribute.</p>
 <p>We will now inject the static explanatory variables <code>aspect</code>, <code>slope</code> and <code>elevation</code></p>
 </div>
@@ -189,30 +189,30 @@ grid.sf =<span class="st"> </span>grid.sf <span class="op">%&gt;%</span>
 <pre><code>## Simple feature collection with 6 features and 8 fields
 ## geometry type:  POINT
 ## dimension:      XY
-## bbox:           xmin: 550013.6 ymin: 665990 xmax: 554013.6 ymax: 666990
+## bbox:           xmin: 550013.6 ymin: 665990 xmax: 741012.9 ymax: 666990
 ## epsg (SRID):    3812
 ## proj4string:    +proj=lcc +lat_1=49.83333333333334 +lat_2=51.16666666666666 +lat_0=50.797815 +lon_0=4.359215833333333 +x_0=649328 +y_0=665262 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
 ##       px elevation       slope   aspect Agricultural_areas
 ## 1 164266  17.91418 0.013484839 3.086932           80.07790
 ## 2 164267  18.14169 0.001938204 2.224847           78.06777
 ## 3 164268  18.83645 0.009254794 4.023337           83.34019
-## 4 164865  19.88416 0.007572229 1.719723           96.17199
-## 5 164866  17.56914 0.005303794 3.216073           30.83748
-## 6 164867  17.48555 0.006535970 3.834256           85.14979
+## 4 164455 113.42007 0.008275864 2.618857           99.95431
+## 5 164865  19.88416 0.007572229 1.719723           96.17199
+## 6 164866  17.56914 0.005303794 3.216073           30.83748
 ##   Artificials_surfaces Forest Herbaceous_vegetation
 ## 1             0.000000      0              19.87641
 ## 2             0.000000      0              21.88654
 ## 3             0.000000      0              16.61413
-## 4             3.782325      0               0.00000
-## 5            27.236174      0              41.88066
-## 6             0.000000      0              14.80453
-##                  geometry
-## 1 POINT (552013.6 666990)
-## 2 POINT (553013.6 666990)
-## 3 POINT (554013.6 666990)
-## 4 POINT (550013.6 665990)
-## 5 POINT (551013.6 665990)
-## 6 POINT (552013.6 665990)</code></pre>
+## 4             0.000000      0               0.00000
+## 5             3.782325      0               0.00000
+## 6            27.236174      0              41.88066
+##                    geometry
+## 1   POINT (552013.6 666990)
+## 2   POINT (553013.6 666990)
+## 3   POINT (554013.6 666990)
+## 4 POINT (741012.9 666989.5)
+## 5   POINT (550013.6 665990)
+## 6   POINT (551013.6 665990)</code></pre>
 </div>
 <div id="writing-to-file" class="section level2">
 <h2 class="hasAnchor">
@@ -222,7 +222,7 @@ grid.sf =<span class="st"> </span>grid.sf <span class="op">%&gt;%</span>
 grid.sf =<span class="st"> </span>sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_transform">st_transform</a></span>(grid.sf, <span class="dv">4326</span>)
 sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_write">st_write</a></span>(<span class="dt">obj =</span> grid.sf, <span class="dt">dsn =</span> <span class="st">"incagridExplVars.geojson"</span>)</code></pre></div>
 <pre><code>## Writing layer `incagridExplVars' to data source `incagridExplVars.geojson' using driver `GeoJSON'
-## features:       52195
+## features:       16900
 ## fields:         8
 ## geometry type:  Point</code></pre>
 <p>You can download this geojson file <a href="https://github.com/pokyah/agrometeoR/blob/master/vignettes/incagridExplVars.geojson">here</a></p>

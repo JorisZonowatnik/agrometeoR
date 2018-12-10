@@ -22,7 +22,9 @@ devtools::load_all()
 # downloading admin boundaries of Belgium
 belgium = sf::st_as_sf((rnaturalearth::ne_states(country = 'belgium')))
 # subsetting Wallonia
-wallonia = belgium %>% dplyr::filter(region == "Walloon")
+wallonia = belgium %>% dplyr::filter(region == "Walloon") %>%
+  dplyr::select(name_fr)
+wallonia = sf::st_union(wallonia)
 # saving objects
 # devtools::use_data(belgium, overwrite = TRUE)
 # devtools::use_data(wallonia, overwrite = TRUE)
@@ -44,7 +46,10 @@ load("./data-raw/extdata/INCA_BE_DAY/INCA_TT_2013.Rdata")
 incaGrid = sf::st_transform(sf::st_as_sf(inca), crs = 4326)
 # limit it to Wallonia + 5km buffer and not full extent
 incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_buffer(st_transform(wallonia, 3812), 5000)), 4326)
-incaGrid = incaGrid[c("px", "latitude", "longitude")]
+# incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_transform(wallonia, 3812)), 4326)
+incaGrid = incaGrid[c("px")]
+
+icanGridBuff = sf::st_buffer(sf::st_transform(incaGrid, 3812), 5000)
 # devtools::use_data(incaGrid, overwrite = TRUE)
 
 #####
