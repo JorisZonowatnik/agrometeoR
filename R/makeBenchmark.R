@@ -24,9 +24,9 @@ makeBenchmark <- function(
       message("Running benchmark...")
 
       # enable parallelization with level = mlr.resample
-      if (isTRUE(parallel)) {
-        parallelStart(mode = "multicore", cpus = cores, level = "mlr.resample")
-      }
+      # if (isTRUE(parallel)) {
+      #   parallelStart(mode = "multicore", cpus = cores, level = "mlr.resample")
+      # }
 
       # benchmark
       bmr = mlr::benchmark(
@@ -35,10 +35,10 @@ makeBenchmark <- function(
         resamplings = mlr::makeResampleDesc(resamplings),
         measures = list(rmse, mse, mae, timetrain))
 
-      # stop the parallelized computing
-      if (isTRUE(parallel)) {
-        parallelStop()
-      }
+      # # stop the parallelized computing
+      # if (isTRUE(parallel)) {
+      #   parallelStop()
+      # }
 
       # perfs + aggregated Performances
       perfs = getBMRPerformances(bmr, as.df = TRUE)
