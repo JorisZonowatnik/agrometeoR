@@ -1,3 +1,5 @@
+library(mlr)
+
 learners = list(
   # defining the simple learners
   lrn.lm.alt_x_y = makeFilterWrapper(
@@ -71,7 +73,20 @@ learners = list(
       predict.type = "se"),
     fw.method = "linear.correlation",
     fw.mandatory.feat = c("y", "x"),
+    fw.abs = 2),
+
+  lrn.gstat.5nn = makeFilterWrapper(
+    learner = makeLearner(
+      cl = "regr.gstat",
+      id = "nn1",
+      par.vals = list(
+        nmax = 5,
+        debug.level = 0),
+      predict.type = "se"),
+    fw.method = "linear.correlation",
+    fw.mandatory.feat = c("y", "x"),
     fw.abs = 2)
 )
 
-devtools::use_data(learners, internal = FALSE, overwrite = TRUE)
+
+devtools::use_data(learners, overwrite = TRUE)
