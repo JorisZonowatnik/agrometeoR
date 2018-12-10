@@ -1,3 +1,5 @@
+library(parallelMap)
+devtools::load_all()
 
 # definition of the tests parameters
 user_token = Sys.getenv("AGROMET_API_V1_KEY")
@@ -27,5 +29,22 @@ dataset = makeDataset.test$output$value
 
 # makeTasks test
 makeTasks.test = makeTasks(
-
+  dataset = dataset,
+  target = "tsa"
 )
+
+task = makeTasks.test$output$value
+
+# makeBenchmark test
+makeBenchmark.test = makeBenchmark(
+  tasks = task[[1]],
+  learners = learners)
+
+benchmark = makeBenchmark.test$output$value
+
+# makeModel test
+makeModel.test = makeModel(
+  task = task[[1]],
+  learner = learners$lrn.lm.alt_x_y)
+
+response = makeModel.test$output$value$stations_pred
