@@ -17,7 +17,7 @@ makeModel <- function(
    }
 
    if (!length(which(class(learner) %in% "Learner")) > 0){
-     stop("The argument task must have class 'Learner'. For more information, see mlr package documentation. ")
+     stop("The argument learner must have class 'Learner'. For more information, see mlr package documentation. ")
    }
 
    withCallingHandlers({
@@ -37,19 +37,20 @@ makeModel <- function(
      aggPerfs = getBMRAggrPerformances(bmr, as.df = TRUE)
 
      # training the learner to create the model
-     m = mlr::train(
+     trained = mlr::train(
        learner = learner,
        task = task)
 
      # creating the residuals + predictions at stations dataframe
-     residuals = data.frame(residuals(m$learner.model))
-     colnames(residuals) = "residuals"
-     predictions = data.frame(predict(m$learner.model))
-     colnames(predictions) = "stations_pred"
+     predictions = data.frame(predict(trained, newdata = getTaskData(task))$data)
+     residuals = predictions %>%
+       dplyr::mutate(residuals = truth - response) %>%
+       dplyr::select(residuals)
+
 
      # create a list containing all the useful information
      model = list(
-       trained = m,
+       trained = trained,
        stations_pred = predictions,
        perfs = list(iters = perfs, agg = aggPerfs),
        residuals = residuals
