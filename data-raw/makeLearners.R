@@ -63,11 +63,25 @@ learners = list(
     fw.mandatory.feat = c("y", "x", "elevation"),
     fw.abs = 3),
 
+  lrn.gstat.2nn = makeFilterWrapper(
+    learner = makeLearner(
+      cl = "regr.gstat",
+      id = "nn2",
+      par.vals = list(
+        set = list(idp = 0),
+        nmax = 2,
+        debug.level = 0),
+      predict.type = "se"),
+    fw.method = "linear.correlation",
+    fw.mandatory.feat = c("y", "x"),
+    fw.abs = 2),
+
   lrn.gstat.1nn = makeFilterWrapper(
     learner = makeLearner(
       cl = "regr.gstat",
       id = "nn1",
       par.vals = list(
+        set = list(idp = 0),
         nmax = 1,
         debug.level = 0),
       predict.type = "se"),
@@ -78,8 +92,9 @@ learners = list(
   lrn.gstat.5nn = makeFilterWrapper(
     learner = makeLearner(
       cl = "regr.gstat",
-      id = "nn1",
+      id = "nn5",
       par.vals = list(
+        set = list(idp = 0),
         nmax = 5,
         debug.level = 0),
       predict.type = "se"),
