@@ -167,20 +167,20 @@ grid.df =<span class="st"> </span>grid.df <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>)
 <span class="co"># excerpt of the data </span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(grid.df)</code></pre></div>
-<pre><code>##       px elevation      slope   aspect Agricultural_areas
-## 1 161260  44.22828 0.01630801 4.131956          31.089247
-## 2 161261  52.99506 0.02571558 2.808717          36.421557
-## 3 161262  53.90875 0.04532333 1.553789          37.587495
-## 4 161263  48.52546 0.01811805 3.178955          81.180172
-## 5 161264  48.91750 0.02418184 3.826779          19.002174
-## 6 161449  83.96607 0.02598631 2.169279           3.312782
-##   Artificials_surfaces    Forest Herbaceous_vegetation
-## 1             13.19809  8.980372              8.951741
-## 2              0.00000 39.184419             22.347962
-## 3              0.00000 49.111040             13.255778
-## 4              0.00000  0.000000             18.774141
-## 5             49.35525  0.000000             27.040626
-## 6             57.84170  0.000000              0.000000</code></pre>
+<pre><code>##       px elevation       slope   aspect Agricultural_areas
+## 1 164266  17.91418 0.013484839 3.086932           80.07790
+## 2 164267  18.14169 0.001938204 2.224847           78.06777
+## 3 164268  18.83645 0.009254794 4.023337           83.34019
+## 4 164455 113.42007 0.008275864 2.618857           99.95431
+## 5 164865  19.88416 0.007572229 1.719723           96.17199
+## 6 164866  17.56914 0.005303794 3.216073           30.83748
+##   Artificials_surfaces Forest Herbaceous_vegetation
+## 1             0.000000      0              19.87641
+## 2             0.000000      0              21.88654
+## 3             0.000000      0              16.61413
+## 4             0.000000      0               0.00000
+## 5             3.782325      0               0.00000
+## 6            27.236174      0              41.88066</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># joining to grid.sf</span>
 grid.sf =<span class="st"> </span>grid.sf <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(grid.df, <span class="dt">by =</span> <span class="st">"px"</span>)
