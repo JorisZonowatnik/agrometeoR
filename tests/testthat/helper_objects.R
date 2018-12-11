@@ -37,3 +37,8 @@ test_task = makeTasks(
   drop = NULL,
   target = test_sensor)$output$value[[1]]
 test_bad_task = NULL
+
+# makeSpatialization inputs
+test_model = makeModel(
+  task = test_task,
+  learner = learners$lrn.lm.alt_x_y)$output$value
