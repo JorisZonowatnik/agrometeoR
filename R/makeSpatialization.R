@@ -3,11 +3,11 @@
 #' @author Thomas Goossens
 #' @importFrom magrittr %>%
 #' @param model an object of class mlr::train() that contains the prediction model
-#' @param grid an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained
+#' @param pred.grid an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained
 #' @return a list containing a boolean and a dataframe containing the spatialized data
 makeSpatialization <- function(
   model,
-  grid = grid.df){
+  pred.grid = grid.df){
 
   out = tryCatch({
     output = list(value = NULL, error = NULL)
@@ -23,15 +23,15 @@ makeSpatialization <- function(
 
     withCallingHandlers({
       # rename X and Y to x and y for mlr (gstat learner compatibility)
-      grid = grid %>%
+      pred.grid = pred.grid %>%
         dplyr::rename("x" = "X") %>%
         dplyr::rename("y" = "Y")
 
       # predicting on the grid
       message("Predicting on grid...")
 
-      pred = predict(model, newdata = grid)
-      spatialized = grid %>%
+      pred = predict(model, newdata = pred.grid)
+      spatialized = pred.grid %>%
         dplyr::select(x, y, px) %>%
         dplyr::bind_cols(pred$data)
 

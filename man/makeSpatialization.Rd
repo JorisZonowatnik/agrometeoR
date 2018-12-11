@@ -4,12 +4,12 @@
 \alias{makeSpatialization}
 \title{spatialize a gridded dataset using a mlr model}
 \usage{
-makeSpatialization(model, grid = grid.df)
+makeSpatialization(model, pred.grid = grid.df)
 }
 \arguments{
 \item{model}{an object of class mlr::train() that contains the prediction model}
 
-\item{grid}{an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained}
+\item{pred.grid}{an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained}
 }
 \value{
 a list containing a boolean and a dataframe containing the spatialized data

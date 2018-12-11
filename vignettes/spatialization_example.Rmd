@@ -8,11 +8,12 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 devtools::load_all()
+library(mlr)
 ```
 
 ## Load the libraries
 
-```{r libraries}
+```{r libraries, eval=FALSE}
 # loading mlr & agrometeoR
 library(mlr)
 library(agrometeoR)
