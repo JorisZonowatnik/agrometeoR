@@ -49,7 +49,6 @@ incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812)
 # incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_transform(wallonia, 3812)), 4326)
 incaGrid = incaGrid[c("px")]
 
-icanGridBuff = sf::st_buffer(sf::st_transform(incaGrid, 3812), 5000)
 # devtools::use_data(incaGrid, overwrite = TRUE)
 
 #####
@@ -367,7 +366,7 @@ colnames(cover.rate) <- gsub(" ","_",colnames(cover.rate))
 stations.ext = merge(stations.ext, cover.rate, by = "sid")
 # removing duplicated ID cols resulting from bind_cols operation
 excluded_vars = c("ID1", "ID2")
-stations.ext  = select(stations.ext, -one_of(excluded_vars))
+stations.ext  = dplyr::select(stations.ext, -one_of(excluded_vars))
 
 
 #####
@@ -375,24 +374,41 @@ stations.ext  = select(stations.ext, -one_of(excluded_vars))
 #####
 
 # static independent vars at stations + station geography objects
-stations.static = stations.ext
-stations.sf = stations.static %>%
+stations.df = stations.ext
+stations.sf = stations.df %>%
   dplyr::select(c(sid, poste))
 # creating the stations static dataset
-st_geometry(stations.static) = NULL
-stations.static = stations.static %>%
+st_geometry(stations.df) = NULL
+stations.df = stations.df %>%
   dplyr::select(c(sid, altitude, elevation, slope, aspect, Agricultural_areas, Artificials_surfaces, Forest, Herbaceous_vegetation))
 # devtools::use_data(stations.sf, overwrite = TRUE)
-# devtools::use_data(stations.static, overwrite = TRUE)
+# devtools::use_data(stations.df, overwrite = TRUE)
 
 # static independent vars at grid points + grid points geography objects
-grid.static = inca.ext
-grid.sf = grid.static %>%
+grid.sf = inca.ext
+
+# adding lat/lon data from from grid.sf to grid & limiting to Wallonia without buffer
+grid.sf = sf::st_intersection(sf::st_transform(grid.sf, 3812), sf::st_transform(wallonia, 3812))
+
+grid.df = grid.sf
+
+grid.sf = grid.sf %>%
   dplyr::select(c(px))
-grid.static = grid.static %>%
+
+grid.df = grid.df %>%
   dplyr::select(c(px, elevation, slope, aspect, Agricultural_areas, Artificials_surfaces, Forest, Herbaceous_vegetation))
 # devtools::use_data(grid.sf, overwrite = TRUE)
-# devtools::use_data(grid.static, overwrite = TRUE)
+# devtools::use_data(grid.df, overwrite = TRUE)
+
+grid.df = grid.df %>%
+  dplyr::left_join(
+    (data.frame(st_coordinates(st_transform(grid.sf, 3812))) %>%
+        dplyr::bind_cols(grid.sf["px"]) %>%
+        dplyr::select(-geometry)
+    ),
+    by = "px"
+  )
+sf::st_geometry(grid.df) = NULL
 
 # dynamic records at stations
 stations.dyn = records.hourly.1month
@@ -407,7 +423,7 @@ colnames(grid.dyn) = c("px", "tsa_hp1", "mtime")
 
 # adding the px of closest point of grid to each stations of stations.sf
 closest_px <- list()
-for(st in seq_len(nrow(stations.sf))){
+for (st in seq_len(nrow(stations.sf))) {
   closest_px[[st]] <- grid.sf[which.min(
     st_distance(grid.sf, stations.sf[st,])),]
 }
@@ -416,28 +432,6 @@ stations.sf = stations.sf %>%
   dplyr::bind_cols(data.frame(closest_px$px)) %>%
   dplyr::rename(px = closest_px.px )
 # devtools::use_data(stations.sf, overwrite = TRUE)
-
-#####
-## SAVING ALL THE OBJECTS TO PACKAGE DATA
-# doc : http://r-pkgs.had.co.nz/data.html
-#####
-
-# renaming for consistency
-grid.df = grid.static
-stations.df = stations.static
-
-# adding lat/lon data from from grid.sf to grid & limiting to Wallonia without buffer
-grid.sf = sf::st_intersection(sf::st_transform(grid.sf, 3812), sf::st_transform(wallonia, 3812))
-
-grid.df = grid.df %>%
-  dplyr::left_join(
-    (data.frame(st_coordinates(st_transform(grid.sf, 3812))) %>%
-        dplyr::bind_cols(grid.sf["px"]) %>%
-        dplyr::select(-geometry)
-    ),
-    by = "px"
-  )
-sf::st_geometry(grid.df) = NULL
 
 # adding lat/lon data from stations.sf to stations.df
 stations.df = stations.df %>%
@@ -449,6 +443,11 @@ stations.df = stations.df %>%
     by = "sid"
   )
 sf::st_geometry(stations.df) = NULL
+
+#####
+## SAVING ALL THE OBJECTS TO PACKAGE DATA
+# doc : http://r-pkgs.had.co.nz/data.html
+#####
 
 # saving in ./R/sysdata.rda
 devtools::use_data(wallonia, stations.sf, grid.sf, grid.df, stations.df, internal = FALSE, overwrite = TRUE)
