@@ -1,15 +1,6 @@
-# testthat::test_file("./tests/testthat/test_spatial_gstat.R")
-# devtools::test(filter = "gstat")
-# devtools::document()
-# devtools::load_all()
-# devtools::test(filter = "spatial_regr_gstat")
-# https://stackoverflow.com/questions/31548796/debugging-testthat-tests-in-rstudio
-# sink(NULL)
-# https://github.com/r-lib/devtools/issues/1675 - Error in x[[method]](...) : attempt to apply non-function
-# https://stackoverflow.com/questions/50083521/error-in-xmethod-attempt-to-apply-non-function-in-testthat-test-when
-# https://stackoverflow.com/questions/7028385/can-i-remove-an-element-in-dot-dot-dot-and-pass-it-on
-# http://r-pkgs.had.co.nz/tests.html
-context("makeDataset")
+
+library(testthat)
+context("Testing makeDataset")
 
 groups = list(
   good = list(
@@ -121,15 +112,4 @@ test_that("When bool isTRUE (no error), output has class dataframe and when bool
     }
 })
 
-test_that("When bool isTRUE, output has class dataframe and when bool isFALSE, output has class NULL", {
-  for (group in 1:length(groups)) {
-    for (case in 1:length(group)) {
-      object = do.call(what = makeDataset, args = groups[[group]][[case]][-1])
-      if (isTRUE(object$bool)) {
-        expect_is(object$output$value, "data.frame")
-      } else {
-        expect_null(object$output$value)
-      }
-    }
-  }
-})
+

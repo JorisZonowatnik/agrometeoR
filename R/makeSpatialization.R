@@ -29,6 +29,7 @@ makeSpatialization <- function(
 
       # predicting on the grid
       message("Predicting on grid...")
+
       pred = predict(model, newdata = grid)
       spatialized = grid %>%
         dplyr::select(x, y, px) %>%
