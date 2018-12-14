@@ -13,7 +13,7 @@ makeSpatialization <- function(
     output = list(value = NULL, error = NULL)
     bool = FALSE
 
-    if (!isTRUE(class(model) == "WrappedModel")) {
+    if (!isTRUE("WrappedModel" %in% class(model))) {
       stop("Provided model must be of class WrappedModel")
     }
 

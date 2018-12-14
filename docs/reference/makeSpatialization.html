@@ -8,6 +8,13 @@
 
 <title>spatialize a gridded dataset using a mlr model — makeSpatialization • agrometeoR</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
@@ -31,6 +38,8 @@
 
 
 <meta property="og:title" content="spatialize a gridded dataset using a mlr model — makeSpatialization" />
+
+<meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -157,7 +166,7 @@
 
     </div>
 
-    <pre class="usage"><span class='fu'>makeSpatialization</span>(<span class='no'>model</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='no'>grid.df</span>)</pre>
+    <pre class="usage"><span class='fu'>makeSpatialization</span>(<span class='no'>model</span>, <span class='kw'>pred.grid</span> <span class='kw'>=</span> <span class='no'>grid.df</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -167,7 +176,7 @@
       <td><p>an object of class mlr::train() that contains the prediction model</p></td>
     </tr>
     <tr>
-      <th>grid</th>
+      <th>pred.grid</th>
       <td><p>an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained</p></td>
     </tr>
     </table>
