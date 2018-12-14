@@ -990,6 +990,11 @@ Version: 1.4.2
 Hash: 83895360ce4f8d2ce92eee00526b5b0b
 Requires: cli, crayon, pillar, rlang
 
+Package: tictoc
+Source: CRAN
+Version: 1.0
+Hash: 0379257b730eed5b9089765c2921a098
+
 Package: tidyr
 Source: CRAN
 Version: 0.8.0
