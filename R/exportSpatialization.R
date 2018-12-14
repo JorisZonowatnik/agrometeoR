@@ -6,9 +6,7 @@
 #' @param spatialized a dataframe containing the gridded predicted values
 #' @param path a character specifying the path where you want your geosonfile to be stored. Default = wd
 #' @param filename a character specifying the name you want to give to the file.
-#' @param csv a boolean specifying if data must be exported as csv. Default = FALSE
-#' @param json a boolean specifying if data must be exported as json. Default = FALSE
-#' @param geojson a boolean specifying if data must be exported as geojson. Default = FALSE
+#' @param format a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"
 #' @param write a boolean specifying if fomatted data must be written to file (TRUE) or printed to console (FALSE)
 #' @return a list containing a boolean and a character containing the data encoded in the required format. Default = csv
 exportSpatialization <- function(
