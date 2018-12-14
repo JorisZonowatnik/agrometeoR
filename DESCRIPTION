@@ -19,8 +19,9 @@ Imports: mlr,
     leaflet.extras (>= 1.0.0),
     geojsonio (>= 0.6.0),
     geojsonlint (>= 0.2.0),
-    jsonlite (>= 1.5)
-Suggests: 
+    jsonlite (>= 1.5),
+    tictoc
+Suggests:
     rgeos (>= 0.3-26),
     raster (>= 2.6-7),
     rnaturalearth (>= 0.1.0),
