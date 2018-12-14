@@ -4,15 +4,22 @@
 \alias{makeBenchmark}
 \title{make a multicore parallelized mlr benchmark experiment for various learners on multiple tasks}
 \usage{
-makeBenchmark(parallel = TRUE, cores = 4, tasks, learners,
+makeBenchmark(parallel = TRUE, cpus = 4, tasks, learners,
+  measures = list(rmse), keep.pred = FALSE, models = FALSE,
   resamplings = "LOO")
 }
 \arguments{
-\item{cores}{an integer specifying the number of cores to use for the benchamrk}
+\item{cpus}{an integer specifying the number of cpus to use for the benchamrk}
 
 \item{tasks}{a list which elements are object of class mlr::makeRegrTask()}
 
 \item{learners}{a list which elements are object of class mlr::makeLearner()}
+
+\item{measures}{a list of the mlr performance metrics you want to get. Default is list(rmse)}
+
+\item{keep.pred}{a boolean specifying if you want to keep the bmr preds. defaut = FALSE}
+
+\item{models}{a boolean specifying if you want to keep the bmr models. defaut = FALSE}
 
 \item{resampling}{a character specifying the type of mlr's CV. Default = LOO}
 }
