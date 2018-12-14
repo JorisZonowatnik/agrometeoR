@@ -99,7 +99,7 @@ test_that("Error are thrown when a bad parameter is passed", {
   }
 })
 
-test_that("When bool isTRUE (no error), output has class dataframe and when bool isFALSE, output has class NULL", {
+test_that("When bool isTRUE (no error), output has class data.frame and when bool isFALSE, output has class NULL", {
   for (group in 1:length(groups)) {
       for (case in 1:length(group)) {
         object = do.call(what = makeDataset, args = groups[[group]][[case]][-1])
