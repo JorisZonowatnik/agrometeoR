@@ -25,7 +25,7 @@ Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 One of tsa, hct, hra}
 
 \item{staticExpl}{a character vector specifying the static explanatory variables you want to add to the tasks.
-Any combinations of "altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided}
+Any combinations of "altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided. Default = "Elevation"}
 
 \item{dynExpl}{a character vector specifying the dynamic explanatory variables you want to add to the task.
 Any combinations of inca, ens}
