@@ -4,6 +4,8 @@
 ## definition of the parameters used in the tests
 #####
 
+library(tidyverse)
+
 # makeDataset inputs
 test_user_token = Sys.getenv("AGROMET_API_V1_KEY")
 test_bad_user_token = "mysterious_token"
@@ -18,7 +20,7 @@ test_bad_sensor = "foo"
 test_staticExpl = "elevation"
 test_bad_staticExpl = "blah"
 test_grid = grid.df
-test_bad_grid = grid.df %>% dplyr::select(-(one_of(test_staticExpl)))
+test_bad_grid = test_grid[-2]
 
 # makeTasks inputs
 test_dataset = makeDataset(
@@ -30,8 +32,7 @@ test_dataset = makeDataset(
   staticExpl = test_staticExpl,
   json = NULL,
   dynExpl = NULL)$output$value
-test_bad_dataset = test_dataset %>%
-  dplyr::rename("foo" = "tsa")
+test_bad_dataset = dplyr::rename(test_dataset, "foo" = "tsa")
 
 # makeModel inputs
 test_task = makeTasks(
@@ -44,3 +45,9 @@ test_bad_task = NULL
 test_model = makeModel(
   task = test_task,
   learner = learners$lrn.lm.alt_x_y)$output$value$trained
+
+# exportSpatialization inputs
+test_spatialized = makeSpatialization(
+  model = test_model,
+  pred.grid = test_grid)$output$value
+test_bad_spatialized = test_spatialized[-2]

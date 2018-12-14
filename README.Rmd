@@ -1,5 +1,16 @@
+---
+output: github_document
+---
 
-# AgrometeoR
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/"
+)
+```
+
+# AgrometeoR <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 ## Introduction 
 
@@ -158,6 +169,10 @@ These are not yet implemented as they require a working API to make queries in o
 
 The package will allow you to use a configuration file where you can list the various learning algorithms you want to use to spatialize data
 
+
+## Logo
+
+Logo create with [logojoy](https://logojoy.com/editor/23591201)
 
 
 
