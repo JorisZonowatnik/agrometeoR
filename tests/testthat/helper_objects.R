@@ -1,4 +1,4 @@
-# creating the objects that will be used in the tests
+# Creation of the objects that will be used in the tests
 
 #####
 ## definition of the parameters used in the tests
@@ -17,6 +17,8 @@ test_sensor = "tsa"
 test_bad_sensor = "foo"
 test_staticExpl = "elevation"
 test_bad_staticExpl = "blah"
+test_grid = grid.df
+test_bad_grid = grid.df %>% dplyr::select(-(one_of(test_staticExpl)))
 
 # makeTasks inputs
 test_dataset = makeDataset(
@@ -41,4 +43,4 @@ test_bad_task = NULL
 # makeSpatialization inputs
 test_model = makeModel(
   task = test_task,
-  learner = learners$lrn.lm.alt_x_y)$output$value
+  learner = learners$lrn.lm.alt_x_y)$output$value$trained

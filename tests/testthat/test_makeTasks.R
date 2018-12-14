@@ -1,6 +1,6 @@
 
 library(testthat)
-context("Testing makeTask")
+context("Testing makeTasks")
 
 groups = list(
   good = list(
