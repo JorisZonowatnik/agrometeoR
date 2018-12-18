@@ -1,8 +1,10 @@
 library(mlr)
 
+# defining the base learners
 learners = list(
-  # defining the simple learners
-  lrn.lm.alt_x_y = makeFilterWrapper(
+
+  # multiple linear regression with alt, lat, lon
+  lrn.lm.alt = makeFilterWrapper(
     learner = makeLearner(
       cl = "regr.lm",
       id = "multiReg.alt_x_y",
@@ -11,29 +13,28 @@ learners = list(
     fw.mandatory.feat = c("elevation", "y", "x"),
     fw.abs = 3),
 
-  # this learner does not support missing values. So we input these
-  # lrn.lm.alt_x_y = makeImputeWrapper(
-  #   lrn.lm.alt_x_y,
-  #   cols = list(tsa_hp1 = imputeMedian()))
-
+  # inverse distance weighted
   lrn.gstat.idw = makeLearner(
     cl = "regr.gstat",
     id = "idw",
     predict.type = "se"),
 
+  # trends order 1
   lrn.gstat.ts1 = makeLearner(
     cl = "regr.gstat",
     id = "ts1",
     par.vals = list(degree = 1, debug.level = 0),
     predict.type = "se"),
 
+  # trends order 2
   lrn.gstat.ts2 = makeLearner(
     cl = "regr.gstat",
     id = "ts2",
     par.vals = list(degree = 2, debug.level = 0),
     predict.type = "se"),
 
-  lrn.gstat.ok = makeFilterWrapper(
+  # ordinary kriging
+  lrn.gstat.krige = makeFilterWrapper(
     learner = makeLearner(
       cl = "regr.gstat",
       id = "ok",
@@ -48,7 +49,8 @@ learners = list(
     fw.mandatory.feat = c("y", "x"),
     fw.abs = 2),
 
-  lrn.gstat.ked = makeFilterWrapper(
+  # kriging with alt as external drift
+  lrn.gstat.krige.alt = makeFilterWrapper(
     learner = makeLearner(
       cl = "regr.gstat",
       id = "ked",
@@ -63,12 +65,12 @@ learners = list(
     fw.mandatory.feat = c("y", "x", "elevation"),
     fw.abs = 3),
 
+  # 2 nearest neighbours based on lon lat
   lrn.gstat.2nn = makeFilterWrapper(
     learner = makeLearner(
       cl = "regr.gstat",
       id = "nn2",
       par.vals = list(
-        set = list(idp = 0),
         nmax = 2,
         debug.level = 0),
       predict.type = "se"),
@@ -76,6 +78,7 @@ learners = list(
     fw.mandatory.feat = c("y", "x"),
     fw.abs = 2),
 
+  # 1 nearest neighbour based on lon lat
   lrn.gstat.1nn = makeFilterWrapper(
     learner = makeLearner(
       cl = "regr.gstat",
@@ -89,19 +92,97 @@ learners = list(
     fw.mandatory.feat = c("y", "x"),
     fw.abs = 2),
 
+  # 5 nearest neighbours based on lon lat
   lrn.gstat.5nn = makeFilterWrapper(
     learner = makeLearner(
       cl = "regr.gstat",
       id = "nn5",
       par.vals = list(
-        set = list(idp = 0),
         nmax = 5,
         debug.level = 0),
       predict.type = "se"),
     fw.method = "linear.correlation",
     fw.mandatory.feat = c("y", "x"),
-    fw.abs = 2)
+    fw.abs = 2),
+
+  # 5 nearest neighbours multivariate with elevation
+  lrn.gstat.5nn.alt = makeFilterWrapper(
+    learner = makeLearner(
+      cl = "regr.gstat",
+      id = "nn5.alt",
+      par.vals = list(
+        nmax = 5,
+        debug.level = 0),
+      predict.type = "se"),
+    fw.method = "linear.correlation",
+    fw.mandatory.feat = c("y", "x", "elevation"),
+    fw.abs = 3),
+
+  #  k-nearest neighbours multivariate with elevation for tuning on k
+  lrn.gstat.knn.alt = makeFilterWrapper(
+    learner = makeLearner(
+      cl = "regr.gstat",
+      id = "knn.alt",
+      par.vals = list(
+        debug.level = 0),
+      predict.type = "se"),
+    fw.method = "linear.correlation",
+    fw.mandatory.feat = c("y", "x", "elevation"),
+    fw.abs = 3)
 )
 
+# parameters set for tuning on OK and KED
+ps.gstat.krige = ParamHelpers::makeParamSet(
+  ParamHelpers::makeDiscreteParam("range", values = c(800, 1600)),
+  ParamHelpers::makeDiscreteParam("psill", values = c(200000)),
+  ParamHelpers::makeDiscreteParam("model.manual", values = c("Sph")),
+  ParamHelpers::makeDiscreteParam("nugget", values = c(0))
+)
 
-devtools::use_data(learners, overwrite = TRUE)
+# parameters set for tuning on knn
+ps.gstat.knn = ParamHelpers::makeParamSet(
+  ParamHelpers::makeDiscreteParam("nmax", values = c(1,2,3,4,5,6))
+)
+
+ctrl = makeTuneControlGrid()
+
+inner = makeResampleDesc("Holdout")
+
+learners.tuning = list(
+  # ked tuning
+  lrn.gstat.krige.alt.tuning = makeTuneWrapper(
+    learner = makeFilterWrapper(
+        learner = makeLearner(
+          cl = "regr.gstat",
+          id = "ked",
+          predict.type = "se"),
+        fw.method = "linear.correlation",
+        fw.mandatory.feat = c("y", "x", "elevation"),
+        fw.abs = 3),
+    resampling = inner,
+    measures = rmse,
+    par.set = ps.gstat.krige, control = ctrl, show.info = FALSE),
+  # ok tuning
+  lrn.gstat.krige.tuning = makeTuneWrapper(
+    learner = makeFilterWrapper(
+      learner = makeLearner(
+        cl = "regr.gstat",
+        id = "ok",
+        predict.type = "se"),
+      fw.method = "linear.correlation",
+      fw.mandatory.feat = c("y", "x"),
+      fw.abs = 2),
+    resampling = inner,
+    measures = rmse,
+    par.set = ps.gstat.krige, control = ctrl, show.info = FALSE),
+  #knn tuning
+  lrn.gstat.knn.alt.tuning = makeTuneWrapper(
+    learner = setLearnerId(learners$lrn.gstat.knn.alt, "knn.alt.tuning"),
+    resampling = inner,
+    measures = rmse,
+    par.set = ps.gstat.knn, control = ctrl, show.info = FALSE)
+)
+
+am.learners = c(learners, learners.tuning)
+
+devtools::use_data(am.learners, overwrite = TRUE)

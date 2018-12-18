@@ -3,7 +3,7 @@
 #' @author Thomas Goossens
 #' @import mlr
 #' @import parallelMap
-#' @param cpus an integer specifying the number of cpus to use for the benchamrk
+#' @param cpus an integer specifying the number of cpus to use for the benchamrk. Default is 1
 #' @param tasks a list which elements are object of class mlr::makeRegrTask()
 #' @param learners a list which elements are object of class mlr::makeLearner()
 #' @param measures a list of the mlr performance metrics you want to get. Default is list(rmse)
@@ -12,14 +12,13 @@
 #' @param resampling  a character specifying the type of mlr's CV. Default = LOO
 #' @return a list wihch elements are objects of class mlr::benchmark()
 makeBenchmark <- function(
-  parallel = TRUE,
-  cpus = 4,
   tasks,
   learners,
   measures = list(rmse),
   keep.pred = FALSE,
   models = FALSE,
-  resamplings = "LOO"){
+  resamplings = "LOO",
+  cpus = 1){
 
   out = tryCatch({
     output = list(value = NULL, error = NULL)
@@ -30,13 +29,16 @@ makeBenchmark <- function(
       # message
       message("Running benchmark...")
 
+      # starting counting time of the bmr execution
+      tictoc::tic()
+
       # enable parallelization with level = mlr.resample
-      if (isTRUE(parallel)) {
+      if (cpus > 1) {
         parallelMap::parallelStart(mode = "multicore", cpus = cpus, level = "mlr.resample")
       }
 
-      # starting counting time of the bmr execution
-      tictoc::tic()
+      # set seed to make bmr experiments reproducibles
+      set.seed(1985)
 
       # benchmark
       bmr = mlr::benchmark(
@@ -47,14 +49,14 @@ makeBenchmark <- function(
         keep.pred = keep.pred,
         models = models)
 
+      # stop the parallelized computing
+      if (cpus > 1) {
+        parallelMap::parallelStop()
+      }
+
       # stoping counting time
       exectime = tictoc::toc()
       exectime = exectime$toc - exectime$tic
-
-      # stop the parallelized computing
-      if (isTRUE(parallel)) {
-        parallelMap::parallelStop()
-      }
 
       # perfs + aggregated Performances
       perfs = getBMRPerformances(bmr, as.df = TRUE)

@@ -135,6 +135,8 @@
 
     
     
+<p>A benchmark experiment allows to compare how various learners perform one one or multiple tasks. You can read the full documentation about benchmarking experiment on the <a href="https://mlr.mlr-org.com/articles/tutorial/benchmark_experiments.html">mlr website</a>.</p>
+<p>In this vignette we will present you how to use the makeBenchmark function and we will also explore the kind of outputs you can get from it.</p>
 <div id="load-the-libraries" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-the-libraries" class="anchor"></a>Load the libraries</h2>
@@ -148,35 +150,29 @@
 <a href="#create-the-tasks" class="anchor"></a>create the tasks</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create the task</span>
 tasks =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeTasks">makeTasks</a></span>(<span class="dt">dataset =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeDataset">makeDataset</a></span>(<span class="dt">dfrom =</span> <span class="st">"2017-03-04T00:00:00Z"</span>, <span class="dt">dto =</span> <span class="st">"2017-03-04T23:00:00Z"</span>, <span class="dt">sensor =</span> <span class="st">"tsa"</span>)<span class="op">$</span>output<span class="op">$</span>value, <span class="dt">target =</span> <span class="st">"tsa"</span>)</code></pre></div>
-<pre><code>## Calling Agromet API...</code></pre>
-<pre><code>## Your API URL call is :  https://app.pameseb.be/agromet/api/v2/cleandata/tsa/1,4,7,9,10,13,14,15,17,18,19,23,24,25,26,27,29,30,32,33,34,35,37,38,39,40,41,42,61/2017-03-04T00:00:00Z/2017-03-04T23:00:00Z</code></pre>
-<pre><code>## The API responded with a status code 200. 
-##  Data has been downloaded</code></pre>
-<pre><code>## Making dataset...</code></pre>
-<pre><code>## Success ! Dataset created</code></pre>
-<pre><code>## Making mlr task(s)...</code></pre>
-<pre><code>## Success ! Task(s) created</code></pre>
 </div>
 <div id="benchmark-some-learners-on-a-subset-of-these-tasks" class="section level2">
 <h2 class="hasAnchor">
 <a href="#benchmark-some-learners-on-a-subset-of-these-tasks" class="anchor"></a>benchmark some learners on a subset of these tasks</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># loading the learners preconfigured with the package</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"learners"</span>)
-bmr =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeBenchmark">makeBenchmark</a></span>(<span class="dt">tasks =</span> tasks<span class="op">$</span>output<span class="op">$</span>value[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">learners =</span> learners)</code></pre></div>
+bmr.1core =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeBenchmark">makeBenchmark</a></span>(<span class="dt">tasks =</span> tasks<span class="op">$</span>output<span class="op">$</span>value[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">learners =</span> learners)</code></pre></div>
 </div>
 <div id="vizualize-performance" class="section level2">
 <h2 class="hasAnchor">
 <a href="#vizualize-performance" class="anchor"></a>vizualize performance</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/plotBMRBoxplots">plotBMRBoxplots</a></span>(bmr<span class="op">$</span>output<span class="op">$</span>value<span class="op">$</span>bmr, <span class="dt">pretty.names =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/plotBMRBoxplots">plotBMRBoxplots</a></span>(bmr.1core<span class="op">$</span>output<span class="op">$</span>value<span class="op">$</span>bmr, <span class="dt">pretty.names =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="benchmarking_example_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/plotBMRSummary">plotBMRSummary</a></span>(bmr<span class="op">$</span>output<span class="op">$</span>value<span class="op">$</span>bmr, <span class="dt">pretty.names =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/plotBMRSummary">plotBMRSummary</a></span>(bmr.1core<span class="op">$</span>output<span class="op">$</span>value<span class="op">$</span>bmr, <span class="dt">pretty.names =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="benchmarking_example_files/figure-html/unnamed-chunk-1-2.png" width="700"></p>
 </div>
 <div id="check-if-parallelization-improves-computing-speed" class="section level2">
 <h2 class="hasAnchor">
 <a href="#check-if-parallelization-improves-computing-speed" class="anchor"></a>Check if parallelization improves computing speed</h2>
+<p>Let’s re-run the same benchmark but on 4 cores this time</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># with parallel computing</span>
-parallel =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeBenchmark">makeBenchmark</a></span>(<span class="dt">tasks =</span> tasks<span class="op">$</span>output<span class="op">$</span>value[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">learners =</span> learners, <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</code></pre></div>
+bmr.4cores =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeBenchmark">makeBenchmark</a></span>(<span class="dt">tasks =</span> tasks<span class="op">$</span>output<span class="op">$</span>value[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], <span class="dt">learners =</span> learners, <span class="dt">cpus =</span> <span class="dv">4</span>)</code></pre></div>
+<p>We can see that we have an improvement of the computation time of a factor of 1.4159473</p>
 </div>
   </div>
 
