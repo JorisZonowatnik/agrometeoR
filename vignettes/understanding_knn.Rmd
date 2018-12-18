@@ -1,7 +1,7 @@
 ---
-title: "Verifying 5nn interpolation with gstat implemented in mlr"
+title: "Understanding KNN"
 author: "Thomas Goossens"
-date: "12/10/2018"
+date: "12/18/2018"
 output: html_document
 ---
 
@@ -12,11 +12,7 @@ devtools::load_all()
 
 ## Intro
 
-As the documentation about the use of gstat to make a knn interpolation is really scarce (the only relevant information we have found is in the [chapter interpolation of the Spatial Data Analysis and Modeling with R website](http://rspatial.org/analysis/rst/4-interpolation.html)), we have conducted a quick investigation to make sure that what gstat performs when using our nearest neighbours learners (e.g. `lrn.gstat.5nn`) correponds to what we actually expect from the algorithm. 
-
-Our expectation was that for a specific location where we want to predict a value, the algorithm computes the mean of the values of its 5 spatially closest neighbours when we implicitly filter the features to latitude and longitude only.
-
-As it will be demonstrated here below, the gstat nearest neighbour (knn) interpolation works as expected.
+How does knn exactly works ? From masteringmachinelearning.com [post](https://machinelearningmastery.com/k-nearest-neighbors-for-machine-learning/) we have deciced to conduct a little test.
 
 ## Load the libraries
 
@@ -31,6 +27,7 @@ library(dplyr)
 library(sf)
 library(mapview)
 ```
+
 ## Example dataset
 
 We create an example dataset from our AGROMET weather database.
@@ -42,7 +39,6 @@ dfrom = ex_dfrom
 dto = ex_dto
 stations = paste0(as.character(stations.df$sid), collapse = ",")
 sensor = "tsa"
-bad_sensor = "boum"
 staticExpl = "elevation"
 
 makeDataset.test = makeDataset(
@@ -55,48 +51,47 @@ makeDataset.test = makeDataset(
 )
 ```
 
-To simplify our future calculations, we add a new custom id column where each id correspond to the row number
+## Comparing various outputs of knn learners
 
-```{r dataset-id}
-dataset = makeDataset.test$output$value
-id = as.data.frame(1:nrow(dataset))
-colnames(id) = "id"
-dataset = dataset %>%
-  dplyr::bind_cols(id)
+We will compare the outputs of these 3 knn-based learners implemented in our package :
+
+* lrn.gstat.5nn
+* lrn.gstat.5nn.alt
+* lrn.gstat.knn.alt.tuning
+
+```{r}
+learners.knn = list(
+  lrn.gstat.5nn = am.learners$lrn.gstat.5nn,
+  lrn.gstat.5nn.alt = am.learners$lrn.gstat.5nn.alt,
+  lrn.gstat.knn.alt.tuning = am.learners$lrn.gstat.knn.alt.tuning)
+
+task.knn = makeTasks(dataset = makeDataset.test$output$value, target = "tsa")
+
+bmr.knn = makeBenchmark(tasks = task.knn$output$value[[1]], learners = learners.knn, measures = rmse, resamplings = "LOO")
+
+models = lapply(X = learners.knn, function(x) {
+  makeModel(task = task.knn$output$value[[1]],
+    learner = x)
+})
+
+predictions = lapply(X = models, function(x) {
+  makeSpatialization(model = x$output$value$trained)
+})
+
+maps = lapply(X = predictions, function(x) {
+  plot(sf::st_as_sf(x$output$value, coords = c("X", "Y"))["response"])
+})
+
+
 ```
 
-## Getting the 5 nearest neighbours id's of each station
 
-Based on this [stackoverflow question](
-https://stackoverflow.com/questions/44187812/5-nearest-neighbors-based-on-given-distance-in-r), for each station, we get its 5 closest neigbours id's and distances.
-
-```{r nn}
-# Calculate the nearest ID and distance
-near_data <- get.knn(dataset[, 4:5], k = 5)
-
-# Extract the nearest ID
-nn_index <- as.data.frame(near_data$nn.index)
-
-# Extract the nearest Distance
-nn_dist <- as.data.frame(near_data$nn.dist)
-
-# combining again in dataset
-dataset = dataset %>%
-  dplyr::bind_cols(nn_index) 
-
-# Excerpt of the data
-head(dataset)
-```
-
-## Training and testing dataset
-
-We will conduct our test on a single station. For this purpose, we exclude the first row from our dataset to create the training set. The test set will therefore correspond to this excluded station.
-
+Let's first define our train & test daatsets
 ```{r train-Test}
 train = dataset[2:29,]
 test = dataset[1:1,]
 
-train.task = makeTasks(
+train.task = makeTasks(output$value$trained
   dataset = train,
   target = "tsa"
 )
@@ -111,10 +106,13 @@ test.task = test.task$output$value
 test.data = getTaskData(test.task[[1]])
 ```
 
-## Building the model & predicting with gstat
+
 
 We can now "train" our learner on the train set and use it to predict the value of the test set.
-The learner we invoke here is a learner that comes prebuild with the agrometeoR package. It's source code can be found in the [makeLearners.R](https://github.com/pokyah/agrometeoR/blob/master/data-raw/makeLearners.R) file on github
+
+
+
+The learner we invoke here is a learner that comes prebuilt with the agrometeoR package. It's source code can be found in the [makeLearners.R](https://github.com/pokyah/agrometeoR/blob/master/data-raw/makeLearners.R) file on github
 
 ```{r training-and-predicting}
 # training

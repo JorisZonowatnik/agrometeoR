@@ -166,16 +166,15 @@
 
     </div>
 
-    <pre class="usage"><span class='fu'>makeBenchmark</span>(<span class='kw'>parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cpus</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='no'>tasks</span>, <span class='no'>learners</span>,
-  <span class='kw'>measures</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>rmse</span>), <span class='kw'>keep.pred</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>resamplings</span> <span class='kw'>=</span> <span class='st'>"LOO"</span>)</pre>
+    <pre class="usage"><span class='fu'>makeBenchmark</span>(<span class='kw'>cpus</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>tasks</span>, <span class='no'>learners</span>, <span class='kw'>measures</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>rmse</span>),
+  <span class='kw'>keep.pred</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>resamplings</span> <span class='kw'>=</span> <span class='st'>"LOO"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>cpus</th>
-      <td><p>an integer specifying the number of cpus to use for the benchamrk</p></td>
+      <td><p>an integer specifying the number of cpus to use for the benchamrk. Default is 1</p></td>
     </tr>
     <tr>
       <th>tasks</th>

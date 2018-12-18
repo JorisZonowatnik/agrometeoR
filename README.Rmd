@@ -86,8 +86,8 @@ sudo apt install r-base
 `devtools` (to install packages from github) and `packrat` (to install all the other packages in a sandbox environment). To do so, open your R console and type the following : 
 
 ```r
-install.packages(devtools)
-install.packages(packrat)
+install.packages("devtools")
+install.packages("packrat")
 ```
 
 #### Create a folder for your project.
