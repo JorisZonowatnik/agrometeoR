@@ -36,7 +36,7 @@ You will also of course need R to make the package works !
 
 #### Install The Debian dependencies required.
 
-To do this, simply open a termina, paste and execute the following line : 
+To do this, in debian, simply open a terminal, paste and execute the following line : 
 
 ```bash
 # installation of OS dependencies
@@ -172,7 +172,7 @@ The package will allow you to use a configuration file where you can list the va
 
 ## Logo
 
-Logo create with [logojoy](https://logojoy.com/editor/23591201)
+Logo created with [logojoy](https://logojoy.com/editor/23591201)
 
 
 
