@@ -6,13 +6,13 @@ groups = list(
   good = list(
     list(
       id = "good",
-      model = test_model,
+      model = test_models,
       pred.grid = test_grid
     )),
   bad = list(
     list(
       id = "bad_grid",
-      model = test_model,
+      model = test_models,
       pred.grid = test_bad_grid
     ),
     list(
