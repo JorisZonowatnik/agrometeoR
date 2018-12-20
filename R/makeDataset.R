@@ -100,7 +100,8 @@ makeDataset <- function(
       # Keep only the relevant columns
       message("Making dataset...")
       dataset = dataset %>%
-        dplyr::select("sid", "mtime", sensor)
+        dplyr::select("sid", "mtime", sensor) %>%
+        dplyr::mutate(task.id = gsub("[^[:digit:]]", "", dataset$mtime))
 
       # join with static explanatory vars
       dataset = dataset %>%
@@ -110,9 +111,25 @@ makeDataset <- function(
           by = "sid")
 
       # rename X and Y to x and y for mlr (gstat learner compatibility
-      output$value = dataset %>%
+      dataset = dataset %>%
         dplyr::rename("y" = "Y") %>%
         dplyr::rename("x" = "X")
+
+      # group by task.id and make lists of dataframes
+      dataset = split(
+        x = dataset,
+        f = as.factor(dataset$task.id))
+
+
+      # remove the task.id column from each dataset
+      dataset = lapply(dataset,
+        function(x){
+          x = x %>%
+            dplyr::select(c(-task.id))
+        })
+
+      # assigning to output$value
+      output$value = dataset
 
       message("Success ! Dataset created")
       bool = TRUE
