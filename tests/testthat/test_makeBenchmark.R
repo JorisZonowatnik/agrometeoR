@@ -6,7 +6,6 @@ groups = list(
   good = list(
     list(
       id = "good",
-      parallel = TRUE,
       cpus = 2,
       tasks = test_tasks,
       learners = learners[c(1, 2, 6, 8)],
@@ -15,7 +14,6 @@ groups = list(
   bad = list(
     list(
       id = "bad",
-      parallel = TRUE,
       cpus = NULL,
       tasks = test_tasks,
       learners = "learners",
@@ -48,7 +46,6 @@ test_that("When bool isTRUE (no error), output has class list and when bool isFA
     for (case in 1:length(group)) {
       args = groups[[group]][[case]][-1]
       object = do.call(what = makeBenchmark, args = args)
-      browser()
       if (isTRUE(object$bool)) {
         expect_is(object$output$value, "list")
       } else {
