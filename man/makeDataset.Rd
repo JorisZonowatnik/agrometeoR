@@ -33,7 +33,7 @@ Any combinations of inca, ens}
 \item{token}{a character specifying your agrometAPI token}
 }
 \value{
-a list containing a boolean and a dataframe containing the desired records
+a list containing a boolean and a list of dataframes containing the desired records
 }
 \author{
 Thomas Goossens
