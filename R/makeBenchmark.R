@@ -9,6 +9,7 @@
 #' @param measures a list of the mlr performance metrics you want to get. Default is list(rmse)
 #' @param keep.pred a boolean specifying if you want to keep the bmr preds. defaut = FALSE
 #' @param models a boolean specifying if you want to keep the bmr models. defaut = FALSE
+#' @param level a character specifying the paralelllization level. Default  = "mlr.benchmark"
 #' @param resampling  a character specifying the type of mlr's CV. Default = LOO
 #' @return a list wihch elements are objects of class mlr::benchmark()
 makeBenchmark <- function(
@@ -17,6 +18,7 @@ makeBenchmark <- function(
   measures = list(rmse),
   keep.pred = FALSE,
   models = FALSE,
+  level = "mlr.benchmark",
   resamplings = "LOO",
   cpus = 1){
 
@@ -34,7 +36,7 @@ makeBenchmark <- function(
 
       # enable parallelization with level = mlr.resample
       if (cpus > 1) {
-        parallelMap::parallelStart(mode = "multicore", cpus = cpus, level = "mlr.resample")
+        parallelMap::parallelStart(mode = "multicore", cpus = cpus, level = level)
       }
 
       # set seed to make bmr experiments reproducibles
