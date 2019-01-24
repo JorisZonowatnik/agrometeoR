@@ -1,0 +1,18 @@
+---
+title: "Optimizing benchmarking speed"
+author: "Thomas Goossens"
+date: "1/24/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
+library(mlr)
+```
+
+## Purpose of a benchmark experiment 
+
+## benchmark time optimization 
+
+## Estimating the time required to perform the benchmark
