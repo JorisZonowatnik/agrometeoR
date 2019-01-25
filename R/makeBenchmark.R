@@ -42,46 +42,61 @@ makeBenchmark <- function(
       # set seed to make bmr experiments reproducibles
       set.seed(1985)
 
-      # benchmark
-      bmr = mlr::benchmark(
-        learners = learners,
-        tasks = tasks,
-        resamplings = mlr::makeResampleDesc(resamplings),
-        measures = measures,
-        keep.pred = keep.pred,
-        models = models)
+      # split tasks in multiple subgroups if length > 1000 to avoid memory saturation
+      tasks.groups = seq(from = 1, to = length(tasks), by = 1000)
 
-      # stop the parallelized computing
-      if (cpus > 1) {
-        parallelMap::parallelStop()
-      }
+      lapply(seq_along(as.list(tasks.groups)),
+        function(x) {
+          if (is.na(tasks.groups[x+1])) {tasks.groups[x+1] = length(tasks)}
+          # benchmark
+          bmr = mlr::benchmark(
+            learners = learners,
+            tasks = tasks[tasks.groups[x]:tasks.groups[x+1]],
+            resamplings = mlr::makeResampleDesc(resamplings),
+            measures = measures,
+            keep.pred = keep.pred,
+            models = models)
 
-      # stoping counting time
-      exectime = tictoc::toc()
-      exectime = exectime$toc - exectime$tic
+          # stop the parallelized computing
+          if (cpus > 1) {
+            parallelMap::parallelStop()
+          }
 
-      # perfs + aggregated Performances
-      perfs = getBMRPerformances(bmr, as.df = TRUE)
-      aggPerfs = getBMRAggrPerformances(bmr, as.df = TRUE)
-      summary = aggPerfs %>%
-        dplyr::group_by(learner.id) %>%
-        dplyr::summarise_at(
-          .vars = 'rmse.test.rmse',
-          .funs = c(min, max, mean, median, sd))
-      colnames(summary) = c("min", "max", "mean", "median", "sd")
+          # stoping counting time
+          exectime = tictoc::toc()
+          exectime = exectime$toc - exectime$tic
 
-      # create a list containing all the useful information
-      output$value = list(
-        bmr = bmr,
-        perfs = perfs,
-        aggPerfs = aggPerfs,
-        summary = summary,
-        exectime = exectime
-      )
+          # perfs + aggregated Performances
+          perfs = getBMRPerformances(bmr, as.df = TRUE)
+          aggPerfs = getBMRAggrPerformances(bmr, as.df = TRUE)
+          summary = aggPerfs %>%
+            dplyr::group_by(learner.id) %>%
+            dplyr::summarise_at(
+              .vars = 'rmse.test.rmse',
+              .funs = c(min, max, mean, median, sd))
+          colnames(summary) = c("min", "max", "mean", "median", "sd")
 
-      # success message and boolean
-      message("Success ! Benchmark conducted")
+          # create a list containing all the useful information
+          output$value = list(
+            bmr = bmr,
+            perfs = perfs,
+            aggPerfs = aggPerfs,
+            summary = summary,
+            exectime = exectime
+          )
+
+          # save the object to a file
+          saveRDS(object = output$value, file = paste0(
+            "bmr.", tasks.groups[x], "-", tasks.groups[x+1], ".rds"))
+
+          # success message and boolean
+          message(paste0(
+            "Success ! Benchmark for tasks " ,
+            tasks.groups[x], "-",
+            tasks.groups[x+1], "conducted"))
+        })
       bool = TRUE
+
     },
       warning = function(cond){
         message("AgrometeoR Warning :")
