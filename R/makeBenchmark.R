@@ -28,26 +28,33 @@ makeBenchmark <- function(
 
     withCallingHandlers({
 
-      # message
-      message("Running benchmark...")
-
-      # starting counting time of the bmr execution
-      tictoc::tic()
-
-      # enable parallelization with level = mlr.resample
-      if (cpus > 1) {
-        parallelMap::parallelStart(mode = "multicore", cpus = cpus, level = level)
-      }
-
       # set seed to make bmr experiments reproducibles
       set.seed(1985)
 
       # split tasks in multiple subgroups if length > 1000 to avoid memory saturation
       tasks.groups = seq(from = 1, to = length(tasks), by = 1000)
 
+      # conducting the bmrs by subgroups
       lapply(seq_along(as.list(tasks.groups)),
         function(x) {
+
+          # message
+          message(paste0(
+            "Conducting Benchmark for tasks " ,
+            tasks.groups[x], "-",
+            tasks.groups[x+1]))
+
+          # starting counting time of the current bmr execution
+          tictoc::tic()
+
+          # enable parallelization with level = mlr.resample
+          if (cpus > 1) {
+            parallelMap::parallelStart(mode = "multicore", cpus = cpus, level = level)
+          }
+
+          # hack to avoid wrong last task number
           if (is.na(tasks.groups[x+1])) {tasks.groups[x+1] = length(tasks)}
+
           # benchmark
           bmr = mlr::benchmark(
             learners = learners,
