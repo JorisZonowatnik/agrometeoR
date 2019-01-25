@@ -89,6 +89,9 @@ makeBenchmark <- function(
           saveRDS(object = output$value, file = paste0(
             "bmr.", tasks.groups[x], "-", tasks.groups[x+1], ".rds"))
 
+          # remove the object stored in RAM
+          rm(output)
+
           # success message and boolean
           message(paste0(
             "Success ! Benchmark for tasks " ,
