@@ -6,6 +6,7 @@ library(tidyverse)
 library(lubridate)
 library(rgdal)
 library(rgeos)
+library(dplyr)
 library(sf)
 library(raster)
 library(rnaturalearth)
@@ -39,14 +40,15 @@ customGrid = sf::st_sf(sf::st_make_grid(x = sf::st_transform(wallonia, crs = 381
 customGrid = sf::st_intersection(customGrid, sf::st_transform(wallonia, crs = 3812))
 # reproject it to standard 4326
 customGrid = sf::st_transform(customGrid, crs = 4326)
-# saving objects
-# devtools::use_data(customGrid, overwrite = TRUE)
 # loading INCA (RMI) grid for whole BE
-load("./data-raw/extdata/INCA_BE_DAY/INCA_TT_2013.Rdata")
-incaGrid = sf::st_transform(sf::st_as_sf(inca), crs = 4326)
-# limit it to Wallonia + 5km buffer and not full extent
-incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_buffer(st_transform(wallonia, 3812), 5000)), 4326)
-# incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_transform(wallonia, 3812)), 4326)
+# load("./data-raw/extdata/INCA_BE_DAY/INCA_TT_2013.Rdata")
+# incaGrid = sf::st_transform(sf::st_as_sf(inca), crs = 4326)
+# # limit it to Wallonia + 5km buffer and not full extent
+# incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_buffer(st_transform(wallonia, 3812), 5000)), 4326)
+# # incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_transform(wallonia, 3812)), 4326)
+# incaGrid = incaGrid[c("px")]
+# load the INCAgrid built from january 2019 RMI data by jphuart
+incaGrid = sf::st_read("./data-raw/extdata/AGROMET/inca.geojson")
 incaGrid = incaGrid[c("px")]
 
 # devtools::use_data(incaGrid, overwrite = TRUE)
@@ -57,7 +59,7 @@ incaGrid = incaGrid[c("px")]
 
 # load all the hourly datasets
 inca.hourly.file.list = list.files(path = "./data-raw/extdata/INCA_BE_H/", pattern = ".Rdata")
-# extract only 1 month because to heavy to load all at onece
+# extract only 1 month because to heavy to load all at once
 inca.hourly.1month =  lapply(inca.hourly.file.list[(length(inca.hourly.file.list) - 24)], function(x) {
   load(file = paste0("./data-raw/extdata/INCA_BE_H/",x))
   get(ls()[ls() != "filename"])
@@ -270,7 +272,7 @@ colnames(cover.rate) <- gsub(" ","_",colnames(cover.rate))
 inca.ext = merge(inca.ext, cover.rate, by = "px")
 # removing duplicated ID cols resulting from bind_cols operation
 excluded_vars = c("ID1", "ID2")
-inca.ext  = select(inca.ext, -one_of(excluded_vars))
+inca.ext  = dplyr::select(inca.ext, -one_of(excluded_vars))
 
 #####
 ## STATIONS EXTRACTIONS
@@ -425,7 +427,7 @@ colnames(grid.dyn) = c("px", "tsa_hp1", "mtime")
 closest_px <- list()
 for (st in seq_len(nrow(stations.sf))) {
   closest_px[[st]] <- grid.sf[which.min(
-    st_distance(grid.sf, stations.sf[st,])),]
+    st_distance(grid.sf, sf::st_transform(stations.sf[st,], sf::st_crs(grid.sf)))),]
 }
 closest_px = do.call(rbind.data.frame, closest_px)
 stations.sf = stations.sf %>%
@@ -443,6 +445,11 @@ stations.df = stations.df %>%
     by = "sid"
   )
 sf::st_geometry(stations.df) = NULL
+
+
+# exporting the grid to geojson file
+grid.data.sf = grid.sf %>% left_join(grid.df) %>% dplyr::select(one_of(c("px", "elevation", "slope",   "aspect")))
+sf::st_write(grid.data.sf, dsn = "grid.geojson", driver = "GeoJSON")
 
 #####
 ## SAVING ALL THE OBJECTS TO PACKAGE DATA
