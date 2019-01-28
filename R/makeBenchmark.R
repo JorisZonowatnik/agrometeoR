@@ -90,7 +90,6 @@ makeBenchmark <- function(
         })
 
         # loading all the temp bmr files and merging in a single big bmr object
-        readRDS("~/Rprojetcs/bmr_makeTask_2012208/bmrs/bmr.1-1001.rds")
         bmr_files = list.files(path = path, pattern = ".rds", full.names = TRUE)
         bmrs = lapply(files, readRDS)
         big_bmr = mergeBenchmarkResults(bmrs)
