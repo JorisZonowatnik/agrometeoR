@@ -11,6 +11,7 @@
 #' @param models a boolean specifying if you want to keep the bmr models. defaut = FALSE
 #' @param level a character specifying the paralelllization level. Default  = "mlr.benchmark"
 #' @param resampling  a character specifying the type of mlr's CV. Default = LOO
+#' @param path a character specifying the path where you want to save the bmr files.
 #' @return a list wihch elements are objects of class mlr::benchmark()
 makeBenchmark <- function(
   tasks,
@@ -20,7 +21,8 @@ makeBenchmark <- function(
   models = FALSE,
   level = "mlr.benchmark",
   resamplings = "LOO",
-  cpus = 1){
+  cpus = 1,
+  path = "./"){
 
   out = tryCatch({
     output = list(value = NULL, error = NULL)
@@ -73,39 +75,46 @@ makeBenchmark <- function(
           exectime = tictoc::toc()
           exectime = exectime$toc - exectime$tic
 
-          # perfs + aggregated Performances
-          perfs = getBMRPerformances(bmr, as.df = TRUE)
-          aggPerfs = getBMRAggrPerformances(bmr, as.df = TRUE)
-          summary = aggPerfs %>%
-            dplyr::group_by(learner.id) %>%
-            dplyr::summarise_at(
-              .vars = 'rmse.test.rmse',
-              .funs = c(min, max, mean, median, sd))
-          colnames(summary) = c("min", "max", "mean", "median", "sd")
-
-          # create a list containing all the useful information
-          output$value = list(
-            bmr = bmr,
-            perfs = perfs,
-            aggPerfs = aggPerfs,
-            summary = summary,
-            exectime = exectime
-          )
-
-          # save the object to a file
-          saveRDS(object = output$value, file = paste0(
+          # save the bmr object to a file
+          saveRDS(object = bmr, file = paste0(path,
             "bmr.", tasks.groups[x], "-", tasks.groups[x+1], ".rds"))
 
           # remove the object stored in RAM
-          rm(output)
+          rm(bmr)
 
           # success message and boolean
           message(paste0(
             "Success ! Benchmark for tasks " ,
             tasks.groups[x], "-",
-            tasks.groups[x+1], "conducted"))
+            tasks.groups[x+1], "conducted and written to file"))
         })
-      bool = TRUE
+
+        # loading all the temp bmr files and merging in a single big bmr object
+        readRDS("~/Rprojetcs/bmr_makeTask_2012208/bmrs/bmr.1-1001.rds")
+        bmr_files = list.files(path = path, pattern = ".rds", full.names = TRUE)
+        bmrs = lapply(files, readRDS)
+        big_bmr = mergeBenchmarkResults(bmrs)
+
+        # perfs + aggregated Performances
+        perfs = getBMRPerformances(big_bmr, as.df = TRUE)
+        aggPerfs = getBMRAggrPerformances(big_bmr, as.df = TRUE)
+        summary = aggPerfs %>%
+          dplyr::group_by(learner.id) %>%
+          dplyr::summarise_at(
+            .vars = 'rmse.test.rmse',
+            .funs = c(min, max, mean, median, sd))
+        colnames(summary) = c("min", "max", "mean", "median", "sd")
+
+        # create a list containing all the useful information
+        output$value = list(
+          bmr = big_bmr,
+          perfs = perfs,
+          aggPerfs = aggPerfs,
+          summary = summary,
+          exectime = exectime
+        )
+
+        bool = TRUE
 
     },
       warning = function(cond){
