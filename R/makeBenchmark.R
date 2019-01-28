@@ -91,7 +91,7 @@ makeBenchmark <- function(
 
         # loading all the temp bmr files and merging in a single big bmr object
         bmr_files = list.files(path = path, pattern = ".rds", full.names = TRUE)
-        bmrs = lapply(files, readRDS)
+        bmrs = lapply(bmr_files, readRDS)
         big_bmr = mergeBenchmarkResults(bmrs)
 
         # perfs + aggregated Performances
