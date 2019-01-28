@@ -449,7 +449,7 @@ sf::st_geometry(stations.df) = NULL
 
 # exporting the grid to geojson file
 grid.data.sf = grid.sf %>% left_join(grid.df) %>% dplyr::select(one_of(c("px", "elevation", "slope",   "aspect")))
-sf::st_write(grid.data.sf, dsn = "grid.geojson", driver = "GeoJSON")
+sf::st_write(grid.data.sf, dsn = "./data-raw/grid.geojson", driver = "GeoJSON")
 
 #####
 ## SAVING ALL THE OBJECTS TO PACKAGE DATA
