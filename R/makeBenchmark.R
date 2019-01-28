@@ -34,7 +34,7 @@ makeBenchmark <- function(
       set.seed(1985)
 
       # split tasks in multiple subgroups if length > 1000 to avoid memory saturation
-      tasks.groups = seq(from = 1, to = length(tasks), by = 1000)
+      tasks.groups = seq(from = 1, to = length(tasks), by = 1)
 
       # conducting the bmrs by subgroups
       lapply(seq_along(as.list(tasks.groups)),
