@@ -9,6 +9,7 @@
 #' @param measures a list of the mlr performance metrics you want to get. Default is list(rmse)
 #' @param keep.pred a boolean specifying if you want to keep the bmr preds. defaut = FALSE
 #' @param models a boolean specifying if you want to keep the bmr models. defaut = FALSE
+#' @param grouping a numeric specifying the number of tasks you want to benchamrk in a single batch. Default to 1000
 #' @param level a character specifying the paralelllization level. Default  = "mlr.benchmark"
 #' @param resampling  a character specifying the type of mlr's CV. Default = LOO
 #' @param path a character specifying the path where you want to save the bmr files.
@@ -19,6 +20,7 @@ makeBenchmark <- function(
   measures = list(rmse),
   keep.pred = FALSE,
   models = FALSE,
+  grouping = 1000,
   level = "mlr.benchmark",
   resamplings = "LOO",
   cpus = 1,
@@ -34,7 +36,7 @@ makeBenchmark <- function(
       set.seed(1985)
 
       # split tasks in multiple subgroups if length > 1000 to avoid memory saturation
-      tasks.groups = seq(from = 1, to = length(tasks), by = 1)
+      tasks.groups = seq(from = 1, to = length(tasks), by = grouping)
 
       # conducting the bmrs by subgroups
       lapply(seq_along(as.list(tasks.groups)),
@@ -57,10 +59,15 @@ makeBenchmark <- function(
           # hack to avoid wrong last task number
           if (is.na(tasks.groups[x+1])) {tasks.groups[x+1] = length(tasks)}
 
+          # hack to avoid repeated benchamrkin while jumping to other set of 1000 tasks
+          # defining next task
+          x.next = x+1
+          if (x %in% seq(from = 1, to = length(tasks), by = grouping)) { x.next == x}
+
           # benchmark
           bmr = mlr::benchmark(
             learners = learners,
-            tasks = tasks[tasks.groups[x]:tasks.groups[x+1]],
+            tasks = tasks[tasks.groups[x]:tasks.groups[x.next]],
             resamplings = mlr::makeResampleDesc(resamplings),
             measures = measures,
             keep.pred = keep.pred,
@@ -77,7 +84,7 @@ makeBenchmark <- function(
 
           # save the bmr object to a file
           saveRDS(object = bmr, file = paste0(path,
-            "bmr.", tasks.groups[x], "-", tasks.groups[x+1], ".rds"))
+            "bmr.", tasks.groups[x], "-", tasks.groups[x.next], ".rds"))
 
           # remove the object stored in RAM
           rm(bmr)
@@ -86,7 +93,7 @@ makeBenchmark <- function(
           message(paste0(
             "Success ! Benchmark for tasks " ,
             tasks.groups[x], "-",
-            tasks.groups[x+1], "conducted and written to file"))
+            tasks.groups[x.next], "conducted and written to file"))
         })
 
         # loading all the temp bmr files and merging in a single big bmr object
