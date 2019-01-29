@@ -5,8 +5,8 @@
 \title{make a multicore parallelized mlr benchmark experiment for various learners on multiple tasks}
 \usage{
 makeBenchmark(tasks, learners, measures = list(rmse), keep.pred = FALSE,
-  models = FALSE, level = "mlr.benchmark", resamplings = "LOO",
-  cpus = 1, path = "./")
+  models = FALSE, grouping = 1000, level = "mlr.benchmark",
+  resamplings = "LOO", cpus = 1, path = "./")
 }
 \arguments{
 \item{tasks}{a list which elements are object of class mlr::makeRegrTask()}
@@ -18,6 +18,8 @@ makeBenchmark(tasks, learners, measures = list(rmse), keep.pred = FALSE,
 \item{keep.pred}{a boolean specifying if you want to keep the bmr preds. defaut = FALSE}
 
 \item{models}{a boolean specifying if you want to keep the bmr models. defaut = FALSE}
+
+\item{grouping}{a numeric specifying the number of tasks you want to benchamrk in a single batch. Default to 1000}
 
 \item{level}{a character specifying the paralelllization level. Default  = "mlr.benchmark"}
 
