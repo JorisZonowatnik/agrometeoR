@@ -62,7 +62,7 @@ makeBenchmark <- function(
           # hack to avoid repeated benchamrkin while jumping to other set of 1000 tasks
           # defining next task
           x.next = x+1
-          if (x %in% seq(from = 1, to = length(tasks), by = grouping)) { x.next == x}
+          if (x.next %in% seq(from = 1, to = length(tasks), by = grouping)) { x.next == x}
 
           # benchmark
           bmr = mlr::benchmark(
