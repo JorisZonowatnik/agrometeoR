@@ -35,7 +35,7 @@ makeBenchmark <- function(
       # set seed to make bmr experiments reproducibles
       set.seed(1985)
 
-      # split tasks in multiple subgroups if length > 1000 to avoid memory saturation
+      # split tasks in multiple subgroups if length > grouping to avoid memory saturation
       tasks.groups = seq(from = 1, to = length(tasks), by = grouping)
 
       # conducting the bmrs by subgroups
@@ -59,10 +59,10 @@ makeBenchmark <- function(
           # hack to avoid wrong last task number
           if (is.na(tasks.groups[x+1])) {tasks.groups[x+1] = length(tasks)}
 
-          # hack to avoid repeated benchamrkin while jumping to other set of 1000 tasks
+          # hack to avoid repeated benchmarking while jumping to other set of 1000 tasks
           # defining next task
           x.next = x+1
-          if (x.next %in% seq(from = 1, to = length(tasks), by = grouping)) { x.next == x}
+          if (tasks.groups[x.next] %in% seq(from = 1, to = length(tasks), by = grouping)) {x.next == x}
 
           # benchmark
           bmr = mlr::benchmark(
