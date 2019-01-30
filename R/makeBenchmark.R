@@ -117,7 +117,6 @@ makeBenchmark <- function(
           perfs = perfs,
           aggPerfs = aggPerfs,
           summary = summary,
-          exectime = exectime
         )
 
         bool = TRUE
