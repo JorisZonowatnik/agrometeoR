@@ -35,18 +35,19 @@ makeBenchmark <- function(
       # set seed to make bmr experiments reproducibles
       set.seed(1985)
 
-      # split tasks in multiple subgroups if length > grouping to avoid memory saturation
-      tasks.groups = seq(from = 1, to = length(tasks), by = grouping)
+      # split tasks in multiple subgroups to avoid memory saturation
+      tasks.groups.start = seq(from = 1, to = length(tasks), by = grouping)
+      tasks.groups.end = seq(from = grouping, to = length(tasks), by = grouping)
 
       # conducting the bmrs by subgroups
-      lapply(seq_along(as.list(tasks.groups)),
+      lapply(seq_along(as.list(tasks.groups.start)),
         function(x) {
 
           # message
           message(paste0(
             "Conducting Benchmark for tasks " ,
-            tasks.groups[x], "-",
-            tasks.groups[x+1]))
+            tasks.groups.start[x], "-",
+            tasks.groups.end[x]))
 
           # starting counting time of the current bmr execution
           tictoc::tic()
@@ -57,17 +58,12 @@ makeBenchmark <- function(
           }
 
           # hack to avoid wrong last task number
-          if (is.na(tasks.groups[x+1])) {tasks.groups[x+1] = length(tasks)}
-
-          # hack to avoid repeated benchmarking while jumping to other set of 1000 tasks
-          # defining next task
-          x.next = x+1
-          if (tasks.groups[x.next] %in% seq(from = 1, to = length(tasks), by = grouping)) {tasks.groups[x.next]  = tasks.groups[x] }
+          if (is.na(tasks.groups.end[x])) {tasks.groups.end[x] = tasks.groups.start[x]}
 
           # benchmark
           bmr = mlr::benchmark(
             learners = learners,
-            tasks = tasks[tasks.groups[x]:tasks.groups[x.next]],
+            tasks = tasks[tasks.groups.start[x] :tasks.groups.end[x]],
             resamplings = mlr::makeResampleDesc(resamplings),
             measures = measures,
             keep.pred = keep.pred,
@@ -84,7 +80,7 @@ makeBenchmark <- function(
 
           # save the bmr object to a file
           saveRDS(object = bmr, file = paste0(path,
-            "bmr.", tasks.groups[x], "-", tasks.groups[x.next], ".rds"))
+            "bmr.", tasks.groups.start[x], "-", tasks.groups.end[x], ".rds"))
 
           # remove the object stored in RAM
           rm(bmr)
