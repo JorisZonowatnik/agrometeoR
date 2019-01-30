@@ -88,8 +88,8 @@ makeBenchmark <- function(
           # success message and boolean
           message(paste0(
             "Success ! Benchmark for tasks " ,
-            tasks.groups[x], "-",
-            tasks.groups[x.next], "conducted and written to file"))
+            tasks.groups.start[x], "-",
+            tasks.groups.end[x], "conducted and written to file"))
         })
 
         # loading all the temp bmr files and merging in a single big bmr object
