@@ -116,7 +116,7 @@ makeBenchmark <- function(
           bmr = big_bmr,
           perfs = perfs,
           aggPerfs = aggPerfs,
-          summary = summary,
+          summary = summary
         )
 
         bool = TRUE
