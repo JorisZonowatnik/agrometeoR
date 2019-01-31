@@ -5,6 +5,7 @@
 #####
 
 library(tidyverse)
+library(dplyr)
 
 # makeDataset inputs
 test_user_token = Sys.getenv("AGROMET_API_V1_KEY")
