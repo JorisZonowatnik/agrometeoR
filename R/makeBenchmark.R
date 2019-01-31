@@ -102,10 +102,14 @@ makeBenchmark <- function(
         aggPerfs = getBMRAggrPerformances(big_bmr, as.df = TRUE)
         summary = aggPerfs %>%
           dplyr::group_by(learner.id) %>%
-          dplyr::summarise_at(
-            .vars = 'rmse.test.rmse',
-            .funs = c(min, max, mean, median, sd))
-        colnames(summary) = c("min", "max", "mean", "median", "sd")
+          dplyr::select(rmse.test.rmse) %>%
+          dplyr::summarise_all(
+            funs(count = sum(!is.na(.)),
+              min = min(.,na.rm = TRUE),
+              max = max(.,na.rm = TRUE),
+              mean = mean(.,na.rm = TRUE),
+              median = median(.,na.rm = TRUE),
+              sd = sd(.,na.rm = TRUE)))
 
         # create a list containing all the useful information
         output$value = list(
