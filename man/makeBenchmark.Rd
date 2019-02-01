@@ -28,6 +28,8 @@ makeBenchmark(tasks, learners, measures = list(rmse), keep.pred = FALSE,
 \item{path}{a character specifying the path where you want to save the bmr files.}
 
 \item{resampling}{a character specifying the type of mlr's CV. Default = LOO}
+
+\item{pattern}{a character specifying the pattern you want to use for the bmr file names.}
 }
 \value{
 a list wihch elements are objects of class mlr::benchmark()

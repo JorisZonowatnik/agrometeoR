@@ -13,6 +13,7 @@
 #' @param level a character specifying the paralelllization level. Default  = "mlr.benchmark"
 #' @param resampling  a character specifying the type of mlr's CV. Default = LOO
 #' @param path a character specifying the path where you want to save the bmr files.
+#' @param prefix a character specifying the prefix you want to use for the bmr file names.
 #' @return a list wihch elements are objects of class mlr::benchmark()
 makeBenchmark <- function(
   tasks,
@@ -24,6 +25,7 @@ makeBenchmark <- function(
   level = "mlr.benchmark",
   resamplings = "LOO",
   cpus = 1,
+  prefix = "",
   path = "./"){
 
   out = tryCatch({
@@ -34,6 +36,10 @@ makeBenchmark <- function(
 
       # set seed to make bmr experiments reproducibles
       set.seed(1985)
+
+      # hack for tasks length when only a single task
+      # ::todo::
+
 
       # split tasks in multiple subgroups to avoid memory saturation
       tasks.groups.start = seq(from = 1, to = length(tasks), by = grouping)
@@ -80,7 +86,7 @@ makeBenchmark <- function(
 
           # save the bmr object to a file
           saveRDS(object = bmr, file = paste0(path,
-            "bmr.", tasks.groups.start[x], "-", tasks.groups.end[x], ".rds"))
+            prefix, "_bmr_",  tasks.groups.start[x], "_", tasks.groups.end[x], ".rds"))
 
           # remove the object stored in RAM
           rm(bmr)
@@ -93,13 +99,15 @@ makeBenchmark <- function(
         })
 
         # loading all the temp bmr files and merging in a single big bmr object
-        bmr_files = list.files(path = path, pattern = ".rds", full.names = TRUE)
+        browser()
+        bmr_files = list.files(path = path, pattern = prefix, full.names = TRUE)
         bmrs = lapply(bmr_files, readRDS)
-        big_bmr = mergeBenchmarkResults(bmrs)
+        if (lenght(bmrs) > 1) {bmrs = mergeBenchmarkResults(bmrs)}
+        else {bmrs = bmrs}
 
         # perfs + aggregated Performances
-        perfs = getBMRPerformances(big_bmr, as.df = TRUE)
-        aggPerfs = getBMRAggrPerformances(big_bmr, as.df = TRUE)
+        perfs = getBMRPerformances(bmrs, as.df = TRUE)
+        aggPerfs = getBMRAggrPerformances(bmrs, as.df = TRUE)
         summary = aggPerfs %>%
           dplyr::group_by(learner.id) %>%
           dplyr::select(rmse.test.rmse) %>%
@@ -113,7 +121,7 @@ makeBenchmark <- function(
 
         # create a list containing all the useful information
         output$value = list(
-          bmr = big_bmr,
+          bmr = bmrs,
           perfs = perfs,
           aggPerfs = aggPerfs,
           summary = summary
