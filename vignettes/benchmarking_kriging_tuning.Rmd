@@ -24,7 +24,7 @@ library(parallelMap)
 ## create the tasks
 ```{r tasks, results='hide', message=FALSE}
 # create the task
-tasks = makeTasks(dataset = makeDataset(dfrom = "2017-03-04T00:00:00Z", dto = "2017-03-04T23:00:00Z", sensor = "tsa")$output$value, target = "tsa")
+tasks = makeTask(dataset = makeDataset(dfrom = "2017-03-04T00:00:00Z", dto = "2017-03-04T23:00:00Z", sensor = "tsa")$output$value, target = "tsa")
 
 data("learners")
 bmr.learners = list(

@@ -1,8 +1,10 @@
 library(mlr)
 
-# defining the base learners
-learners = list(
+######
+## base learners
+#####
 
+baseLearners = list(
   # multiple linear regression with alt, lat, lon
   lrn.lm.alt = makeFilterWrapper(
     learner = makeLearner(
@@ -17,20 +19,6 @@ learners = list(
   lrn.gstat.idw = makeLearner(
     cl = "regr.gstat",
     id = "idw",
-    predict.type = "se"),
-
-  # trends order 1
-  lrn.gstat.ts1 = makeLearner(
-    cl = "regr.gstat",
-    id = "ts1",
-    par.vals = list(degree = 1, debug.level = 0),
-    predict.type = "se"),
-
-  # trends order 2
-  lrn.gstat.ts2 = makeLearner(
-    cl = "regr.gstat",
-    id = "ts2",
-    par.vals = list(degree = 2, debug.level = 0),
     predict.type = "se"),
 
   # ordinary kriging
@@ -65,19 +53,6 @@ learners = list(
     fw.mandatory.feat = c("y", "x", "elevation"),
     fw.abs = 3),
 
-  # 2 nearest neighbours based on lon lat
-  lrn.gstat.2nn = makeFilterWrapper(
-    learner = makeLearner(
-      cl = "regr.gstat",
-      id = "nn2",
-      par.vals = list(
-        nmax = 2,
-        debug.level = 0),
-      predict.type = "se"),
-    fw.method = "linear.correlation",
-    fw.mandatory.feat = c("y", "x"),
-    fw.abs = 2),
-
   # 1 nearest neighbour based on lon lat
   lrn.gstat.1nn = makeFilterWrapper(
     learner = makeLearner(
@@ -86,6 +61,39 @@ learners = list(
       par.vals = list(
         set = list(idp = 0),
         nmax = 1,
+        debug.level = 0),
+      predict.type = "se"),
+    fw.method = "linear.correlation",
+    fw.mandatory.feat = c("y", "x"),
+    fw.abs = 2)
+)
+
+#####
+## other learners
+#####
+
+otherLearners = list(
+  # trends order 1
+  lrn.gstat.ts1 = makeLearner(
+    cl = "regr.gstat",
+    id = "ts1",
+    par.vals = list(degree = 1, debug.level = 0),
+    predict.type = "se"),
+
+  # trends order 2
+  lrn.gstat.ts2 = makeLearner(
+    cl = "regr.gstat",
+    id = "ts2",
+    par.vals = list(degree = 2, debug.level = 0),
+    predict.type = "se"),
+
+  # 2 nearest neighbours based on lon lat
+  lrn.gstat.2nn = makeFilterWrapper(
+    learner = makeLearner(
+      cl = "regr.gstat",
+      id = "nn2",
+      par.vals = list(
+        nmax = 2,
         debug.level = 0),
       predict.type = "se"),
     fw.method = "linear.correlation",
@@ -131,6 +139,10 @@ learners = list(
     fw.abs = 3)
 )
 
+#####
+## Tuning preparation
+#####
+
 # parameters set for tuning on OK and KED
 ps.gstat.krige = ParamHelpers::makeParamSet(
   ParamHelpers::makeDiscreteParam("range", values = c(800, 1600)),
@@ -148,7 +160,10 @@ ctrl = makeTuneControlGrid()
 
 inner = makeResampleDesc("Holdout")
 
-learners.tuning = list(
+#####
+## tuned learners
+#####
+tunedLearners = list(
   # ked tuning
   lrn.gstat.krige.alt.tuning = makeTuneWrapper(
     learner = makeFilterWrapper(
@@ -177,12 +192,12 @@ learners.tuning = list(
     par.set = ps.gstat.krige, control = ctrl, show.info = FALSE),
   #knn tuning
   lrn.gstat.knn.alt.tuning = makeTuneWrapper(
-    learner = setLearnerId(learners$lrn.gstat.knn.alt, "knn.alt.tuning"),
+    learner = setLearnerId(otherLearners$lrn.gstat.knn.alt, "knn.alt.tuning"),
     resampling = inner,
     measures = rmse,
     par.set = ps.gstat.knn, control = ctrl, show.info = FALSE)
 )
 
-am.learners = c(learners, learners.tuning)
+learners = list(baseLearners = baseLearners, otherLearners = otherLearners, tunedLearners = tunedLearners)
 
-devtools::use_data(am.learners, overwrite = TRUE)
+devtools::use_data(learners, overwrite = TRUE)

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Benchmarking example • agrometeoR</title>
+<title>Development Roadmap • agrometeoR</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -15,7 +15,7 @@
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Benchmarking example">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Development Roadmap">
 <meta property="og:description" content="">
 <meta property="og:image" content="/logo.png">
 <meta name="twitter:card" content="summary">
@@ -135,78 +135,38 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Benchmarking example</h1>
+      <h1>Development Roadmap</h1>
                         <h4 class="author">Thomas Goossens</h4>
             
-            <h4 class="date">11/22/2018</h4>
+            <h4 class="date">1/24/2019</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/pokyah/agrometeoR/blob/master/vignettes/benchmarking_example.Rmd"><code>vignettes/benchmarking_example.Rmd</code></a></small>
-      <div class="hidden name"><code>benchmarking_example.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/pokyah/agrometeoR/blob/master/vignettes/Development_roadmap.Rmd"><code>vignettes/Development_roadmap.Rmd</code></a></small>
+      <div class="hidden name"><code>Development_roadmap.Rmd</code></div>
 
     </div>
 
     
     
-<p>A benchmark experiment allows to compare how various learners perform one one or multiple tasks. You can read the full documentation about benchmarking experiment on the <a href="https://mlr.mlr-org.com/articles/tutorial/benchmark_experiments.html">mlr website</a>.</p>
-<p>In this vignette we will present you how to use the makeBenchmark function and we will also explore the kind of outputs you can get from it.</p>
-<p>But first we will explain why we have decided to implement our custom version of the benchmarking function rather than simply use the mlr one.</p>
-<div id="why-create-a-custom-benchmarking-function" class="section level2">
+<div id="r-markdown" class="section level2">
 <h2 class="hasAnchor">
-<a href="#why-create-a-custom-benchmarking-function" class="anchor"></a>Why create a custom benchmarking function ?</h2>
-<ol style="list-style-type: decimal">
-<li><p>Allow user to have a custom function that is shipped with the package. No need to dig in the extensive mlr documentation for a simple benchmark</p></li>
-<li><p>As we benchmark not a single dataset but plenty of hourly or daily datasets from hour stations network, we need a way to perform, store and analyse thousands of benchmarks while avoiding CPU and RAM saturation.</p></li>
-</ol>
+<a href="#r-markdown" class="anchor"></a>R Markdown</h2>
+<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cars)</code></pre></div>
+<pre><code>##      speed           dist       
+##  Min.   : 4.0   Min.   :  2.00  
+##  1st Qu.:12.0   1st Qu.: 26.00  
+##  Median :15.0   Median : 36.00  
+##  Mean   :15.4   Mean   : 42.98  
+##  3rd Qu.:19.0   3rd Qu.: 56.00  
+##  Max.   :25.0   Max.   :120.00</code></pre>
 </div>
-<div id="specificities-of-our-benchamrking-function" class="section level2">
+<div id="including-plots" class="section level2">
 <h2 class="hasAnchor">
-<a href="#specificities-of-our-benchamrking-function" class="anchor"></a>Specificities of our benchamrking function</h2>
-<p>Our benchmarking function … ::TODO::</p>
-</div>
-<div id="load-the-libraries" class="section level2">
-<h2 class="hasAnchor">
-<a href="#load-the-libraries" class="anchor"></a>Load the libraries</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># loading mlr &amp; agrometeoR</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(agrometeoR)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mlr)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(parallelMap)</code></pre></div>
-</div>
-<div id="create-the-tasks" class="section level2">
-<h2 class="hasAnchor">
-<a href="#create-the-tasks" class="anchor"></a>create the tasks</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create the task</span>
-task =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeTask">makeTask</a></span>(<span class="dt">dataset =</span> dataset<span class="op">$</span>output<span class="op">$</span>value<span class="op">$</span><span class="st">`</span><span class="dt">20170304</span><span class="st">`</span>, <span class="dt">target =</span> <span class="st">"tsa"</span>)</code></pre></div>
-</div>
-<div id="benchmark-some-learners-on-a-subset-of-these-tasks" class="section level2">
-<h2 class="hasAnchor">
-<a href="#benchmark-some-learners-on-a-subset-of-these-tasks" class="anchor"></a>benchmark some learners on a subset of these tasks</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># loading the learners preconfigured with the package</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"am.learners"</span>)
-
-<span class="co"># conduct the bmr on 2 tasks</span>
-bmr =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeBenchmark">makeBenchmark</a></span>(<span class="dt">tasks =</span> task<span class="op">$</span>output<span class="op">$</span>value, <span class="dt">learners =</span> am.learners, <span class="dt">grouping =</span> <span class="dv">1</span>, <span class="dt">cpus =</span> <span class="dv">4</span>, <span class="dt">path =</span> <span class="st">"./"</span>)</code></pre></div>
-</div>
-<div id="vizualize-performance" class="section level2">
-<h2 class="hasAnchor">
-<a href="#vizualize-performance" class="anchor"></a>vizualize performance</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># plotBMRBoxplots(bmr.1core$output$value$bmr, pretty.names = FALSE)</span>
-<span class="co"># plotBMRSummary(bmr.1core$output$value$bmr, pretty.names = FALSE)</span>
-<span class="co"># </span>
-<span class="co"># lapply(bmrs.1core, function(x) {</span>
-<span class="co">#   plotBMRBoxplots(x$output$value[[1]], pretty.names = FALSE)</span>
-<span class="co"># })</span>
-<span class="co"># </span>
-<span class="co"># lapply(bmrs.1core, function(x) {</span>
-<span class="co">#   plotBMRSummary(x$output$value[[1]], pretty.names = FALSE)</span>
-<span class="co"># })</span></code></pre></div>
-</div>
-<div id="check-if-parallelization-improves-computing-speed" class="section level2">
-<h2 class="hasAnchor">
-<a href="#check-if-parallelization-improves-computing-speed" class="anchor"></a>Check if parallelization improves computing speed</h2>
-<p>Let’s re-run the same benchmark but on 4 cores this time</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># with parallel computing</span>
-<span class="co"># bmr.4cores = makeBenchmark(tasks = tasks$output$value[1:3], learners = learners, cpus = 4)</span></code></pre></div>
-<p>We can see that we have an improvement of the computation time of a factor of <code>#r bmr.1core$output$value$exectime/bmr.4cores$output$value$exectime</code></p>
+<a href="#including-plots" class="anchor"></a>Including Plots</h2>
+<p>You can also embed plots, for example:</p>
+<p><img src="Development_roadmap_files/figure-html/pressure-1.png" width="700"></p>
+<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
 </div>
   </div>
 
@@ -215,13 +175,8 @@ bmr =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentati
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#why-create-a-custom-benchmarking-function">Why create a custom benchmarking function ?</a></li>
-      <li><a href="#specificities-of-our-benchamrking-function">Specificities of our benchamrking function</a></li>
-      <li><a href="#load-the-libraries">Load the libraries</a></li>
-      <li><a href="#create-the-tasks">create the tasks</a></li>
-      <li><a href="#benchmark-some-learners-on-a-subset-of-these-tasks">benchmark some learners on a subset of these tasks</a></li>
-      <li><a href="#vizualize-performance">vizualize performance</a></li>
-      <li><a href="#check-if-parallelization-improves-computing-speed">Check if parallelization improves computing speed</a></li>
+<li><a href="#r-markdown">R Markdown</a></li>
+      <li><a href="#including-plots">Including Plots</a></li>
       </ul>
 </div>
       </div>
