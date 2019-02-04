@@ -8,7 +8,10 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 devtools::load_all()
+library(dplyr)
 ```
+
+## Preamble
 
 A benchmark experiment allows to compare how various learners perform one one or multiple tasks.
 You can read the full documentation about benchmarking experiment on the [mlr website](https://mlr.mlr-org.com/articles/tutorial/benchmark_experiments.html).
@@ -17,59 +20,71 @@ In this vignette we will present you how to use the makeBenchmark function and w
 
 But first we will explain why we have decided to implement our custom version of the benchmarking function rather than simply use the mlr one.
 
-## Why create a custom benchmarking function ? 
+### Why create a custom benchmarking function ? 
 
 1. Allow user to have a custom function that is shipped with the package. No need to dig in the extensive mlr documentation for a simple benchmark
 
-2. As we benchmark not a single dataset but plenty of hourly or daily datasets from hour stations network, we need a way to perform, store and analyse thousands of benchmarks while avoiding CPU and RAM saturation.
+2. As we benchmark not a single dataset but plenty of hourly or daily datasets from our stations network, we need a way to perform, store and analyse thousands of benchmarks while avoiding CPU and RAM saturation.
 
-## Specificities of our benchamrking function
+### Specificities of our benchamrking function
 
-Our benchmarking function ... ::TODO::
+Our function allows you to choose a `grouping` value. This is the number of tasks you want to assign to a single batch benchmarking job. Its purpose is to avoid RAM saturation by writting the result of the batch benchmarking job to a file rather than storing it in RAM.
 
-## Load the libraries
+For example, if you have 20000 hourly records, you will need to perform 20000 benchmarks. Such an amount of information could probably lead to a RAM saturation (depending of your system). To avoid this, you can decide to work by batches of 1000 tasks using `grouping = 1000`. The function will then create a file containing the bmr results for each batch of 1000 tasks.
+
+Once all the batches have been performed (bmr conducted and written to file), the function will automatically load all the temporary files and construct a single benchmark result object. 
+
+## Working example
+
+We will benchmark our `baseLearners` on a set of 3 hourly records. This is of course a small number of hourly records but this is for the sake of example.
+
+### Load the libraries
 
 ```{r libraries,results='hide'}
 # loading mlr & agrometeoR
 library(agrometeoR)
 library(mlr)
-library(parallelMap)
 ```
 
+### Create a dataset containging the 5 hourly sets of records
 
-## create the tasks
-```{r tasks, results='hide', message=FALSE}
+The `makeDataset` function provides a list where each element is a dataframe containing an hourly set of records. 
+
+```{r dataset, results='hide', message=FALSE}
 # create an hourly dataset
-dataset = makeDataset(dfrom = "2016-07-01T08:00:00Z", dto = "2016-07-01T08:00:00Z")
-# create the task
-task = makeTask(dataset = dataset$output$value[[1]], target = "tsa")
-# each task must be stored in a list element for makeBenchmark function
-task = list(task1 = task$output$value)
-
+dataset = makeDataset(dfrom = "2016-07-01T08:00:00Z", dto = "2016-07-01T11:00:00Z")
 ```
 
-## benchmark some learners on a subset of these tasks
+### Create the 5 tasks using lapply
 
+Our `makeTask` function is dedicated to the creation of a single task. In order to make multiple tasks from the output of the `makeDataset` simply use `lapply` on each element of its elements.
+
+```{r tasks, results='hide', message=FALSE}
+# create the tasks from the dataset
+tasks = lapply(dataset$output$value, function(x) makeTask(dataset = x, target = "tsa"))
+# extract the actual tasks from the more complex object
+tasks = lapply(tasks, function(x) x = x$output$value ) 
+```
+
+### Benchmark the baseLearners on the 5 tasks
 ```{r batch_benchmark, message=FALSE, warning=FALSE, results='hide'}
 # loading the learners preconfigured with the package
 data("learners")
 # conduct the bmr on 2 tasks
-bmr = makeBenchmark(tasks = task, learners = learners$baseLearners, grouping = 1, cpus = 4, path = "./output/")
+bmr = makeBenchmark(tasks = tasks, prefix = "test", learners = learners$baseLearners, grouping = 1, cpus = 4, path = "./outputs/",keep.pred = TRUE)
 ```
 
 
-## vizualize performance 
+### vizualize performance 
 ```{r}
-# plotBMRBoxplots(bmr.1core$output$value$bmr, pretty.names = FALSE)
-# plotBMRSummary(bmr.1core$output$value$bmr, pretty.names = FALSE)
-# 
-# lapply(bmrs.1core, function(x) {
-#   plotBMRBoxplots(x$output$value[[1]], pretty.names = FALSE)
-# })
-# 
-# lapply(bmrs.1core, function(x) {
-#   plotBMRSummary(x$output$value[[1]], pretty.names = FALSE)
-# })
+# box plots
+plotBMRBoxplots(bmr$output$value$bmr, pretty.names = FALSE)
+
+# summary plots
+plotBMRSummary(bmr$output$value$bmr, pretty.names = FALSE)
+
+# summary table
+bmr$output$value$summary
 ```
 
 ## Check if parallelization improves computing speed

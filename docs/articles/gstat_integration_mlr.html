@@ -60,6 +60,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/Development_roadmap.html">Development Roadmap</a>
+    </li>
+    <li>
       <a href="../articles/benchmarking_example.html">Benchmarking example</a>
     </li>
     <li>
@@ -75,6 +78,9 @@
       <a href="../articles/networks_intercomparison.html">Networks Intercomparison</a>
     </li>
     <li>
+      <a href="../articles/optimizing_benchmarking.html">Optimizing benchmarking speed</a>
+    </li>
+    <li>
       <a href="../articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
     </li>
     <li>
@@ -82,6 +88,9 @@
     </li>
     <li>
       <a href="../articles/two_years_benchmark.html">a 2 years benchmark</a>
+    </li>
+    <li>
+      <a href="../articles/understanding_knn.html">Understanding KNN</a>
     </li>
     <li>
       <a href="../articles/using_packrat.html">Using packrat</a>
@@ -190,7 +199,7 @@ mod.idw =<span class="st"> </span><span class="kw"><a href="https://www.rdocumen
 <span class="co"># interpolating</span>
 newdata.pred.idw =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/gstat/topics/predict.gstat">predict</a></span>(mod.idw, <span class="dt">newdata =</span> meuse.grid)
 ## [inverse distance weighted interpolation]
-mlr.idw =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.idw<span class="op">$</span>data)
+mlr.idw =<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.idw<span class="op">$</span>data)
 <span class="co"># mapping</span>
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/coordinates">coordinates</a></span>(mlr.idw) =<span class="st"> </span><span class="er">~</span>x<span class="op">+</span>y
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/gridded-methods">gridded</a></span>(mlr.idw) =<span class="st"> </span><span class="ot">TRUE</span>
@@ -236,7 +245,7 @@ meuse =<span class="st"> </span><span class="kw"><a href="https://www.rdocumenta
 meuse.grid =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/impute">impute</a></span>(meuse.grid, <span class="dt">classes =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">numeric =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/imputations">imputeMean</a></span>(), <span class="dt">factor =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/imputations">imputeMode</a></span>()),
   <span class="dt">dummy.classes =</span> <span class="st">"integer"</span>)<span class="op">$</span>data
 <span class="co"># adding a column with log zinc</span>
-meuse =<span class="st"> </span>meuse <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">log_zinc =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(zinc))
+meuse =<span class="st"> </span>meuse <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">log_zinc =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(zinc))
 <span class="co"># defining the regression task</span>
 task =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/Task">makeRegrTask</a></span>(<span class="dt">id =</span> <span class="st">"meuse"</span>,  <span class="dt">data =</span> meuse, <span class="dt">target =</span> <span class="st">"log_zinc"</span>)
 task.ts =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/dropFeatures">dropFeatures</a></span>(<span class="dt">task =</span> task, <span class="dt">features =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskFeatureNames">getTaskFeatureNames</a></span>(task)[<span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>)])
@@ -252,13 +261,13 @@ mod.ts.<span class="dv">3</span> =<span class="st"> </span><span class="kw"><a h
 ts.mlr =<span class="st"> </span>meuse.grid
 newdata.pred.ts.<span class="dv">1</span> =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/gstat/topics/predict.gstat">predict</a></span>(mod.ts.<span class="dv">1</span>, <span class="dt">newdata =</span> meuse.grid)
 ## [ordinary or weighted least squares prediction]
-ts.mlr<span class="op">$</span>mlr.ts.<span class="dv">1</span> =<span class="st"> </span>(<span class="kw"><a href="http://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.ts.<span class="dv">1</span><span class="op">$</span>data))<span class="op">$</span>response
+ts.mlr<span class="op">$</span>mlr.ts.<span class="dv">1</span> =<span class="st"> </span>(<span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.ts.<span class="dv">1</span><span class="op">$</span>data))<span class="op">$</span>response
 newdata.pred.ts.<span class="dv">2</span> =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/gstat/topics/predict.gstat">predict</a></span>(mod.ts.<span class="dv">2</span>, <span class="dt">newdata =</span> meuse.grid)
 ## [ordinary or weighted least squares prediction]
-ts.mlr<span class="op">$</span>mlr.ts.<span class="dv">2</span> =<span class="st"> </span>(<span class="kw"><a href="http://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.ts.<span class="dv">2</span><span class="op">$</span>data))<span class="op">$</span>response
+ts.mlr<span class="op">$</span>mlr.ts.<span class="dv">2</span> =<span class="st"> </span>(<span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.ts.<span class="dv">2</span><span class="op">$</span>data))<span class="op">$</span>response
 newdata.pred.ts.<span class="dv">3</span> =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/gstat/topics/predict.gstat">predict</a></span>(mod.ts.<span class="dv">3</span>, <span class="dt">newdata =</span> meuse.grid)
 ## [ordinary or weighted least squares prediction]
-ts.mlr<span class="op">$</span>mlr.ts.<span class="dv">3</span> =<span class="st"> </span>(<span class="kw"><a href="http://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.ts.<span class="dv">3</span><span class="op">$</span>data))<span class="op">$</span>response
+ts.mlr<span class="op">$</span>mlr.ts.<span class="dv">3</span> =<span class="st"> </span>(<span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.ts.<span class="dv">3</span><span class="op">$</span>data))<span class="op">$</span>response
 <span class="co"># mapping</span>
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/coordinates">coordinates</a></span>(ts.mlr) =<span class="st"> </span><span class="er">~</span>x<span class="op">+</span>y
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/gridded-methods">gridded</a></span>(ts.mlr) =<span class="st"> </span><span class="ot">TRUE</span>
@@ -310,7 +319,7 @@ meuse =<span class="st"> </span><span class="kw"><a href="https://www.rdocumenta
 meuse.grid =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/impute">impute</a></span>(meuse.grid, <span class="dt">classes =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">numeric =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/imputations">imputeMean</a></span>(), <span class="dt">factor =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/imputations">imputeMode</a></span>()),
   <span class="dt">dummy.classes =</span> <span class="st">"integer"</span>)<span class="op">$</span>data
 <span class="co"># adding a column with log zinc</span>
-meuse =<span class="st"> </span>meuse <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">log_zinc =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(zinc))
+meuse =<span class="st"> </span>meuse <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">log_zinc =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(zinc))
 <span class="co"># defining the regression task</span>
 task =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/Task">makeRegrTask</a></span>(<span class="dt">id =</span> <span class="st">"meuse"</span>,  <span class="dt">data =</span> meuse, <span class="dt">target =</span> <span class="st">"log_zinc"</span>)
 task.krg =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/dropFeatures">dropFeatures</a></span>(<span class="dt">task =</span> task, <span class="dt">features =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskFeatureNames">getTaskFeatureNames</a></span>(task)[<span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>)])
@@ -321,7 +330,7 @@ mod.krg =<span class="st"> </span><span class="kw"><a href="https://www.rdocumen
 <span class="co"># kriging</span>
 newdata.pred.krg =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/gstat/topics/predict.gstat">predict</a></span>(<span class="dt">object =</span> mod.krg, <span class="dt">newdata =</span> meuse.grid)
 ## [using ordinary kriging]
-ok.mlr =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.krg<span class="op">$</span>data)
+ok.mlr =<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.krg<span class="op">$</span>data)
 <span class="co"># mapping</span>
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/coordinates">coordinates</a></span>(ok.mlr) =<span class="st"> </span><span class="er">~</span>x<span class="op">+</span>y
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/gridded-methods">gridded</a></span>(ok.mlr) =<span class="st"> </span><span class="ot">TRUE</span>
@@ -333,7 +342,7 @@ se.mod.krg =<span class="st"> </span><span class="kw"><a href="https://www.rdocu
 <span class="co"># SE kriging</span>
 se.newdata.pred.krg =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/gstat/topics/predict.gstat">predict</a></span>(<span class="dt">object =</span> se.mod.krg, <span class="dt">newdata =</span> meuse.grid)
 ## [using ordinary kriging]
-ok.se.mlr =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), se.newdata.pred.krg<span class="op">$</span>data)
+ok.se.mlr =<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), se.newdata.pred.krg<span class="op">$</span>data)
 <span class="co"># SE mapping</span>
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/coordinates">coordinates</a></span>(ok.se.mlr) =<span class="st"> </span><span class="er">~</span>x<span class="op">+</span>y
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/gridded-methods">gridded</a></span>(ok.se.mlr) =<span class="st"> </span><span class="ot">TRUE</span>
@@ -382,10 +391,10 @@ meuse =<span class="st"> </span><span class="kw"><a href="https://www.rdocumenta
 meuse.grid =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/impute">impute</a></span>(meuse.grid, <span class="dt">classes =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">numeric =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/imputations">imputeMean</a></span>(), <span class="dt">factor =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/imputations">imputeMode</a></span>()),
   <span class="dt">dummy.classes =</span> <span class="st">"integer"</span>)<span class="op">$</span>data
 <span class="co"># adding a column with log zinc</span>
-meuse =<span class="st"> </span>meuse <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">log_zinc =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(zinc))
+meuse =<span class="st"> </span>meuse <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">log_zinc =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(zinc))
 <span class="co"># adding a column with sqrt dist</span>
-meuse =<span class="st"> </span>meuse <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">sqrt_dist =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt</a></span>(dist))
-meuse.grid =<span class="st"> </span>meuse.grid <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">sqrt_dist =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt</a></span>(dist))
+meuse =<span class="st"> </span>meuse <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">sqrt_dist =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt</a></span>(dist))
+meuse.grid =<span class="st"> </span>meuse.grid <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">sqrt_dist =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt</a></span>(dist))
 <span class="co"># defining the regression task</span>
 task =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/Task">makeRegrTask</a></span>(<span class="dt">id =</span> <span class="st">"meuse"</span>,  <span class="dt">data =</span> meuse, <span class="dt">target =</span> <span class="st">"log_zinc"</span>)
 task.krg =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/dropFeatures">dropFeatures</a></span>(<span class="dt">task =</span> task, <span class="dt">features =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskFeatureNames">getTaskFeatureNames</a></span>(task)[<span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">15</span>)])
@@ -396,7 +405,7 @@ mod.krg =<span class="st"> </span><span class="kw"><a href="https://www.rdocumen
 <span class="co"># kriging</span>
 newdata.pred.krg =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/gstat/topics/predict.gstat">predict</a></span>(<span class="dt">object =</span> mod.krg, <span class="dt">newdata =</span> meuse.grid)
 ## [using universal kriging]
-ked.mlr =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.krg<span class="op">$</span>data)
+ked.mlr =<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), newdata.pred.krg<span class="op">$</span>data)
 <span class="co"># mapping</span>
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/coordinates">coordinates</a></span>(ked.mlr) =<span class="st"> </span><span class="er">~</span>x<span class="op">+</span>y
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/gridded-methods">gridded</a></span>(ked.mlr) =<span class="st"> </span><span class="ot">TRUE</span>
@@ -408,7 +417,7 @@ se.mod.krg =<span class="st"> </span><span class="kw"><a href="https://www.rdocu
 <span class="co"># SE kriging</span>
 se.newdata.pred.krg =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/gstat/topics/predict.gstat">predict</a></span>(<span class="dt">object =</span> se.mod.krg, <span class="dt">newdata =</span> meuse.grid)
 ## [using universal kriging]
-ked.se.mlr =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), se.newdata.pred.krg<span class="op">$</span>data)
+ked.se.mlr =<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(meuse.grid), se.newdata.pred.krg<span class="op">$</span>data)
 <span class="co"># SE mapping</span>
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/coordinates">coordinates</a></span>(ked.se.mlr) =<span class="st"> </span><span class="er">~</span>x<span class="op">+</span>y
 sp<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sp/topics/gridded-methods">gridded</a></span>(ked.se.mlr) =<span class="st"> </span><span class="ot">TRUE</span>

@@ -58,7 +58,7 @@ makeDataset.test = makeDataset(
 To simplify our future calculations, we add a new custom id column where each id correspond to the row number
 
 ```{r dataset-id}
-dataset = makeDataset.test$output$value
+dataset = makeDataset.test$output$value[[1]]
 id = as.data.frame(1:nrow(dataset))
 colnames(id) = "id"
 dataset = dataset %>%
@@ -96,19 +96,19 @@ We will conduct our test on a single station. For this purpose, we exclude the f
 train = dataset[2:29,]
 test = dataset[1:1,]
 
-train.task = makeTasks(
+train.task = makeTask(
   dataset = train,
   target = "tsa"
 )
 train.task = train.task$output$value
-train.data = getTaskData(train.task[[1]])
+train.data = getTaskData(train.task)
 
-test.task =  makeTasks(
+test.task =  makeTask(
   dataset = test,
   target = "tsa"
 )
 test.task = test.task$output$value
-test.data = getTaskData(test.task[[1]])
+test.data = getTaskData(test.task)
 ```
 
 ## Building the model & predicting with gstat
@@ -119,11 +119,11 @@ The learner we invoke here is a learner that comes prebuild with the agrometeoR 
 ```{r training-and-predicting}
 # training
 train.model.5nn = mlr::train(
-  learner = learners$lrn.gstat.5nn,
-  task = train.task[[1]])
+  learner = learners$otherLearners$lrn.gstat.5nn,
+  task = train.task)
 
 # predicting
-test.pred.5nn = predict(train.model.5nn, test.task[[1]])
+test.pred.5nn = predict(train.model.5nn, test.task)
 
 # adding predicted info to test set
 test.data = test.data %>%
@@ -153,7 +153,7 @@ We see that this manual computation provides the exact same value of the one pro
 
 ## Conclusion
 
-We can assert that the behaviour of the gstat learner correspond to our expectations. Also, we must note that we have define our gstat.5nn learner such as the values of the neighbours are not weighted according to their distance to the station for which we want to predict the value. Here is the code corresponding to the definition of our gstat.5nn learner (as found on github) : 
+We can assert that the behaviour of the gstat learner correspond to our expectations. Also, we must note that we have define our gstat.5nn learner such as the values of the neighbours are not weighted according to their distance to the station for which we want to predict the value. Here is the code corresponding to the definition of our gstat.5nn learner : 
 
 ```{r}
   lrn.gstat.5nn = makeFilterWrapper(

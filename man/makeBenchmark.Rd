@@ -6,7 +6,7 @@
 \usage{
 makeBenchmark(tasks, learners, measures = list(rmse), keep.pred = FALSE,
   models = FALSE, grouping = 1000, level = "mlr.benchmark",
-  resamplings = "LOO", cpus = 1, path = "./")
+  resamplings = "LOO", cpus = 1, prefix = "", path = "./")
 }
 \arguments{
 \item{tasks}{a list which elements are object of class mlr::makeRegrTask()}
@@ -25,11 +25,11 @@ makeBenchmark(tasks, learners, measures = list(rmse), keep.pred = FALSE,
 
 \item{cpus}{an integer specifying the number of cpus to use for the benchamrk. Default is 1}
 
+\item{prefix}{a character specifying the prefix you want to use for the bmr file names.}
+
 \item{path}{a character specifying the path where you want to save the bmr files.}
 
 \item{resampling}{a character specifying the type of mlr's CV. Default = LOO}
-
-\item{pattern}{a character specifying the pattern you want to use for the bmr file names.}
 }
 \value{
 a list wihch elements are objects of class mlr::benchmark()
