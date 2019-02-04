@@ -60,6 +60,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/Development_roadmap.html">Development Roadmap</a>
+    </li>
+    <li>
       <a href="../articles/benchmarking_example.html">Benchmarking example</a>
     </li>
     <li>
@@ -75,6 +78,9 @@
       <a href="../articles/networks_intercomparison.html">Networks Intercomparison</a>
     </li>
     <li>
+      <a href="../articles/optimizing_benchmarking.html">Optimizing benchmarking speed</a>
+    </li>
+    <li>
       <a href="../articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
     </li>
     <li>
@@ -82,6 +88,9 @@
     </li>
     <li>
       <a href="../articles/two_years_benchmark.html">a 2 years benchmark</a>
+    </li>
+    <li>
+      <a href="../articles/understanding_knn.html">Understanding KNN</a>
     </li>
     <li>
       <a href="../articles/using_packrat.html">Using packrat</a>
@@ -150,16 +159,16 @@ grid.sf =<span class="st"> </span>grid.sf[<span class="st">"px"</span>]
 <pre><code>## Simple feature collection with 6 features and 1 field
 ## geometry type:  POINT
 ## dimension:      XY
-## bbox:           xmin: 550013.6 ymin: 665990 xmax: 741012.9 ymax: 666990
+## bbox:           xmin: 542637.5 ymin: 657200.5 xmax: 544645.1 ymax: 661204.6
 ## epsg (SRID):    3812
 ## proj4string:    +proj=lcc +lat_1=49.83333333333334 +lat_2=51.16666666666666 +lat_0=50.797815 +lon_0=4.359215833333333 +x_0=649328 +y_0=665262 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
-##         px                  geometry
-## 155 164266   POINT (552013.6 666990)
-## 156 164267   POINT (553013.6 666990)
-## 157 164268   POINT (554013.6 666990)
-## 224 164455 POINT (741012.9 666989.5)
-## 237 164865   POINT (550013.6 665990)
-## 238 164866   POINT (551013.6 665990)</code></pre>
+##     px                  geometry
+## 2 1099 POINT (543641.3 659202.5)
+## 3 1100 POINT (543641.4 658201.5)
+## 4 1101 POINT (543641.3 660203.5)
+## 5 1103 POINT (542637.5 661204.6)
+## 6 1138 POINT (543641.2 661204.5)
+## 7 1415 POINT (544645.1 657200.5)</code></pre>
 <p>We see that this <code>grid.sf</code> dataset contains the RMI <code>px</code> reference and the location of the grid points stored in the geometry attribute.</p>
 <p>We will now inject the static explanatory variables <code>aspect</code>, <code>slope</code> and <code>elevation</code></p>
 </div>
@@ -171,55 +180,55 @@ grid.sf =<span class="st"> </span>grid.sf[<span class="st">"px"</span>]
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"grid.df"</span>)
 <span class="co"># removing X and Y cols</span>
 grid.df =<span class="st"> </span>grid.df <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>)
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>)
 <span class="co"># excerpt of the data </span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(grid.df)</code></pre></div>
-<pre><code>##       px elevation       slope   aspect Agricultural_areas
-## 1 164266  17.91418 0.013484839 3.086932           80.07790
-## 2 164267  18.14169 0.001938204 2.224847           78.06777
-## 3 164268  18.83645 0.009254794 4.023337           83.34019
-## 4 164455 113.42007 0.008275864 2.618857           99.95431
-## 5 164865  19.88416 0.007572229 1.719723           96.17199
-## 6 164866  17.56914 0.005303794 3.216073           30.83748
-##   Artificials_surfaces Forest Herbaceous_vegetation
-## 1             0.000000      0              19.87641
-## 2             0.000000      0              21.88654
-## 3             0.000000      0              16.61413
-## 4             0.000000      0               0.00000
-## 5             3.782325      0               0.00000
-## 6            27.236174      0              41.88066</code></pre>
+<pre><code>##     px elevation       slope   aspect Agricultural_areas
+## 1 1099  16.73109 0.006285769 2.289892           99.95431
+## 2 1100  16.80623 0.002238894 3.094462           95.12771
+## 3 1101  18.35830 0.023760735 2.891225           73.49445
+## 4 1103  33.42897 0.019199268 1.196516           92.49177
+## 5 1138  27.63995 0.018148860 2.776093           95.99715
+## 6 1415  16.84042 0.002510676 4.865386           98.19756
+##   Artificials_surfaces    Forest Herbaceous_vegetation
+## 1             0.000000 0.0000000              0.000000
+## 2             4.826604 0.0000000              0.000000
+## 3             0.000000 0.6551617             25.804701
+## 4             0.000000 0.0000000              7.462547
+## 5             0.000000 0.0000000              3.957165
+## 6             1.756750 0.0000000              0.000000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># joining to grid.sf</span>
 grid.sf =<span class="st"> </span>grid.sf <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(grid.df, <span class="dt">by =</span> <span class="st">"px"</span>)
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(grid.df, <span class="dt">by =</span> <span class="st">"px"</span>)
 <span class="co"># excerpt of the data </span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(grid.sf)</code></pre></div>
 <pre><code>## Simple feature collection with 6 features and 8 fields
 ## geometry type:  POINT
 ## dimension:      XY
-## bbox:           xmin: 550013.6 ymin: 665990 xmax: 741012.9 ymax: 666990
+## bbox:           xmin: 542637.5 ymin: 657200.5 xmax: 544645.1 ymax: 661204.6
 ## epsg (SRID):    3812
 ## proj4string:    +proj=lcc +lat_1=49.83333333333334 +lat_2=51.16666666666666 +lat_0=50.797815 +lon_0=4.359215833333333 +x_0=649328 +y_0=665262 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
-##       px elevation       slope   aspect Agricultural_areas
-## 1 164266  17.91418 0.013484839 3.086932           80.07790
-## 2 164267  18.14169 0.001938204 2.224847           78.06777
-## 3 164268  18.83645 0.009254794 4.023337           83.34019
-## 4 164455 113.42007 0.008275864 2.618857           99.95431
-## 5 164865  19.88416 0.007572229 1.719723           96.17199
-## 6 164866  17.56914 0.005303794 3.216073           30.83748
-##   Artificials_surfaces Forest Herbaceous_vegetation
-## 1             0.000000      0              19.87641
-## 2             0.000000      0              21.88654
-## 3             0.000000      0              16.61413
-## 4             0.000000      0               0.00000
-## 5             3.782325      0               0.00000
-## 6            27.236174      0              41.88066
+##     px elevation       slope   aspect Agricultural_areas
+## 1 1099  16.73109 0.006285769 2.289892           99.95431
+## 2 1100  16.80623 0.002238894 3.094462           95.12771
+## 3 1101  18.35830 0.023760735 2.891225           73.49445
+## 4 1103  33.42897 0.019199268 1.196516           92.49177
+## 5 1138  27.63995 0.018148860 2.776093           95.99715
+## 6 1415  16.84042 0.002510676 4.865386           98.19756
+##   Artificials_surfaces    Forest Herbaceous_vegetation
+## 1             0.000000 0.0000000              0.000000
+## 2             4.826604 0.0000000              0.000000
+## 3             0.000000 0.6551617             25.804701
+## 4             0.000000 0.0000000              7.462547
+## 5             0.000000 0.0000000              3.957165
+## 6             1.756750 0.0000000              0.000000
 ##                    geometry
-## 1   POINT (552013.6 666990)
-## 2   POINT (553013.6 666990)
-## 3   POINT (554013.6 666990)
-## 4 POINT (741012.9 666989.5)
-## 5   POINT (550013.6 665990)
-## 6   POINT (551013.6 665990)</code></pre>
+## 1 POINT (543641.3 659202.5)
+## 2 POINT (543641.4 658201.5)
+## 3 POINT (543641.3 660203.5)
+## 4 POINT (542637.5 661204.6)
+## 5 POINT (543641.2 661204.5)
+## 6 POINT (544645.1 657200.5)</code></pre>
 </div>
 <div id="writing-to-file" class="section level2">
 <h2 class="hasAnchor">
@@ -229,7 +238,7 @@ grid.sf =<span class="st"> </span>grid.sf <span class="op">%&gt;%</span>
 grid.sf =<span class="st"> </span>sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_transform">st_transform</a></span>(grid.sf, <span class="dv">4326</span>)
 sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_write">st_write</a></span>(<span class="dt">obj =</span> grid.sf, <span class="dt">dsn =</span> <span class="st">"incagridExplVars.geojson"</span>)</code></pre></div>
 <pre><code>## Writing layer `incagridExplVars' to data source `incagridExplVars.geojson' using driver `GeoJSON'
-## features:       16900
+## features:       16534
 ## fields:         8
 ## geometry type:  Point</code></pre>
 <p>You can download this geojson file <a href="https://github.com/pokyah/agrometeoR/blob/master/vignettes/incagridExplVars.geojson">here</a></p>

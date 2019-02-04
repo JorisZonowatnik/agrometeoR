@@ -3,6 +3,7 @@
 #' @author Thomas Goossens
 #' @import mlr
 #' @import parallelMap
+#' @importFrom magrittr %>%
 #' @param cpus an integer specifying the number of cpus to use for the benchamrk. Default is 1
 #' @param tasks a list which elements are object of class mlr::makeRegrTask()
 #' @param learners a list which elements are object of class mlr::makeLearner()
@@ -99,11 +100,11 @@ makeBenchmark <- function(
         })
 
         # loading all the temp bmr files and merging in a single big bmr object
-        browser()
         bmr_files = list.files(path = path, pattern = prefix, full.names = TRUE)
         bmrs = lapply(bmr_files, readRDS)
-        if (lenght(bmrs) > 1) {bmrs = mergeBenchmarkResults(bmrs)}
-        else {bmrs = bmrs}
+
+        if (length(bmrs) > 1) {bmrs = mergeBenchmarkResults(bmrs)}
+        else {bmrs = bmrs[[1]]}
 
         # perfs + aggregated Performances
         perfs = getBMRPerformances(bmrs, as.df = TRUE)
