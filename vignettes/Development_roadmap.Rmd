@@ -1,11 +1,56 @@
 ---
 title: "Development Roadmap"
 author: "Thomas Goossens"
-date: "1/24/2019"
+date: "02/05/2019"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+## Introduction
+
+The tool to assess which spatialization method is the most appropriate is a benchmarking experiment.
+
+## Room for manoeuvre : 
+
+### Stations
+
+* which of Pameseb ? 
+* which of RMI ?
+* Pameseb correcred Humain model ?
+
+### Learners
+
+* baseLearners (= ZEPP)
+* UpgradedLearners 
+* ExplorativeLearners
+
+### Explanatory variables
+
+These variables must already be available as spatialized data in order to be used as explanaotry variables.
+
+#### Temperature (tsa) prediction
+
+* lat + lon
+* altitude
+* incaAnalysis (=T0)
+* ens
+
+#### Relative humidity (hra) prediction
+
+* lat + lon
+* alt
+* incaAnalysis
+* ens
+
+## Organization of the work
+
+### bmrs
+
+Benchmark experiments will be conducted on 2 years dataset of both __HOURLY__ and __DAILY__ records.
+From these benchmarks we obtain :
+
+
 
