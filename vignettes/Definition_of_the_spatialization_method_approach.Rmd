@@ -1,0 +1,118 @@
+---
+title: 'A methodological approach to assess the best
+  weather spatialization technique'
+author: "02/04/2019"
+output: html_document
+---
+
+# 1. Context & objectives   
+
+## 1.1. Context 
+
+European directive [2009/128/CE](http://www.eppo.int/PPPRODUCTS/information/2009_0128_EU-e.pdf) : establishing a framework for Community action to achieve the sustainable use of pesticides
+
+<details>
+  <summary>more</summary>
+  <p>
+<!-- the above p cannot start right at the beginning of the line and is mandatory for everything else to work -->
+The European directive 2009/128/CE imposes member-states to set up tools that allow for a more rational use of crop protection products. Among these tools, agricultural warning systems, based on crop monitoring models for the control of pests and diseases are widely adopted and have proved their efficiency. However, due to the difficulty to get meteorological data at high spatial resolution (at the parcel scale), they still are underused. The use of geostatistical tools (Kriging, Multiple Regressions, Artificial Neural Networks, etc.) makes it possible to interpolate data provided by physical weather stations in such a way that a high spatial resolution network (mesh size of 1 km2) of virtual weather stations could be generated. That is the objective of the AGROMET project.
+</p></details>
+
+## 1.2. Objective
+
+Provide hourly 1km² gridded datasets of weather parameters with the best accuracy (i.e. spatialize hourly records from the stations on the whole area of Wallonia) =  __SPATIALIZATION__
+
+<details>
+  <summary>more</summary>
+  <p>
+<!-- the above p cannot start right at the beginning of the line and is mandatory for everything else to work -->
+The project aims to set up an operational web-platform designed for real-time agro-meteorological data dissemination at high spatial (1km2) and temporal (hourly) resolution. To achieve the availability of data at such a high spatial resolution, we plan to “spatialize” the real-time data sent by more than 30 connected physical weather stations belonging to the PAMESEB and RMI networks. This spatialization will then result in a gridded dataset corresponding to a network of 16 000 virtual stations uniformly spread on the whole territory of Wallonia.
+These “spatialized” data will be made available through a web-platform providing interactive visualization widgets (maps, charts, tables and various indicators) and an API allowing their use on the fly, notably by agricultural warning systems providers. An extensive and precise documentation about data origin, geo-statistic algorithms used and uncertainty will also be available.
+</p></details>
+
+Best suited tools : 
+
+1.  ~~__physical atmospherical models__~~ 
+<small>(not straight forward to develop an explicit physical model describing how the output data can be derived from the input data) </small>
+2.  __supervised machine learning [regression](https://math.stackexchange.com/questions/141381/regression-vs-classification) algorithms__ that given a set of continuous data, find the best relationship that represents the set of continuous data
+<small>(common approach largely discussed in the academic litterature)</small>
+* __Our main goal will be to choose, for each weather parameter, the best suited supervised machine learning regression method__
+
+
+# 2. Key definitions
+
+## 2.1. Spatialization 
+Spatialization or spatial interpolation creates a __continuous surface__ from values measured at discrete locations to __predict__ values at any location in the interest zone with the __best accuracy__.
+
+In the chapter *The principles of geostatistical analysis*  of the [Using ArcGis Geostatistical analyst](http://dusk2.geo.orst.edu/gis/geostat_analyst.pdf), K. Johnston gives an efficient overview of what spatialization is and what are the two big groups of techniques (deterministic and __stochastic__).
+
+## 2.2. Supervised machine learning 
+From [machinelearningmastery.com](https://machinelearningmastery.com/supervised-and-unsupervised-machine-learning-algorithms/) : 
+
+> Supervised learning is where you have input variables (x) and an output variable (Y) and you use an algorithm to learn the mapping function from the input to the output : `Y = f(X)`<br>
+The goal is to approximate the mapping function so well that when you have new input data (x), you can predict the output variables (Y) for that data.<br>
+It is called supervised learning because the process of an algorithm learning from the training dataset can be thought of as a teacher supervising the learning process
+
+Also check this worth reading [post](https://medium.com/@ageitgey/machine-learning-is-fun-80ea3ec3c471)
+
+# 3. Defining the best supervised machine learning regression method
+
+## 3.1. Our general approach
+
+* Inspired from work of [ZEPP](https://github.com/pokyah/agrometeor-spatialization-review-benchmark/tree/master/assets/ZEPP) + [Arvalis](https://github.com/pokyah/agrometeor-spatialization-review-benchmark/tree/master/assets/arvalis) + [IRCeline](https://github.com/pokyah/agrometeor-spatialization-review-benchmark/tree/master/assets/IRCELINE)
+
+* ... to transpose into R-code
+
+* ... using supervised machine learning techniques
+
+* ... as proposed in the excellent [geocomputation with R](https://geocompr.robinlovelace.net/) book from PhD [Robin Lovelace](http://www.robinlovelace.net/about/).
+
+## 3.2. Step-by-step workflow 
+
+1. From our __historical dataset__ of hourly weather records ([Pameseb db](https://app.pameseb.be)) 
+2. filter a representative subset of records (e.g. __5 years of continuous hourly records__) + select the "good" stations
+3. For __each hourly set of records__ (30 stations - or more ([by integrating IRM  network](https://pokyah.github.io/AWS-Humain-comparison/reporting/Humain-presentation-revealjs.html#/)? )
+4. run a __benchmark experiment__ where __different desired regression learning algorithms__ are applied to various regression tasks (i.e. datasets with different combinations of explanatory variables + the target weather parameter) with the aim to compare and rank the combinations of algorithm + used explanatory variables using a [cross validation resampling strategy](https://www.researchgate.net/publication/226334863_Resampling_Strategies_for_Model_Assessment_and_Selection) (LOOCV) that provides the desired [performance metrics](https://medium.com/human-in-a-machine-world/mae-and-rmse-which-metric-is-better-e60ac3bde13d) ([RMSE or MAE?](https://www.geosci-model-dev.net/7/1247/2014/gmd-7-1247-2014.pdf))
+
+---- 
+
+5. Then __aggregate, by calculating the mean__, all the hourly performance measures on the whole representative subset to choose the method (= regression learning algorithm + regression task) that globally performs the best
+6. For each desired hourly dataset, apply the choosen method to __build a model__ to make spatial predictions
+7. __Use maps__ to [vizualize the predictions and their uncertainty](http://spatial-analyst.net/wiki/index.php/Uncertainty_visualization#Visualization_of_uncertainty_using_whitening_in_R)
+8. Make the predictions available on the platform together with its uncertainty indicator  
+
+## 3.3. workflow activity diagrams
+[spatialization methodology viewer](./assets/uml_images/spatialization-methodology.svg)
+ 
+
+## 3.4. Which target dependent variables ? 
+
+... or variables to be spatialized
+
+* temperature (a lot of litterature with expertise from KNMI + RMI)
+* relative humidity (performed by Arvalis + ZEPP)
+* ~~rainfall~~ (RMI rain radar)
+* leaves wetness (none of our partners)
+
+## 3.5. Which independent variables ?
+
+... or explanatory variables 
+
+* digital elevation model and its derivatives like aspect and slope (available from R command line using `getData` from [Raster](https://cran.r-project.org/web/packages/raster/index.html) package)
+* solar irradiance (available from [eumetsat - lsa saf](https://landsaf.ipma.pt/en/products/longwave-shortwave-radiation/dssf/))
+* other ? (distance to sea, CORINE land cover, temporal series, etc...)
+
+## 3.6. Which R config and packages ? 
+
+In order to ensure science reproductibility ([why it is important](https://www.sevenbridges.com/docker-based-solutions-to-reproducibility-in-science/)), the code ([R](https://medium.com/activewizards-machine-learning-company/top-20-r-libraries-for-data-science-in-2018-infographic-956f8419f883)) is developed in a self-maintained and publicly available [Docker image](https://github.com/pokyah/agrometeorDocker)  
+
+In addition to the famous [tidyverse](https://www.tidyverse.org/) packages suite, we use bleeding edge R packages :
+
+* from sp to the new [sf](https://edzer.github.io/UseR2017/) (perfect integration with dplyr verbs and with the OGC [simple feature](https://en.wikipedia.org/wiki/Simple_Features) standard) for spatial data handling
+* [mlr](https://mlr-org.github.io) : an umbrella-package providing a unified interface to dozens of learning algorithms
+
+# 4. Conclusion 
+
+* Thanks to exchanges with our partners (Steering Committee and KNMI + ZEPP + Arvalis) and an extensive review (both in terms of spatial prediction theory and R-coding), 
+* we have figured out how to setup & code an R-facility to find the best suited interpolation method for each of our weather params
+
