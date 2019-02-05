@@ -23,25 +23,27 @@ library(agrometeoR)
 ## Create the machine learning task for a specific hour
 *Check the default values of the params in the references file to make sure you understand what is constructed* 
 ```{r task, message=FALSE, warning=FALSE, paged.print=TRUE}
+# create the dataset
+myDataset = (makeDataset(dfrom = "2017-03-04T15:00:00Z", dto = "2017-03-04T15:00:00Z", sensor = "tsa"))$output$value
 # create the task
-myTasks = makeTasks(dataset = (makeDataset(dfrom = "2017-03-04T15:00:00Z", dto = "2017-03-04T15:00:00Z", sensor = "tsa"))$output$value, target = "tsa")
+myTask = makeTask(dataset = myDataset[[1]], target = "tsa")
 # what are the variables ? 
-colnames(mlr::getTaskData(myTasks$output$value$`20170304150000`))
+colnames(mlr::getTaskData(myTask$output$value))
 # what data do we have ? 
-head(getTaskData(myTasks$output$value$`20170304150000`))
+head(getTaskData(myTask$output$value))
 ```
 
 ## Train a learner
 
 ```{r train, message=FALSE, warning=FALSE, paged.print=TRUE}
-# instantiate a multiple li,near regression learner and specify that it must also provide se of preds
+# instantiate a multiple linear regression learner and specify that it must also provide se of preds
 myLearner = mlr::makeLearner("regr.lm", id = "multipleLinearReg", predict.type = "se" )
 # create the model by training the learner and also benchmark the learner with a LOO
-myModel = makeModel(task = myTasks$output$value$`20170304150000`, learner = myLearner)
+myModel = makeModel(task = myTask$output$value, learner = myLearner)
 # what are the model performances ? 
 myModel$output$value$perfs$agg
 # what about the residuals ? 
-plot(x =  getTaskData(myTasks$output$value$`20170304150000`)[["tsa"]], myModel$output$value$residuals[[1]])
+plot(x =  getTaskData(myTask$output$value)[["tsa"]], myModel$output$value$residuals[[1]])
 ```
 
 ## Spatialize using the trained a learner
@@ -49,8 +51,8 @@ plot(x =  getTaskData(myTasks$output$value$`20170304150000`)[["tsa"]], myModel$o
 ```{r spatializeconfig, include=FALSE}
 # trick to avoir overwriting error with st_write - https://github.com/r-spatial/sf/issues/274
 files = list.files()
-if (!is.null(paste0(myTasks$output$value$`20170304150000`$task.desc$id, ".geojson" %in% files))) {
-  file.remove(paste0(myTasks$output$value$`20170304150000`$task.desc$id, ".geojson"))
+if (!is.null(paste0(myTask$output$value$task.desc$id, ".geojson" %in% files))) {
+  file.remove(paste0(myTask$output$value$task.desc$id, ".geojson"))
 }
 ```
 
