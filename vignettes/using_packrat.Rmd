@@ -6,3 +6,5 @@ output: html_document
 ---
 http://distancesampling.org/developer/develop/dev-packrat.html
 https://github.com/r-lib/pkgdown/issues/488
+
+https://rdrr.io/github/rstudio/packrat/man/packify.html in case there is a need for packrat mode on on each startup
