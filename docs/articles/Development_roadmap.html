@@ -60,6 +60,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/Definition_of_the_spatialization_method_approach.html">A methodological approach to assess the best weather spatialization technique</a>
+    </li>
+    <li>
       <a href="../articles/Development_roadmap.html">Development Roadmap</a>
     </li>
     <li>
@@ -75,7 +78,7 @@
       <a href="../articles/networks_intercomparison.html">Networks Intercomparison</a>
     </li>
     <li>
-      <a href="../articles/optimizing_benchmarking.html">Optimizing benchmarking speed</a>
+      <a href="../articles/package_structuration.html">Package structuration</a>
     </li>
     <li>
       <a href="../articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
@@ -132,7 +135,7 @@
       <h1>Development Roadmap</h1>
                         <h4 class="author">Thomas Goossens</h4>
             
-            <h4 class="date">1/24/2019</h4>
+            <h4 class="date">02/05/2019</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/pokyah/agrometeoR/blob/master/vignettes/Development_roadmap.Rmd"><code>vignettes/Development_roadmap.Rmd</code></a></small>
       <div class="hidden name"><code>Development_roadmap.Rmd</code></div>
@@ -141,26 +144,170 @@
 
     
     
-<div id="r-markdown" class="section level2">
+<div id="introduction" class="section level2">
 <h2 class="hasAnchor">
-<a href="#r-markdown" class="anchor"></a>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cars)</code></pre></div>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
+<a href="#introduction" class="anchor"></a>Introduction</h2>
+<p>The tool to assess which spatialization method is the most appropriate is <em>a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation</em>.</p>
+<p>This approach relies heavily on the <a href="package">mlr</a> <span class="citation">(Bischl et al. 2016)</span> which is an unified interface to performe machine learning analysis using R.</p>
+<p>We have decided to use data from 01 jan 2016 to 31 dev 2017 as these two years cover to very distinct situations (2016 = wet and 2017 = dry). To conduct these experiments we will use the <code>makeBenchmark</code> function integrated with this package. Many parameters can influence the quality of the spatial predictions and these will be tested in multiple benchmark experiments. This is why the exploration field must be restricted and the investigated parameters must be prioritized. This article present our investigations roadmap. Our global philosophy is to start with a simple approach and gradually add complexity to it.</p>
 </div>
-<div id="including-plots" class="section level2">
+<div id="goals" class="section level2">
 <h2 class="hasAnchor">
-<a href="#including-plots" class="anchor"></a>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="Development_roadmap_files/figure-html/pressure-1.png" width="700"></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<a href="#goals" class="anchor"></a>Goals</h2>
+<p>We must assess which is the best spatialization technique for :</p>
+<ul>
+<li>air temperature (TSA) and relative humidity (HRA)</li>
+<li>for both hourly and daily data.</li>
+</ul>
+<p>We don’t need to asses the best spatialization technique for :</p>
+<ul>
+<li>Leaves wetness (HCT) as it will be computed from already spatilized datasets (HRA and ::TODO::).</li>
+<li>rainfall (PLU) as we receive spatialized datasets from RMI’s rainfalls radar ::TODO:: (name of the product ?).</li>
+</ul>
+</div>
+<div id="terminology" class="section level2">
+<h2 class="hasAnchor">
+<a href="#terminology" class="anchor"></a>Terminology</h2>
+<p>Here we define the terminology that will be used in this document. This terminology is important as we need precise definitions to avoid confusions in our future interpretations and discussions. As stated earlier, we will need to conduct :</p>
+<p><em>a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation</em></p>
+<ul>
+<li>
+<strong>Stations of interest</strong> : Weather stations considered for the spatilization process.</li>
+<li>
+<strong>Set of records</strong> : a set of data recorded by the stations of interests at a specific moment.</li>
+<li>
+<strong>Historical dataset</strong> : the dataset containing all the hourly set of records of weather parameters for all the stations of interest.</li>
+<li>
+<strong>Iterated leave-one-out cross validation</strong> : cross validation of a model created by training a specific learner on a single set of records from the historical dataset</li>
+<li>
+<strong>Benchmark Experiment</strong> : comparison of multiples iterated leave-one-out cross validations results operated on the same set of records but with different learners</li>
+<li>
+<strong>Batch of benchmarks experiments</strong> : set of benchmark experiments conducted on multiple set of records.</li>
+</ul>
+</div>
+<div id="exploration-field" class="section level2">
+<h2 class="hasAnchor">
+<a href="#exploration-field" class="anchor"></a>Exploration field</h2>
+<p>Here we present all the parameters that can influence the results of a batch of benchmark experiments.</p>
+<div id="stations-of-interest" class="section level3">
+<h3 class="hasAnchor">
+<a href="#stations-of-interest" class="anchor"></a>Stations of interest</h3>
+<p>To assess which stations should be considered ::TODO:: Article analysis means of the stations…</p>
+<p>At the moment we have 2 networks of stations available :</p>
+<ul>
+<li><strong>The Pameseb stations</strong></li>
+<li><strong>The RMI stations</strong></li>
+</ul>
+<p>::TODO:: maps of the 2 networks</p>
+<p>We will investigate if combining the two networks improve the quality of the predictions. Also we will consider if correcting the Pameseb TSA data using the correction model built by the Humain stations intercomparison (::TODO:: see article) increases the quality of the predictions.</p>
+</div>
+<div id="timeframes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#timeframes" class="anchor"></a>Timeframes</h3>
+<p>The spatialized data must be available for two different time resolutions :</p>
+<ul>
+<li><strong>Daily</strong></li>
+<li><strong>Hourly</strong></li>
+</ul>
+<p>As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions.</p>
+</div>
+<div id="learners" class="section level3">
+<h3 class="hasAnchor">
+<a href="#learners" class="anchor"></a>Learners</h3>
+<p>The learners are the algorithms that can be trained to build a model on a set of records. Numerous regression learners exist. We have decided to restrict the investigation field to the one that have already proven their efficiency in other studies.</p>
+<p>We have decided to group the learners in various categories of increasing complexity</p>
+<ul>
+<li>
+<strong>baseLearners</strong> : these are the learners tested by the <a href="http://onlinelibrary.wiley.com/doi/10.1111/j.1365-2338.2007.01134.x/abstract">ZEPP</a> <span class="citation">(Zeuner and Kleinhenz 2007)</span>
+</li>
+<li>
+<strong>upgradedLearners</strong> : these are modified versions of the baseLearners using other arbitrary or tuned hyperparameters values (see mlr documentation about learners).</li>
+<li>
+<strong>explorativeLearners</strong> : some of the learners tested in the <a href="https://www.sciencedirect.com/science/article/pii/S2211675315000482">Kilimanjaro study</a> <span class="citation">(Appelhans et al. 2015)</span> : glm, cubist and ANN</li>
+<li>
+<strong>deepLearning</strong> : this approach will be based on the <a href="https://tensorflow.rstudio.com/">TensorFlow</a> library but will not be considered before 2020. Introduction in the <a href="https://www.youtube.com/watch?v=atiYXm7JZv0&amp;t=73s">Machine Learning with R and TensorFlow video</a>.</li>
+</ul>
+</div>
+<div id="explanatory-variables" class="section level3">
+<h3 class="hasAnchor">
+<a href="#explanatory-variables" class="anchor"></a>Explanatory variables</h3>
+<p>These variables must already be available as spatialized data in order to be used as explanatory variables. We can make the distinction between the <strong>static explanatory variables</strong> and the <strong>dynamic explanatory variables</strong>. The static variables are constant over time while the dynamic vary over time.</p>
+<p>The static explanatory variables to investigate are :</p>
+<ul>
+<li>latitude and longitude</li>
+<li>elevation : the dataset if freely available on the <a href="https://registry.opendata.aws/terrain-tiles/">Registry of Open Data on AWS</a> and can be easily donwloaded using the <a href="https://github.com/jhollist/elevatr">elevatr</a> package</li>
+<li>slope : this variable is computed from elevation using the raster package</li>
+<li>aspect : this variable is computed from elevation using the raster package</li>
+<li>soil occupation : this variable is downloaded form the NGI website (::TOTO:: source)</li>
+</ul>
+<p>The dynamic explanatory variables are :</p>
+<ul>
+<li>irradiance (ENS) : data pulled from the <a href="https://landsaf.ipma.pt/en/products/longwave-shortwave-radiation/dssf/">MSG Downward Surface Shortwave Flux (MDSSF)</a> from Landsaf <span class="citation">(Trigo et al. 2011)</span>
+</li>
+<li>INCA_BE analysis T0 (INC) : data pulled from the <a href="http://radar.meteo.be/en/2730756-Operational+nowcasting.html">INCA-BE operational nowcasting system of the RMI</a> <span class="citation">(Reyniers and Delobbe 2012)</span>
+</li>
+</ul>
+<div id="temperature-tsa-prediction" class="section level4">
+<h4 class="hasAnchor">
+<a href="#temperature-tsa-prediction" class="anchor"></a>Temperature (tsa) prediction</h4>
+<ul>
+<li>lat + lon</li>
+<li>altitude</li>
+<li>incaAnalysis (=T0)</li>
+<li>ens</li>
+</ul>
+</div>
+<div id="relative-humidity-hra-prediction" class="section level4">
+<h4 class="hasAnchor">
+<a href="#relative-humidity-hra-prediction" class="anchor"></a>Relative humidity (hra) prediction</h4>
+<ul>
+<li>lat + lon</li>
+<li>alt</li>
+<li>incaAnalysis</li>
+<li>ens</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="organization-of-the-work" class="section level2">
+<h2 class="hasAnchor">
+<a href="#organization-of-the-work" class="anchor"></a>Organization of the work</h2>
+<p>All the steps (milestones) must be clearly named so that we know what we are exactly talking about. Here are all the identified milestones :</p>
+<ul>
+<li>bmr_baseLearners_Pameseb_tsa_h :</li>
+<li>bmr_baseLearners_Pameseb_tsa_d :</li>
+<li>bmr_baseLearners_Pameseb_Irm_tsa_h :</li>
+<li>bmr_baseLearners_Pameseb_Irm_tsa_d :</li>
+<li>model_correction_pameseb2Irm :</li>
+<li>baseLearners_PamesebCorr_Irm_tsa_h :</li>
+<li>baseLearners_PamesebCorr_Irm_tsa_d :</li>
+</ul>
+<div id="bmrs" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bmrs" class="anchor"></a>bmrs</h3>
+<p>Benchmark experiments will be conducted on 2 years dataset of both <strong>HOURLY</strong> and <strong>DAILY</strong> records. From these benchmarks we obtain :</p>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
+<div id="refs" class="references">
+<div id="ref-appelhans_evaluating_2015">
+<p>Appelhans, Tim, Ephraim Mwangomo, Douglas R. Hardy, Andreas Hemp, and Thomas Nauss. 2015. “Evaluating Machine Learning Approaches for the Interpolation of Monthly Air Temperature at Mt. Kilimanjaro, Tanzania.” <em>Spatial Statistics</em> 14: 91–113.</p>
+</div>
+<div id="ref-bischl_mlr:_2016">
+<p>Bischl, Bernd, Michel Lang, Lars Kotthoff, Julia Schiffner, Jakob Richter, Erich Studerus, Giuseppe Casalicchio, and Zachary M Jones. 2016. “Mlr: Machine Learning in R.” <em>The Journal of Machine Learning Research</em> 17 (1): 5938–42.</p>
+</div>
+<div id="ref-reyniers_nowcasting_2012">
+<p>Reyniers, Maarten, and Laurent Delobbe. 2012. “The Nowcasting System INCA-BE in Belgium and Its Performance in Different Synoptic Situations.” In.</p>
+</div>
+<div id="ref-trigo_satellite_2011">
+<p>Trigo, Isabel F, Carlos C Dacamara, Pedro Viterbo, Jean-Louis Roujean, Folke Olesen, Carla Barroso, Fernando Camacho-de-Coca, Dominique Carrer, Sandra C Freitas, and Javier Garcia-Haro. 2011. “The Satellite Application Facility for Land Surface Analysis.” <em>International Journal of Remote Sensing</em> 32 (10): 2725–44.</p>
+</div>
+<div id="ref-zeuner_use_2007">
+<p>Zeuner, T., and B. Kleinhenz. 2007. “Use of Geographic Information Systems in Warning Services for Late Blight*.” <em>EPPO Bulletin</em> 37 (2): 327–34. doi:<a href="https://doi.org/10.1111/j.1365-2338.2007.01134.x">10.1111/j.1365-2338.2007.01134.x</a>.</p>
+</div>
+</div>
 </div>
   </div>
 
@@ -169,8 +316,12 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#r-markdown">R Markdown</a></li>
-      <li><a href="#including-plots">Including Plots</a></li>
+<li><a href="#introduction">Introduction</a></li>
+      <li><a href="#goals">Goals</a></li>
+      <li><a href="#terminology">Terminology</a></li>
+      <li><a href="#exploration-field">Exploration field</a></li>
+      <li><a href="#organization-of-the-work">Organization of the work</a></li>
+      <li><a href="#references">References</a></li>
       </ul>
 </div>
       </div>
