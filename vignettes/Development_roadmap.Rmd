@@ -3,6 +3,7 @@ title: "Development Roadmap"
 author: "Thomas Goossens"
 date: "02/05/2019"
 output: html_document
+bibliography: ../inst/bibliography/bibliography.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -11,25 +12,90 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-The tool to assess which spatialization method is the most appropriate is a benchmarking experiment.
+The tool to assess which spatialization method is the most appropriate is *a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation*. 
 
-## Room for manoeuvre : 
+This approach relies heavily on the [mlr](package) [@bischl_mlr:_2016] which is an unified interface to performe machine learning analysis using R.
 
-### Stations
+We have decided to use data from 01 jan 2016 to 31 dev 2017 as these two years cover to very distinct situations (2016 = wet and 2017 = dry). To conduct these experiments we will use the `makeBenchmark` function integrated with this package. Many parameters can influence the quality of the spatial predictions and these will be tested in multiple benchmark experiments. This is why the exploration field must be restricted and the investigated parameters must be prioritized. This article present our investigations roadmap. Our global philosophy is to start with a simple approach and gradually add complexity to it. 
 
-* which of Pameseb ? 
-* which of RMI ?
-* Pameseb correcred Humain model ?
+## Goals 
+
+We must assess which is the best spatialization technique for :
+
+* air temperature (TSA) and relative humidity (HRA)
+* for both hourly and daily data.
+
+We don't need to asses the best spatialization technique for :
+
+* Leaves wetness (HCT) as it will be computed from already spatilized datasets (HRA and ::TODO::).
+* rainfall (PLU) as we receive spatialized datasets from RMI's rainfalls radar ::TODO:: (name of the product ?).
+
+## Terminology
+
+Here we define the terminology that will be used in this document. This terminology is important as we need precise definitions to avoid confusions in our future interpretations and discussions. As stated earlier, we will need to conduct :
+
+*a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation*
+ 
+* __Stations of interest__ : Weather stations considered for the spatilization process. 
+* __Set of records__ : a set of data recorded by the stations of interests at a specific moment. 
+* __Historical dataset__ : the dataset containing all the hourly set of records of weather parameters for all the stations of interest.
+* __Iterated leave-one-out cross validation__ : cross validation of a model created by training a specific learner on a single set of records from the historical dataset
+* __Benchmark Experiment__ : comparison of multiples iterated leave-one-out cross validations results operated on the same set of records but with different learners
+* __Batch of benchmarks experiments__ : set of benchmark experiments conducted on multiple set of records.
+
+## Exploration field
+
+Here we present all the parameters that can influence the results of a batch of benchmark experiments.
+
+### Stations of interest
+
+To assess which stations should be considered ::TODO:: Article analysis means of the stations...
+
+At the moment we have 2 networks of stations available : 
+
+* __The Pameseb stations__
+* __The RMI stations__
+
+::TODO:: maps of the 2 networks
+
+We will investigate if combining the two networks improve the quality of the predictions. Also we will consider if correcting the Pameseb TSA data using the correction model built by the Humain stations intercomparison (::TODO:: see article) increases the quality of the predictions.
+
+### Timeframes
+
+The spatialized data must be available for two different time resolutions :
+
+* __Daily__
+* __Hourly__
+
+As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions.
 
 ### Learners
 
-* baseLearners (= ZEPP)
-* UpgradedLearners 
-* ExplorativeLearners
+The learners are the algorithms that can be trained to build a model on a set of records. Numerous regression learners exist. We have decided to restrict the investigation field to the one that have already proven their efficiency in other studies.
+
+We have decided to group the learners in various categories of increasing complexity 
+
+* __baseLearners__ : these are the learners tested by the [ZEPP](http://onlinelibrary.wiley.com/doi/10.1111/j.1365-2338.2007.01134.x/abstract) [@zeuner_use_2007]
+* __upgradedLearners__ : these are modified versions of the baseLearners using other arbitrary or tuned hyperparameters values (see mlr documentation about learners).
+* __explorativeLearners__ : some of the learners tested in the [Kilimanjaro study](https://www.sciencedirect.com/science/article/pii/S2211675315000482) [@appelhans_evaluating_2015] : glm, cubist and ANN
+* __deepLearning__ : this approach will be based on the [TensorFlow](https://tensorflow.rstudio.com/) library but will not be considered before 2020. Introduction in the [Machine Learning with R and TensorFlow video](https://www.youtube.com/watch?v=atiYXm7JZv0&t=73s).
 
 ### Explanatory variables
 
-These variables must already be available as spatialized data in order to be used as explanaotry variables.
+These variables must already be available as spatialized data in order to be used as explanatory variables. We can make the distinction between the __static explanatory variables__ and the __dynamic explanatory variables__. The static variables are constant over time while the dynamic vary over time.
+
+The static explanatory variables to investigate are : 
+
+* latitude and longitude
+* elevation : the dataset if freely available on the [Registry of Open Data on AWS](https://registry.opendata.aws/terrain-tiles/) and can be easily donwloaded using the [elevatr](https://github.com/jhollist/elevatr) package 
+* slope : this variable is computed from elevation using the raster package
+* aspect : this variable is computed from elevation using the raster package
+* soil occupation : this variable is downloaded form the NGI website (::TOTO:: source)
+
+The dynamic explanatory variables are :
+
+* irradiance (ENS) : data pulled from the [MSG Downward Surface Shortwave Flux (MDSSF)](https://landsaf.ipma.pt/en/products/longwave-shortwave-radiation/dssf/) from Landsaf [@trigo_satellite_2011]
+* INCA_BE analysis T0 (INC) : data pulled from the [INCA-BE operational nowcasting system of the RMI](http://radar.meteo.be/en/2730756-Operational+nowcasting.html) [@reyniers_nowcasting_2012]
 
 #### Temperature (tsa) prediction
 
@@ -47,10 +113,23 @@ These variables must already be available as spatialized data in order to be use
 
 ## Organization of the work
 
+All the steps (milestones) must be clearly named so that we know what we are exactly talking about. Here are all the identified milestones : 
+
+* bmr_baseLearners_Pameseb_tsa_h : 
+* bmr_baseLearners_Pameseb_tsa_d : 
+* bmr_baseLearners_Pameseb_Irm_tsa_h : 
+* bmr_baseLearners_Pameseb_Irm_tsa_d : 
+* model_correction_pameseb2Irm : 
+* baseLearners_PamesebCorr_Irm_tsa_h :
+* baseLearners_PamesebCorr_Irm_tsa_d :
+
+
 ### bmrs
 
 Benchmark experiments will be conducted on 2 years dataset of both __HOURLY__ and __DAILY__ records.
 From these benchmarks we obtain :
+
+## References
 
 
 
