@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Package structuration • agrometeoR</title>
+<title>Intercomparison at Humain • agrometeoR</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -15,7 +15,7 @@
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Package structuration">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Intercomparison at Humain">
 <meta property="og:description" content="">
 <meta property="og:image" content="/logo.png">
 <meta name="twitter:card" content="summary">
@@ -141,26 +141,38 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Package structuration</h1>
+      <h1>Intercomparison at Humain</h1>
                         <h4 class="author">Thomas Goossens</h4>
             
-            <h4 class="date">2/5/2019</h4>
+            <h4 class="date">2/7/2019</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/pokyah/agrometeoR/blob/master/vignettes/package_structuration.Rmd"><code>vignettes/package_structuration.Rmd</code></a></small>
-      <div class="hidden name"><code>package_structuration.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/pokyah/agrometeoR/blob/master/vignettes/Humain_intercomparison_model.Rmd"><code>vignettes/Humain_intercomparison_model.Rmd</code></a></small>
+      <div class="hidden name"><code>Humain_intercomparison_model.Rmd</code></div>
 
     </div>
 
     
     
-<p>The interest of an R package is that</p>
-<p>So all we need to perform the spatialisation is hosted into this package.</p>
-<p>This means the datasets, functions, documentation, etc.</p>
-<p>To understand how to maintain this package, read first this blog post <a href="https://tinyheero.github.io/jekyll/update/2015/07/26/making-your-first-R-package.html" class="uri">https://tinyheero.github.io/jekyll/update/2015/07/26/making-your-first-R-package.html</a> and the the book by Hadley : <a href="http://r-pkgs.had.co.nz/intro.html" class="uri">http://r-pkgs.had.co.nz/intro.html</a></p>
-<div id="functions" class="section level2">
+<div id="r-markdown" class="section level2">
 <h2 class="hasAnchor">
-<a href="#functions" class="anchor"></a>Functions</h2>
-<p>All the functions are built with the <a href="http://mazamascience.com/WorkingWithData/?p=912">try-catch-finally</a> approach which allows a better error handling</p>
+<a href="#r-markdown" class="anchor"></a>R Markdown</h2>
+<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cars)</code></pre></div>
+<pre><code>##      speed           dist       
+##  Min.   : 4.0   Min.   :  2.00  
+##  1st Qu.:12.0   1st Qu.: 26.00  
+##  Median :15.0   Median : 36.00  
+##  Mean   :15.4   Mean   : 42.98  
+##  3rd Qu.:19.0   3rd Qu.: 56.00  
+##  Max.   :25.0   Max.   :120.00</code></pre>
+</div>
+<div id="including-plots" class="section level2">
+<h2 class="hasAnchor">
+<a href="#including-plots" class="anchor"></a>Including Plots</h2>
+<p>You can also embed plots, for example:</p>
+<p><img src="Humain_intercomparison_model_files/figure-html/pressure-1.png" width="700"></p>
+<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
 </div>
   </div>
 
@@ -169,7 +181,8 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#functions">Functions</a></li>
+<li><a href="#r-markdown">R Markdown</a></li>
+      <li><a href="#including-plots">Including Plots</a></li>
       </ul>
 </div>
       </div>
