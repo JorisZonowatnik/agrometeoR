@@ -1,0 +1,135 @@
+---
+title: "Agromet : Weather Spatialization Review and Benchmark"
+author: "Thomas Goossens"
+date: "2/7/2018"
+output: html_document
+bibliography: ../inst/bibliography/bibliography.bib
+---
+
+# Introduction and context
+
+The aim of the Agromet project is to provide a near real-time hourly gridded datasets of weather parameters at the resolution of 1 km² for the whole region of Wallonia characterized by a quality indicator.
+
+The Agromet project is largely inspired by what the [ZEPP](http://www.zepp.info/) has developed in the context of their late blight warning services [@zeuner_use_2007]
+
+Before starting the development of our own service, we decided to submit a survey to our end users and to perform a preliminary benchmark of weather data interpolation facilities developed by other institutions. 
+
+This document compiles the useful information we have gathered during our benchmarking and synthetise the main ideas to keep in mind while building our platform.
+
+# Literature review
+
+An extensive literature review of weather spatialization techniques has been performed. 
+
+## Recommanded academic papers
+
+Here is a short selection of the most useful papers regarding the comprehension of meteorological data spatialization for our walloon agricultural context :
+
+- [Interpolation methods for climate data literature review](https://www.snap.uaf.edu/sites/default/files/files/Interpolation_methods_for_climate_data.pdf) - [@sluiter_interpolation_2008]
+- [Use of geographic information systems in warning services for late blight](https://onlinelibrary.wiley.com/doi/full/10.1111/j.1365-2338.2007.01134.x) - [@zeuner_use_2007]
+- [Decision Support Systems in Agriculture: Administration of Meteorological Data, Use of Geographic Information Systems(GIS) and Validation Methods in Crop Protection Warning Service](https://www.researchgate.net/publication/221916045_Decision_Support_Systems_in_Agriculture_Administration_of_Meteorological_Data_Use_of_Geographic_Information_SystemsGIS_and_Validation_Methods_in_Crop_Protection_Warning_Service) - [@paolo_decision_2011]
+- [Spatial interpolation of air pollution measurements using CORINE land cover data](https://www.sciencedirect.com/science/article/pii/S1352231008001829) - [@janssen_spatial_2008]
+- [Spatial interpolation of ambient ozone concentrations from sparse monitoring points in Belgium](https://www.researchgate.net/publication/6720140_Spatial_interpolation_of_ambient_ozone_concentrations_from_sparse_monitoring_points_in_Belgium) - [@hooyberghs_spatial_2006]
+- [The developments in spatialization of meteorological and climatological elements](https://www.researchgate.net/publication/281538637_The_Developments_in_Spatialization_of_Meteorological_and_Climatological_Elements) - [@tveito_developments_2007]
+- [Solar irradiance-corrected spatial interpolation of hourly temperature in complex terrain](https://www.sciencedirect.com/science/article/pii/S0168192304001443) - [@chung_solar_2004]
+
+In the coming months we plan to organize and share our full bibliography. 
+
+## Reference books
+
+These books focus on the theory relative to the general principles of spatialization techniques  :
+
+- [Spatial Interpolation for Climate Data - The Use of GIS in Climatology and Meteorology](http://www.muthar-alomar.com/wp-content/uploads/2013/01/Spatial-Interpolation_for-Climate.pdf) - [@dobesch_spatial_2013] 
+- [Principles of Geographic Information Systems - An introductory textbook](http://www.itc.nl/library/papers_2009/general/PrinciplesGIS.pdf) - [@huisman_principles_2009]
+- [Principles Of Geographical Information Systems](http://www.downloadreferencebook.com/download/principles-of-geographical-information-systems) - [@burrough_principles_2015]
+- [Using ArcGIS Geostatistical Analyst](http://xa.yimg.com/kq/groups/17314041/411653630/name/ESRI%20-%20Using%20ArcGIS%20Geostatistical%20Analyst.pdf) - [@johnston_using_2001]
+- [A review of spatial interpolation methods for environmental scientists](http://corpdata.s3.amazonaws.com/68229/Rec2008_023.pdf) - [@li_review_2011]
+- [A Practical Guide to Geostatistical Mapping of Environmental Variables](http://spatial-analyst.net/book/system/files/Hengl_2009_GEOSTATe2c0w.pdf) - [@hengl_practical_2009]
+
+
+## European experts in weather data spatialization
+
+Here is a list of european experts in terms of weather spatialization worth following.  
+
+|  Country  	| Author                	| Institution                                    	| Publication                                                                                                                                   	|
+|---------	|-----------------------	|------------------------------------------------	|-----------------------------------------------------------------------------------------------------------------------------------------------	|
+| Allemagne 	| [T. Zeuner](https://www.researchgate.net/researcher/2067858955_T_Zeuner "T. Zeuner")             	| ZEPP German Crop Protection Services           	| [Use of geographic information systems in warning services for late blight](http://onlinelibrary.wiley.com/doi/10.1111/j.1365-2338.2007.01134.x/abstract "Use of geographic information systems in warning services for late blight")                                                                     	|
+| Serbie    	| [Milan Kilibarda](https://www.researchgate.net/profile/Milan_Kilibarda "Milan Kilibarda")       	| University of Belgrade                         	| [Spatio-temporal interpolation of daily temperatures for global land areas at 1 km resolution](http://onlinelibrary.wiley.com/doi/10.1002/2013JD020803/full "Spatio-temporal interpolation of daily temperatures for global land areas at 1 km resolution")                                                  	|
+| Pays-bas  	| [Raymond Sluiter](https://www.researchgate.net/profile/Raymond_Sluiter "Raymond Sluiter")       	| KNMI                                           	|  [Interpolation methods for climate data - literature Review](http://bibliotheek.knmi.nl/knmipubIR/IR2009-04.pdf "Interpolation methods for climate data - literature Review")                                                                                   	|
+| Pays-bas  	| [Tomislav Hengl ](https://www.researchgate.net/profile/Tomislav_Hengl/info "Tomislav Hengl ")       	| ISRIC World Soil Information Institute         	| [R-package Spatial Analyst](http://spatial-analyst.net/ "R-package Spatial Analyst")                                                                                                                     	|
+| Norwegian 	| [Jean-Marie Lepioufle](https://www.researchgate.net/profile/Jean_Marie_Lepioufle2 "Jean-Marie Lepioufle")  	| Norwegian Meteorological Institute             	| [Recent developments in spatial interpolation of precipitation and temperature at MET Norway](https://www.researchgate.net/profile/Cristian_Lussana/publication/273490969_Recent_developments_in_spatial_interpolation_of_precipitation_and_temperature_at_MET_Norway/links/5795e56b08ae33e89facf86c/Recent-developments-in-spatial-interpolation-of-precipitation-and-temperature-at-MET-Norway.pdf?origin=publication_detail&ev=pub_int_prw_xdl&msrp=a_HsvemfIRpbbqok3OlrTe8W9s_6vi8bVNvdjephGEA2_k9Suwd0IUkjixOkL5r5jXh_oXKkzI389swr4tejguYvbA-0zorY72HaBur5WoU.5fBXmB2tkhX9yQfUWqB0dmFQjoHHkZWdTyFSeW_aeJilRXS_mvei-gj8CwU4R35LAY5De9xxW_E24VSGd3Z_GA.SH190BKK4lOgQzKG58PawvoInnZohck8jBvlJZjWcz-B3kVG2Ve1myuXcYtnLVMrsPNHqR9BrT8jAZuxD9oeKw.jn9JyplYcwA7xW0lx6Me8ZFBjvOCKR-cXndTvljnxwFnf9BRoJs1xBIjii81yczJmd5mdN501yE-GKYD5mxoNw "Recent developments in spatial interpolation of precipitation and temperature at MET Norway")                                                   	|
+| Grèce     	| [Kostas philippopoulos ](https://www.researchgate.net/profile/Kostas_Philippopoulos "Kostas philippopoulos ")	| University of Reading                          	| [Artificial Neural Network Modeling of Relative Humidity and Air Temperature Spatial and Temporal Distributions Over Complex Terrains](https://www.researchgate.net/publication/269279018_Artificial_Neural_Network_Modeling_of_Relative_Humidity_and_Air_Temperature_Spatial_and_Temporal_Distributions_Over_Complex_Terrains "Artificial Neural Network Modeling of Relative Humidity and Air Temperature Spatial and Temporal Distributions Over Complex Terrains")          	|
+| Portugual 	| [Silva Alvaro](https://www.researchgate.net/profile/Alvaro_Silva13)         	| Instituto Português do Mar e da Atmosfera      	| [Neural Networks application to spatial interpolation of climate variables](https://www.researchgate.net/publication/276058549_Neural_Networks_application_to_spatial_interpolation_of_climate_variables "Neural Networks application to spatial interpolation of climate variables")                                                                     	|
+| Slovénie  	| [Luka honzak](https://www.researchgate.net/profile/Luka_Honzak "Luka honzak")           	| Bo Mo LTD                                      	| [WEATHER SCENARIO APP](http://www.bo-mo.si/fispace/ "WEATHER SCENARIO APP")                                                                                                                          	|
+| France    	| [Mehdi Sine](https://www.researchgate.net/profile/Mehdi_Sine "Mehdi Sine")             	| Vigicultures par Arvalis - institut du Végétal 	| [VIGICULTURES – An early warning system for crop pest management ](https://www.researchgate.net/publication/230838280_VIGICULTURES_-_An_early_warning_system_for_crop_pest_management "VIGICULTURES – An early warning system for crop pest management ")                                                                              	|
+| Belgique  	| [Aurore Degré](https://www.researchgate.net/profile/Aurore_Degre "Aurore Degré")          	| Faculté Gemboux                                	| [Different methods for spatial interpolation of rainfall data for operational hydrology and hydrological modeling at watershed scale: a review](http://popups.ulg.ac.be/1780-4507/index.php?id=10003 "Different methods for spatial interpolation of rainfall data for operational hydrology and hydrological modeling at watershed scale: a review") 	|
+| Pologne   	| [Maciej Kryza](https://www.researchgate.net/profile/Maciej_Kryza "Maciej Kryza")          	| university de Wroclaw   
+
+## Key learnings from the review
+
+The literature reveals that a lot of spatial interpolation methods have been developed the last decades. These techniques have been borrowed from other fields (e.g. oil prospection) and transposed  in the field of meteorology where the comprehension and modelisation of the processes is much more technical due to the complexity and the spatial heterogeneity of weather events. 
+
+In such, there is not an out-of-the box recipe to apply to each weather parameter. The choice of the right interpolation method depends of many factors such as the spatial distribution of the weather station network, the topography, the number of stations, local gradients such as global circulation effects, etc. 
+
+Moreover, more attention has been ported on the spatialization of __climate__ data rather than __hourly meteorological__ data which is our concern. Therefore, an important phase of testing, benchmarking and tweaking of the processes described here above is required in order to efficiently produce useful and sensible gridded outputs that could be used profitably by agronomical models. 
+
+These phase will require a deep knowledge of the principles of these geostatistical spatialization method combined with the development of programming skills required to explore the data and conduct practical analysis. 
+
+The exploratory phases needed for the development of an adjusted data analysis technique able to deal with data scarcity should be performed in a way such as the the most simple solutions are evaluated first. Depending of the results of the evaluation of the investigated technique, we will decide if further investigations are required. If no significant extra-value is added by are more complex process, the later will not be retained.
+
+
+
+The first results suggest that for the temperature, we will need to apply a correction model to the Pameseb measurments recorded around the daily maximal temperature hours. 
+
+# Understanding our end-users needs
+
+A web-survey has been submitted to our potential end-users. Its purpose was to insure that the platform integrates the real needs of the future end-users (walloon crop warning system managers and academic research). The results of this survey also serve as a development priority list. The results are available in this [report](../assets/survey/report_end-users-survey.pdf).  
+
+
+# Choosing the right software
+
+Among all the available programming languages, we choose [R](https://www.r-project.org/ "R")  :
+- Fully [open-source and free (like beer and freedom)](https://www.wired.com/2013/09/why-free-software-is-more-important-now-than-ever-before/)
+- large user base and [more and more used](https://thenextweb.com/offers/2018/03/28/tech-giants-are-harnessing-r-programming-learn-it-and-get-hired-with-this-complete-training-bundle/)
+- R is developed by statisticians for statisticians
+- R is already used by other institutions implicated in weather data spatialization and internally at CRA-W
+- Many libraries (packages) cover our needs 
+
+| package                                                                            	| purpose                                                                         	|
+|------------------------------------------------------------------------------------	|---------------------------------------------------------------------------------	|
+| [gstat](https://cran.r-project.org/web/packages/gstat/index.html "gstat")          	| Spatial and Spatio-Temporal Geostatistical Modelling, Prediction and Simulation 	|
+| [meteo](https://cran.r-project.org/web/packages/meteo/index.html "meteo")          	| Spatio-Temporal Analysis and Mapping of Meteorological Observations             	|
+| [sf](https://cran.rstudio.com/web/packages/sf/index.html "sf")                    	| Simple Features for R                                                       	    |
+| [raster](https://cran.r-project.org/web/packages/raster/index.html "raster")        | Geographic Data Analysis and Modeling                                             | 
+| [automap](https://cran.r-project.org/web/packages/automap/index.html "automap")     | Automatic interpolation package                                                   | 
+| [dplyr](https://cran.r-project.org/web/packages/dplyr/index.html "dplyr")          	| A Grammar of Data Manipulation                                                  	|
+| [rgdal](https://cran.r-project.org/web/packages/rgdal/index.html "rgdal")          	| Bindings for the Geospatial Data Abstraction Library                            	|
+| [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html "ggplot2")    	| Create Elegant Data Visualisations Using the Grammar of Graphics                	|
+| [shiny](https://cran.r-project.org/web/packages/shiny/index.html "shiny")          	| Web Application Framework for R                                                 	|
+| [geoR](https://cran.r-project.org/web/packages/geoR/index.html "geoR")             	| Analysis of Geostatistical Data                                                 	|
+| [validate](https://cran.r-project.org/web/packages/validate/index.html "validate") 	| Data Validation Infrastructure                                                  	|
+| [mlr](https://cran.r-project.org/web/packages/mlr/index.html "mlr")                	| Machine Learning in R                                                           	|
+Here is an [infography](https://www.datacamp.com/community/tutorials/r-or-python-for-data-analysis#gs.9_Pvc14) that compares R to python.
+
+# Extra investigations 
+
+If extra time remains, we could investigate to incorporate crowdsourced datasets. At the present time, both the KNMI and the RMI work on such a process in the context of the [WOW experiment](http://wow.metoffice.gov.uk) initiated by the UK metoffice.
+
+# Data dissemination policy 
+
+A particular attention will be given to make our data [INSPIRE](https://inspire.ec.europa.eu/) compliant and their origin will be described using the [W3C recommandations](https://www.w3.org/TR/prov-dm/). 
+
+As developers we push for the adoption of an open-data policy as the [Community Data License Agreement](https://cdla.io/). However, the final decision regarding the choice of the policy will be taken at higher levels. 
+
+Here is a selection of publications in agreement with an open-data approach :
+
+* [open-source software in sciences paper](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002598)
+* [KNMI data policy](http://data.knmi.nl/services)
+* [Eu general principle for open access to scientific publications in Horizon 2020](https://ec.europa.eu/programmes/horizon2020/en/h2020-section/open-science-open-access)
+* [Brussels administrations and open data](http://be.brussels/files-fr/a-propos-de-la-region/mrbc/lopen-data-et-les-administrations-en-rbc)
+* [Belgian federal state and open data](http://data.gov.be/fr/news/strategie-federale-open-data)
+* [Wallonia and open data](https://www.digitalwallonia.be/open-big-data-as-a-service/)
+* [The value of open source](https://cointelegraph.com/news/the-open-source-world-is-worth-billions)
+* [Open-source et cooperativism](http://bollier.org/blog/bauwens-use-peer-production-license-foster-%E2%80%9Copen-cooperativism%E2%80%9D)
+
+# References
+

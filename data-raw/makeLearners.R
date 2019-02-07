@@ -87,6 +87,12 @@ otherLearners = list(
     par.vals = list(degree = 2, debug.level = 0),
     predict.type = "se"),
 
+  lrn.gstat.ts3 = makeLearner(
+    cl = "regr.gstat",
+    id = "ts2",
+    par.vals = list(degree = 3, debug.level = 0),
+    predict.type = "se"),
+
   # 2 nearest neighbours based on lon lat
   lrn.gstat.2nn = makeFilterWrapper(
     learner = makeLearner(

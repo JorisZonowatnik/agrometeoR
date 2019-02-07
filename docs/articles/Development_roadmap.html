@@ -66,6 +66,12 @@
       <a href="../articles/Development_roadmap.html">Development Roadmap</a>
     </li>
     <li>
+      <a href="../articles/Humain_intercomparison_model.html">Intercomparison at Humain</a>
+    </li>
+    <li>
+      <a href="../articles/Partners.html">Partners</a>
+    </li>
+    <li>
       <a href="../articles/benchmarking_example.html">Benchmarking example</a>
     </li>
     <li>
@@ -94,6 +100,9 @@
     </li>
     <li>
       <a href="../articles/using_packrat.html">Using packrat</a>
+    </li>
+    <li>
+      <a href="../articles/weather_spatialisation_review.html">Agromet : Weather Spatialization Review and Benchmark</a>
     </li>
   </ul>
 </li>
@@ -144,16 +153,16 @@
 
     
     
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<div id="introduction" class="section level1">
+<h1 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>The tool to assess which spatialization method is the most appropriate is <em>a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation</em>.</p>
 <p>This approach relies heavily on the <a href="package">mlr</a> <span class="citation">(Bischl et al. 2016)</span> which is an unified interface to performe machine learning analysis using R.</p>
 <p>We have decided to use data from 01 jan 2016 to 31 dev 2017 as these two years cover to very distinct situations (2016 = wet and 2017 = dry). To conduct these experiments we will use the <code>makeBenchmark</code> function integrated with this package. Many parameters can influence the quality of the spatial predictions and these will be tested in multiple benchmark experiments. This is why the exploration field must be restricted and the investigated parameters must be prioritized. This article present our investigations roadmap. Our global philosophy is to start with a simple approach and gradually add complexity to it.</p>
 </div>
-<div id="goals" class="section level2">
-<h2 class="hasAnchor">
-<a href="#goals" class="anchor"></a>Goals</h2>
+<div id="goals" class="section level1">
+<h1 class="hasAnchor">
+<a href="#goals" class="anchor"></a>Goals</h1>
 <p>We must assess which is the best spatialization technique for :</p>
 <ul>
 <li>air temperature (TSA) and relative humidity (HRA)</li>
@@ -165,9 +174,9 @@
 <li>rainfall (PLU) as we receive spatialized datasets from RMI’s rainfalls radar ::TODO:: (name of the product ?).</li>
 </ul>
 </div>
-<div id="terminology" class="section level2">
-<h2 class="hasAnchor">
-<a href="#terminology" class="anchor"></a>Terminology</h2>
+<div id="terminology" class="section level1">
+<h1 class="hasAnchor">
+<a href="#terminology" class="anchor"></a>Terminology</h1>
 <p>Here we define the terminology that will be used in this document. This terminology is important as we need precise definitions to avoid confusions in our future interpretations and discussions. As stated earlier, we will need to conduct :</p>
 <p><em>a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation</em></p>
 <ul>
@@ -185,13 +194,13 @@
 <strong>Batch of benchmarks experiments</strong> : set of benchmark experiments conducted on multiple set of records.</li>
 </ul>
 </div>
-<div id="exploration-field" class="section level2">
-<h2 class="hasAnchor">
-<a href="#exploration-field" class="anchor"></a>Exploration field</h2>
+<div id="exploration-field" class="section level1">
+<h1 class="hasAnchor">
+<a href="#exploration-field" class="anchor"></a>Exploration field</h1>
 <p>Here we present all the parameters that can influence the results of a batch of benchmark experiments.</p>
-<div id="stations-of-interest" class="section level3">
-<h3 class="hasAnchor">
-<a href="#stations-of-interest" class="anchor"></a>Stations of interest</h3>
+<div id="stations-of-interest" class="section level2">
+<h2 class="hasAnchor">
+<a href="#stations-of-interest" class="anchor"></a>Stations of interest</h2>
 <p>To assess which stations should be considered ::TODO:: Article analysis means of the stations…</p>
 <p>At the moment we have 2 networks of stations available :</p>
 <ul>
@@ -200,10 +209,15 @@
 </ul>
 <p>::TODO:: maps of the 2 networks</p>
 <p>We will investigate if combining the two networks improve the quality of the predictions. Also we will consider if correcting the Pameseb TSA data using the correction model built by the Humain stations intercomparison (::TODO:: see article) increases the quality of the predictions.</p>
+<p>A specific attention will be ported on the analysis of the quality of the data produced by each of our stations. We will need to carry analysis in order to detect eventual structural or local effects such as overheating in temperature shelters.</p>
+<p>It is important to get a deep insight and comprehensive overview of our weather station network before interpolating its data in order to avoid the integration of non-desired local or structural effects during the interpolation process.</p>
+<p>Local temperature effects will be detectable by pointing out abnormally high our low values appearing from long term analysis of each of the stations from our network. Again, a good knowledge of the station network (eg : situation and direct environment of each of the stations) is required. To remove local effects from the interpolation process, each station could first be weighted according to a quality parameter characterized by the local situation of the considered station. Time series analysis ( <a href="https://pokyah.github.io/pokyah-maps/temperature/">example map</a> ::TODO:: find source code and create dedicated vignette) will help us for this purpose.</p>
+<p>The Agromet project will spatialize weather data gathered both by the <a href="https://www.pameseb.be/">Pameseb</a> network owned by the <a href="http://www.cra.wallonie.be/fr">CRA-W</a> and stations owned by the national weather office <a href="https://www.meteo.be">RMI</a>.</p>
+<p>Before integrating two different networks in the spatilization process, we need to assess their intercompatibilty. To address this, both our team and the RMI works on an intercomparison of the networks performed by the mean of a location (Humain - Belgium) equiped with 2 stations belongings to the 2 networks. The first results of this comparative analysis are available on <a href="https://pokyah.github.io/AWS-Humain-comparison/">this repository</a>.</p>
 </div>
-<div id="timeframes" class="section level3">
-<h3 class="hasAnchor">
-<a href="#timeframes" class="anchor"></a>Timeframes</h3>
+<div id="timeframes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#timeframes" class="anchor"></a>Timeframes</h2>
 <p>The spatialized data must be available for two different time resolutions :</p>
 <ul>
 <li><strong>Daily</strong></li>
@@ -211,9 +225,9 @@
 </ul>
 <p>As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions.</p>
 </div>
-<div id="learners" class="section level3">
-<h3 class="hasAnchor">
-<a href="#learners" class="anchor"></a>Learners</h3>
+<div id="learners" class="section level2">
+<h2 class="hasAnchor">
+<a href="#learners" class="anchor"></a>Learners</h2>
 <p>The learners are the algorithms that can be trained to build a model on a set of records. Numerous regression learners exist. We have decided to restrict the investigation field to the one that have already proven their efficiency in other studies.</p>
 <p>We have decided to group the learners in various categories of increasing complexity</p>
 <ul>
@@ -228,69 +242,70 @@
 <strong>deepLearning</strong> : this approach will be based on the <a href="https://tensorflow.rstudio.com/">TensorFlow</a> library but will not be considered before 2020. Introduction in the <a href="https://www.youtube.com/watch?v=atiYXm7JZv0&amp;t=73s">Machine Learning with R and TensorFlow video</a>.</li>
 </ul>
 </div>
-<div id="explanatory-variables" class="section level3">
-<h3 class="hasAnchor">
-<a href="#explanatory-variables" class="anchor"></a>Explanatory variables</h3>
+<div id="explanatory-variables" class="section level2">
+<h2 class="hasAnchor">
+<a href="#explanatory-variables" class="anchor"></a>Explanatory variables</h2>
 <p>These variables must already be available as spatialized data in order to be used as explanatory variables. We can make the distinction between the <strong>static explanatory variables</strong> and the <strong>dynamic explanatory variables</strong>. The static variables are constant over time while the dynamic vary over time.</p>
 <p>The static explanatory variables to investigate are :</p>
 <ul>
-<li>latitude and longitude</li>
-<li>elevation : the dataset if freely available on the <a href="https://registry.opendata.aws/terrain-tiles/">Registry of Open Data on AWS</a> and can be easily donwloaded using the <a href="https://github.com/jhollist/elevatr">elevatr</a> package</li>
-<li>slope : this variable is computed from elevation using the raster package</li>
-<li>aspect : this variable is computed from elevation using the raster package</li>
-<li>soil occupation : this variable is downloaded form the NGI website (::TOTO:: source)</li>
+<li><strong>latitude and longitude</strong></li>
+<li>
+<strong>elevation</strong> : the dataset if freely available on the <a href="https://registry.opendata.aws/terrain-tiles/">Registry of Open Data on AWS</a> and can be easily donwloaded using the <a href="https://github.com/jhollist/elevatr">elevatr</a> package</li>
+<li>
+<strong>slope</strong> : this variable is computed from elevation using the raster package</li>
+<li>
+<strong>aspect</strong> : this variable is computed from elevation using the raster package</li>
+<li>
+<strong>soil occupation</strong> : this variable is downloaded form the <a href="http://inspire.ngi.be/download-free/atomfeeds/AtomFeed-en.xml">NGI website</a>
+</li>
 </ul>
 <p>The dynamic explanatory variables are :</p>
 <ul>
-<li>irradiance (ENS) : data pulled from the <a href="https://landsaf.ipma.pt/en/products/longwave-shortwave-radiation/dssf/">MSG Downward Surface Shortwave Flux (MDSSF)</a> from Landsaf <span class="citation">(Trigo et al. 2011)</span>
+<li>
+<strong>irradiance</strong> (ENS) : data pulled from the <a href="https://landsaf.ipma.pt/en/products/longwave-shortwave-radiation/dssf/">MSG Downward Surface Shortwave Flux (MDSSF)</a> from Landsaf <span class="citation">(Trigo et al. 2011)</span>
 </li>
-<li>INCA_BE analysis T0 (INC) : data pulled from the <a href="http://radar.meteo.be/en/2730756-Operational+nowcasting.html">INCA-BE operational nowcasting system of the RMI</a> <span class="citation">(Reyniers and Delobbe 2012)</span>
+<li>
+<strong>INCA_BE analysis T0</strong> (INC) : data pulled from the <a href="http://radar.meteo.be/en/2730756-Operational+nowcasting.html">INCA-BE operational nowcasting system of the RMI</a> <span class="citation">(Reyniers and Delobbe 2012)</span>
 </li>
 </ul>
-<div id="temperature-tsa-prediction" class="section level4">
-<h4 class="hasAnchor">
-<a href="#temperature-tsa-prediction" class="anchor"></a>Temperature (tsa) prediction</h4>
-<ul>
-<li>lat + lon</li>
-<li>altitude</li>
-<li>incaAnalysis (=T0)</li>
-<li>ens</li>
-</ul>
-</div>
-<div id="relative-humidity-hra-prediction" class="section level4">
-<h4 class="hasAnchor">
-<a href="#relative-humidity-hra-prediction" class="anchor"></a>Relative humidity (hra) prediction</h4>
-<ul>
-<li>lat + lon</li>
-<li>alt</li>
-<li>incaAnalysis</li>
-<li>ens</li>
-</ul>
 </div>
 </div>
-</div>
-<div id="organization-of-the-work" class="section level2">
+<div id="milestones" class="section level1">
+<h1 class="hasAnchor">
+<a href="#milestones" class="anchor"></a>Milestones</h1>
+<p>All the bmrs experiments that we will All the milestones must be clearly named so that we know what we are exactly talking about. Here are all the identified milestones :</p>
+<div id="bmr_baselearners_pameseb_tsa_h" class="section level2">
 <h2 class="hasAnchor">
-<a href="#organization-of-the-work" class="anchor"></a>Organization of the work</h2>
-<p>All the steps (milestones) must be clearly named so that we know what we are exactly talking about. Here are all the identified milestones :</p>
-<ul>
-<li>bmr_baseLearners_Pameseb_tsa_h :</li>
-<li>bmr_baseLearners_Pameseb_tsa_d :</li>
-<li>bmr_baseLearners_Pameseb_Irm_tsa_h :</li>
-<li>bmr_baseLearners_Pameseb_Irm_tsa_d :</li>
-<li>model_correction_pameseb2Irm :</li>
-<li>baseLearners_PamesebCorr_Irm_tsa_h :</li>
-<li>baseLearners_PamesebCorr_Irm_tsa_d :</li>
-</ul>
-<div id="bmrs" class="section level3">
-<h3 class="hasAnchor">
-<a href="#bmrs" class="anchor"></a>bmrs</h3>
-<p>Benchmark experiments will be conducted on 2 years dataset of both <strong>HOURLY</strong> and <strong>DAILY</strong> records. From these benchmarks we obtain :</p>
+<a href="#bmr_baselearners_pameseb_tsa_h" class="anchor"></a>bmr_baseLearners_Pameseb_tsa_h</h2>
 </div>
-</div>
-<div id="references" class="section level2 unnumbered">
+<div id="bmr_baselearners_pameseb_tsa_d" class="section level2">
 <h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<a href="#bmr_baselearners_pameseb_tsa_d" class="anchor"></a>bmr_baseLearners_Pameseb_tsa_d</h2>
+</div>
+<div id="bmr_baselearners_pameseb_irm_tsa_h" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bmr_baselearners_pameseb_irm_tsa_h" class="anchor"></a>bmr_baseLearners_Pameseb_Irm_tsa_h</h2>
+</div>
+<div id="bmr_baselearners_pameseb_irm_tsa_d" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bmr_baselearners_pameseb_irm_tsa_d" class="anchor"></a>bmr_baseLearners_Pameseb_Irm_tsa_d</h2>
+</div>
+<div id="baselearners_pamesebcorr_irm_tsa_h" class="section level2">
+<h2 class="hasAnchor">
+<a href="#baselearners_pamesebcorr_irm_tsa_h" class="anchor"></a>baseLearners_PamesebCorr_Irm_tsa_h</h2>
+</div>
+<div id="baselearners_pamesebcorr_irm_tsa_d" class="section level2">
+<h2 class="hasAnchor">
+<a href="#baselearners_pamesebcorr_irm_tsa_d" class="anchor"></a>baseLearners_PamesebCorr_Irm_tsa_d</h2>
+</div>
+<div id="bmrs" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bmrs" class="anchor"></a>bmrs</h2>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h1>
 <div id="refs" class="references">
 <div id="ref-appelhans_evaluating_2015">
 <p>Appelhans, Tim, Ephraim Mwangomo, Douglas R. Hardy, Andreas Hemp, and Thomas Nauss. 2015. “Evaluating Machine Learning Approaches for the Interpolation of Monthly Air Temperature at Mt. Kilimanjaro, Tanzania.” <em>Spatial Statistics</em> 14: 91–113.</p>
@@ -319,8 +334,25 @@
 <li><a href="#introduction">Introduction</a></li>
       <li><a href="#goals">Goals</a></li>
       <li><a href="#terminology">Terminology</a></li>
-      <li><a href="#exploration-field">Exploration field</a></li>
-      <li><a href="#organization-of-the-work">Organization of the work</a></li>
+      <li>
+<a href="#exploration-field">Exploration field</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#stations-of-interest">Stations of interest</a></li>
+      <li><a href="#timeframes">Timeframes</a></li>
+      <li><a href="#learners">Learners</a></li>
+      <li><a href="#explanatory-variables">Explanatory variables</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#milestones">Milestones</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#bmr_baselearners_pameseb_tsa_h">bmr_baseLearners_Pameseb_tsa_h</a></li>
+      <li><a href="#bmr_baselearners_pameseb_tsa_d">bmr_baseLearners_Pameseb_tsa_d</a></li>
+      <li><a href="#bmr_baselearners_pameseb_irm_tsa_h">bmr_baseLearners_Pameseb_Irm_tsa_h</a></li>
+      <li><a href="#bmr_baselearners_pameseb_irm_tsa_d">bmr_baseLearners_Pameseb_Irm_tsa_d</a></li>
+      <li><a href="#baselearners_pamesebcorr_irm_tsa_h">baseLearners_PamesebCorr_Irm_tsa_h</a></li>
+      <li><a href="#baselearners_pamesebcorr_irm_tsa_d">baseLearners_PamesebCorr_Irm_tsa_d</a></li>
+      <li><a href="#bmrs">bmrs</a></li>
+      </ul>
+</li>
       <li><a href="#references">References</a></li>
       </ul>
 </div>

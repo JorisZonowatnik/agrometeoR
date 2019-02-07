@@ -1,0 +1,67 @@
+---
+title: "Partners"
+author: "Thomas Goossens"
+date: "2/7/2019"
+output: html_document
+---
+
+# Audit of an external spatialized weather data provider
+
+The Weather Company (owned by IBM) provides hourly gridded dataset at the resolution of 1 km². Using their solution would allow us to rapidly provide a functional platform. However, the inherent costs of the use of a third party provider and the lack of transparency regarding how the spatialization process works and performs do not allow us to choose this solution.
+
+As a research institution, it is also our role to develop expertise in various fields like weather data spatialization and to make this expertise valuable to our clients (the walloon farmers). Its is also worth to keep in mind that developping our own platform is an excellent way to value the Pameseb AWS network.
+
+For the complete solution proposed by IBM, please refer to the [IBM supplementary material](./assets/IBM/)
+
+# Exchanges with our partners
+
+Here we present the key learnings from the experience feedbacks of the various institutions we have met during our benchmarking campain.
+
+## KNMI - Netherlands
+
+The KNMI (KONINKELIJK NATIONAAL METEOROLOGISCH INSTITUUT) has developed what they call [An operational R-based interpolation facility for climate and meteo data](./assets/DailyMeteo2014_Sluiter_20140627_002s.pdf). In october 2017 we have organized a first knowledge exchange workshop with this partner. 
+
+They have found R-software to be the most appropriate tool for weather data spatialization. This opinion is also shared by Meteo Switzerland (Christopher Frei), Meteo Norway (Ole Einar Tveito) and the RMI (Michel Journée).
+
+Raymond Sluiter has published the review paper [Interpolation methods for climate data](https://www.researchgate.net/publication/242783501_Interpolation_methods_for_climate_data) into which he details the various deterministic and stochastic spatilization methods available. This review is an excellent starting point for who wants to start in the field of weather data spatialization.
+
+Their developments were conducted in the context of the creation of a new climate atlas rather than with agronomical purposes. According to their feedback, there is no out-of-the box solution. We must find the solution best suited to our purpose by proceeding from the simplest solution and progressively add more complexity while asserting the level of accuracy brougth by this additional complexity. A good balance must be found between complexity and operability since we aim to build an operational suite. 
+
+Their presentations are available in the [KNMI supplementary materials](./assets/KNMI/)
+
+## Arvalis - France
+
+Arvalis (Institut du Végétal) has also conducted weather data spatialization research in an agricultural context (crop warning systems). We have organized a knowledge exchange workshop in January 2018. Like the KNMI they have tested various methods with an increasing level of complexity. Our contact Olivier Deudon also uses R-software to conduct his researches.
+
+The key points of their research are detailed in the [arvalis supplementary materials](./assets/arvalis/). Here we present a brief summary of their methodology and main findings. The aim of their work was to test various methods of weather data spatial interpolation and find the most efficient ones (in terms of accuracy) for various parameters (temperature, relative humidity, rainfall) in the context of their specific AWS network (> 400 stations in France). 
+
+Regarding temperature : 
+* tested methods : Inverse distance, multiple regressions, various kriging methods
+* validation method : splitting the dataset in training set (355 stations) and test set (100 stations)
+* model evaluation criterion : RMSE
+* method with the lowest RMSE for T°: universal kriging
+* used covariates : elevation, surface solar irradiance
+
+## ZEPP - Germany
+
+As mentioned above, our project is mainly inspired from the ZEPP (ZENTRALSTELLE DER LÄNDER FÜR EDV-GESTÜTZTE ENTSCHEIDUNGSHILFEN UND PROGRAMME IM PFLANZENSCHUTZ - *Central Institute for Decision Support Systems in Crop Protection*) work. Here we present the key points of our November 2017 workshop. 
+
+It is essential to keep in mind the agricultural scope of the platform. The objective is make the best predictions __in cultural area__. It is not a problem if the quality of the prediction is not as high in area were not crops are grown (e.g. Hautes-Fagnes).
+
+What matters most are the quality of the decision support tools outputs based on our weather data rather than the weather data itself. Their comparison of various spatialization technique revealed that for their needs, the most efficient technique is the multiple regression based on elevation, latitude and longitude. This comparison is extensively discussed in the Zeuner PhD Thesis present in the  [ZEPP supplementary material](./assets/ZEPP/)
+
+Here we present a brief summary of their method and main findings. The aim of their work was to provide an operationnal platform able to supply crop alert system models with hourly gridded datasets of temperature and relative humidity accross germany that present the highest accuracy.
+
+Regarding temperature : 
+* tested methods : krigin, IDW, spline, multiple regression
+* validation method : 570 stations 
+* model evaluation criterion: difference hourly interpolated - measured at the location of the stations (+ boxplots)
+* used covaraites : elevation
+* choosen method : multiple regression
+
+
+## RMI - Royal Meteorological Institute - Belgium
+
+The RMI is our primary partner in terms of weather data spatialization with who we work in close collaboration. As the KNMI, they have an advanced expertise in terms of spatialization of weather data using R software.
+
+[RMI supplementary material](./assets/IRM/)

@@ -8,9 +8,10 @@ bibliography: ../inst/bibliography/bibliography.bib
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all()
+library(mlr)
 ```
-
-## Introduction
+# Introduction
 
 The tool to assess which spatialization method is the most appropriate is *a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation*. 
 
@@ -18,7 +19,7 @@ This approach relies heavily on the [mlr](package) [@bischl_mlr:_2016] which is 
 
 We have decided to use data from 01 jan 2016 to 31 dev 2017 as these two years cover to very distinct situations (2016 = wet and 2017 = dry). To conduct these experiments we will use the `makeBenchmark` function integrated with this package. Many parameters can influence the quality of the spatial predictions and these will be tested in multiple benchmark experiments. This is why the exploration field must be restricted and the investigated parameters must be prioritized. This article present our investigations roadmap. Our global philosophy is to start with a simple approach and gradually add complexity to it. 
 
-## Goals 
+# Goals 
 
 We must assess which is the best spatialization technique for :
 
@@ -30,7 +31,7 @@ We don't need to asses the best spatialization technique for :
 * Leaves wetness (HCT) as it will be computed from already spatilized datasets (HRA and ::TODO::).
 * rainfall (PLU) as we receive spatialized datasets from RMI's rainfalls radar ::TODO:: (name of the product ?).
 
-## Terminology
+# Terminology
 
 Here we define the terminology that will be used in this document. This terminology is important as we need precise definitions to avoid confusions in our future interpretations and discussions. As stated earlier, we will need to conduct :
 
@@ -43,11 +44,11 @@ Here we define the terminology that will be used in this document. This terminol
 * __Benchmark Experiment__ : comparison of multiples iterated leave-one-out cross validations results operated on the same set of records but with different learners
 * __Batch of benchmarks experiments__ : set of benchmark experiments conducted on multiple set of records.
 
-## Exploration field
+# Exploration field
 
 Here we present all the parameters that can influence the results of a batch of benchmark experiments.
 
-### Stations of interest
+## Stations of interest
 
 To assess which stations should be considered ::TODO:: Article analysis means of the stations...
 
@@ -60,7 +61,18 @@ At the moment we have 2 networks of stations available :
 
 We will investigate if combining the two networks improve the quality of the predictions. Also we will consider if correcting the Pameseb TSA data using the correction model built by the Humain stations intercomparison (::TODO:: see article) increases the quality of the predictions.
 
-### Timeframes
+A specific attention will be ported on the analysis of the quality of the data produced by each of our stations. We will need to carry analysis in order to detect eventual structural or local effects such as overheating in temperature shelters. 
+
+It is important to get a deep insight and comprehensive overview of our weather station network before interpolating its data in order to avoid the integration of non-desired local or structural effects during the interpolation process. 
+
+Local temperature effects will be detectable by pointing out abnormally high our low values appearing from long term analysis of each of the stations from our network. Again, a good knowledge of the station network (eg : situation and direct environment of each of the stations) is required. To remove local effects from the interpolation process, each station could first be weighted according to a quality parameter characterized by the local situation of the considered station. Time series analysis ( [example map](https://pokyah.github.io/pokyah-maps/temperature/) ::TODO:: find source code and create dedicated vignette) will help us for this purpose.
+
+The Agromet project will spatialize weather data gathered both by the [Pameseb](https://www.pameseb.be/) network owned by the [CRA-W](http://www.cra.wallonie.be/fr) and stations owned by the national weather office [RMI](https://www.meteo.be). 
+
+Before integrating two different networks in the spatilization process, we need to assess their intercompatibilty. To address this, both our team and the RMI works on an intercomparison of the networks performed by the mean of a location (Humain - Belgium) equiped with 2 stations belongings to the 2 networks. The first results of this comparative analysis are available on [this repository](https://pokyah.github.io/AWS-Humain-comparison/).
+
+
+## Timeframes
 
 The spatialized data must be available for two different time resolutions :
 
@@ -69,67 +81,126 @@ The spatialized data must be available for two different time resolutions :
 
 As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions.
 
-### Learners
-
-The learners are the algorithms that can be trained to build a model on a set of records. Numerous regression learners exist. We have decided to restrict the investigation field to the one that have already proven their efficiency in other studies.
-
-We have decided to group the learners in various categories of increasing complexity 
-
-* __baseLearners__ : these are the learners tested by the [ZEPP](http://onlinelibrary.wiley.com/doi/10.1111/j.1365-2338.2007.01134.x/abstract) [@zeuner_use_2007]
-* __upgradedLearners__ : these are modified versions of the baseLearners using other arbitrary or tuned hyperparameters values (see mlr documentation about learners).
-* __explorativeLearners__ : some of the learners tested in the [Kilimanjaro study](https://www.sciencedirect.com/science/article/pii/S2211675315000482) [@appelhans_evaluating_2015] : glm, cubist and ANN
-* __deepLearning__ : this approach will be based on the [TensorFlow](https://tensorflow.rstudio.com/) library but will not be considered before 2020. Introduction in the [Machine Learning with R and TensorFlow video](https://www.youtube.com/watch?v=atiYXm7JZv0&t=73s).
-
-### Explanatory variables
+## Explanatory variables
 
 These variables must already be available as spatialized data in order to be used as explanatory variables. We can make the distinction between the __static explanatory variables__ and the __dynamic explanatory variables__. The static variables are constant over time while the dynamic vary over time.
 
 The static explanatory variables to investigate are : 
 
-* latitude and longitude
-* elevation : the dataset if freely available on the [Registry of Open Data on AWS](https://registry.opendata.aws/terrain-tiles/) and can be easily donwloaded using the [elevatr](https://github.com/jhollist/elevatr) package 
-* slope : this variable is computed from elevation using the raster package
-* aspect : this variable is computed from elevation using the raster package
-* soil occupation : this variable is downloaded form the NGI website (::TOTO:: source)
+* __latitude and longitude__
+* __elevation__ : the dataset if freely available on the [Registry of Open Data on AWS](https://registry.opendata.aws/terrain-tiles/) and can be easily donwloaded using the [elevatr](https://github.com/jhollist/elevatr) package 
+* __slope__ : this variable is computed from elevation using the raster package
+* __aspect__ : this variable is computed from elevation using the raster package
+* __soil occupation__ : this variable is downloaded form the [NGI website](http://inspire.ngi.be/download-free/atomfeeds/AtomFeed-en.xml)
 
-The dynamic explanatory variables are :
+The investigated dynamic explanatory variables are :
 
-* irradiance (ENS) : data pulled from the [MSG Downward Surface Shortwave Flux (MDSSF)](https://landsaf.ipma.pt/en/products/longwave-shortwave-radiation/dssf/) from Landsaf [@trigo_satellite_2011]
-* INCA_BE analysis T0 (INC) : data pulled from the [INCA-BE operational nowcasting system of the RMI](http://radar.meteo.be/en/2730756-Operational+nowcasting.html) [@reyniers_nowcasting_2012]
+* __irradiance__ (ENS) : data pulled from the [MSG Downward Surface Shortwave Flux (MDSSF)](https://landsaf.ipma.pt/en/products/longwave-shortwave-radiation/dssf/) from Landsaf [@trigo_satellite_2011]
+* __INCA_BE analysis T0__ (INC) : data pulled from the [INCA-BE operational nowcasting system of the RMI](http://radar.meteo.be/en/2730756-Operational+nowcasting.html) [@reyniers_nowcasting_2012]
 
-#### Temperature (tsa) prediction
+## Algorithms
 
-* lat + lon
-* altitude
-* incaAnalysis (=T0)
-* ens
+Numerous regression algorithms exist. We have decided to restrict the investigation field to the one that have already proven their efficiency in other studies.
 
-#### Relative humidity (hra) prediction
+We have decided to group the algorithms in various categories of increasing complexity. The source code used to construct the learners from these algorithms is stored into the `data-raw/makeLearners.R` file of the present package. These learners are constructed on the basis of the `mlr` package.
 
-* lat + lon
-* alt
-* incaAnalysis
-* ens
+A __learner__ is an implementation of an algorithm for which a filtering of the explanatory variables to use might be applied and where the hyper-parameters values to test are set.
 
-## Organization of the work
+### Base algorithms
 
-All the steps (milestones) must be clearly named so that we know what we are exactly talking about. Here are all the identified milestones : 
+These are those tested by the [ZEPP](http://onlinelibrary.wiley.com/doi/10.1111/j.1365-2338.2007.01134.x/abstract) [@zeuner_use_2007]. 
 
-* bmr_baseLearners_Pameseb_tsa_h : 
-* bmr_baseLearners_Pameseb_tsa_d : 
-* bmr_baseLearners_Pameseb_Irm_tsa_h : 
-* bmr_baseLearners_Pameseb_Irm_tsa_d : 
-* model_correction_pameseb2Irm : 
-* baseLearners_PamesebCorr_Irm_tsa_h :
-* baseLearners_PamesebCorr_Irm_tsa_d :
+* multiple linear regression
+* inverse distance weighted
+* one nearest neighbour
+* kriging
+
+### Other algorithms
+
+* splines degree 1, 2 and 3
+* multiple nearest neighbours
+
+### explorative algorithms
+
+These are some of the algorithms tested in the [Kilimanjaro study](https://www.sciencedirect.com/science/article/pii/S2211675315000482) [@appelhans_evaluating_2015] : 
+* generalized linear model (glm),
+* cubist
+* artificial neural network
+
+### DeepLearning
+
+This approach will be based on the [TensorFlow](https://tensorflow.rstudio.com/) library but will not be considered before 2020. Introduction in the [Machine Learning with R and TensorFlow video](https://www.youtube.com/watch?v=atiYXm7JZv0&t=73s).
+
+# Milestones
+
+Multiple combinations of the precedents parameters will be tested in various batch of benchmarks experiments. Each of them represent one of our milestones.
+
+## milestone1
+
+```{r, milestone1, echo = FALSE}
+id = c("baseMulLR", "baseIDW", "base1NN", "baseOK", "baseKED")
+algorithms = c('mulLR','IDW','1NN', 'OK', 'KED')
+explanatory = c("alt, lon, lat", "lon, lat", "lon, lat", "lon, lat", "alt, lon, lat")
+hyperparameters = c(NA, NA, NA, "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0")
+stations = c("Pameseb", "Pameseb", "Pameseb", "Pameseb", "Pameseb")  
+resolution = c("hourly", "hourly", "hourly", "hourly", "hourly")
+target = c("tsa", "tsa", "tsa", "tsa", "tsa")
 
 
-### bmrs
+milestone1 = data.frame(id, algorithms, explanatory, hyperparameters, stations, resolution, target)
+knitr::kable(milestone1)
+```
 
-Benchmark experiments will be conducted on 2 years dataset of both __HOURLY__ and __DAILY__ records.
-From these benchmarks we obtain :
+## milestone2
 
-## References
+Same as milestone 1 instead the time resolution that is daily and not hourly
+
+```{r, milestone2, echo = FALSE}
+id = c("baseMulLR", "baseIDW", "base1NN", "baseOK", "baseKED")
+algorithms = c('mulLR','IDW','1NN', 'OK', 'KED')
+explanatory = c("alt, lon, lat", "lon, lat", "lon, lat", "lon, lat", "alt, lon, lat")
+hyperparameters = c(NA, NA, NA, "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0")
+stations = c("Pameseb", "Pameseb", "Pameseb", "Pameseb", "Pameseb")  
+resolution = c("daily", "daily", "daily", "daily", "daily")
+target = c("tsa", "tsa", "tsa", "tsa", "tsa")
+
+milestone2 = data.frame(id, algorithms, explanatory, hyperparameters, stations, resolution, target)
+knitr::kable(milestone2)
+```
+
+## milestone3
+
+```{r, milestone3, echo = FALSE}
+id = c("baseMulLR", "baseIDW", "base1NN", "baseOK", "baseKED")
+algorithms = c('mulLR','IDW','1NN', 'OK', 'KED')
+explanatory = c("alt, lon, lat", "lon, lat", "lon, lat", "lon, lat", "alt, lon, lat")
+hyperparameters = 
+stations = c("Pameseb", "Pameseb", "Pameseb", "Pameseb", "Pameseb")  
+resolution = c("daily", "daily", "daily", "daily", "daily")
+target = c("hra", "hra", "hra", "hra", "hra")
+
+
+milestone2 = data.frame(id, algorithms, explanatory, stations, resolution, target)
+knitr::kable(milestone2)
+```
+
+
+## bmr_baseLearners_Pameseb_tsa_d
+
+## bmr_baseLearners_Pameseb_Irm_tsa_h 
+
+## bmr_baseLearners_Pameseb_Irm_tsa_d
+
+## baseLearners_PamesebCorr_Irm_tsa_h
+
+## baseLearners_PamesebCorr_Irm_tsa_d
+
+
+## bmrs
+
+
+
+# References
 
 
 
