@@ -60,9 +60,6 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Definition_of_the_spatialization_method_approach.html">A methodological approach to assess the best weather spatialization technique</a>
-    </li>
-    <li>
       <a href="../articles/Development_roadmap.html">Development Roadmap</a>
     </li>
     <li>
@@ -70,6 +67,12 @@
     </li>
     <li>
       <a href="../articles/Partners.html">Partners</a>
+    </li>
+    <li>
+      <a href="../articles/Presentation_agromet_project.html">Presentation of the Agromet Project</a>
+    </li>
+    <li>
+      <a href="../articles/Spatialization_method_approach.html">A methodological approach to assess the best weather spatialization technique</a>
     </li>
     <li>
       <a href="../articles/benchmarking_example.html">Benchmarking example</a>
@@ -81,13 +84,7 @@
       <a href="../articles/interpolation_grid_creation.html">Creation of the interpolation Grid</a>
     </li>
     <li>
-      <a href="../articles/networks_intercomparison.html">Networks Intercomparison</a>
-    </li>
-    <li>
       <a href="../articles/package_structuration.html">Package structuration</a>
-    </li>
-    <li>
-      <a href="../articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
     </li>
     <li>
       <a href="../articles/spatialization_example.html">A simple spatialization example using agrometeoR</a>
@@ -157,7 +154,7 @@
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>The tool to assess which spatialization method is the most appropriate is <em>a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation</em>.</p>
-<p>This approach relies heavily on the <a href="package">mlr</a> <span class="citation">(Bischl et al. 2016)</span> which is an unified interface to performe machine learning analysis using R.</p>
+<p>This approach relies heavily on the <a href="https://mlr.mlr-org.com/">mlr package</a> <span class="citation">(Bischl et al. 2016)</span> which is an unified interface to perform machine learning analysis using R.</p>
 <p>We have decided to use data from 01 jan 2016 to 31 dev 2017 as these two years cover to very distinct situations (2016 = wet and 2017 = dry). To conduct these experiments we will use the <code>makeBenchmark</code> function integrated with this package. Many parameters can influence the quality of the spatial predictions and these will be tested in multiple benchmark experiments. This is why the exploration field must be restricted and the investigated parameters must be prioritized. This article present our investigations roadmap. Our global philosophy is to start with a simple approach and gradually add complexity to it.</p>
 </div>
 <div id="goals" class="section level1">
@@ -170,7 +167,7 @@
 </ul>
 <p>We don’t need to asses the best spatialization technique for :</p>
 <ul>
-<li>Leaves wetness (HCT) as it will be computed from already spatilized datasets (HRA and ::TODO::).</li>
+<li>Leaves wetness (HCT) as it will be computed from already spatialized datasets (HRA and ::TODO::).</li>
 <li>rainfall (PLU) as we receive spatialized datasets from RMI’s rainfalls radar ::TODO:: (name of the product ?).</li>
 </ul>
 </div>
@@ -197,27 +194,21 @@
 <div id="exploration-field" class="section level1">
 <h1 class="hasAnchor">
 <a href="#exploration-field" class="anchor"></a>Exploration field</h1>
-<p>Here we present all the parameters that can influence the results of a batch of benchmark experiments.</p>
+<p>Here we present all the <strong>exploration parameters</strong> that can influence the results of a batch of benchmark experiments.</p>
 <div id="stations-of-interest" class="section level2">
 <h2 class="hasAnchor">
 <a href="#stations-of-interest" class="anchor"></a>Stations of interest</h2>
-<p>To assess which stations should be considered ::TODO:: Article analysis means of the stations…</p>
-<p>At the moment we have 2 networks of stations available :</p>
-<ul>
-<li><strong>The Pameseb stations</strong></li>
-<li><strong>The RMI stations</strong></li>
-</ul>
+<p>It is important to get a deep insight and comprehensive overview of our weather station network before interpolating its data in order to avoid the integration of non-desired local or structural effects during the interpolation process.</p>
+<p>A specific attention will be ported on the analysis of the quality of the data produced by each of our stations. We will need to carry an analysis in order to detect eventual structural or local effects such as overheating in temperature shelters.</p>
+<p>Local temperature effects will be detectable by pointing out abnormally high our low values appearing from long term analysis of each of the stations from our network. Again, a good knowledge of the station network (eg : situation and direct environment of each of the stations) is required. To remove local effects from the interpolation process, each station could first be weighted according to a quality parameter characterized by the local situation of the considered station. Time series analysis ( <a href="https://pokyah.github.io/pokyah-maps/temperature/">example map</a> ::TODO:: find source code and create dedicated vignette) will help us for this purpose.</p>
+<p>The Agromet project aims to spatialize weather data gathered both by the <a href="https://www.pameseb.be/">Pameseb</a> network owned by the <a href="http://www.cra.wallonie.be/fr">CRA-W</a> and stations owned by the national weather office <a href="https://www.meteo.be">RMI</a>.</p>
+<p>Before integrating two different networks in the spatilization process, we need to assess their intercompatibilty. To address this, both our team and the RMI works on an intercomparison of the networks performed by the mean of a location (Humain - Belgium) equiped with 2 stations belongings to the 2 networks. The first results of this comparative analysis are available on <a href="https://pokyah.github.io/AWS-Humain-comparison/">this repository</a>.</p>
 <p>::TODO:: maps of the 2 networks</p>
 <p>We will investigate if combining the two networks improve the quality of the predictions. Also we will consider if correcting the Pameseb TSA data using the correction model built by the Humain stations intercomparison (::TODO:: see article) increases the quality of the predictions.</p>
-<p>A specific attention will be ported on the analysis of the quality of the data produced by each of our stations. We will need to carry analysis in order to detect eventual structural or local effects such as overheating in temperature shelters.</p>
-<p>It is important to get a deep insight and comprehensive overview of our weather station network before interpolating its data in order to avoid the integration of non-desired local or structural effects during the interpolation process.</p>
-<p>Local temperature effects will be detectable by pointing out abnormally high our low values appearing from long term analysis of each of the stations from our network. Again, a good knowledge of the station network (eg : situation and direct environment of each of the stations) is required. To remove local effects from the interpolation process, each station could first be weighted according to a quality parameter characterized by the local situation of the considered station. Time series analysis ( <a href="https://pokyah.github.io/pokyah-maps/temperature/">example map</a> ::TODO:: find source code and create dedicated vignette) will help us for this purpose.</p>
-<p>The Agromet project will spatialize weather data gathered both by the <a href="https://www.pameseb.be/">Pameseb</a> network owned by the <a href="http://www.cra.wallonie.be/fr">CRA-W</a> and stations owned by the national weather office <a href="https://www.meteo.be">RMI</a>.</p>
-<p>Before integrating two different networks in the spatilization process, we need to assess their intercompatibilty. To address this, both our team and the RMI works on an intercomparison of the networks performed by the mean of a location (Humain - Belgium) equiped with 2 stations belongings to the 2 networks. The first results of this comparative analysis are available on <a href="https://pokyah.github.io/AWS-Humain-comparison/">this repository</a>.</p>
 </div>
-<div id="timeframes" class="section level2">
+<div id="time-resolutions" class="section level2">
 <h2 class="hasAnchor">
-<a href="#timeframes" class="anchor"></a>Timeframes</h2>
+<a href="#time-resolutions" class="anchor"></a>Time resolutions</h2>
 <p>The spatialized data must be available for two different time resolutions :</p>
 <ul>
 <li><strong>Daily</strong></li>
@@ -225,41 +216,25 @@
 </ul>
 <p>As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions.</p>
 </div>
-<div id="learners" class="section level2">
+<div id="explanatory-variables---features" class="section level2">
 <h2 class="hasAnchor">
-<a href="#learners" class="anchor"></a>Learners</h2>
-<p>The learners are the algorithms that can be trained to build a model on a set of records. Numerous regression learners exist. We have decided to restrict the investigation field to the one that have already proven their efficiency in other studies.</p>
-<p>We have decided to group the learners in various categories of increasing complexity</p>
-<ul>
-<li>
-<strong>baseLearners</strong> : these are the learners tested by the <a href="http://onlinelibrary.wiley.com/doi/10.1111/j.1365-2338.2007.01134.x/abstract">ZEPP</a> <span class="citation">(Zeuner and Kleinhenz 2007)</span>
-</li>
-<li>
-<strong>upgradedLearners</strong> : these are modified versions of the baseLearners using other arbitrary or tuned hyperparameters values (see mlr documentation about learners).</li>
-<li>
-<strong>explorativeLearners</strong> : some of the learners tested in the <a href="https://www.sciencedirect.com/science/article/pii/S2211675315000482">Kilimanjaro study</a> <span class="citation">(Appelhans et al. 2015)</span> : glm, cubist and ANN</li>
-<li>
-<strong>deepLearning</strong> : this approach will be based on the <a href="https://tensorflow.rstudio.com/">TensorFlow</a> library but will not be considered before 2020. Introduction in the <a href="https://www.youtube.com/watch?v=atiYXm7JZv0&amp;t=73s">Machine Learning with R and TensorFlow video</a>.</li>
-</ul>
-</div>
-<div id="explanatory-variables" class="section level2">
-<h2 class="hasAnchor">
-<a href="#explanatory-variables" class="anchor"></a>Explanatory variables</h2>
-<p>These variables must already be available as spatialized data in order to be used as explanatory variables. We can make the distinction between the <strong>static explanatory variables</strong> and the <strong>dynamic explanatory variables</strong>. The static variables are constant over time while the dynamic vary over time.</p>
+<a href="#explanatory-variables---features" class="anchor"></a>Explanatory variables - features</h2>
+<p>These variables must already be available as spatialized data in order to be used as explanatory variables (also called _<strong>features</strong>). We can make the distinction between the <strong>static explanatory variables</strong> and the <strong>dynamic explanatory variables</strong>. The static variables are constant over time while the dynamic vary over time.</p>
 <p>The static explanatory variables to investigate are :</p>
 <ul>
 <li><strong>latitude and longitude</strong></li>
 <li>
-<strong>elevation</strong> : the dataset if freely available on the <a href="https://registry.opendata.aws/terrain-tiles/">Registry of Open Data on AWS</a> and can be easily donwloaded using the <a href="https://github.com/jhollist/elevatr">elevatr</a> package</li>
+<strong>elevation</strong> : the dataset is freely available on the <a href="https://registry.opendata.aws/terrain-tiles/">Registry of Open Data on AWS</a> and can be easily donwloaded using the <a href="https://github.com/jhollist/elevatr">elevatr</a> package</li>
 <li>
-<strong>slope</strong> : this variable is computed from elevation using the raster package</li>
-<li>
-<strong>aspect</strong> : this variable is computed from elevation using the raster package</li>
-<li>
-<strong>soil occupation</strong> : this variable is downloaded form the <a href="http://inspire.ngi.be/download-free/atomfeeds/AtomFeed-en.xml">NGI website</a>
+<strong>slope</strong> : this variable is computed from elevation using the <a href="https://CRAN.R-project.org/package=raster">raster package</a> <span class="citation">(Hijmans et al. 2015)</span>
 </li>
+<li>
+<strong>aspect</strong> : this variable is computed from elevation using the <a href="https://CRAN.R-project.org/package=raster">raster package</a>
+</li>
+<li>
+<strong>soil occupation</strong> : this variable is downloaded form the <a href="http://inspire.ngi.be/download-free/atomfeeds/AtomFeed-en.xml">NGI website</a> ::TODO:: details</li>
 </ul>
-<p>The dynamic explanatory variables are :</p>
+<p>The investigated dynamic explanatory variables are :</p>
 <ul>
 <li>
 <strong>irradiance</strong> (ENS) : data pulled from the <a href="https://landsaf.ipma.pt/en/products/longwave-shortwave-radiation/dssf/">MSG Downward Surface Shortwave Flux (MDSSF)</a> from Landsaf <span class="citation">(Trigo et al. 2011)</span>
@@ -269,38 +244,1869 @@
 </li>
 </ul>
 </div>
+<div id="algorithms" class="section level2">
+<h2 class="hasAnchor">
+<a href="#algorithms" class="anchor"></a>Algorithms</h2>
+<p>Numerous regression algorithms exist. We have decided to restrict the investigation field to the one that have already proven their efficiency in other studies.</p>
+<p>A <strong>learner</strong> is an implementation of an algorithm for which a filtering of the explanatory variables to use might be applied and where the hyper-parameters values to test are set.</p>
+<p>We have decided to group the algorithms in various categories of increasing complexity. The source code used to construct the learners from these algorithms is stored into the <code>data-raw/makeLearners.R</code> file of the present package. These learners are constructed on the basis of the <code>mlr</code> package and are available once you have called <code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(agrometeoR)</a></code></p>
+<div id="base-algorithms" class="section level3">
+<h3 class="hasAnchor">
+<a href="#base-algorithms" class="anchor"></a>Base algorithms</h3>
+<p>These are those tested by the <a href="http://onlinelibrary.wiley.com/doi/10.1111/j.1365-2338.2007.01134.x/abstract">ZEPP</a> <span class="citation">(Zeuner and Kleinhenz 2007)</span>.</p>
+<ul>
+<li>multiple linear regression</li>
+<li>inverse distance weighted</li>
+<li>one nearest neighbour</li>
+<li>kriging</li>
+</ul>
+</div>
+<div id="other-algorithms" class="section level3">
+<h3 class="hasAnchor">
+<a href="#other-algorithms" class="anchor"></a>Other algorithms</h3>
+<ul>
+<li>splines degree 1, 2 and 3</li>
+<li>multiple nearest neighbours</li>
+</ul>
+</div>
+<div id="explorative-algorithms" class="section level3">
+<h3 class="hasAnchor">
+<a href="#explorative-algorithms" class="anchor"></a>explorative algorithms</h3>
+<p>These are some of the algorithms tested in the <a href="https://www.sciencedirect.com/science/article/pii/S2211675315000482">Kilimanjaro study</a> <span class="citation">(Appelhans et al. 2015)</span> :</p>
+<ul>
+<li>generalized linear model (glm),</li>
+<li>cubist</li>
+<li>artificial neural network</li>
+</ul>
+</div>
+<div id="deep-learning" class="section level3">
+<h3 class="hasAnchor">
+<a href="#deep-learning" class="anchor"></a>Deep Learning</h3>
+<p>This approach will be based on the <a href="https://tensorflow.rstudio.com/">TensorFlow</a> library but will not be considered before 2020. A good introduction to deep learning with R is available in the <a href="https://www.youtube.com/watch?v=atiYXm7JZv0&amp;t=73s">Machine Learning with R and TensorFlow video</a>.</p>
+</div>
+</div>
 </div>
 <div id="milestones" class="section level1">
 <h1 class="hasAnchor">
 <a href="#milestones" class="anchor"></a>Milestones</h1>
-<p>All the bmrs experiments that we will All the milestones must be clearly named so that we know what we are exactly talking about. Here are all the identified milestones :</p>
-<div id="bmr_baselearners_pameseb_tsa_h" class="section level2">
+<p>Multiple combinations of the described <strong>exploration parameters</strong> will be tested in various batch of benchmarks experiments. Each of them represent one of our milestones. Here below we present all of our <strong>base milestones</strong> (i.e. constructed on the basis of the base learners). Each milestone will be conducted on both <strong>tsa</strong> and <strong>hra</strong>.</p>
+<div id="pameseb-base-milestones" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bmr_baselearners_pameseb_tsa_h" class="anchor"></a>bmr_baseLearners_Pameseb_tsa_h</h2>
+<a href="#pameseb-base-milestones" class="anchor"></a>Pameseb base milestones</h2>
+<div id="milestone-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-1" class="anchor"></a>milestone 1</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="bmr_baselearners_pameseb_tsa_d" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bmr_baselearners_pameseb_tsa_d" class="anchor"></a>bmr_baseLearners_Pameseb_tsa_d</h2>
+<div id="milestone-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-2" class="anchor"></a>milestone 2</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="bmr_baselearners_pameseb_irm_tsa_h" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bmr_baselearners_pameseb_irm_tsa_h" class="anchor"></a>bmr_baseLearners_Pameseb_Irm_tsa_h</h2>
+<div id="milestone-3" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-3" class="anchor"></a>milestone 3</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="bmr_baselearners_pameseb_irm_tsa_d" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bmr_baselearners_pameseb_irm_tsa_d" class="anchor"></a>bmr_baseLearners_Pameseb_Irm_tsa_d</h2>
+<div id="milestone-4" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-4" class="anchor"></a>milestone 4</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="baselearners_pamesebcorr_irm_tsa_h" class="section level2">
-<h2 class="hasAnchor">
-<a href="#baselearners_pamesebcorr_irm_tsa_h" class="anchor"></a>baseLearners_PamesebCorr_Irm_tsa_h</h2>
+<div id="milestone-5" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-5" class="anchor"></a>milestone 5</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="baselearners_pamesebcorr_irm_tsa_d" class="section level2">
-<h2 class="hasAnchor">
-<a href="#baselearners_pamesebcorr_irm_tsa_d" class="anchor"></a>baseLearners_PamesebCorr_Irm_tsa_d</h2>
+<div id="milestone-6" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-6" class="anchor"></a>milestone 6</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="bmrs" class="section level2">
+<div id="milestone-7" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-7" class="anchor"></a>milestone 7</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-8" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-8" class="anchor"></a>milestone 8</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-9" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-9" class="anchor"></a>milestone 9</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-10" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-10" class="anchor"></a>milestone 10</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-11" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-11" class="anchor"></a>milestone 11</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-12" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-12" class="anchor"></a>milestone 12</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="pameseb-rmi-base-milestones" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bmrs" class="anchor"></a>bmrs</h2>
+<a href="#pameseb-rmi-base-milestones" class="anchor"></a>Pameseb + RMI base milestones</h2>
+<div id="milestone-13" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-13" class="anchor"></a>milestone 13</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-14" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-14" class="anchor"></a>milestone 14</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-15" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-15" class="anchor"></a>milestone 15</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-16" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-16" class="anchor"></a>milestone 16</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-17" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-17" class="anchor"></a>milestone 17</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-18" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-18" class="anchor"></a>milestone 18</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-19" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-19" class="anchor"></a>milestone 19</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-20" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-20" class="anchor"></a>milestone 20</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-21" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-21" class="anchor"></a>milestone 21</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-22" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-22" class="anchor"></a>milestone 22</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-23" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-23" class="anchor"></a>milestone 23</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-24" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-24" class="anchor"></a>milestone 24</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb + RMI</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="pameseb-corrected-rmi-base-milestones" class="section level2">
+<h2 class="hasAnchor">
+<a href="#pameseb-corrected-rmi-base-milestones" class="anchor"></a>Pameseb corrected + RMI base milestones</h2>
+<div id="milestone-25" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-25" class="anchor"></a>milestone 25</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-26" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-26" class="anchor"></a>milestone 26</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-27" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-27" class="anchor"></a>milestone 27</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-28" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-28" class="anchor"></a>milestone 28</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-29" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-29" class="anchor"></a>milestone 29</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-30" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-30" class="anchor"></a>milestone 30</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat</td>
+<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-31" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-31" class="anchor"></a>milestone 31</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-32" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-32" class="anchor"></a>milestone 32</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-33" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-33" class="anchor"></a>milestone 33</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-34" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-34" class="anchor"></a>milestone 34</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-35" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-35" class="anchor"></a>milestone 35</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">hourly</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="milestone-36" class="section level3">
+<h3 class="hasAnchor">
+<a href="#milestone-36" class="anchor"></a>milestone 36</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">algorithms</th>
+<th align="left">features</th>
+<th align="left">hyperparameters</th>
+<th align="left">stations</th>
+<th align="left">resolution</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">mulLR</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">IDW</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">1NN</td>
+<td align="left">lon, lat</td>
+<td align="left">NA</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="even">
+<td align="left">OK</td>
+<td align="left">lon, lat</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+<tr class="odd">
+<td align="left">KED</td>
+<td align="left">alt, lon, lat, incaA</td>
+<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">Pameseb corr + RMI</td>
+<td align="left">daily</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="future-milestones" class="section level2">
+<h2 class="hasAnchor">
+<a href="#future-milestones" class="anchor"></a>Future milestones</h2>
+<p>As shown in the previous tables, the hyper-parameters values for the kriging learners KED and OK have been preset. No <a href="https://mlr.mlr-org.com/articles/tutorial/tune.html">hyper-parameter tuning</a> is conducted. This is a choice that was decided with the steering committee in order to reduce computing time and to make things simple at the beginning. The combinations of the hyper-parameters values are based on what RMI uses for their own maps.</p>
+<p>In a next future, it might be interesting to use an hyper-tuning loop in order to find the best-hyperparameters values to use. Note that this is a very computationnaly intensive step.</p>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
@@ -312,6 +2118,9 @@
 </div>
 <div id="ref-bischl_mlr:_2016">
 <p>Bischl, Bernd, Michel Lang, Lars Kotthoff, Julia Schiffner, Jakob Richter, Erich Studerus, Giuseppe Casalicchio, and Zachary M Jones. 2016. “Mlr: Machine Learning in R.” <em>The Journal of Machine Learning Research</em> 17 (1): 5938–42.</p>
+</div>
+<div id="ref-hijmans_package_2015">
+<p>Hijmans, Robert J, Jacob van Etten, Joe Cheng, Matteo Mattiuzzi, Michael Sumner, Jonathan A Greenberg, Oscar Perpinan Lamigueiro, Andrew Bevan, Etienne B Racine, and Ashton Shortridge. 2015. “Package ‘Raster’.” <em>R Package</em>.</p>
 </div>
 <div id="ref-reyniers_nowcasting_2012">
 <p>Reyniers, Maarten, and Laurent Delobbe. 2012. “The Nowcasting System INCA-BE in Belgium and Its Performance in Different Synoptic Situations.” In.</p>
@@ -337,20 +2146,17 @@
       <li>
 <a href="#exploration-field">Exploration field</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#stations-of-interest">Stations of interest</a></li>
-      <li><a href="#timeframes">Timeframes</a></li>
-      <li><a href="#learners">Learners</a></li>
-      <li><a href="#explanatory-variables">Explanatory variables</a></li>
+      <li><a href="#time-resolutions">Time resolutions</a></li>
+      <li><a href="#explanatory-variables---features">Explanatory variables - features</a></li>
+      <li><a href="#algorithms">Algorithms</a></li>
       </ul>
 </li>
       <li>
 <a href="#milestones">Milestones</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#bmr_baselearners_pameseb_tsa_h">bmr_baseLearners_Pameseb_tsa_h</a></li>
-      <li><a href="#bmr_baselearners_pameseb_tsa_d">bmr_baseLearners_Pameseb_tsa_d</a></li>
-      <li><a href="#bmr_baselearners_pameseb_irm_tsa_h">bmr_baseLearners_Pameseb_Irm_tsa_h</a></li>
-      <li><a href="#bmr_baselearners_pameseb_irm_tsa_d">bmr_baseLearners_Pameseb_Irm_tsa_d</a></li>
-      <li><a href="#baselearners_pamesebcorr_irm_tsa_h">baseLearners_PamesebCorr_Irm_tsa_h</a></li>
-      <li><a href="#baselearners_pamesebcorr_irm_tsa_d">baseLearners_PamesebCorr_Irm_tsa_d</a></li>
-      <li><a href="#bmrs">bmrs</a></li>
+<li><a href="#pameseb-base-milestones">Pameseb base milestones</a></li>
+      <li><a href="#pameseb-rmi-base-milestones">Pameseb + RMI base milestones</a></li>
+      <li><a href="#pameseb-corrected-rmi-base-milestones">Pameseb corrected + RMI base milestones</a></li>
+      <li><a href="#future-milestones">Future milestones</a></li>
       </ul>
 </li>
       <li><a href="#references">References</a></li>
