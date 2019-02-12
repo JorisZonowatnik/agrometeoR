@@ -68,7 +68,7 @@ Before integrating two different networks in the spatilization process, we need 
 
 We will investigate if combining the two networks improve the quality of the predictions. Also we will consider if correcting the Pameseb TSA data using the correction model built by the Humain stations intercomparison (::TODO:: see article) increases the quality of the predictions.
 
-## Timeframes
+## Time resolutions
 
 The spatialized data must be available for two different time resolutions :
 
@@ -77,9 +77,9 @@ The spatialized data must be available for two different time resolutions :
 
 As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions.
 
-## Explanatory variables
+## Explanatory variables - features
 
-These variables must already be available as spatialized data in order to be used as explanatory variables. We can make the distinction between the __static explanatory variables__ and the __dynamic explanatory variables__. The static variables are constant over time while the dynamic vary over time.
+These variables must already be available as spatialized data in order to be used as explanatory variables (also called ___features__). We can make the distinction between the __static explanatory variables__ and the __dynamic explanatory variables__. The static variables are constant over time while the dynamic vary over time.
 
 The static explanatory variables to investigate are : 
 
@@ -124,28 +124,26 @@ These are some of the algorithms tested in the [Kilimanjaro study](https://www.s
 * cubist
 * artificial neural network
 
-### DeepLearning
+### Deep Learning
 
 This approach will be based on the [TensorFlow](https://tensorflow.rstudio.com/) library but will not be considered before 2020. A good introduction to deep learning with R is available in the [Machine Learning with R and TensorFlow video](https://www.youtube.com/watch?v=atiYXm7JZv0&t=73s).
 
 # Milestones
 
-Multiple combinations of the described __exploration parameters__ will be tested in various batch of benchmarks experiments. Each of them represent one of our milestones. Here below we present all of our __base milestones__ (i.e. constructed on the basis of the base learners).
+Multiple combinations of the described __exploration parameters__ will be tested in various batch of benchmarks experiments. Each of them represent one of our milestones. Here below we present all of our __base milestones__ (i.e. constructed on the basis of the base learners). Each milestone will be conducted on both __tsa__ and __hra__.
 
-## base milestones
+## Pameseb base milestones
 
 ### milestone 1
 
 ```{r, milestone1, echo = FALSE}
-id = c("baseMulLR", "baseIDW", "base1NN", "baseOK", "baseKED")
 algorithms = c('mulLR','IDW','1NN', 'OK', 'KED')
-explanatory = c("alt, lon, lat", "lon, lat", "lon, lat", "lon, lat", "alt, lon, lat")
+features = c("alt, lon, lat", "lon, lat", "lon, lat", "lon, lat", "alt, lon, lat")
 hyperparameters = c(NA, NA, NA, "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0")
 stations = c("Pameseb", "Pameseb", "Pameseb", "Pameseb", "Pameseb")
 resolution = c("hourly", "hourly", "hourly", "hourly", "hourly")
-target = c("tsa", "tsa", "tsa", "tsa", "tsa")
 
-milestone1 = data.frame(id, algorithms, explanatory, hyperparameters, stations, resolution, target)
+milestone1 = data.frame(algorithms, features, hyperparameters, stations, resolution)
 knitr::kable(milestone1)
 ```
 
@@ -162,9 +160,8 @@ knitr::kable(milestone2)
 ### milestone 3
 
 ```{r, milestone3, echo = FALSE}
-milestone3 = milestone1 %>%
-  dplyr::mutate(
-    target, target = str_replace(target, "tsa", "hra"))
+milestone3 = milestone1
+milestone3$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
 
 knitr::kable(milestone3)
 ```
@@ -172,20 +169,19 @@ knitr::kable(milestone3)
 ### milestone 4
 
 ```{r, milestone4, echo = FALSE}
-milestone4 = milestone1 %>%
-  dplyr::mutate(
-    target, target = str_replace(target, "tsa", "hra")) %>%
+milestone4 = milestone3 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
 
 knitr::kable(milestone4)
 ```
 
+
 ### milestone 5
 
 ```{r, milestone5, echo = FALSE}
 milestone5 = milestone1
-milestone5$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
+milestone5$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
 
 knitr::kable(milestone5)
 ```
@@ -203,30 +199,26 @@ knitr::kable(milestone6)
 ### milestone 7
 
 ```{r, milestone7, echo = FALSE}
-milestone7 = milestone5 %>%
+milestone7 = milestone1 %>%
   dplyr::mutate(
-    target, target = str_replace(target, "tsa", "hra")) %>%
-
+    features, features = str_replace(features, "alt, lon, lat", "alt, lon, lat, incaA")) 
 knitr::kable(milestone7)
 ```
 
 ### milestone 8
 
 ```{r, milestone8, echo = FALSE}
-milestone8 = milestone5 %>%
+milestone8 = milestone7 %>%
   dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) %>%
-  dplyr::mutate(
-    target, target = str_replace(target, "tsa", "hra")) 
-
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
 knitr::kable(milestone8)
 ```
 
 ### milestone 9
 
 ```{r, milestone9, echo = FALSE}
-milestone9 = milestone1
-milestone5$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
+milestone9 = milestone7
+milestone9$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
 
 knitr::kable(milestone9)
 ```
@@ -237,16 +229,14 @@ knitr::kable(milestone9)
 milestone10 = milestone9 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-
 knitr::kable(milestone10)
 ```
 
 ### milestone 11
 
 ```{r, milestone11, echo = FALSE}
-milestone11 = milestone9 %>%
-  dplyr::mutate(
-    target, target = str_replace(target, "tsa", "hra")) 
+milestone11 = milestone7
+milestone11$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
 
 knitr::kable(milestone11)
 ```
@@ -254,31 +244,245 @@ knitr::kable(milestone11)
 ### milestone 12
 
 ```{r, milestone12, echo = FALSE}
-milestone12 = milestone9 %>%
+milestone12 = milestone11 %>%
   dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) %>%
-  dplyr::mutate(
-    target, target = str_replace(target, "tsa", "hra")) 
-
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
 knitr::kable(milestone12)
 ```
 
+## Pameseb + RMI base milestones
+
+### milestone 13
+
+```{r, milestone13, echo = FALSE}
+milestone13 = milestone1 %>%
+  dplyr::mutate(
+    stations, stations = str_replace(stations, "Pameseb", "Pameseb + RMI")) 
+knitr::kable(milestone13)
+```
+
+### milestone 14
+
+```{r, milestone14, echo = FALSE}
+milestone14 = milestone13 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily"))
+
+knitr::kable(milestone14)
+```
+
+### milestone 15
+
+```{r, milestone15, echo = FALSE}
+milestone15 = milestone13
+milestone15$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
+
+knitr::kable(milestone15)
+```
+
+### milestone 16
+
+```{r, milestone16, echo = FALSE}
+milestone16 = milestone15 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+
+knitr::kable(milestone16)
+```
 
 
-## bmr_baseLearners_Pameseb_tsa_d
+### milestone 17
 
-## bmr_baseLearners_Pameseb_Irm_tsa_h 
+```{r, milestone17, echo = FALSE}
+milestone17 = milestone13
+milestone17$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
 
-## bmr_baseLearners_Pameseb_Irm_tsa_d
+knitr::kable(milestone17)
+```
 
-## baseLearners_PamesebCorr_Irm_tsa_h
+### milestone 18
 
-## baseLearners_PamesebCorr_Irm_tsa_d
+```{r, milestone18, echo = FALSE}
+milestone18 = milestone17 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+
+knitr::kable(milestone18)
+```
+
+### milestone 19
+
+```{r, milestone19, echo = FALSE}
+milestone19 = milestone13 %>%
+  dplyr::mutate(
+    features, features = str_replace(features, "alt, lon, lat", "alt, lon, lat, incaA")) 
+knitr::kable(milestone19)
+```
+
+### milestone 20
+
+```{r, milestone20, echo = FALSE}
+milestone20 = milestone19 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+knitr::kable(milestone20)
+```
+
+### milestone 21
+
+```{r, milestone21, echo = FALSE}
+milestone21 = milestone19
+milestone21$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
+
+knitr::kable(milestone21)
+```
+
+### milestone 22
+
+```{r, milestone22, echo = FALSE}
+milestone22 = milestone21 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+knitr::kable(milestone21)
+```
+
+### milestone 23
+
+```{r, milestone23, echo = FALSE}
+milestone23 = milestone21
+milestone23$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
+
+knitr::kable(milestone23)
+```
+
+### milestone 24
+
+```{r, milestone24, echo = FALSE}
+milestone24 = milestone23 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+knitr::kable(milestone24)
+```
+
+## Pameseb corrected + RMI base milestones
+
+### milestone 25
+
+```{r, milestone25, echo = FALSE}
+milestone25 = milestone1 %>%
+  dplyr::mutate(
+    stations, stations = str_replace(stations, "Pameseb", "Pameseb corr + RMI")) 
+knitr::kable(milestone25)
+```
+
+### milestone 26
+
+```{r, milestone26, echo = FALSE}
+milestone26 = milestone25 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily"))
+
+knitr::kable(milestone26)
+```
+
+### milestone 27
+
+```{r, milestone27, echo = FALSE}
+milestone27 = milestone25
+milestone27$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
+
+knitr::kable(milestone27)
+```
+
+### milestone 28
+
+```{r, milestone28, echo = FALSE}
+milestone28 = milestone27 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+
+knitr::kable(milestone28)
+```
 
 
-## bmrs
+### milestone 29
 
+```{r, milestone29, echo = FALSE}
+milestone29 = milestone25
+milestone29$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
 
+knitr::kable(milestone29)
+```
+
+### milestone 30
+
+```{r, milestone30, echo = FALSE}
+milestone30 = milestone29 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+
+knitr::kable(milestone30)
+```
+
+### milestone 31
+
+```{r, milestone31, echo = FALSE}
+milestone31 = milestone25 %>%
+  dplyr::mutate(
+    features, features = str_replace(features, "alt, lon, lat", "alt, lon, lat, incaA")) 
+knitr::kable(milestone31)
+```
+
+### milestone 32
+
+```{r, milestone32, echo = FALSE}
+milestone32 = milestone31 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+knitr::kable(milestone32)
+```
+
+### milestone 33
+
+```{r, milestone33, echo = FALSE}
+milestone33 = milestone31
+milestone33$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
+
+knitr::kable(milestone33)
+```
+
+### milestone 34
+
+```{r, milestone34, echo = FALSE}
+milestone34 = milestone33 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+knitr::kable(milestone34)
+```
+
+### milestone 35
+
+```{r, milestone35, echo = FALSE}
+milestone35 = milestone33
+milestone35$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
+
+knitr::kable(milestone35)
+```
+
+### milestone 36
+
+```{r, milestone36, echo = FALSE}
+milestone36 = milestone35 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+knitr::kable(milestone36)
+```
+
+## Future milestones
+
+As shown in the previous tables, the hyper-parameters values for the kriging learners KED and OK have been preset. No [hyper-parameter tuning](https://mlr.mlr-org.com/articles/tutorial/tune.html) is conducted. This is a choice that was decided with the steering committee in order to reduce computing time and to make things simple at the beginning. The combinations of the hyper-parameters values are based on what RMI uses for their own maps.
+
+In a next future, it might be interesting to use an hyper-tuning loop in order to find the best-hyperparameters values to use. Note that this is a very computationnaly intensive step.
 
 # References
 
