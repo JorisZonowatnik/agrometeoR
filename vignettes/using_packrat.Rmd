@@ -9,7 +9,9 @@ output: html_document
 
 When you build an R package, you'll most probably need functions from other packages to make your own functions work. The packages that are required by your own package are called dependencies and these are listed into the [DESCRIPTION file](http://r-pkgs.had.co.nz/description.html) of your package.
 
-When a package is installed, its dependencies will also be installed by R if not yet available on the machine. Sometimes a package may require a minimum version number of one of its dependencies. This might lead to conflict with versions already installed on the computer. And to solve this conflict you might need to uninstall a version of a dependency that has been proven to work for another package and/or analysis resulting in potential breaks of your previously working code. 
+When a package is installed, its dependencies will also be installed by R if not yet available on the machine. Sometimes a package may require a minimum version number of one of its dependencies. This might lead to conflict with versions already installed on the computer. To solve this conflict you might need to uninstall a version of a dependency that has been proven to work for another package and/or analysis resulting in potential breaks of your previously working code. 
+
+As shown in its DESCRIPTION file, the agrometeoR packages requires multiples dependencies with minimal version number to work. If you want to make sure that your analysis our app that relies on the agrometeoR packages works and don't break other analysis our app that require the same dependencies, we strongly recommand you to use packrat ! 
 
 To quote [packrat official website](https://rstudio.github.io/) : 
 
@@ -20,21 +22,20 @@ We built packrat to solve these problems. Use packrat to make your R projects mo
   * Portable: Easily transport your projects from one computer to another, even across different platforms. Packrat makes it easy to install the packages your project depends on.
   * Reproducible: Packrat records the exact package versions you depend on, and ensures those exact versions are the ones that get installed wherever you go.
   
-Packrat has been built to avoid dependencies intercompatability issues. In this article, we will learn how to get the most out of it.
+Packrat has been built to avoid dependencies intercompatability issues. Think of it as virtual environement similar to pypenv. In this article, we will learn how to get the most out of it in the context of an analysis/project that requires the agrometeoR package. For a detailed explanation about packrat, please visit the official website.
 
 # Packrat vs. non-packrat project
 
 In a non-packarat project, R install the libraries in a specific folder that is made available to all of your R projects. In a Linux environment, the R command `.libPaths()` tells you where is located this folder. By default it is located at `/usr/local/lib/R/site-library`.
 In a packrat project, R install the libraries in a private library which is only available to this specific project and which is located into the project directory. This ensures that there is no dependencies collision between projects.
 
-# Starting a new project the packrat way
+# Starting a new project that requires agrometeoR : the packrat way
 
-Let say you want to start a new R project analysis that requires multiples libraries to work. What you would normally do is to install the missing one using `ìnstall.packages()` and load the required libraries using `library()`. Doing so R will install and load the libraries to and from your system wide folder (`/usr/local/lib/R/site-library`). 
-
+Let say you want to start a new R project (an analysis our an app) that requires agrometeoR. What you would normally do, is to install the package using `devtools::ìnstall_github("pokyah/agrometeoR")` and load the package using `library(agrometeoR)`. Doing so R will install and load agrometeoR to and from your system wide folder (`/usr/local/lib/R/site-library`). 
 
 Now, lets work the packrat way ! 
 
-First, you create a new folder for your project and `cd` into it. You open your R console and the first thing to do, of course, is to install packrat : 
+Once you have created a new folder for your project and `cd` into it, you first must install packrat globally.
 
 ```{r, ignore = TRUE}
 install.packages("packrat")
@@ -46,8 +47,26 @@ Once installed, you make your project a packrat project by initializing packrat 
 packrat::init()
 ```
 
-This command will create a `packrat` flder at the root of your project. This is the private library of your project where all of the required packages will be installed. 
-Once packrat is initialized, R will never look at the packages that are globally installed, so if you already had some libraries previously installed 
+This command will create a `packrat` folder at the root of your project. This is the private library of your project where all of the required packages will be installed. 
+Once packrat is initialized, R will never look at the packages that are globally installed. So if you already had some libraries previously installed, you will need to reinstall those into your project private library 
+
+And how does R knows that the current project is a packrat one ? R, simply adds a new line to your project `.Rprofile` file telling R to use the project private library when installing and loading packages. Hence, each time R is loaded from this project, it will read this `.Rprofile` file and understand it must work in packrat mode.
+
+Now, we can install agrometeoR in this packrat context : 
+
+```{r, ignore = TRUE}
+devtoolls::install_github("pokyah/agrometeoR")
+```
+
+R now installs agrometeoR and all its dependencies listed into its DESCRIPTION file into your project private library. 
+
+# Keeping track of your dependencies versions
+
+Once you are into a packrat project, packrat also creates and updates a `packrat.lock` file where it stores all the informations about your dependencies : name, repository, version number, etc. This file is extremely useful for reproductibility as it lists all the information required to reconstruct the exact same environment that was used to conduct an analysis. It is used by packrat itself if you use `packrat::restore()`. 
+
+# packrat if you use the agrometeoR package
+
+If you plan to use the agrometeor project 
 
 
 http://distancesampling.org/developer/develop/dev-packrat.html
