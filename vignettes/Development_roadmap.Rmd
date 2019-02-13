@@ -134,15 +134,19 @@ This approach will be based on the [TensorFlow](https://tensorflow.rstudio.com/)
 
 # Milestones
 
+::TODO:: explain the incrementability of these bmrs experiments
+
 Multiple combinations of the described __exploration parameters__ will be tested in various batches of benchmarks experiments. Each of these batches represent one of our milestones. Here below we present all of the  __base milestones__ (i.e. constructed on the basis of the base learners) resulting from all the possible combinations we have decided to investigate. 
 
 As different target variables can be explained by different explanatory variables, we refer to different milestones numbers for each of the target variables even if in some cases a milestone might be constructed from the same combination of parameters.
 
 From a deployment strategy point of view, once a milestone has been benchmarked, the idea is to use its best learner on the production server that delivers the spatialized data. The produced data must then be flagged by a combination of the milestone number and algorithm abbrevitation.
 
+
+spatialis&é sur base d'un résultat de bmr milestone en utlisant le meilleur learner de cette mielstone
 ## TSA milestones
 
-### milestoneTsa1
+### milestoneTsaH1
 
 ```{r, milestoneTsa1, echo = FALSE}
 algorithms = c('mulLR','IDW','1NN', 'OK', 'KED')
@@ -152,675 +156,242 @@ stations = c("Pameseb", "Pameseb", "Pameseb", "Pameseb", "Pameseb")
 resolution = c("hourly", "hourly", "hourly", "hourly", "hourly")
 target = "tsa"
 
-milestoneTsa1 = data.frame(algorithms, features, hyperparameters, stations, resolution, target)
-knitr::kable(milestoneTsa1)
+milestoneTsaH1 = data.frame(algorithms, features, hyperparameters, stations, resolution, target)
+knitr::kable(milestoneTsaH1)
 ```
 
-### milestoneTsa2
+### milestoneTsaD1
 
-```{r, milestonetsa2, echo = FALSE}
-milestoneTsa2 = milestoneTsa1 %>%
+```{r, milestonetsaD1, echo = FALSE}
+milestoneTsaD1 = milestoneTsaH1 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily"))
 
-knitr::kable(milestoneTsa2)
+knitr::kable(milestoneTsaD1)
 ```
 
-### milestoneTsa3
+### milestoneTsaH2
 
-```{r, milestoneTsa3, echo = FALSE}
-milestoneTsa3 = milestoneTsa1
-milestoneTsa3$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
+```{r, milestoneTsaH2, echo = FALSE}
+milestoneTsaH2 = milestoneTsaH1 %>%
+  dplyr::filter(algorithms %in% (c("OK", "KED")))
+milestoneTsaH2$hyperparameters = c("range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
 
-knitr::kable(milestoneTsa3)
+knitr::kable(milestoneTsaH2)
 ```
 
-### milestoneTsa4
+### milestoneTsaD2
 
-```{r, milestoneTsa4, echo = FALSE}
-milestoneTsa4 = milestoneTsa3 %>%
+```{r, milestoneTsaD2, echo = FALSE}
+milestoneTsaD2 = milestoneTsaH2 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
 
-knitr::kable(milestoneTsa4)
+knitr::kable(milestoneTsaD2)
 ```
 
-### milestoneTsa5
+### milestoneTsaH3
 
-```{r, milestoneTsa5, echo = FALSE}
-milestoneTsa5 = milestoneTsa1
-milestoneTsa5$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
+```{r, milestoneTsaH3, echo = FALSE}
+milestoneTsaH3 = milestoneTsaH2
+milestoneTsaH3$hyperparameters = c("range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
 
-knitr::kable(milestoneTsa5)
+knitr::kable(milestoneTsaH3)
 ```
 
-### milestoneTsa6
+### milestoneTsaD3
 
 ```{r, milestoneTsa6, echo = FALSE}
-milestoneTsa6 = milestoneTsa5 %>%
+milestoneTsaD3 = milestoneTsaD2 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
 
-knitr::kable(milestoneTsa6)
+knitr::kable(milestoneTsaD3)
 ```
 
-### milestoneTsa7
+### milestoneTsaH4
 
-```{r, milestoneTsa7, echo = FALSE}
-milestoneTsa7 = milestoneTsa1 %>%
+```{r, milestoneTsaH4, echo = FALSE}
+milestoneTsaH4 = milestoneTsaH1 %>%
+  dplyr::filter(algorithms %in% (c("mulLR", "KED"))) %>%
   dplyr::mutate(
     features, features = str_replace(features, "alt, lon, lat", "alt, lon, lat, incaA")) 
-knitr::kable(milestoneTsa7)
+knitr::kable(milestoneTsaH4)
 ```
 
-### milestoneTsa8
+### milestoneTsaD4
 
-```{r, milestoneTsa8, echo = FALSE}
-milestoneTsa8 = milestoneTsa7 %>%
+```{r, milestoneTsaD4, echo = FALSE}
+milestoneTsaD4 = milestoneTsaH4 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneTsa8)
+knitr::kable(milestoneTsaD4)
 ```
 
-### milestoneTsa9
+### milestoneTsaH5
 
-```{r, milestoneTsa9, echo = FALSE}
-milestoneTsa9 = milestoneTsa7
-milestoneTsa9$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
+```{r, milestoneTsaH5, echo = FALSE}
+milestoneTsaH5 = milestoneTsaH4 %>%
+  dplyr::filter(algorithms %in% c("KED"))
+milestoneTsaH5$hyperparameters = c("range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
 
-knitr::kable(milestoneTsa9)
+knitr::kable(milestoneTsaH5)
 ```
 
-### milestoneTsa10
+### milestoneTsaD5
 
-```{r, milestoneTsa10, echo = FALSE}
-milestoneTsa10 = milestoneTsa9 %>%
+```{r, milestoneTsaD5, echo = FALSE}
+milestoneTsaD5 = milestoneTsaH5 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneTsa10)
+knitr::kable(milestoneTsaD5)
 ```
 
-### milestoneTsa11
+### milestoneTsaH6
 
-```{r, milestoneTsa11, echo = FALSE}
-milestoneTsa11 = milestoneTsa7
-milestoneTsa11$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
+```{r, milestoneTsaH6, echo = FALSE}
+milestoneTsaH6 = milestoneTsaH5
+milestoneTsaH6$hyperparameters = c("range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
 
-knitr::kable(milestoneTsa11)
+knitr::kable(milestoneTsaH6)
 ```
 
-### milestoneTsa12
+### milestoneTsaD6
 
-```{r, milestoneTsa12, echo = FALSE}
-milestoneTsa12 = milestoneTsa11 %>%
+```{r, milestoneTsaD6, echo = FALSE}
+milestoneTsaD6 = milestoneTsaH6 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneTsa12)
-```
-
-### milestoneTsa13
-
-```{r, milestoneTsa13, echo = FALSE}
-milestoneTsa13 = milestoneTsa1 %>%
-  dplyr::mutate(
-    stations, stations = str_replace(stations, "Pameseb", "Pameseb + RMI")) 
-knitr::kable(milestoneTsa13)
-```
-
-### milestoneTsa14
-
-```{r, milestoneTsa14, echo = FALSE}
-milestoneTsa14 = milestoneTsa13 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily"))
-
-knitr::kable(milestoneTsa14)
-```
-
-### milestoneTsa15
-
-```{r, milestoneTsa15, echo = FALSE}
-milestoneTsa15 = milestoneTsa13
-milestoneTsa15$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneTsa15)
-```
-
-### milestoneTsa16
-
-```{r, milestoneTsa16, echo = FALSE}
-milestoneTsa16 = milestoneTsa15 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-
-knitr::kable(milestoneTsa16)
-```
-
-### milestoneTsa17
-
-```{r, milestoneTsa17, echo = FALSE}
-milestoneTsa17 = milestoneTsa13
-milestoneTsa17$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneTsa17)
-```
-
-### milestoneTsa18
-
-```{r, milestoneTsa18, echo = FALSE}
-milestoneTsa18 = milestoneTsa17 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-
-knitr::kable(milestoneTsa18)
-```
-
-### milestoneTsa19
-
-```{r, milestoneTsa19, echo = FALSE}
-milestoneTsa19 = milestoneTsa13 %>%
-  dplyr::mutate(
-    features, features = str_replace(features, "alt, lon, lat", "alt, lon, lat, incaA")) 
-knitr::kable(milestoneTsa19)
-```
-
-### milestoneTsa20
-
-```{r, milestoneTsa20, echo = FALSE}
-milestoneTsa20 = milestoneTsa19 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneTsa20)
-```
-
-### milestoneTsa21
-
-```{r, milestoneTsa21, echo = FALSE}
-milestoneTsa21 = milestoneTsa19
-milestoneTsa21$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneTsa21)
-```
-
-### milestoneTsa22
-
-```{r, milestoneTsa22, echo = FALSE}
-milestoneTsa22 = milestoneTsa21 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneTsa21)
-```
-
-### milestoneTsa23
-
-```{r, milestoneTsa23, echo = FALSE}
-milestoneTsa23 = milestoneTsa21
-milestoneTsa23$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneTsa23)
-```
-
-### milestoneTsa24
-
-```{r, milestoneTsa24, echo = FALSE}
-milestoneTsa24 = milestoneTsa23 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneTsa24)
-```
-
-### milestoneTsa25
-
-```{r, milestoneTsa25, echo = FALSE}
-milestoneTsa25 = milestoneTsa1 %>%
-  dplyr::mutate(
-    stations, stations = str_replace(stations, "Pameseb", "Pameseb corr + RMI")) 
-knitr::kable(milestoneTsa25)
-```
-
-### milestoneTsa26
-
-```{r, milestoneTsa26, echo = FALSE}
-milestoneTsa26 = milestoneTsa25 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily"))
-
-knitr::kable(milestoneTsa26)
-```
-
-### milestoneTsa27
-
-```{r, milestoneTsa27, echo = FALSE}
-milestoneTsa27 = milestoneTsa25
-milestoneTsa27$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneTsa27)
-```
-
-### milestoneTsa28
-
-```{r, milestoneTsa28, echo = FALSE}
-milestoneTsa28 = milestoneTsa27 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-
-knitr::kable(milestoneTsa28)
+knitr::kable(milestoneTsaD6)
 ```
 
 
-### milestoneTsa29
+######### 
 
-```{r, milestoneTsa29, echo = FALSE}
-milestoneTsa29 = milestoneTsa25
-milestoneTsa29$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
+#########
 
-knitr::kable(milestoneTsa29)
-```
+### milestoneTsaH7
 
-### milestoneTsa30
-
-```{r, milestoneTsa30, echo = FALSE}
-milestoneTsa30 = milestoneTsa29 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-
-knitr::kable(milestoneTsa30)
-```
-
-### milestoneTsa31
-
-```{r, milestoneTsa31, echo = FALSE}
-milestoneTsa31 = milestoneTsa25 %>%
-  dplyr::mutate(
-    features, features = str_replace(features, "alt, lon, lat", "alt, lon, lat, incaA")) 
-knitr::kable(milestoneTsa31)
-```
-
-### milestoneTsa32
-
-```{r, milestoneTsa32, echo = FALSE}
-milestoneTsa32 = milestoneTsa31 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneTsa32)
-```
-
-### milestoneTsa33
-
-```{r, milestoneTsa33, echo = FALSE}
-milestoneTsa33 = milestoneTsa31
-milestoneTsa33$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneTsa33)
-```
-
-### milestoneTsa34
-
-```{r, milestoneTsa34, echo = FALSE}
-milestoneTsa34 = milestoneTsa33 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneTsa34)
-```
-
-### milestoneTsa35
-
-```{r, milestoneTsa35, echo = FALSE}
-milestoneTsa35 = milestoneTsa33
-milestoneTsa35$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneTsa35)
-```
-
-### milestoneTsa36
-
-```{r, milestoneTsa36, echo = FALSE}
-milestoneTsa36 = milestoneTsa35 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneTsa36)
-```
-
-## HRA milestones
-
-### milestoneHra1
-
-```{r, milestoneHra1, echo = FALSE}
+```{r, milestoneTsaH7, echo = FALSE}
 algorithms = c('mulLR','IDW','1NN', 'OK', 'KED')
 features = c("alt, lon, lat", "lon, lat", "lon, lat", "lon, lat", "alt, lon, lat")
 hyperparameters = c(NA, NA, NA, "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0")
-stations = c("Pameseb", "Pameseb", "Pameseb", "Pameseb", "Pameseb")
+stations = c("Pameseb + RMI", "Pameseb + RMI", "Pameseb + RMI", "Pameseb + RMI", "Pameseb + RMI")
 resolution = c("hourly", "hourly", "hourly", "hourly", "hourly")
 target = "tsa"
 
-milestoneHra1 = data.frame(algorithms, features, hyperparameters, stations, resolution, target)
-knitr::kable(milestoneHra1)
+milestoneTsaH7 = data.frame(algorithms, features, hyperparameters, stations, resolution, target)
+knitr::kable(milestoneTsaH7)
 ```
 
-### milestoneHra2
+### milestoneTsaD7
 
-```{r, milestoneHra2, echo = FALSE}
-milestoneHra2 = milestoneHra1 %>%
+```{r, milestonetsaD8, echo = FALSE}
+milestoneTsaD7 = milestoneTsaH7 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily"))
 
-knitr::kable(milestoneHra2)
+knitr::kable(milestoneTsaD7)
 ```
 
-### milestoneHra3
+### milestoneTsaH8
 
-```{r, milestoneHra3, echo = FALSE}
-milestoneHra3 = milestoneHra1
-milestoneHra3$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
+```{r, milestoneTsaH8, echo = FALSE}
+milestoneTsaH8 = milestoneTsaH7 %>%
+  dplyr::filter(algorithms %in% (c("OK", "KED")))
+milestoneTsaH8$hyperparameters = c("range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
 
-knitr::kable(milestoneHra3)
+knitr::kable(milestoneTsaH8)
 ```
 
-### milestoneHra4
+### milestoneTsaD8
 
-```{r, milestoneHra4, echo = FALSE}
-milestoneHra4 = milestoneHra3 %>%
+```{r, milestoneTsaD8, echo = FALSE}
+milestoneTsaD8 = milestoneTsaH8 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
 
-knitr::kable(milestoneHra4)
+knitr::kable(milestoneTsaD8)
 ```
 
-### milestoneHra5
+### milestoneTsaH9
 
-```{r, milestoneHra5, echo = FALSE}
-milestoneHra5 = milestoneHra1
-milestoneHra5$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
+```{r, milestoneTsaH9, echo = FALSE}
+milestoneTsaH9 = milestoneTsaH8
+milestoneTsaH9$hyperparameters = c("range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
 
-knitr::kable(milestoneHra5)
+knitr::kable(milestoneTsaH9)
 ```
 
-### milestoneHra6
+### milestoneTsaD9
 
-```{r, milestoneHra6, echo = FALSE}
-milestoneHra6 = milestoneHra5 %>%
+```{r, milestoneTsaD9, echo = FALSE}
+milestoneTsaD9 = milestoneTsaH9 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
 
-knitr::kable(milestoneHra6)
+knitr::kable(milestoneTsaD9)
 ```
 
-### milestoneHra7
+### milestoneTsaH10
 
-```{r, milestoneHra7, echo = FALSE}
-milestoneHra7 = milestoneHra1 %>%
+```{r, milestoneTsaH10, echo = FALSE}
+milestoneTsaH10 = milestoneTsaH7 %>%
+  dplyr::filter(algorithms %in% (c("mulLR", "KED"))) %>%
   dplyr::mutate(
     features, features = str_replace(features, "alt, lon, lat", "alt, lon, lat, incaA")) 
-knitr::kable(milestoneHra7)
+knitr::kable(milestoneTsaH10)
 ```
 
-### milestoneHra8
+### milestoneTsaD10
 
-```{r, milestoneHra8, echo = FALSE}
-milestoneHra8 = milestoneHra7 %>%
+```{r, milestoneTsaD10, echo = FALSE}
+milestoneTsaD10 = milestoneTsaH10 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneHra8)
+knitr::kable(milestoneTsaD10)
 ```
 
-### milestoneHra9
+### milestoneTsaH11
 
-```{r, milestoneHra9, echo = FALSE}
-milestoneHra9 = milestoneHra7
-milestoneHra9$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
+```{r, milestoneTsaH11, echo = FALSE}
+milestoneTsaH11 = milestoneTsaH10 %>%
+  dplyr::filter(algorithms %in% c("KED"))
+milestoneTsaH11$hyperparameters = c("range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
 
-knitr::kable(milestoneHra9)
+knitr::kable(milestoneTsaH11)
 ```
 
-### milestoneHra10
+### milestoneTsaD11
 
-```{r, milestoneHra10, echo = FALSE}
-milestoneHra10 = milestoneHra9 %>%
+```{r, milestoneTsaD11, echo = FALSE}
+milestoneTsaD11 = milestoneTsaH11 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneHra10)
+knitr::kable(milestoneTsaD11)
 ```
 
-### milestoneHra11
+### milestoneTsaH12
 
-```{r, milestoneHra11, echo = FALSE}
-milestoneHra11 = milestoneHra7
-milestoneHra11$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
+```{r, milestoneTsaH12, echo = FALSE}
+milestoneTsaH12 = milestoneTsaH11
+milestoneTsaH12$hyperparameters = c("range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
 
-knitr::kable(milestoneHra11)
+knitr::kable(milestoneTsaH12)
 ```
 
-### milestoneHra12
+### milestoneTsaD12
 
-```{r, milestoneHra12, echo = FALSE}
-milestoneHra12 = milestoneHra11 %>%
+```{r, milestoneTsaD12, echo = FALSE}
+milestoneTsaD12 = milestoneTsaH12 %>%
   dplyr::mutate(
     resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneHra12)
-```
-
-### milestoneHra13
-
-```{r, milestoneHra13, echo = FALSE}
-milestoneHra13 = milestoneHra1 %>%
-  dplyr::mutate(
-    stations, stations = str_replace(stations, "Pameseb", "Pameseb + RMI")) 
-knitr::kable(milestoneHra13)
-```
-
-### milestoneHra14
-
-```{r, milestoneHra14, echo = FALSE}
-milestoneHra14 = milestoneHra13 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily"))
-
-knitr::kable(milestoneHra14)
-```
-
-### milestoneHra15
-
-```{r, milestoneHra15, echo = FALSE}
-milestoneHra15 = milestoneHra13
-milestoneHra15$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneHra15)
-```
-
-### milestoneHra16
-
-```{r, milestoneHra16, echo = FALSE}
-milestoneHra16 = milestoneHra15 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-
-knitr::kable(milestoneHra16)
-```
-
-### milestoneHra17
-
-```{r, milestoneHra17, echo = FALSE}
-milestoneHra17 = milestoneHra13
-milestoneHra17$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneHra17)
-```
-
-### milestoneHra18
-
-```{r, milestoneHra18, echo = FALSE}
-milestoneHra18 = milestoneHra17 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-
-knitr::kable(milestoneHra18)
-```
-
-### milestoneHra19
-
-```{r, milestoneHra19, echo = FALSE}
-milestoneHra19 = milestoneHra13 %>%
-  dplyr::mutate(
-    features, features = str_replace(features, "alt, lon, lat", "alt, lon, lat, incaA")) 
-knitr::kable(milestoneHra19)
-```
-
-### milestoneHra20
-
-```{r, milestoneHra20, echo = FALSE}
-milestoneHra20 = milestoneHra19 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneHra20)
-```
-
-### milestoneHra21
-
-```{r, milestoneHra21, echo = FALSE}
-milestoneHra21 = milestoneHra19
-milestoneHra21$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneHra21)
-```
-
-### milestoneHra22
-
-```{r, milestoneHra22, echo = FALSE}
-milestoneHra22 = milestoneHra21 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneHra21)
-```
-
-### milestoneHra23
-
-```{r, milestoneHra23, echo = FALSE}
-milestoneHra23 = milestoneHra21
-milestoneHra23$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneHra23)
-```
-
-### milestoneHra24
-
-```{r, milestoneHra24, echo = FALSE}
-milestoneHra24 = milestoneHra23 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneHra24)
-```
-
-### milestoneHra25
-
-```{r, milestoneHra25, echo = FALSE}
-milestoneHra25 = milestoneHra1 %>%
-  dplyr::mutate(
-    stations, stations = str_replace(stations, "Pameseb", "Pameseb corr + RMI")) 
-knitr::kable(milestoneHra25)
-```
-
-### milestoneHra26
-
-```{r, milestoneHra26, echo = FALSE}
-milestoneHra26 = milestoneHra25 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily"))
-
-knitr::kable(milestoneHra26)
-```
-
-### milestoneHra27
-
-```{r, milestoneHra27, echo = FALSE}
-milestoneHra27 = milestoneHra25
-milestoneHra27$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneHra27)
-```
-
-### milestoneHra28
-
-```{r, milestoneHra28, echo = FALSE}
-milestoneHra28 = milestoneHra27 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-
-knitr::kable(milestoneHra28)
+knitr::kable(milestoneTsaD12)
 ```
 
 
-### milestoneHra29
 
-```{r, milestoneHra29, echo = FALSE}
-milestoneHra29 = milestoneHra25
-milestoneHra29$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
 
-knitr::kable(milestoneHra29)
-```
-
-### milestoneHra30
-
-```{r, milestoneHra30, echo = FALSE}
-milestoneHra30 = milestoneHra29 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-
-knitr::kable(milestoneHra30)
-```
-
-### milestoneHra31
-
-```{r, milestoneHra31, echo = FALSE}
-milestoneHra31 = milestoneHra25 %>%
-  dplyr::mutate(
-    features, features = str_replace(features, "alt, lon, lat", "alt, lon, lat, incaA")) 
-knitr::kable(milestoneHra31)
-```
-
-### milestoneHra32
-
-```{r, milestoneHra32, echo = FALSE}
-milestoneHra32 = milestoneHra31 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneHra32)
-```
-
-### milestoneHra33
-
-```{r, milestoneHra33, echo = FALSE}
-milestoneHra33 = milestoneHra31
-milestoneHra33$hyperparameters = c(NA, NA, NA, "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneHra33)
-```
-
-### milestoneHra34
-
-```{r, milestoneHra34, echo = FALSE}
-milestoneHra34 = milestoneHra33 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneHra34)
-```
-
-### milestoneHra35
-
-```{r, milestoneHra35, echo = FALSE}
-milestoneHra35 = milestoneHra33
-milestoneHra35$hyperparameters = c(NA, NA, NA, "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
-
-knitr::kable(milestoneHra35)
-```
-
-### milestoneHra36
-
-```{r, milestoneHra36, echo = FALSE}
-milestoneHra36 = milestoneHra35 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
-knitr::kable(milestoneHra36)
-```
 
 ## Future milestones
 
