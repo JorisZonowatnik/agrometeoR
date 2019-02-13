@@ -7,11 +7,17 @@ output: html_document
 
 # Introduction
 
-When you build an R package, you'll most probably need functions from other packages to make your own functions work. The packages that are required by your own package are called dependencies and these are listed into the [DESCRIPTION file](http://r-pkgs.had.co.nz/description.html) of your package.
+If you plan to use the agrometeoR package, you must know that this packages relies on other packages that are sometimes still in development versions. For example, the implementation of gstat into mlr required to perform kriging interpolation while benefiting of the mlr unified interface for algorithms benchmarking is not available on CRAN.
+
+The packages that are required by a specific package are called dependencies and these are listed into the [DESCRIPTION file](http://r-pkgs.had.co.nz/description.html) of a package.
 
 When a package is installed, its dependencies will also be installed by R if not yet available on the machine. Sometimes a package may require a minimum version number of one of its dependencies. This might lead to conflict with versions already installed on the computer. To solve this conflict you might need to uninstall a version of a dependency that has been proven to work for another package and/or analysis resulting in potential breaks of your previously working code. 
 
-As shown in its DESCRIPTION file, the agrometeoR packages requires multiples dependencies with minimal version number to work. If you want to make sure that your analysis our app that relies on the agrometeoR packages works and don't break other analysis our app that require the same dependencies, we strongly recommand you to use packrat ! 
+As shown in its DESCRIPTION file, the agrometeoR packages requires multiples dependencies with minimal version number to work. If you want to make sure that your project (analysis our app) that relies on the agrometeoR packages works and don't break other projects that require the same dependencies, we strongly recommand you to use packrat ! 
+
+Important note :
+
+R package dependencies we are talking about into this article means R packages required for a specific R package to work. We don't talk about linux dependencies ! As these might be as tricky as R paclage dependencies, we strongly suggest you to learn more about [Docker](https://pokyah.github.io/post/using-r-with-docker/) to create containerized operating system configurations.
 
 To quote [packrat official website](https://rstudio.github.io/) : 
 
@@ -58,7 +64,9 @@ Now, we can install agrometeoR in this packrat context :
 devtoolls::install_github("pokyah/agrometeoR")
 ```
 
-R now installs agrometeoR and all its dependencies listed into its DESCRIPTION file into your project private library. 
+R now installs agrometeoR and all its dependencies listed into its DESCRIPTION file into your project private library.
+
+You can now use all of the functions of the agrometeoR package knowing they will work and that this new installation will not break previously existing code relying on your global R packages library.
 
 # Keeping track of your dependencies versions
 
