@@ -4,6 +4,52 @@ author: "Thomas Goossens"
 date: "11/23/2018"
 output: html_document
 ---
+
+# Introduction
+
+When you build an R package, you'll most probably need functions from other packages to make your own functions work. The packages that are required by your own package are called dependencies and these are listed into the [DESCRIPTION file](http://r-pkgs.had.co.nz/description.html) of your package.
+
+When a package is installed, its dependencies will also be installed by R if not yet available on the machine. Sometimes a package may require a minimum version number of one of its dependencies. This might lead to conflict with versions already installed on the computer. And to solve this conflict you might need to uninstall a version of a dependency that has been proven to work for another package and/or analysis resulting in potential breaks of your previously working code. 
+
+To quote [packrat official website](https://rstudio.github.io/) : 
+
+> Have you ever updated a package to get code in one of your projects to work, only to find that the updated package makes code in another project stop working?
+We built packrat to solve these problems. Use packrat to make your R projects more:
+>
+  * Isolated: Installing a new or updated package for one project won’t break your other projects, and vice versa. That’s because packrat gives each project its own private package library.
+  * Portable: Easily transport your projects from one computer to another, even across different platforms. Packrat makes it easy to install the packages your project depends on.
+  * Reproducible: Packrat records the exact package versions you depend on, and ensures those exact versions are the ones that get installed wherever you go.
+  
+Packrat has been built to avoid dependencies intercompatability issues. In this article, we will learn how to get the most out of it.
+
+# Packrat vs. non-packrat project
+
+In a non-packarat project, R install the libraries in a specific folder that is made available to all of your R projects. In a Linux environment, the R command `.libPaths()` tells you where is located this folder. By default it is located at `/usr/local/lib/R/site-library`.
+In a packrat project, R install the libraries in a private library which is only available to this specific project and which is located into the project directory. This ensures that there is no dependencies collision between projects.
+
+# Starting a new project the packrat way
+
+Let say you want to start a new R project analysis that requires multiples libraries to work. What you would normally do is to install the missing one using `ìnstall.packages()` and load the required libraries using `library()`. Doing so R will install and load the libraries to and from your system wide folder (`/usr/local/lib/R/site-library`). 
+
+
+Now, lets work the packrat way ! 
+
+First, you create a new folder for your project and `cd` into it. You open your R console and the first thing to do, of course, is to install packrat : 
+
+```{r, ignore = TRUE}
+install.packages("packrat")
+```
+
+Once installed, you make your project a packrat project by initializing packrat : 
+
+```{r, ignore = TRUE}
+packrat::init()
+```
+
+This command will create a `packrat` flder at the root of your project. This is the private library of your project where all of the required packages will be installed. 
+Once packrat is initialized, R will never look at the packages that are globally installed, so if you already had some libraries previously installed 
+
+
 http://distancesampling.org/developer/develop/dev-packrat.html
 https://github.com/r-lib/pkgdown/issues/488
 
