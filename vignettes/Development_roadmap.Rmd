@@ -134,16 +134,15 @@ This approach will be based on the [TensorFlow](https://tensorflow.rstudio.com/)
 
 # Milestones
 
-::TODO:: explain the incrementability of these bmrs experiments
 
 Multiple combinations of the described __exploration parameters__ will be tested in various batches of benchmarks experiments. Each of these batches represent one of our milestones. Here below we present all of the  __base milestones__ (i.e. constructed on the basis of the base learners) resulting from all the possible combinations we have decided to investigate. 
 
-As different target variables can be explained by different explanatory variables, we refer to different milestones numbers for each of the target variables even if in some cases a milestone might be constructed from the same combination of parameters.
+As different target variables can be explained by different explanatory variables, we refer to different milestones names for each of the target variables even if in some cases a milestone might be constructed from the same combination of parameters.
 
-From a deployment strategy point of view, once a milestone has been benchmarked, the idea is to use its best learner on the production server that delivers the spatialized data. The produced data must then be flagged by a combination of the milestone number and algorithm abbrevitation.
+From a deployment strategy point of view, once a milestone has been benchmarked, the idea is to use its best learner on the production server that delivers the spatialized data. The produced data must then be flagged by a combination of the milestone name and its best algorithm abbrevitation.
 
+;;TODO:: rewrite this sentence. Once new milestone has been reached, and if one of its algorithms perform better than the best algorithm from a previous milestone, the idea is to use this new one.
 
-spatialis&é sur base d'un résultat de bmr milestone en utlisant le meilleur learner de cette mielstone
 ## TSA milestones
 
 ### milestoneTsaH1
@@ -265,11 +264,6 @@ milestoneTsaD6 = milestoneTsaH6 %>%
 knitr::kable(milestoneTsaD6)
 ```
 
-
-######### 
-
-#########
-
 ### milestoneTsaH7
 
 ```{r, milestoneTsaH7, echo = FALSE}
@@ -389,8 +383,126 @@ milestoneTsaD12 = milestoneTsaH12 %>%
 knitr::kable(milestoneTsaD12)
 ```
 
+## HRA milestones
 
+### milestoneHraH1
 
+```{r, milestoneHra1, echo = FALSE}
+algorithms = c('mulLR','IDW','1NN', 'OK', 'KED')
+features = c("alt, lon, lat", "lon, lat", "lon, lat", "lon, lat", "alt, lon, lat")
+hyperparameters = c(NA, NA, NA, "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0")
+stations = c("Pameseb", "Pameseb", "Pameseb", "Pameseb", "Pameseb")
+resolution = c("hourly", "hourly", "hourly", "hourly", "hourly")
+target = "Hra"
+
+milestoneHraH1 = data.frame(algorithms, features, hyperparameters, stations, resolution, target)
+knitr::kable(milestoneHraH1)
+```
+
+### milestoneHraD1
+
+```{r, milestoneHraD1, echo = FALSE}
+milestoneHraD1 = milestoneHraH1 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily"))
+
+knitr::kable(milestoneHraD1)
+```
+
+### milestoneHraH2
+
+```{r, milestoneHraH2, echo = FALSE}
+milestoneHraH2 = milestoneHraH1 %>%
+  dplyr::filter(algorithms %in% (c("OK", "KED")))
+milestoneHraH2$hyperparameters = c("range = 400, psill = 100000, model.manual = 'Sph', nugget = 0", "range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
+
+knitr::kable(milestoneHraH2)
+```
+
+### milestoneHraD2
+
+```{r, milestoneHraD2, echo = FALSE}
+milestoneHraD2 = milestoneHraH2 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+
+knitr::kable(milestoneHraD2)
+```
+
+### milestoneHraH3
+
+```{r, milestoneHraH3, echo = FALSE}
+milestoneHraH3 = milestoneHraH2
+milestoneHraH3$hyperparameters = c("range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 1600, psill = 800000, model.manual = 'Sph', nugget = 0")
+
+knitr::kable(milestoneHraH3)
+```
+
+### milestoneHraD3
+
+```{r, milestoneHra6, echo = FALSE}
+milestoneHraD3 = milestoneHraD2 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+
+knitr::kable(milestoneHraD3)
+```
+
+### milestoneHraH4
+
+```{r, milestoneHraH4, echo = FALSE}
+milestoneHraH4 = milestoneHraH1 %>%
+  dplyr::filter(algorithms %in% (c("mulLR", "KED"))) %>%
+  dplyr::mutate(
+    features, features = str_replace(features, "alt, lon, lat", "alt, lon, lat, incaA")) 
+knitr::kable(milestoneHraH4)
+```
+
+### milestoneHraD4
+
+```{r, milestoneHraD4, echo = FALSE}
+milestoneHraD4 = milestoneHraH4 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+knitr::kable(milestoneHraD4)
+```
+
+### milestoneHraH5
+
+```{r, milestoneHraH5, echo = FALSE}
+milestoneHraH5 = milestoneHraH4 %>%
+  dplyr::filter(algorithms %in% c("KED"))
+milestoneHraH5$hyperparameters = c("range = 400, psill = 100000, model.manual = 'Sph', nugget = 0")
+
+knitr::kable(milestoneHraH5)
+```
+
+### milestoneHraD5
+
+```{r, milestoneHraD5, echo = FALSE}
+milestoneHraD5 = milestoneHraH5 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+knitr::kable(milestoneHraD5)
+```
+
+### milestoneHraH6
+
+```{r, milestoneHraH6, echo = FALSE}
+milestoneHraH6 = milestoneHraH5
+milestoneHraH6$hyperparameters = c("range = 1600, psill = 200000, model.manual = 'Sph', nugget = 0")
+
+knitr::kable(milestoneHraH6)
+```
+
+### milestoneHraD6
+
+```{r, milestoneHraD6, echo = FALSE}
+milestoneHraD6 = milestoneHraH6 %>%
+  dplyr::mutate(
+    resolution, resolution = str_replace(resolution, "hourly", "daily")) 
+knitr::kable(milestoneHraD6)
+```
 
 
 ## Future milestones
