@@ -295,14 +295,15 @@
 <h1 class="hasAnchor">
 <a href="#milestones" class="anchor"></a>Milestones</h1>
 <p>Multiple combinations of the described <strong>exploration parameters</strong> will be tested in various batches of benchmarks experiments. Each of these batches represent one of our milestones. Here below we present all of the <strong>base milestones</strong> (i.e. constructed on the basis of the base learners) resulting from all the possible combinations we have decided to investigate.</p>
-<p>As different target variables can be explained by different explanatory variables, we refer to different milestones numbers for each of the target variables even if in some cases a milestone might be constructed from the same combination of parameters.</p>
-<p>From a deployment strategy point of view, once a milestone has been benchmarked, the idea is to use its best learner on the production server that delivers the spatialized data. The produced data must then be flagged by a combination of the milestone number and algorithm abbrevitation.</p>
+<p>As different target variables can be explained by different explanatory variables, we refer to different milestones names for each of the target variables even if in some cases a milestone might be constructed from the same combination of parameters.</p>
+<p>From a deployment strategy point of view, once a milestone has been benchmarked, the idea is to use its best learner on the production server that delivers the spatialized data. The produced data must then be flagged by a combination of the milestone name and its best algorithm abbrevitation.</p>
+<p>;;TODO:: rewrite this sentence. Once new milestone has been reached, and if one of its algorithms perform better than the best algorithm from a previous milestone, the idea is to use this new one.</p>
 <div id="tsa-milestones" class="section level2">
 <h2 class="hasAnchor">
 <a href="#tsa-milestones" class="anchor"></a>TSA milestones</h2>
-<div id="milestonetsa1" class="section level3">
+<div id="milestonetsah1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa1" class="anchor"></a>milestoneTsa1</h3>
+<a href="#milestonetsah1" class="anchor"></a>milestoneTsaH1</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -356,9 +357,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa2" class="section level3">
+<div id="milestonetsad1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa2" class="anchor"></a>milestoneTsa2</h3>
+<a href="#milestonetsad1" class="anchor"></a>milestoneTsaD1</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -412,9 +413,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa3" class="section level3">
+<div id="milestonetsah2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa3" class="anchor"></a>milestoneTsa3</h3>
+<a href="#milestonetsah2" class="anchor"></a>milestoneTsaH2</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -426,30 +427,6 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
@@ -457,7 +434,7 @@
 <td align="left">hourly</td>
 <td align="left">tsa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
@@ -468,9 +445,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa4" class="section level3">
+<div id="milestonetsad2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa4" class="anchor"></a>milestoneTsa4</h3>
+<a href="#milestonetsad2" class="anchor"></a>milestoneTsaD2</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -482,30 +459,6 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
@@ -513,7 +466,7 @@
 <td align="left">daily</td>
 <td align="left">tsa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
@@ -524,9 +477,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa5" class="section level3">
+<div id="milestonetsah3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa5" class="anchor"></a>milestoneTsa5</h3>
+<a href="#milestonetsah3" class="anchor"></a>milestoneTsaH3</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -538,30 +491,6 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
 <td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
@@ -569,7 +498,7 @@
 <td align="left">hourly</td>
 <td align="left">tsa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
 <td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
@@ -580,9 +509,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa6" class="section level3">
+<div id="milestonetsad3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa6" class="anchor"></a>milestoneTsa6</h3>
+<a href="#milestonetsad3" class="anchor"></a>milestoneTsaD3</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -594,41 +523,17 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
 <td align="left">tsa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
-<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
 <td align="left">tsa</td>
@@ -636,9 +541,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa7" class="section level3">
+<div id="milestonetsah4" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa7" class="anchor"></a>milestoneTsa7</h3>
+<a href="#milestonetsah4" class="anchor"></a>milestoneTsaH4</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -658,30 +563,6 @@
 <td align="left">tsa</td>
 </tr>
 <tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
@@ -692,9 +573,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa8" class="section level3">
+<div id="milestonetsad4" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa8" class="anchor"></a>milestoneTsa8</h3>
+<a href="#milestonetsad4" class="anchor"></a>milestoneTsaD4</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -714,30 +595,6 @@
 <td align="left">tsa</td>
 </tr>
 <tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
@@ -748,9 +605,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa9" class="section level3">
+<div id="milestonetsah5" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa9" class="anchor"></a>milestoneTsa9</h3>
+<a href="#milestonetsah5" class="anchor"></a>milestoneTsaH5</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -760,53 +617,19 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
 <td align="left">tsa</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table>
 </div>
-<div id="milestonetsa10" class="section level3">
+<div id="milestonetsad5" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa10" class="anchor"></a>milestoneTsa10</h3>
+<a href="#milestonetsad5" class="anchor"></a>milestoneTsaD5</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -816,53 +639,19 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
 <td align="left">tsa</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table>
 </div>
-<div id="milestonetsa11" class="section level3">
+<div id="milestonetsah6" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa11" class="anchor"></a>milestoneTsa11</h3>
+<a href="#milestonetsah6" class="anchor"></a>milestoneTsaH6</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -872,53 +661,19 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
 <td align="left">tsa</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table>
 </div>
-<div id="milestonetsa12" class="section level3">
+<div id="milestonetsad6" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa12" class="anchor"></a>milestoneTsa12</h3>
+<a href="#milestonetsad6" class="anchor"></a>milestoneTsaD6</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -928,53 +683,19 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
 <td align="left">tsa</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table>
 </div>
-<div id="milestonetsa13" class="section level3">
+<div id="milestonetsah7" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa13" class="anchor"></a>milestoneTsa13</h3>
+<a href="#milestonetsah7" class="anchor"></a>milestoneTsaH7</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1028,9 +749,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa14" class="section level3">
+<div id="milestonetsad7" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa14" class="anchor"></a>milestoneTsa14</h3>
+<a href="#milestonetsad7" class="anchor"></a>milestoneTsaD7</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1084,9 +805,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa15" class="section level3">
+<div id="milestonetsah8" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa15" class="anchor"></a>milestoneTsa15</h3>
+<a href="#milestonetsah8" class="anchor"></a>milestoneTsaH8</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1098,30 +819,6 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
@@ -1129,7 +826,7 @@
 <td align="left">hourly</td>
 <td align="left">tsa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
@@ -1140,9 +837,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa16" class="section level3">
+<div id="milestonetsad8" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa16" class="anchor"></a>milestoneTsa16</h3>
+<a href="#milestonetsad8" class="anchor"></a>milestoneTsaD8</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1154,30 +851,6 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
@@ -1185,7 +858,7 @@
 <td align="left">daily</td>
 <td align="left">tsa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
@@ -1196,9 +869,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa17" class="section level3">
+<div id="milestonetsah9" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa17" class="anchor"></a>milestoneTsa17</h3>
+<a href="#milestonetsah9" class="anchor"></a>milestoneTsaH9</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1210,30 +883,6 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
 <td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
@@ -1241,7 +890,7 @@
 <td align="left">hourly</td>
 <td align="left">tsa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
 <td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
@@ -1252,9 +901,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa18" class="section level3">
+<div id="milestonetsad9" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa18" class="anchor"></a>milestoneTsa18</h3>
+<a href="#milestonetsad9" class="anchor"></a>milestoneTsaD9</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1266,30 +915,6 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
 <td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
@@ -1297,7 +922,7 @@
 <td align="left">daily</td>
 <td align="left">tsa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
 <td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
@@ -1308,9 +933,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa19" class="section level3">
+<div id="milestonetsah10" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa19" class="anchor"></a>milestoneTsa19</h3>
+<a href="#milestonetsah10" class="anchor"></a>milestoneTsaH10</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1330,30 +955,6 @@
 <td align="left">tsa</td>
 </tr>
 <tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
@@ -1364,9 +965,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa20" class="section level3">
+<div id="milestonetsad10" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa20" class="anchor"></a>milestoneTsa20</h3>
+<a href="#milestonetsad10" class="anchor"></a>milestoneTsaD10</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1386,30 +987,6 @@
 <td align="left">tsa</td>
 </tr>
 <tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
@@ -1420,9 +997,9 @@
 </tbody>
 </table>
 </div>
-<div id="milestonetsa21" class="section level3">
+<div id="milestonetsah11" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa21" class="anchor"></a>milestoneTsa21</h3>
+<a href="#milestonetsah11" class="anchor"></a>milestoneTsaH11</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1432,53 +1009,19 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb + RMI</td>
 <td align="left">hourly</td>
 <td align="left">tsa</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table>
 </div>
-<div id="milestonetsa22" class="section level3">
+<div id="milestonetsad11" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa22" class="anchor"></a>milestoneTsa22</h3>
+<a href="#milestonetsad11" class="anchor"></a>milestoneTsaD11</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1488,53 +1031,19 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
+<td align="left">daily</td>
 <td align="left">tsa</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table>
 </div>
-<div id="milestonetsa23" class="section level3">
+<div id="milestonetsah12" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa23" class="anchor"></a>milestoneTsa23</h3>
+<a href="#milestonetsah12" class="anchor"></a>milestoneTsaH12</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1544,53 +1053,19 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb + RMI</td>
 <td align="left">hourly</td>
 <td align="left">tsa</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table>
 </div>
-<div id="milestonetsa24" class="section level3">
+<div id="milestonetsad12" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonetsa24" class="anchor"></a>milestoneTsa24</h3>
+<a href="#milestonetsad12" class="anchor"></a>milestoneTsaD12</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -1600,729 +1075,23 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb + RMI</td>
 <td align="left">daily</td>
 <td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa25" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa25" class="anchor"></a>milestoneTsa25</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa26" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa26" class="anchor"></a>milestoneTsa26</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa27" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa27" class="anchor"></a>milestoneTsa27</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa28" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa28" class="anchor"></a>milestoneTsa28</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa29" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa29" class="anchor"></a>milestoneTsa29</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa30" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa30" class="anchor"></a>milestoneTsa30</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa31" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa31" class="anchor"></a>milestoneTsa31</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa32" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa32" class="anchor"></a>milestoneTsa32</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa33" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa33" class="anchor"></a>milestoneTsa33</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa34" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa34" class="anchor"></a>milestoneTsa34</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa35" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa35" class="anchor"></a>milestoneTsa35</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonetsa36" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonetsa36" class="anchor"></a>milestoneTsa36</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">tsa</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table>
 </div>
 </div>
 <div id="hra-milestones" class="section level2">
 <h2 class="hasAnchor">
 <a href="#hra-milestones" class="anchor"></a>HRA milestones</h2>
-<div id="milestonehra1" class="section level3">
+<div id="milestonehrah1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra1" class="anchor"></a>milestoneHra1</h3>
+<a href="#milestonehrah1" class="anchor"></a>milestoneHraH1</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2339,7 +1108,7 @@
 <td align="left">NA</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 <tr class="even">
 <td align="left">IDW</td>
@@ -2347,7 +1116,7 @@
 <td align="left">NA</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 <tr class="odd">
 <td align="left">1NN</td>
@@ -2355,7 +1124,7 @@
 <td align="left">NA</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 <tr class="even">
 <td align="left">OK</td>
@@ -2363,7 +1132,7 @@
 <td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 <tr class="odd">
 <td align="left">KED</td>
@@ -2371,14 +1140,14 @@
 <td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="milestonehra2" class="section level3">
+<div id="milestonehrad1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra2" class="anchor"></a>milestoneHra2</h3>
+<a href="#milestonehrad1" class="anchor"></a>milestoneHraD1</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2395,7 +1164,7 @@
 <td align="left">NA</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 <tr class="even">
 <td align="left">IDW</td>
@@ -2403,7 +1172,7 @@
 <td align="left">NA</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 <tr class="odd">
 <td align="left">1NN</td>
@@ -2411,7 +1180,7 @@
 <td align="left">NA</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 <tr class="even">
 <td align="left">OK</td>
@@ -2419,7 +1188,7 @@
 <td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 <tr class="odd">
 <td align="left">KED</td>
@@ -2427,14 +1196,14 @@
 <td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="milestonehra3" class="section level3">
+<div id="milestonehrah2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra3" class="anchor"></a>milestoneHra3</h3>
+<a href="#milestonehrah2" class="anchor"></a>milestoneHraH2</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2446,51 +1215,27 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="milestonehra4" class="section level3">
+<div id="milestonehrad2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra4" class="anchor"></a>milestoneHra4</h3>
+<a href="#milestonehrad2" class="anchor"></a>milestoneHraD2</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2502,51 +1247,27 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="milestonehra5" class="section level3">
+<div id="milestonehrah3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra5" class="anchor"></a>milestoneHra5</h3>
+<a href="#milestonehrah3" class="anchor"></a>milestoneHraH3</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2558,51 +1279,27 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
 <td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
 <td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="milestonehra6" class="section level3">
+<div id="milestonehrad3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra6" class="anchor"></a>milestoneHra6</h3>
+<a href="#milestonehrad3" class="anchor"></a>milestoneHraD3</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2614,51 +1311,27 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
 <td align="left">OK</td>
 <td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat</td>
-<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
+<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="milestonehra7" class="section level3">
+<div id="milestonehrah4" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra7" class="anchor"></a>milestoneHra7</h3>
+<a href="#milestonehrah4" class="anchor"></a>milestoneHraH4</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2675,46 +1348,22 @@
 <td align="left">NA</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 <tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="milestonehra8" class="section level3">
+<div id="milestonehrad4" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra8" class="anchor"></a>milestoneHra8</h3>
+<a href="#milestonehrad4" class="anchor"></a>milestoneHraD4</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2731,46 +1380,22 @@
 <td align="left">NA</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 <tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
+<td align="left">Hra</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="milestonehra9" class="section level3">
+<div id="milestonehrah5" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra9" class="anchor"></a>milestoneHra9</h3>
+<a href="#milestonehrah5" class="anchor"></a>milestoneHraH5</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2780,53 +1405,19 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
+<td align="left">Hra</td>
+</tr></tbody>
 </table>
 </div>
-<div id="milestonehra10" class="section level3">
+<div id="milestonehrad5" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra10" class="anchor"></a>milestoneHra10</h3>
+<a href="#milestonehrad5" class="anchor"></a>milestoneHraD5</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2836,53 +1427,19 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
+<td align="left">Hra</td>
+</tr></tbody>
 </table>
 </div>
-<div id="milestonehra11" class="section level3">
+<div id="milestonehrah6" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra11" class="anchor"></a>milestoneHra11</h3>
+<a href="#milestonehrah6" class="anchor"></a>milestoneHraH6</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2892,53 +1449,19 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
+<td align="left">Hra</td>
+</tr></tbody>
 </table>
 </div>
-<div id="milestonehra12" class="section level3">
+<div id="milestonehrad6" class="section level3">
 <h3 class="hasAnchor">
-<a href="#milestonehra12" class="anchor"></a>milestoneHra12</h3>
+<a href="#milestonehrad6" class="anchor"></a>milestoneHraD6</h3>
 <table class="table">
 <thead><tr class="header">
 <th align="left">algorithms</th>
@@ -2948,1392 +1471,14 @@
 <th align="left">resolution</th>
 <th align="left">target</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">KED</td>
 <td align="left">alt, lon, lat, incaA</td>
 <td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
 <td align="left">Pameseb</td>
 <td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra13" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra13" class="anchor"></a>milestoneHra13</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra14" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra14" class="anchor"></a>milestoneHra14</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra15" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra15" class="anchor"></a>milestoneHra15</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra16" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra16" class="anchor"></a>milestoneHra16</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra17" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra17" class="anchor"></a>milestoneHra17</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra18" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra18" class="anchor"></a>milestoneHra18</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra19" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra19" class="anchor"></a>milestoneHra19</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra20" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra20" class="anchor"></a>milestoneHra20</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra21" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra21" class="anchor"></a>milestoneHra21</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra22" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra22" class="anchor"></a>milestoneHra22</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra23" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra23" class="anchor"></a>milestoneHra23</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra24" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra24" class="anchor"></a>milestoneHra24</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra25" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra25" class="anchor"></a>milestoneHra25</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra26" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra26" class="anchor"></a>milestoneHra26</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra27" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra27" class="anchor"></a>milestoneHra27</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra28" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra28" class="anchor"></a>milestoneHra28</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra29" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra29" class="anchor"></a>milestoneHra29</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra30" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra30" class="anchor"></a>milestoneHra30</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat</td>
-<td align="left">range = 1600, psill = 800000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra31" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra31" class="anchor"></a>milestoneHra31</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra32" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra32" class="anchor"></a>milestoneHra32</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 800, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra33" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra33" class="anchor"></a>milestoneHra33</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra34" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra34" class="anchor"></a>milestoneHra34</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 400, psill = 100000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra35" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra35" class="anchor"></a>milestoneHra35</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">hourly</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="milestonehra36" class="section level3">
-<h3 class="hasAnchor">
-<a href="#milestonehra36" class="anchor"></a>milestoneHra36</h3>
-<table class="table">
-<thead><tr class="header">
-<th align="left">algorithms</th>
-<th align="left">features</th>
-<th align="left">hyperparameters</th>
-<th align="left">stations</th>
-<th align="left">resolution</th>
-<th align="left">target</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">mulLR</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">IDW</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">1NN</td>
-<td align="left">lon, lat</td>
-<td align="left">NA</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="even">
-<td align="left">OK</td>
-<td align="left">lon, lat</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-<tr class="odd">
-<td align="left">KED</td>
-<td align="left">alt, lon, lat, incaA</td>
-<td align="left">range = 1600, psill = 200000, model.manual = ‘Sph’, nugget = 0</td>
-<td align="left">Pameseb corr + RMI</td>
-<td align="left">daily</td>
-<td align="left">hra</td>
-</tr>
-</tbody>
+<td align="left">Hra</td>
+</tr></tbody>
 </table>
 </div>
 </div>
