@@ -1,5 +1,67 @@
 library(mlr)
 
+
+######
+## smart learners names
+######
+
+agrometeorLearners = list(
+  mulLR_lonLatAlt_NA = makeFilterWrapper(
+    learner = makeLearner(
+      cl = "regr.lm",
+      id = "multiReg.alt_x_y",
+      predict.type = 'se'),
+    fw.method = "linear.correlation",
+    fw.mandatory.feat = c("elevation", "y", "x"),
+    fw.abs = 3),
+  IDW_lonLat_NA = makeLearner(
+    cl = "regr.gstat",
+    id = "idw",
+    predict.type = "se"),
+  NN1_lonLAt_NA = makeFilterWrapper(
+    learner = makeLearner(
+      cl = "regr.gstat",
+      id = "nn1",
+      par.vals = list(
+        set = list(idp = 0),
+        nmax = 1,
+        debug.level = 0),
+      predict.type = "se"),
+    fw.method = "linear.correlation",
+    fw.mandatory.feat = c("y", "x"),
+    fw.abs = 2),
+  OK_lonLat_Range800Psill200000ModelSphNugget0 = makeFilterWrapper(
+    learner = makeLearner(
+      cl = "regr.gstat",
+      id = "ok",
+      par.vals = list(
+        range = 800,
+        psill = 200000,
+        model.manual = "Sph",
+        nugget = 0,
+        debug.level = 0),
+      predict.type = "se"),
+    fw.method = "linear.correlation",
+    fw.mandatory.feat = c("y", "x"),
+    fw.abs = 2),
+  KED_lonLatAlt_Range800Psill200000ModelSphNugget0 = makeFilterWrapper(
+    learner = makeLearner(
+      cl = "regr.gstat",
+      id = "ok",
+      par.vals = list(
+        range = 800,
+        psill = 200000,
+        model.manual = "Sph",
+        nugget = 0,
+        debug.level = 0),
+      predict.type = "se"),
+    fw.method = "linear.correlation",
+    fw.mandatory.feat = c("elevation", "y", "x"),
+    fw.abs = 2)
+)
+
+
+
 ######
 ## base learners
 #####
@@ -207,3 +269,5 @@ tunedLearners = list(
 learners = list(baseLearners = baseLearners, otherLearners = otherLearners, tunedLearners = tunedLearners)
 
 devtools::use_data(learners, overwrite = TRUE)
+devtools::use_data(agrometeorLearners, overwrite = TRUE)
+

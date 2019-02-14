@@ -142,6 +142,8 @@ From a deployment strategy point of view, once a milestone has been benchmarked,
 
 ;;TODO:: rewrite this sentence. Once new milestone has been reached, and if one of its algorithms perform better than the best algorithm from a previous milestone, the idea is to use this new one.
 
+Milestone = combination of set of learners + stations + target + resolution temp
+
 ## TSA milestones
 
 ### milestoneTsaH1
