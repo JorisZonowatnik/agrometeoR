@@ -37,7 +37,7 @@ makeDataset <- function(
     }
 
     # check if sensor provided is OK
-    if (!sensor %in% c("tsa", "hra", "hct")) {
+    if (!sensor %in% c("tsa", "hra", "hct", "vvt", "ens")) {
       stop(paste0(
         "The sensor ",
         "\"", sensor, "\"",

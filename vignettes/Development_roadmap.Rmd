@@ -134,12 +134,11 @@ This approach will be based on the [TensorFlow](https://tensorflow.rstudio.com/)
 
 # Milestones
 
-
 Multiple combinations of the described __exploration parameters__ will be tested in various batches of benchmarks experiments. Each of these batches represent one of our milestones. Here below we present all of the  __base milestones__ (i.e. constructed on the basis of the base learners) resulting from all the possible combinations we have decided to investigate. 
 
 As different target variables can be explained by different explanatory variables, we refer to different milestones names for each of the target variables even if in some cases a milestone might be constructed from the same combination of parameters.
 
-From a deployment strategy point of view, once a milestone has been benchmarked, the idea is to use its best learner on the production server that delivers the spatialized data. The produced data must then be flagged by a combination of the milestone name and its best algorithm abbrevitation.
+From a deployment strategy point of view, once a milestone has been benchmarked, the idea is to use its best learner on the production server that delivers the spatialized data.  The produced data must then be flagged by a combination of the milestone name and its best algorithm abbrevitation.
 
 ;;TODO:: rewrite this sentence. Once new milestone has been reached, and if one of its algorithms perform better than the best algorithm from a previous milestone, the idea is to use this new one.
 

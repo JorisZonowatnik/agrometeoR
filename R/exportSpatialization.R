@@ -5,7 +5,7 @@
 #' @importFrom magrittr %>%
 #' @param spatialized a dataframe containing the gridded predicted values
 #' @param path a character specifying the path where you want your geosonfile to be stored. Default = wd
-#' @param filename a character specifying the name you want to give to the file.
+#' @param filename a character specifying the name you want to give to the file. Default = NULL
 #' @param format a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"
 #' @param write a boolean specifying if fomatted data must be written to file (TRUE) or printed to console (FALSE)
 #' @return a list containing a boolean and a character containing the data encoded in the required format. Default = csv
@@ -43,7 +43,7 @@ exportSpatialization <- function(
     if (format == "csv") {
       message("Encoding data to csv...")
       if (isTRUE(write)) {
-        write.csv(data.frame(spatializedNoCoords), paste0(path, "/", filename, format), row.names = FALSE)
+        write.csv(data.frame(spatializedNoCoords), paste0(path, "/", filename, ".", format), row.names = FALSE)
         message(paste0("File written to", path, "/", filename, ".", format))
       } else{
         csv.con = textConnection("csv.con", "w")
@@ -59,7 +59,7 @@ exportSpatialization <- function(
     if (format == "json") {
       message("Encoding data to json...")
       if (isTRUE(write)) {
-        jsonlite::write_json(x = spatializedNoCoords, path = paste0(path, "/", filename, format))
+        jsonlite::write_json(x = spatializedNoCoords, path = paste0(path, "/", filename, ".", format))
         message(paste0("File written to", path, "/", filename, ".", format))
       } else{
         output$value = jsonlite::toJSON(spatializedNoCoords)
@@ -72,7 +72,7 @@ exportSpatialization <- function(
       message("Encoding data to geojson...")
       output$value = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
       if (isTRUE(write)) {
-        geojsonio::geojson_write(output$value, file = paste0(path, "/", filename, ".geojson"))
+        geojsonio::geojson_write(output$value, file = paste0(path, "/", filename, ".", format))
         message(paste0("File written to", path, "/", filename, ".", format))
       }else{
         #cat(geojsonString)
