@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">agrometeoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -63,6 +63,18 @@
       <a href="../articles/Development_roadmap.html">Development Roadmap</a>
     </li>
     <li>
+      <a href="../articles/Humain_intercomparison_model.html">Intercomparison at Humain</a>
+    </li>
+    <li>
+      <a href="../articles/Partners.html">Partners</a>
+    </li>
+    <li>
+      <a href="../articles/Presentation_agromet_project.html">Presentation of the Agromet Project</a>
+    </li>
+    <li>
+      <a href="../articles/Spatialization_method_approach.html">A methodological approach to assess the best weather spatialization technique</a>
+    </li>
+    <li>
       <a href="../articles/benchmarking_example.html">Benchmarking example</a>
     </li>
     <li>
@@ -72,13 +84,7 @@
       <a href="../articles/interpolation_grid_creation.html">Creation of the interpolation Grid</a>
     </li>
     <li>
-      <a href="../articles/networks_intercomparison.html">Networks Intercomparison</a>
-    </li>
-    <li>
-      <a href="../articles/optimizing_benchmarking.html">Optimizing benchmarking speed</a>
-    </li>
-    <li>
-      <a href="../articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
+      <a href="../articles/package_structuration.html">Package structuration</a>
     </li>
     <li>
       <a href="../articles/spatialization_example.html">A simple spatialization example using agrometeoR</a>
@@ -91,6 +97,9 @@
     </li>
     <li>
       <a href="../articles/using_packrat.html">Using packrat</a>
+    </li>
+    <li>
+      <a href="../articles/weather_spatialisation_review.html">Agromet : Weather Spatialization Review and Benchmark</a>
     </li>
   </ul>
 </li>
@@ -153,9 +162,9 @@
 <a href="#create-the-machine-learning-task-for-a-specific-hour" class="anchor"></a>Create the machine learning task for a specific hour</h2>
 <p><em>Check the default values of the params in the references file to make sure you understand what is constructed</em></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create the dataset</span>
-myDataset =<span class="st"> </span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeDataset">makeDataset</a></span>(<span class="dt">dfrom =</span> <span class="st">"2017-03-04T15:00:00Z"</span>, <span class="dt">dto =</span> <span class="st">"2017-03-04T15:00:00Z"</span>, <span class="dt">sensor =</span> <span class="st">"tsa"</span>))<span class="op">$</span>output<span class="op">$</span>value
+myDataset =<span class="st"> </span>(<span class="kw"><a href="../reference/makeDataset.html">makeDataset</a></span>(<span class="dt">dfrom =</span> <span class="st">"2017-03-04T15:00:00Z"</span>, <span class="dt">dto =</span> <span class="st">"2017-03-04T15:00:00Z"</span>, <span class="dt">sensor =</span> <span class="st">"tsa"</span>))<span class="op">$</span>output<span class="op">$</span>value
 <span class="co"># create the task</span>
-myTask =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeTask">makeTask</a></span>(<span class="dt">dataset =</span> myDataset[[<span class="dv">1</span>]], <span class="dt">target =</span> <span class="st">"tsa"</span>)
+myTask =<span class="st"> </span><span class="kw"><a href="../reference/makeTask.html">makeTask</a></span>(<span class="dt">dataset =</span> myDataset[[<span class="dv">1</span>]], <span class="dt">target =</span> <span class="st">"tsa"</span>)
 <span class="co"># what are the variables ? </span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(mlr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(myTask<span class="op">$</span>output<span class="op">$</span>value))</code></pre></div>
 <pre><code>## [1] "tsa"       "x"         "y"         "elevation"</code></pre>
@@ -175,13 +184,13 @@ myTask =<span class="st"> </span><span class="kw"><a href="https://www.rdocument
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># instantiate a multiple linear regression learner and specify that it must also provide se of preds</span>
 myLearner =<span class="st"> </span>mlr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/makeLearner">makeLearner</a></span>(<span class="st">"regr.lm"</span>, <span class="dt">id =</span> <span class="st">"multipleLinearReg"</span>, <span class="dt">predict.type =</span> <span class="st">"se"</span> )
 <span class="co"># create the model by training the learner and also benchmark the learner with a LOO</span>
-myModel =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeModel">makeModel</a></span>(<span class="dt">task =</span> myTask<span class="op">$</span>output<span class="op">$</span>value, <span class="dt">learner =</span> myLearner)
+myModel =<span class="st"> </span><span class="kw"><a href="../reference/makeModel.html">makeModel</a></span>(<span class="dt">task =</span> myTask<span class="op">$</span>output<span class="op">$</span>value, <span class="dt">learner =</span> myLearner)
 <span class="co"># what are the model performances ? </span>
 myModel<span class="op">$</span>output<span class="op">$</span>value<span class="op">$</span>perfs<span class="op">$</span>agg</code></pre></div>
 <pre><code>##          task.id        learner.id rmse.test.rmse mse.test.mean
 ## 1 20170304150000 multipleLinearReg      0.8650726     0.7483506
 ##   mae.test.mean timetrain.test.mean
-## 1     0.7437658         0.001413793</code></pre>
+## 1     0.7437658         0.001517241</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># what about the residuals ? </span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dt">x =</span>  <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/getTaskData">getTaskData</a></span>(myTask<span class="op">$</span>output<span class="op">$</span>value)[[<span class="st">"tsa"</span>]], myModel<span class="op">$</span>output<span class="op">$</span>value<span class="op">$</span>residuals[[<span class="dv">1</span>]])</code></pre></div>
 <p><img src="spatialization_example_files/figure-html/train-1.png" width="700"></p>
@@ -190,7 +199,7 @@ myModel<span class="op">$</span>output<span class="op">$</span>value<span class=
 <h2 class="hasAnchor">
 <a href="#spatialize-using-the-trained-a-learner" class="anchor"></a>Spatialize using the trained a learner</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># produce the spatialized geojson</span>
-spatialized =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeSpatialization">makeSpatialization</a></span>(<span class="dt">model =</span> myModel<span class="op">$</span>output<span class="op">$</span>value<span class="op">$</span>trained)
+spatialized =<span class="st"> </span><span class="kw"><a href="../reference/makeSpatialization.html">makeSpatialization</a></span>(<span class="dt">model =</span> myModel<span class="op">$</span>output<span class="op">$</span>value<span class="op">$</span>trained)
 <span class="co"># read it</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(spatialized<span class="op">$</span>output<span class="op">$</span>value)</code></pre></div>
 <pre><code>##     px response        se        X        Y

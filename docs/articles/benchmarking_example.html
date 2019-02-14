@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">agrometeoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -63,6 +63,18 @@
       <a href="../articles/Development_roadmap.html">Development Roadmap</a>
     </li>
     <li>
+      <a href="../articles/Humain_intercomparison_model.html">Intercomparison at Humain</a>
+    </li>
+    <li>
+      <a href="../articles/Partners.html">Partners</a>
+    </li>
+    <li>
+      <a href="../articles/Presentation_agromet_project.html">Presentation of the Agromet Project</a>
+    </li>
+    <li>
+      <a href="../articles/Spatialization_method_approach.html">A methodological approach to assess the best weather spatialization technique</a>
+    </li>
+    <li>
       <a href="../articles/benchmarking_example.html">Benchmarking example</a>
     </li>
     <li>
@@ -72,13 +84,7 @@
       <a href="../articles/interpolation_grid_creation.html">Creation of the interpolation Grid</a>
     </li>
     <li>
-      <a href="../articles/networks_intercomparison.html">Networks Intercomparison</a>
-    </li>
-    <li>
-      <a href="../articles/optimizing_benchmarking.html">Optimizing benchmarking speed</a>
-    </li>
-    <li>
-      <a href="../articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
+      <a href="../articles/package_structuration.html">Package structuration</a>
     </li>
     <li>
       <a href="../articles/spatialization_example.html">A simple spatialization example using agrometeoR</a>
@@ -91,6 +97,9 @@
     </li>
     <li>
       <a href="../articles/using_packrat.html">Using packrat</a>
+    </li>
+    <li>
+      <a href="../articles/weather_spatialisation_review.html">Agromet : Weather Spatialization Review and Benchmark</a>
     </li>
   </ul>
 </li>
@@ -179,14 +188,14 @@
 <a href="#create-a-dataset-containging-the-5-hourly-sets-of-records" class="anchor"></a>Create a dataset containging the 5 hourly sets of records</h3>
 <p>The <code>makeDataset</code> function provides a list where each element is a dataframe containing an hourly set of records.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create an hourly dataset</span>
-dataset =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeDataset">makeDataset</a></span>(<span class="dt">dfrom =</span> <span class="st">"2016-07-01T08:00:00Z"</span>, <span class="dt">dto =</span> <span class="st">"2016-07-01T11:00:00Z"</span>)</code></pre></div>
+dataset =<span class="st"> </span><span class="kw"><a href="../reference/makeDataset.html">makeDataset</a></span>(<span class="dt">dfrom =</span> <span class="st">"2016-07-01T08:00:00Z"</span>, <span class="dt">dto =</span> <span class="st">"2016-07-01T11:00:00Z"</span>)</code></pre></div>
 </div>
 <div id="create-the-5-tasks-using-lapply" class="section level3">
 <h3 class="hasAnchor">
 <a href="#create-the-5-tasks-using-lapply" class="anchor"></a>Create the 5 tasks using lapply</h3>
 <p>Our <code>makeTask</code> function is dedicated to the creation of a single task. In order to make multiple tasks from the output of the <code>makeDataset</code> simply use <code>lapply</code> on each element of its elements.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create the tasks from the dataset</span>
-tasks =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(dataset<span class="op">$</span>output<span class="op">$</span>value, <span class="cf">function</span>(x) <span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeTask">makeTask</a></span>(<span class="dt">dataset =</span> x, <span class="dt">target =</span> <span class="st">"tsa"</span>))
+tasks =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(dataset<span class="op">$</span>output<span class="op">$</span>value, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/makeTask.html">makeTask</a></span>(<span class="dt">dataset =</span> x, <span class="dt">target =</span> <span class="st">"tsa"</span>))
 <span class="co"># extract the actual tasks from the more complex object</span>
 tasks =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(tasks, <span class="cf">function</span>(x) <span class="dt">x =</span> x<span class="op">$</span>output<span class="op">$</span>value ) </code></pre></div>
 </div>
@@ -196,7 +205,7 @@ tasks =<span class="st"> </span><span class="kw"><a href="https://www.rdocumenta
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># loading the learners preconfigured with the package</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"learners"</span>)
 <span class="co"># conduct the bmr on 2 tasks</span>
-bmr =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/agrometeoR/topics/makeBenchmark">makeBenchmark</a></span>(<span class="dt">tasks =</span> tasks, <span class="dt">prefix =</span> <span class="st">"test"</span>, <span class="dt">learners =</span> learners<span class="op">$</span>baseLearners, <span class="dt">grouping =</span> <span class="dv">1</span>, <span class="dt">cpus =</span> <span class="dv">4</span>, <span class="dt">path =</span> <span class="st">"./outputs/"</span>,<span class="dt">keep.pred =</span> <span class="ot">TRUE</span>)</code></pre></div>
+bmr =<span class="st"> </span><span class="kw"><a href="../reference/makeBenchmark.html">makeBenchmark</a></span>(<span class="dt">tasks =</span> tasks, <span class="dt">prefix =</span> <span class="st">"test"</span>, <span class="dt">learners =</span> learners<span class="op">$</span>baseLearners, <span class="dt">grouping =</span> <span class="dv">1</span>, <span class="dt">cpus =</span> <span class="dv">4</span>, <span class="dt">path =</span> <span class="st">"./outputs/"</span>,<span class="dt">keep.pred =</span> <span class="ot">TRUE</span>)</code></pre></div>
 </div>
 <div id="vizualize-performance" class="section level3">
 <h3 class="hasAnchor">

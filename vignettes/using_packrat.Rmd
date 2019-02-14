@@ -43,13 +43,13 @@ Now, lets work the packrat way !
 
 Once you have created a new folder for your project and `cd` into it, you first must install packrat globally.
 
-```{r, ignore = TRUE}
+```{r, eval = FALSE}
 install.packages("packrat")
 ```
 
 Once installed, you make your project a packrat project by initializing packrat : 
 
-```{r, ignore = TRUE}
+```{r, eval = FALSE}
 packrat::init()
 ```
 
@@ -60,8 +60,8 @@ And how does R knows that the current project is a packrat one ? R, simply adds 
 
 Now, we can install agrometeoR in this packrat context : 
 
-```{r, ignore = TRUE}
-devtoolls::install_github("pokyah/agrometeoR")
+```{r, eval = FALSE}
+devtools::install_github("pokyah/agrometeoR")
 ```
 
 R now installs agrometeoR and all its dependencies listed into its DESCRIPTION file into your project private library.
