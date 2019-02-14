@@ -12,7 +12,7 @@ exportSpatialization(spatialized, path = getwd(), filename = NULL,
 
 \item{path}{a character specifying the path where you want your geosonfile to be stored. Default = wd}
 
-\item{filename}{a character specifying the name you want to give to the file.}
+\item{filename}{a character specifying the name you want to give to the file. Default = NULL}
 
 \item{format}{a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"}
 

@@ -74,7 +74,7 @@ Once you are into a packrat project, packrat also creates and updates a `packrat
 
 # packrat if you use the agrometeoR package
 
-If you plan to use the agrometeor project 
+If you plan to use the agrometeoR package into your project
 
 
 http://distancesampling.org/developer/develop/dev-packrat.html

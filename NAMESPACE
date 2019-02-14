@@ -3,6 +3,7 @@
 export(exportSpatialization)
 export(getData)
 export(makeBenchmark)
+export(makeComparison)
 export(makeDataset)
 export(makeModel)
 export(makeSpatialization)
