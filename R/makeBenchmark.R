@@ -16,6 +16,7 @@
 #' @param path a character specifying the path where you want to save the bmr files.
 #' @param prefix a character specifying the prefix you want to use for the bmr file names.
 #' @return a list wihch elements are objects of class mlr::benchmark()
+
 makeBenchmark <- function(
   tasks,
   learners,
