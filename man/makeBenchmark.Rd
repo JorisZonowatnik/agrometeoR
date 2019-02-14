@@ -34,10 +34,6 @@ makeBenchmark(tasks, learners, measures = list(rmse), keep.pred = FALSE,
 \value{
 a list wihch elements are objects of class mlr::benchmark()
 }
-\details{
-blab lbaĵgrorhf ofr r rfurhfrnfurhfurufhurhfuhruhfurhuhfruhufhruhfurhfhruhf \n
-efeygfeigfeigfueigfeigfgefiygefiegfyigefiegfigefg
-}
 \author{
 Thomas Goossens
 }

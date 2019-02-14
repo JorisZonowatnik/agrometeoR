@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">agrometeoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
       </span>
     </div>
 
@@ -63,6 +63,18 @@
       <a href="../articles/Development_roadmap.html">Development Roadmap</a>
     </li>
     <li>
+      <a href="../articles/Humain_intercomparison_model.html">Intercomparison at Humain</a>
+    </li>
+    <li>
+      <a href="../articles/Partners.html">Partners</a>
+    </li>
+    <li>
+      <a href="../articles/Presentation_agromet_project.html">Presentation of the Agromet Project</a>
+    </li>
+    <li>
+      <a href="../articles/Spatialization_method_approach.html">A methodological approach to assess the best weather spatialization technique</a>
+    </li>
+    <li>
       <a href="../articles/benchmarking_example.html">Benchmarking example</a>
     </li>
     <li>
@@ -72,13 +84,7 @@
       <a href="../articles/interpolation_grid_creation.html">Creation of the interpolation Grid</a>
     </li>
     <li>
-      <a href="../articles/networks_intercomparison.html">Networks Intercomparison</a>
-    </li>
-    <li>
-      <a href="../articles/optimizing_benchmarking.html">Optimizing benchmarking speed</a>
-    </li>
-    <li>
-      <a href="../articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
+      <a href="../articles/package_structuration.html">Package structuration</a>
     </li>
     <li>
       <a href="../articles/spatialization_example.html">A simple spatialization example using agrometeoR</a>
@@ -91,6 +97,9 @@
     </li>
     <li>
       <a href="../articles/using_packrat.html">Using packrat</a>
+    </li>
+    <li>
+      <a href="../articles/weather_spatialisation_review.html">Agromet : Weather Spatialization Review and Benchmark</a>
     </li>
   </ul>
 </li>
@@ -141,11 +150,73 @@
 
     
     
+<div id="introduction" class="section level1">
+<h1 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h1>
+<p>If you plan to use the agrometeoR package, you must know that this packages relies on other packages that are sometimes still in development versions. For example, the implementation of gstat into mlr required to perform kriging interpolation while benefiting of the mlr unified interface for algorithms benchmarking is not available on CRAN.</p>
+<p>The packages that are required by a specific package are called dependencies and these are listed into the <a href="http://r-pkgs.had.co.nz/description.html">DESCRIPTION file</a> of a package.</p>
+<p>When a package is installed, its dependencies will also be installed by R if not yet available on the machine. Sometimes a package may require a minimum version number of one of its dependencies. This might lead to conflict with versions already installed on the computer. To solve this conflict you might need to uninstall a version of a dependency that has been proven to work for another package and/or analysis resulting in potential breaks of your previously working code.</p>
+<p>As shown in its DESCRIPTION file, the agrometeoR packages requires multiples dependencies with minimal version number to work. If you want to make sure that your project (analysis our app) that relies on the agrometeoR packages works and don’t break other projects that require the same dependencies, we strongly recommand you to use packrat !</p>
+<p>Important note :</p>
+<p>R package dependencies we are talking about into this article means R packages required for a specific R package to work. We don’t talk about linux dependencies ! As these might be as tricky as R paclage dependencies, we strongly suggest you to learn more about <a href="https://pokyah.github.io/post/using-r-with-docker/">Docker</a> to create containerized operating system configurations.</p>
+<p>To quote <a href="https://rstudio.github.io/">packrat official website</a> :</p>
+<blockquote>
+<p>Have you ever updated a package to get code in one of your projects to work, only to find that the updated package makes code in another project stop working? We built packrat to solve these problems. Use packrat to make your R projects more:</p>
+<ul>
+<li>Isolated: Installing a new or updated package for one project won’t break your other projects, and vice versa. That’s because packrat gives each project its own private package library.</li>
+<li>Portable: Easily transport your projects from one computer to another, even across different platforms. Packrat makes it easy to install the packages your project depends on.</li>
+<li>Reproducible: Packrat records the exact package versions you depend on, and ensures those exact versions are the ones that get installed wherever you go.</li>
+</ul>
+</blockquote>
+<p>Packrat has been built to avoid dependencies intercompatability issues. Think of it as virtual environement similar to pypenv. In this article, we will learn how to get the most out of it in the context of an analysis/project that requires the agrometeoR package. For a detailed explanation about packrat, please visit the official website.</p>
+</div>
+<div id="packrat-vs-non-packrat-project" class="section level1">
+<h1 class="hasAnchor">
+<a href="#packrat-vs-non-packrat-project" class="anchor"></a>Packrat vs. non-packrat project</h1>
+<p>In a non-packarat project, R install the libraries in a specific folder that is made available to all of your R projects. In a Linux environment, the R command <code><a href="https://www.rdocumentation.org/packages/base/topics/libPaths">.libPaths()</a></code> tells you where is located this folder. By default it is located at <code>/usr/local/lib/R/site-library</code>. In a packrat project, R install the libraries in a private library which is only available to this specific project and which is located into the project directory. This ensures that there is no dependencies collision between projects.</p>
+</div>
+<div id="starting-a-new-project-that-requires-agrometeor-the-packrat-way" class="section level1">
+<h1 class="hasAnchor">
+<a href="#starting-a-new-project-that-requires-agrometeor-the-packrat-way" class="anchor"></a>Starting a new project that requires agrometeoR : the packrat way</h1>
+<p>Let say you want to start a new R project (an analysis our an app) that requires agrometeoR. What you would normally do, is to install the package using <code>devtools::ìnstall_github("pokyah/agrometeoR")</code> and load the package using <code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(agrometeoR)</a></code>. Doing so R will install and load agrometeoR to and from your system wide folder (<code>/usr/local/lib/R/site-library</code>).</p>
+<p>Now, lets work the packrat way !</p>
+<p>Once you have created a new folder for your project and <code>cd</code> into it, you first must install packrat globally.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"packrat"</span>)</code></pre></div>
+<p>Once installed, you make your project a packrat project by initializing packrat :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">packrat<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/packrat/topics/init">init</a></span>()</code></pre></div>
+<p>This command will create a <code>packrat</code> folder at the root of your project. This is the private library of your project where all of the required packages will be installed. Once packrat is initialized, R will never look at the packages that are globally installed. So if you already had some libraries previously installed, you will need to reinstall those into your project private library</p>
+<p>And how does R knows that the current project is a packrat one ? R, simply adds a new line to your project <code>.Rprofile</code> file telling R to use the project private library when installing and loading packages. Hence, each time R is loaded from this project, it will read this <code>.Rprofile</code> file and understand it must work in packrat mode.</p>
+<p>Now, we can install agrometeoR in this packrat context :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"pokyah/agrometeoR"</span>)</code></pre></div>
+<p>R now installs agrometeoR and all its dependencies listed into its DESCRIPTION file into your project private library.</p>
+<p>You can now use all of the functions of the agrometeoR package knowing they will work and that this new installation will not break previously existing code relying on your global R packages library.</p>
+</div>
+<div id="keeping-track-of-your-dependencies-versions" class="section level1">
+<h1 class="hasAnchor">
+<a href="#keeping-track-of-your-dependencies-versions" class="anchor"></a>Keeping track of your dependencies versions</h1>
+<p>Once you are into a packrat project, packrat also creates and updates a <code>packrat.lock</code> file where it stores all the informations about your dependencies : name, repository, version number, etc. This file is extremely useful for reproductibility as it lists all the information required to reconstruct the exact same environment that was used to conduct an analysis. It is used by packrat itself if you use <code><a href="https://www.rdocumentation.org/packages/packrat/topics/restore">packrat::restore()</a></code>.</p>
+</div>
+<div id="packrat-if-you-use-the-agrometeor-package" class="section level1">
+<h1 class="hasAnchor">
+<a href="#packrat-if-you-use-the-agrometeor-package" class="anchor"></a>packrat if you use the agrometeoR package</h1>
+<p>If you plan to use the agrometeor project</p>
 <p><a href="http://distancesampling.org/developer/develop/dev-packrat.html" class="uri">http://distancesampling.org/developer/develop/dev-packrat.html</a> <a href="https://github.com/r-lib/pkgdown/issues/488" class="uri">https://github.com/r-lib/pkgdown/issues/488</a></p>
 <p><a href="https://rdrr.io/github/rstudio/packrat/man/packify.html" class="uri">https://rdrr.io/github/rstudio/packrat/man/packify.html</a> in case there is a need for packrat mode on on each startup</p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+        <div id="tocnav">
+      <h2 class="hasAnchor">
+<a href="#tocnav" class="anchor"></a>Contents</h2>
+      <ul class="nav nav-pills nav-stacked">
+<li><a href="#introduction">Introduction</a></li>
+      <li><a href="#packrat-vs-non-packrat-project">Packrat vs. non-packrat project</a></li>
+      <li><a href="#starting-a-new-project-that-requires-agrometeor-the-packrat-way">Starting a new project that requires agrometeoR : the packrat way</a></li>
+      <li><a href="#keeping-track-of-your-dependencies-versions">Keeping track of your dependencies versions</a></li>
+      <li><a href="#packrat-if-you-use-the-agrometeor-package">packrat if you use the agrometeoR package</a></li>
+      </ul>
+</div>
       </div>
 
 </div>
