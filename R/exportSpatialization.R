@@ -81,7 +81,7 @@ exportSpatialization <- function(
       }
     }
   },
-    error = function(err){
+    error = function(cond){
       error = paste0(
         "AgrometeoR Error : exportSpatialization failed. Here is the original error message : ",
         cond,
