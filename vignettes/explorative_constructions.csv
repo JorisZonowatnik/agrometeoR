@@ -1,0 +1,45 @@
+id;algorithmName;hyperparameters;mlrClass;featuresFilering;networks;tuning
+1;MultipleRegression;NA;regr.lm;lon,lat,alt;Pameseb;NA
+2;MultipleRegression;NA;regr.lm;lon,lat,alt;Pameseb,IRM;NA
+3;MultipleRegression;NA;regr.lm;lon,lat,alt;PamesebCorr,IRM;NA
+4;MultipleRegression;NA;regr.lm;lon,lat,alt,inca0;Pameseb;NA
+5;MultipleRegression;NA;regr.lm;lon,lat,alt,inca0;Pameseb,IRM;NA
+6;MultipleRegression;NA;regr.lm;lon,lat,alt,inca0;PamesebCorr,IRM;NA
+
+7;IDW;NA;regr.gstat;lon,lat;Pameseb;NA
+8;IDW;NA;regr.gstat;lon,lat;Pameseb,IRM;NA
+9;IDW;NA;regr.gstat;lon,lat;PamesebCorr,IRM;NA
+
+13;KNN1;set = list(idp = 0), nmax = 1;regr.gstat;lon,lat;Pameseb;NA
+14;KNN1;set = list(idp = 0), nmax = 1;regr.gstat;lon,lat;Pameseb,IRM;NA
+15;KNN1;set = list(idp = 0), nmax = 1;regr.gstat;lon,lat;PamesebCorr,IRM;NA
+
+19;Ordinarykriging;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb;NA
+20;Ordinarykriging;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb,IRM;NA
+21;Ordinarykriging;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;PamesebCorr,IRM;NA
+19;Ordinarykriging;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb;NA
+20;Ordinarykriging;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb,IRM;NA
+21;Ordinarykriging;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;PamesebCorr,IRM;NA
+19;Ordinarykriging;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb;NA
+20;Ordinarykriging;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb,IRM;NA
+21;Ordinarykriging;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;PamesebCorr,IRM;NA
+
+19;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb;NA
+20;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb,IRM;NA
+21;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;PamesebCorr,IRM;NA
+19;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb;NA
+20;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb,IRM;NA
+21;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;PamesebCorr,IRM;NA
+19;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb;NA
+20;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb,IRM;NA
+21;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;PamesebCorr,IRM;NA
+
+19;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb;NA
+20;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb,IRM;NA
+21;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;PamesebCorr,IRM;NA
+19;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb;NA
+20;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb,IRM;NA
+21;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;PamesebCorr,IRM;NA
+19;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb;NA
+20;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb,IRM;NA
+21;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;PamesebCorr,IRM;NA

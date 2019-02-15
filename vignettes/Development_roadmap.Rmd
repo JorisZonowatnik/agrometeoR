@@ -19,16 +19,18 @@ library(stringr)
 
 The tool to assess which spatialization method is the most appropriate is *a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation*. 
 
-This approach relies heavily on the [mlr package](https://mlr.mlr-org.com/) [@bischl_mlr:_2016] which is an unified interface to perform machine learning analysis using R. We strongly recommand you to read to mlr documentation in order to understand its terminology and principles. Doing so you'll also get knowledge about machine learning theory. In this package we will refer a lot to the mlr terminology. Each of the terms we will use here must be understood in terms of their mlr definition (e.g. learner, benchmark experiment, etc.) 
+This approach relies heavily on the [mlr package](https://mlr.mlr-org.com/) [@bischl_mlr:_2016] which is an unified interface to perform machine learning analysis using R. We strongly recommand you to read the mlr documentation in order to understand its terminology and principles. Doing so you'll moreover get valuable knowledge about machine learning theory.
 
-We have decided to use data from 01 jan 2016 to 31 dev 2017 as these two years cover to very distinct situations (2016 = wet and 2017 = dry). To conduct these experiments we will use the `makeBenchmark` function integrated with this package. Many parameters can influence the quality of the spatial predictions and these will be tested in multiple benchmark experiments. This is why the exploration field must be restricted and the investigated parameters must be prioritized. This article present our investigations roadmap. Our global philosophy is to start with a simple approach and gradually add complexity to it. 
+In this package we will refer a lot to the mlr terminology. The borrowed terms from mlr terminology must be understood in terms of their mlr definition (e.g. learner, benchmark experiment, etc.) 
+
+We have decided to use data from 01 jan 2016 to 31 dev 2017 as these two years cover two very distinct situations (2016 = wet and 2017 = dry). To conduct these experiments we will use the `makeBenchmark` function integrated with this package. Many parameters can influence the quality of the spatial predictions and these will be tested in multiple benchmark experiments. This is why the exploration field must be restricted and the investigated parameters must be prioritized. This article present our investigations roadmap. Our global philosophy is to start with a simple approach and gradually add complexity to it. 
 
 # Goals 
 
 We must assess which is the best spatialization technique for :
 
-* air temperature (TSA) and relative humidity (HRA)
-* for both hourly and daily data. As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions separately.
+* air temperature (__TSA__) and relative humidity (__HRA__)
+* for both __hourly__ and __daily__ data. As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions separately.
 
 We don't need to asses the best spatialization technique for :
 
@@ -37,23 +39,31 @@ We don't need to asses the best spatialization technique for :
 
 # Terminology
 
-Here we define the terminology that will be used in this document. This terminology is important as we need precise definitions to avoid confusions in our future interpretations and discussions. As stated earlier, we will need to conduct :
+A specific terminology is important as we need precise definitions to avoid confusions in our future interpretations and discussions. As already stated earlier, we will need to conduct :
 
 *a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation*
  
-* __exploration parameters__ : the set of parameters that can influence the quality of the spatialization. These are, the considered explanatory variables (also called features), the stations of interests, the choosen algorithm and its hyperparameters values if relevant.
-* __explorative construction__ : a specific combination of the 4  __exploration parameters__.
 * __Set of records__ : a set of data recorded by the stations of interests at a specific moment. 
 * __Historical dataset__ : the dataset containing all the hourly set of records of weather parameters for all the stations of interest.
 * __Iterated leave-one-out cross validation__ : cross validation of a model created by training a specific learner on a single set of records from the historical dataset
 * __Learner__ : an implementation of an algorithm (e.g. multiple linear regression, ANN, SVM, etc) for which a filtering of the explanatory variables to use might be applied and where its hyper-parameters values are set if required.
 * __Benchmark Experiment__ : comparison of multiples iterated leave-one-out cross validations results operated on the same set of records but with different explorative constructions
 * __Batch of benchmarks experiments__ : set of benchmark experiments conducted on multiple set of records (typically : on an historical dataset containing 2 years of records at a certain time resolution).
+* __explorative construction__ : a specific combination of the 4  __exploration parameters__.
+* __exploration parameters__ : the set of parameters that can influence the quality of the spatialization. These are, the considered explanatory variables (also called features), the stations of interests, the choosen algorithm and its hyperparameters values if relevant.
 
-# Exploration field
+
+# Exploration parameters
 
 ## Stations of interest
 
+We will investigate if combining both Pameseb and IRM networks improve the quality of the predictions. Also we will consider if correcting the Pameseb TSA data using the correction model built by the Humain stations intercomparison (::TODO:: see article) increases the quality of the predictions. This leads to 3 possible situations :
+
+* Pameseb only
+* Pameseb + RMI
+* Pameseb corr + RMI
+
+::BEGIN DRAFT::
 It is important to get a deep insight and comprehensive overview of our weather station network before interpolating its data in order to avoid the integration of non-desired local or structural effects during the interpolation process.
 
 A specific attention will be ported on the analysis of the quality of the data produced by each of our stations. We will need to carry an analysis in order to detect eventual structural or local effects such as overheating in temperature shelters. 
@@ -66,16 +76,11 @@ Before integrating two different networks in the spatilization process, we need 
 
 ::TODO:: maps of the 2 networks
 
-We will investigate if combining the two networks improve the quality of the predictions. Also we will consider if correcting the Pameseb TSA data using the correction model built by the Humain stations intercomparison (::TODO:: see article) increases the quality of the predictions. 
+::END DRAFT::
 
-* Pameseb
-* Pameseb + RMI
-* Pameseb corr + RMI
+## Explanatory variables (called features in terms of mlr)
 
-
-## Explanatory variables - features
-
-These variables must already be available as spatialized data in order to be used as explanatory variables (also called ___features__). We can make the distinction between the __static explanatory variables__ and the __dynamic explanatory variables__. The static variables are constant over time while the dynamic vary over time.
+These variables must already be available as spatialized data in order to be used as explanatory variables. We can make the distinction between the __static explanatory variables__ and the __dynamic explanatory variables__. The static variables are constant over time while the dynamic vary over time.
 
 The static explanatory variables to investigate are : 
 
@@ -92,70 +97,49 @@ The dynamic explanatory variables to investigate are :
 
 ## Algorithms
 
-Numerous regression algorithms exist. We have decided to restrict the investigation field to the one that have already proven their efficiency in other studies.
+Numerous [regression algorithms](https://mlr.mlr-org.com/articles/tutorial/integrated_learners.html#regression-60) exist. We have decided to restrict the investigation field to those that have already proven their efficiency in other studies : 
 
-We have decided to group the algorithms in various categories of increasing complexity. The source code used to construct the learners from these algorithms is stored into the `data-raw/makeLearners.R` file of the present package. These learners are constructed on the basis of the `mlr` package and are available once you have called `library(agrometeoR)`
+* [ZEPP](http://onlinelibrary.wiley.com/doi/10.1111/j.1365-2338.2007.01134.x/abstract) [@zeuner_use_2007].
+* [Kilimanjaro study](https://www.sciencedirect.com/science/article/pii/S2211675315000482) [@appelhans_evaluating_2015]
 
-### Base algorithms
+The source code used to construct the learners from these algorithms is stored into the `data-raw/makeLearners.R` file of the present package. These learners are constructed on the basis of the `mlr` package and are available once you have called `library(agrometeoR)`. The algorithms and their respective mlr class that are actually used (or that will be used) to construct our learners are : 
 
-These are those tested by the [ZEPP](http://onlinelibrary.wiley.com/doi/10.1111/j.1365-2338.2007.01134.x/abstract) [@zeuner_use_2007]. 
+* multiple linear regression : regr.lm
+* inverse distance weighted: regr.gstat
+* one nearest neighbour : regr.gstat
+* kriging : regr.gstat
+* generalized linear model : regr.glm
+* cubist : regr.cubist
+* artificial neural network : regr.nnet 
 
-* multiple linear regression
-* inverse distance weighted
-* one nearest neighbour
-* kriging
 
-### Other algorithms
-
-* splines degree 1, 2 and 3
-* multiple nearest neighbours
-
-### explorative algorithms
-
-These are some of the algorithms tested in the [Kilimanjaro study](https://www.sciencedirect.com/science/article/pii/S2211675315000482) [@appelhans_evaluating_2015] : 
-
-* generalized linear model (glm),
-* cubist (cub)
-* artificial neural network (ann)
-
-### Deep Learning
-
-This approach will be based on the [TensorFlow](https://tensorflow.rstudio.com/) library but will not be considered before 2020. A good introduction to deep learning with R is available in the [Machine Learning with R and TensorFlow video](https://www.youtube.com/watch?v=atiYXm7JZv0&t=73s).
+A deep learning approach will be based on the [TensorFlow](https://tensorflow.rstudio.com/) library but will not be considered before 2020. A good introduction to deep learning with R is available in the [Machine Learning with R and TensorFlow video](https://www.youtube.com/watch?v=atiYXm7JZv0&t=73s).
 
 # Assessment of the best spatialization technique
 
 Each constructed combination of the described __exploration parameters__ will be refered as an __explorative construction__. We have decided to identify each of these explorative constructions with an ID as this is an handy shortcut to describe a complex association of an algorithm, its potential multiple hyperparameters values, the investigated features and the considered stations.
 
-The respective __performance__ of multiple __explorative constructions__ are assessed by performing a batch of benchmarks experiments. A new __milestone__ is reached each time a new explorative construction has been integrated to a batch of benchmark experiments. A __best construction reference__ is defined by the list of the ID's of the considered explorative constructions injected into the batch of benchmark experiments and the ID of the best explorative construction among this list. 
+The respective __performances__ of multiple __explorative constructions__ are assessed by performing a batch of benchmarks experiments. A new __milestone__ is reached each time a new explorative construction has been integrated to a batch of benchmark experiments. A __best construction reference__ is defined by the list of the ID's of the considered explorative constructions injected into the batch of benchmark experiments and the ID of the best explorative construction among this list. 
 
-When spatializing data using the best investigated __explorative construction__ of a __milestone__ , its __best construction reference__ must be stored as a metadata of the spatialized data
+When spatializing data in a production environment, its __best construction reference__ must be stored as a metadata of the spatialized data.
 
+Note that some __explorative constructions__ might not be relevant to a target variable. Hence it will be useless to use it in a batch of benchmark experiments for this target variable.
 
-## TSA milestones
+## explorative constructions
 
 ### milestoneTsaH1
 
 ```{r, milestoneTsa1, echo = FALSE}
+id = seq(1,36,1)
 algorithms = c('mulLR','IDW','1NN', 'OK', 'KED')
 features = c("alt, lon, lat", "lon, lat", "lon, lat", "lon, lat", "alt, lon, lat")
 hyperparameters = c(NA, NA, NA, "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0", "range = 800, psill = 200000, model.manual = 'Sph', nugget = 0")
-stations = c("Pameseb", "Pameseb", "Pameseb", "Pameseb", "Pameseb")
-resolution = c("hourly", "hourly", "hourly", "hourly", "hourly")
-target = "tsa"
+
 
 milestoneTsaH1 = data.frame(algorithms, features, hyperparameters, stations, resolution, target)
 knitr::kable(milestoneTsaH1)
 ```
 
-### milestoneTsaD1
-
-```{r, milestonetsaD1, echo = FALSE}
-milestoneTsaD1 = milestoneTsaH1 %>%
-  dplyr::mutate(
-    resolution, resolution = str_replace(resolution, "hourly", "daily"))
-
-knitr::kable(milestoneTsaD1)
-```
 
 ### milestoneTsaH2
 
