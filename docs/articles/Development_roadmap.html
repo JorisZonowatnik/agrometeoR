@@ -154,7 +154,7 @@
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>The tool to assess which spatialization method is the most appropriate is <em>a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation</em>.</p>
-<p>This approach relies heavily on the <a href="https://mlr.mlr-org.com/">mlr package</a> <span class="citation">(Bischl et al. 2016)</span> which is an unified interface to perform machine learning analysis using R.</p>
+<p>This approach relies heavily on the <a href="https://mlr.mlr-org.com/">mlr package</a> <span class="citation">(Bischl et al. 2016)</span> which is an unified interface to perform machine learning analysis using R. We strongly recommand you to read to mlr documentation in order to understand its terminology and principles. Doing so you’ll also get knowledge about machine learning theory. In this package we will refer a lot to the mlr terminology. Each of the terms we will use here must be understood in terms of their mlr definition (e.g. learner, benchmark experiment, etc.)</p>
 <p>We have decided to use data from 01 jan 2016 to 31 dev 2017 as these two years cover to very distinct situations (2016 = wet and 2017 = dry). To conduct these experiments we will use the <code>makeBenchmark</code> function integrated with this package. Many parameters can influence the quality of the spatial predictions and these will be tested in multiple benchmark experiments. This is why the exploration field must be restricted and the investigated parameters must be prioritized. This article present our investigations roadmap. Our global philosophy is to start with a simple approach and gradually add complexity to it.</p>
 </div>
 <div id="goals" class="section level1">
@@ -163,7 +163,7 @@
 <p>We must assess which is the best spatialization technique for :</p>
 <ul>
 <li>air temperature (TSA) and relative humidity (HRA)</li>
-<li>for both hourly and daily data.</li>
+<li>for both hourly and daily data. As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions separately.</li>
 </ul>
 <p>We don’t need to asses the best spatialization technique for :</p>
 <ul>
@@ -178,7 +178,9 @@
 <p><em>a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation</em></p>
 <ul>
 <li>
-<strong>Stations of interest</strong> : Weather stations considered for the spatilization process.</li>
+<strong>exploration parameters</strong> : the set of parameters that can influence the quality of the spatialization. These are, the considered explanatory variables (also called features), the stations of interests, the choosen algorithm and its hyperparameters values if relevant.</li>
+<li>
+<strong>explorative construction</strong> : a specific combination of the 4 <strong>exploration parameters</strong>.</li>
 <li>
 <strong>Set of records</strong> : a set of data recorded by the stations of interests at a specific moment.</li>
 <li>
@@ -186,15 +188,16 @@
 <li>
 <strong>Iterated leave-one-out cross validation</strong> : cross validation of a model created by training a specific learner on a single set of records from the historical dataset</li>
 <li>
-<strong>Benchmark Experiment</strong> : comparison of multiples iterated leave-one-out cross validations results operated on the same set of records but with different learners</li>
+<strong>Learner</strong> : an implementation of an algorithm (e.g. multiple linear regression, ANN, SVM, etc) for which a filtering of the explanatory variables to use might be applied and where its hyper-parameters values are set if required.</li>
 <li>
-<strong>Batch of benchmarks experiments</strong> : set of benchmark experiments conducted on multiple set of records.</li>
+<strong>Benchmark Experiment</strong> : comparison of multiples iterated leave-one-out cross validations results operated on the same set of records but with different explorative constructions</li>
+<li>
+<strong>Batch of benchmarks experiments</strong> : set of benchmark experiments conducted on multiple set of records (typically : on an historical dataset containing 2 years of records at a certain time resolution).</li>
 </ul>
 </div>
 <div id="exploration-field" class="section level1">
 <h1 class="hasAnchor">
 <a href="#exploration-field" class="anchor"></a>Exploration field</h1>
-<p>Here we present all the <strong>exploration parameters</strong> that can influence the results of a batch of benchmark experiments.</p>
 <div id="stations-of-interest" class="section level2">
 <h2 class="hasAnchor">
 <a href="#stations-of-interest" class="anchor"></a>Stations of interest</h2>
@@ -210,16 +213,6 @@
 <li>Pameseb + RMI</li>
 <li>Pameseb corr + RMI</li>
 </ul>
-</div>
-<div id="time-resolutions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#time-resolutions" class="anchor"></a>Time resolutions</h2>
-<p>The spatialized data must be available for two different time resolutions :</p>
-<ul>
-<li><strong>Daily</strong></li>
-<li><strong>Hourly</strong></li>
-</ul>
-<p>As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions.</p>
 </div>
 <div id="explanatory-variables---features" class="section level2">
 <h2 class="hasAnchor">
@@ -239,7 +232,7 @@
 <li>
 <strong>soil occupation</strong> : this variable is downloaded form the <a href="http://inspire.ngi.be/download-free/atomfeeds/AtomFeed-en.xml">NGI website</a> ::TODO:: details</li>
 </ul>
-<p>The investigated dynamic explanatory variables are :</p>
+<p>The dynamic explanatory variables to investigate are :</p>
 <ul>
 <li>
 <strong>irradiance</strong> (ENS) : data pulled from the <a href="https://landsaf.ipma.pt/en/products/longwave-shortwave-radiation/dssf/">MSG Downward Surface Shortwave Flux (MDSSF)</a> from Landsaf <span class="citation">(Trigo et al. 2011)</span>
@@ -253,7 +246,6 @@
 <h2 class="hasAnchor">
 <a href="#algorithms" class="anchor"></a>Algorithms</h2>
 <p>Numerous regression algorithms exist. We have decided to restrict the investigation field to the one that have already proven their efficiency in other studies.</p>
-<p>A <strong>learner</strong> is an implementation of an algorithm for which a filtering of the explanatory variables to use might be applied and where the hyper-parameters values to test are set.</p>
 <p>We have decided to group the algorithms in various categories of increasing complexity. The source code used to construct the learners from these algorithms is stored into the <code>data-raw/makeLearners.R</code> file of the present package. These learners are constructed on the basis of the <code>mlr</code> package and are available once you have called <code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(agrometeoR)</a></code></p>
 <div id="base-algorithms" class="section level3">
 <h3 class="hasAnchor">
@@ -280,8 +272,8 @@
 <p>These are some of the algorithms tested in the <a href="https://www.sciencedirect.com/science/article/pii/S2211675315000482">Kilimanjaro study</a> <span class="citation">(Appelhans et al. 2015)</span> :</p>
 <ul>
 <li>generalized linear model (glm),</li>
-<li>cubist</li>
-<li>artificial neural network</li>
+<li>cubist (cub)</li>
+<li>artificial neural network (ann)</li>
 </ul>
 </div>
 <div id="deep-learning" class="section level3">
@@ -291,13 +283,12 @@
 </div>
 </div>
 </div>
-<div id="milestones" class="section level1">
+<div id="assessment-of-the-best-spatialization-technique" class="section level1">
 <h1 class="hasAnchor">
-<a href="#milestones" class="anchor"></a>Milestones</h1>
-<p>Multiple combinations of the described <strong>exploration parameters</strong> will be tested in various batches of benchmarks experiments. Each of these batches represent one of our milestones. Here below we present all of the <strong>base milestones</strong> (i.e. constructed on the basis of the base learners) resulting from all the possible combinations we have decided to investigate.</p>
-<p>As different target variables can be explained by different explanatory variables, we refer to different milestones names for each of the target variables even if in some cases a milestone might be constructed from the same combination of parameters.</p>
-<p>From a deployment strategy point of view, once a milestone has been benchmarked, the idea is to use its best learner on the production server that delivers the spatialized data. The produced data must then be flagged by a combination of the milestone name and its best algorithm abbrevitation.</p>
-<p>;;TODO:: rewrite this sentence. Once new milestone has been reached, and if one of its algorithms perform better than the best algorithm from a previous milestone, the idea is to use this new one.</p>
+<a href="#assessment-of-the-best-spatialization-technique" class="anchor"></a>Assessment of the best spatialization technique</h1>
+<p>Each constructed combination of the described <strong>exploration parameters</strong> will be refered as an <strong>explorative construction</strong>. We have decided to identify each of these explorative constructions with an ID as this is an handy shortcut to describe a complex association of an algorithm, its potential multiple hyperparameters values, the investigated features and the considered stations.</p>
+<p>The respective <strong>performance</strong> of multiple <strong>explorative constructions</strong> are assessed by performing a batch of benchmarks experiments. A new <strong>milestone</strong> is reached each time a new explorative construction has been integrated to a batch of benchmark experiments. A <strong>best construction reference</strong> is defined by the list of the ID’s of the considered explorative constructions injected into the batch of benchmark experiments and the ID of the best explorative construction among this list.</p>
+<p>When spatializing data using the best investigated <strong>explorative construction</strong> of a <strong>milestone</strong> , its <strong>best construction reference</strong> must be stored as a metadata of the spatialized data</p>
 <div id="tsa-milestones" class="section level2">
 <h2 class="hasAnchor">
 <a href="#tsa-milestones" class="anchor"></a>TSA milestones</h2>
@@ -1526,13 +1517,12 @@
       <li>
 <a href="#exploration-field">Exploration field</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#stations-of-interest">Stations of interest</a></li>
-      <li><a href="#time-resolutions">Time resolutions</a></li>
       <li><a href="#explanatory-variables---features">Explanatory variables - features</a></li>
       <li><a href="#algorithms">Algorithms</a></li>
       </ul>
 </li>
       <li>
-<a href="#milestones">Milestones</a><ul class="nav nav-pills nav-stacked">
+<a href="#assessment-of-the-best-spatialization-technique">Assessment of the best spatialization technique</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#tsa-milestones">TSA milestones</a></li>
       <li><a href="#hra-milestones">HRA milestones</a></li>
       <li><a href="#future-milestones">Future milestones</a></li>

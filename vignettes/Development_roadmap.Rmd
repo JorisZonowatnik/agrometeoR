@@ -19,7 +19,7 @@ library(stringr)
 
 The tool to assess which spatialization method is the most appropriate is *a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation*. 
 
-This approach relies heavily on the [mlr package](https://mlr.mlr-org.com/) [@bischl_mlr:_2016] which is an unified interface to perform machine learning analysis using R.
+This approach relies heavily on the [mlr package](https://mlr.mlr-org.com/) [@bischl_mlr:_2016] which is an unified interface to perform machine learning analysis using R. We strongly recommand you to read to mlr documentation in order to understand its terminology and principles. Doing so you'll also get knowledge about machine learning theory. In this package we will refer a lot to the mlr terminology. Each of the terms we will use here must be understood in terms of their mlr definition (e.g. learner, benchmark experiment, etc.) 
 
 We have decided to use data from 01 jan 2016 to 31 dev 2017 as these two years cover to very distinct situations (2016 = wet and 2017 = dry). To conduct these experiments we will use the `makeBenchmark` function integrated with this package. Many parameters can influence the quality of the spatial predictions and these will be tested in multiple benchmark experiments. This is why the exploration field must be restricted and the investigated parameters must be prioritized. This article present our investigations roadmap. Our global philosophy is to start with a simple approach and gradually add complexity to it. 
 
@@ -28,7 +28,7 @@ We have decided to use data from 01 jan 2016 to 31 dev 2017 as these two years c
 We must assess which is the best spatialization technique for :
 
 * air temperature (TSA) and relative humidity (HRA)
-* for both hourly and daily data.
+* for both hourly and daily data. As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions separately.
 
 We don't need to asses the best spatialization technique for :
 
@@ -41,16 +41,16 @@ Here we define the terminology that will be used in this document. This terminol
 
 *a batch of benchmark experiments performed on multiple set of records from an historical dataset of observed weather data recorded by the stations of interest where the predictive performance of various learners are assessed on each set of records by an iterated leave-one-out cross validation*
  
-* __Stations of interest__ : Weather stations considered for the spatilization process. 
+* __exploration parameters__ : the set of parameters that can influence the quality of the spatialization. These are, the considered explanatory variables (also called features), the stations of interests, the choosen algorithm and its hyperparameters values if relevant.
+* __explorative construction__ : a specific combination of the 4  __exploration parameters__.
 * __Set of records__ : a set of data recorded by the stations of interests at a specific moment. 
 * __Historical dataset__ : the dataset containing all the hourly set of records of weather parameters for all the stations of interest.
 * __Iterated leave-one-out cross validation__ : cross validation of a model created by training a specific learner on a single set of records from the historical dataset
-* __Benchmark Experiment__ : comparison of multiples iterated leave-one-out cross validations results operated on the same set of records but with different learners
-* __Batch of benchmarks experiments__ : set of benchmark experiments conducted on multiple set of records.
+* __Learner__ : an implementation of an algorithm (e.g. multiple linear regression, ANN, SVM, etc) for which a filtering of the explanatory variables to use might be applied and where its hyper-parameters values are set if required.
+* __Benchmark Experiment__ : comparison of multiples iterated leave-one-out cross validations results operated on the same set of records but with different explorative constructions
+* __Batch of benchmarks experiments__ : set of benchmark experiments conducted on multiple set of records (typically : on an historical dataset containing 2 years of records at a certain time resolution).
 
 # Exploration field
-
-Here we present all the __exploration parameters__ that can influence the results of a batch of benchmark experiments.
 
 ## Stations of interest
 
@@ -72,14 +72,6 @@ We will investigate if combining the two networks improve the quality of the pre
 * Pameseb + RMI
 * Pameseb corr + RMI
 
-## Time resolutions
-
-The spatialized data must be available for two different time resolutions :
-
-* __Daily__
-* __Hourly__
-
-As the performance of the same learner might differ from one time resolution to the other, we need to investigate both time resolutions.
 
 ## Explanatory variables - features
 
@@ -93,7 +85,7 @@ The static explanatory variables to investigate are :
 * __aspect__ : this variable is computed from elevation using the [raster package](https://CRAN.R-project.org/package=raster)
 * __soil occupation__ : this variable is downloaded form the [NGI website](http://inspire.ngi.be/download-free/atomfeeds/AtomFeed-en.xml) ::TODO:: details
 
-The investigated dynamic explanatory variables are :
+The dynamic explanatory variables to investigate are :
 
 * __irradiance__ (ENS) : data pulled from the [MSG Downward Surface Shortwave Flux (MDSSF)](https://landsaf.ipma.pt/en/products/longwave-shortwave-radiation/dssf/) from Landsaf [@trigo_satellite_2011]
 * __INCA_BE analysis T0__ (INC) : data pulled from the [INCA-BE operational nowcasting system of the RMI](http://radar.meteo.be/en/2730756-Operational+nowcasting.html) [@reyniers_nowcasting_2012]
@@ -101,8 +93,6 @@ The investigated dynamic explanatory variables are :
 ## Algorithms
 
 Numerous regression algorithms exist. We have decided to restrict the investigation field to the one that have already proven their efficiency in other studies.
-
-A __learner__ is an implementation of an algorithm for which a filtering of the explanatory variables to use might be applied and where the hyper-parameters values to test are set.
 
 We have decided to group the algorithms in various categories of increasing complexity. The source code used to construct the learners from these algorithms is stored into the `data-raw/makeLearners.R` file of the present package. These learners are constructed on the basis of the `mlr` package and are available once you have called `library(agrometeoR)`
 
@@ -125,24 +115,21 @@ These are those tested by the [ZEPP](http://onlinelibrary.wiley.com/doi/10.1111/
 These are some of the algorithms tested in the [Kilimanjaro study](https://www.sciencedirect.com/science/article/pii/S2211675315000482) [@appelhans_evaluating_2015] : 
 
 * generalized linear model (glm),
-* cubist
-* artificial neural network
+* cubist (cub)
+* artificial neural network (ann)
 
 ### Deep Learning
 
 This approach will be based on the [TensorFlow](https://tensorflow.rstudio.com/) library but will not be considered before 2020. A good introduction to deep learning with R is available in the [Machine Learning with R and TensorFlow video](https://www.youtube.com/watch?v=atiYXm7JZv0&t=73s).
 
-# Milestones
+# Assessment of the best spatialization technique
 
-Multiple combinations of the described __exploration parameters__ will be tested in various batches of benchmarks experiments. Each of these batches represent one of our milestones. Here below we present all of the  __base milestones__ (i.e. constructed on the basis of the base learners) resulting from all the possible combinations we have decided to investigate. 
+Each constructed combination of the described __exploration parameters__ will be refered as an __explorative construction__. We have decided to identify each of these explorative constructions with an ID as this is an handy shortcut to describe a complex association of an algorithm, its potential multiple hyperparameters values, the investigated features and the considered stations.
 
-As different target variables can be explained by different explanatory variables, we refer to different milestones names for each of the target variables even if in some cases a milestone might be constructed from the same combination of parameters.
+The respective __performance__ of multiple __explorative constructions__ are assessed by performing a batch of benchmarks experiments. A new __milestone__ is reached each time a new explorative construction has been integrated to a batch of benchmark experiments. A __best construction reference__ is defined by the list of the ID's of the considered explorative constructions injected into the batch of benchmark experiments and the ID of the best explorative construction among this list. 
 
-From a deployment strategy point of view, once a milestone has been benchmarked, the idea is to use its best learner on the production server that delivers the spatialized data.  The produced data must then be flagged by a combination of the milestone name and its best algorithm abbrevitation.
+When spatializing data using the best investigated __explorative construction__ of a __milestone__ , its __best construction reference__ must be stored as a metadata of the spatialized data
 
-;;TODO:: rewrite this sentence. Once new milestone has been reached, and if one of its algorithms perform better than the best algorithm from a previous milestone, the idea is to use this new one.
-
-Milestone = combination of set of learners + stations + target + resolution temp
 
 ## TSA milestones
 
