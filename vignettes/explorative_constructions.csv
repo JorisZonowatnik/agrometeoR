@@ -1,45 +1,45 @@
 id;algorithmName;hyperparameters;mlrClass;featuresFilering;networks;tuning
-1;MultipleRegression;NA;regr.lm;lon,lat,alt;Pameseb;NA
-2;MultipleRegression;NA;regr.lm;lon,lat,alt;Pameseb,IRM;NA
-3;MultipleRegression;NA;regr.lm;lon,lat,alt;PamesebCorr,IRM;NA
-4;MultipleRegression;NA;regr.lm;lon,lat,alt,inca0;Pameseb;NA
-5;MultipleRegression;NA;regr.lm;lon,lat,alt,inca0;Pameseb,IRM;NA
-6;MultipleRegression;NA;regr.lm;lon,lat,alt,inca0;PamesebCorr,IRM;NA
+ec1;MultipleRegression;NULL;regr.lm;lon,lat,alt;Pameseb;NULL
+ec2;MultipleRegression;NULL;regr.lm;lon,lat,alt;Pameseb,IRM;NULL
+ec3;MultipleRegression;NULL;regr.lm;lon,lat,alt;PamesebCorr,IRM;NULL
+ec4;MultipleRegression;NULL;regr.lm;lon,lat,alt,inca0;Pameseb;NULL
+ec5;MultipleRegression;NULL;regr.lm;lon,lat,alt,inca0;Pameseb,IRM;NULL
+ec6;MultipleRegression;NULL;regr.lm;lon,lat,alt,inca0;PamesebCorr,IRM;NULL
 
-7;IDW;NA;regr.gstat;lon,lat;Pameseb;NA
-8;IDW;NA;regr.gstat;lon,lat;Pameseb,IRM;NA
-9;IDW;NA;regr.gstat;lon,lat;PamesebCorr,IRM;NA
+ec7;IDW;NULL;regr.gstat;lon,lat;Pameseb;NULL
+ec8;IDW;NULL;regr.gstat;lon,lat;Pameseb,IRM;NULL
+ec9;IDW;NULL;regr.gstat;lon,lat;PamesebCorr,IRM;NULL
 
-13;KNN1;set = list(idp = 0), nmax = 1;regr.gstat;lon,lat;Pameseb;NA
-14;KNN1;set = list(idp = 0), nmax = 1;regr.gstat;lon,lat;Pameseb,IRM;NA
-15;KNN1;set = list(idp = 0), nmax = 1;regr.gstat;lon,lat;PamesebCorr,IRM;NA
+ec13;KNN1;set = list(idp = 0), nmax = 1;regr.gstat;lon,lat;Pameseb;NULL
+ec14;KNN1;set = list(idp = 0), nmax = 1;regr.gstat;lon,lat;Pameseb,IRM;NULL
+ec15;KNN1;set = list(idp = 0), nmax = 1;regr.gstat;lon,lat;PamesebCorr,IRM;NULL
 
-19;Ordinarykriging;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb;NA
-20;Ordinarykriging;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb,IRM;NA
-21;Ordinarykriging;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;PamesebCorr,IRM;NA
-19;Ordinarykriging;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb;NA
-20;Ordinarykriging;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb,IRM;NA
-21;Ordinarykriging;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;PamesebCorr,IRM;NA
-19;Ordinarykriging;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb;NA
-20;Ordinarykriging;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb,IRM;NA
-21;Ordinarykriging;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;PamesebCorr,IRM;NA
+ec16;Ordinarykriging;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb;NULL
+ec17;Ordinarykriging;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb,IRM;NULL
+ec18;Ordinarykriging;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;PamesebCorr,IRM;NULL
+ec19;Ordinarykriging;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb;NULL
+ec20;Ordinarykriging;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb,IRM;NULL
+ec21;Ordinarykriging;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;PamesebCorr,IRM;NULL
+ec22;Ordinarykriging;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb;NULL
+ec23;Ordinarykriging;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;Pameseb,IRM;NULL
+ec24;Ordinarykriging;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat;PamesebCorr,IRM;NULL
 
-19;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb;NA
-20;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb,IRM;NA
-21;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;PamesebCorr,IRM;NA
-19;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb;NA
-20;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb,IRM;NA
-21;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;PamesebCorr,IRM;NA
-19;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb;NA
-20;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb,IRM;NA
-21;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;PamesebCorr,IRM;NA
+ec25;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb;NULL
+ec26;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb,IRM;NULL
+ec27;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;PamesebCorr,IRM;NULL
+ec28;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb;NULL
+ec29;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb,IRM;NULL
+ec30;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;PamesebCorr,IRM;NULL
+ec31;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb;NULL
+ec32;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;Pameseb,IRM;NULL
+ec33;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,alt;PamesebCorr,IRM;NULL
 
-19;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb;NA
-20;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb,IRM;NA
-21;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;PamesebCorr,IRM;NA
-19;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb;NA
-20;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb,IRM;NA
-21;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;PamesebCorr,IRM;NA
-19;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb;NA
-20;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb,IRM;NA
-21;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;PamesebCorr,IRM;NA
+ec34;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb;NULL
+ec35;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb,IRM;NULL
+ec36;KrigingExternalDrift;range = 800, psill = 200000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;PamesebCorr,IRM;NULL
+ec37;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb;NULL
+ec38;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb,IRM;NULL
+ec39;KrigingExternalDrift;range = 400, psill = 100000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;PamesebCorr,IRM;NULL
+ec40;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb;NULL
+ec41;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;Pameseb,IRM;NULL
+ec42;KrigingExternalDrift;range = 1600, psill = 400000, model.manual = "Sph", nugget = 0;regr.gstat;lon,lat,inca0;PamesebCorr,IRM;NULL
