@@ -25,8 +25,8 @@ exportSpatialization <- function(
       stop("Argument spatialized must have class data.frame. ")
     }
 
-    if (!all(colnames(spatialized) == c("px", "response", "se", "X", "Y"))) {
-      stop("Colnames of spatialized argument do not match \"px\", \"response\", \"se\", \"X\", \"Y\"")
+    if (!all(colnames(spatialized) == c("px", "response", "X", "Y"))) {
+      stop("Colnames of spatialized argument do not match \"px\", \"response\", \"X\", \"Y\"")
     }
 
     if (!format %in% c("csv","json","geojson")) {
