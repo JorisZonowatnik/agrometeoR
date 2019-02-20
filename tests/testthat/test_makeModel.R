@@ -40,7 +40,7 @@ test_that("Output has the good structure, whatever error or not", {
 
 test_that("Error are thrown when a bad parameter is passed", {
   for (group in 1:length(groups)) {
-    if (names(groups[1]) == "bad") {
+    if (names(groups[group]) == "bad") {
       for (case in 1:length(group)) {
         object = do.call(what = makeModel, args = groups[[group]][[case]][-1])
         expect_error(object)
@@ -54,7 +54,6 @@ test_that("When bool isTRUE (no error), output has class WrappedModel and when b
     for (case in 1:length(group)) {
       object = do.call(what = makeModel, args = groups[[group]][[case]][-1])
       if (isTRUE(object$bool)) {
-        #browser()
         expect_is(object$output$value$trained, "WrappedModel")
       } else {
         expect_null(object$output$value)

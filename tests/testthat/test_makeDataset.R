@@ -90,8 +90,9 @@ test_that("Output has the good structure, whatever error or not", {
 
 test_that("Error are thrown when a bad parameter is passed", {
   for (group in 1:length(groups)) {
-    if (names(groups[1]) == "bad") {
+    if (names(groups[group]) == "bad") {
       for (case in 1:length(group)) {
+        browser()
         object = do.call(what = makeDataset, args = groups[[group]][[case]][-1])
         expect_error(object)
       }
