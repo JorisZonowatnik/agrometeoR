@@ -16,7 +16,7 @@ exportSpatialization(spatialized, path = getwd(), filename = NULL,
 
 \item{format}{a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"}
 
-\item{write}{a boolean specifying if fomatted data must be written to file (TRUE) or printed to console (FALSE)}
+\item{write}{a boolean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)}
 }
 \value{
 a list containing a boolean and a character containing the data encoded in the required format. Default = csv
