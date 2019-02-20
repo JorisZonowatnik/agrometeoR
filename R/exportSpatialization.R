@@ -7,7 +7,7 @@
 #' @param path a character specifying the path where you want your geosonfile to be stored. Default = wd
 #' @param filename a character specifying the name you want to give to the file. Default = NULL
 #' @param format a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"
-#' @param write a boolean specifying if fomatted data must be written to file (TRUE) or printed to console (FALSE)
+#' @param write a boolean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)
 #' @return a list containing a boolean and a character containing the data encoded in the required format. Default = csv
 exportSpatialization <- function(
   spatialized,
@@ -16,26 +16,13 @@ exportSpatialization <- function(
   format = "csv",
   write = FALSE){
 
-  out = tryCatch({
+  output = list(value = NULL, condition = list(type = NULL, message = NULL))
+  bool = FALSE
 
-    output = list(value = NULL, error = NULL)
-    bool = FALSE
+  doExportSpatialisation = function(){
 
-    if (!class(spatialized) == "data.frame") {
-      stop("Argument spatialized must have class data.frame. ")
-    }
-
-    if (!all(colnames(spatialized) == c("px", "response", "X", "Y"))) {
-      stop("Colnames of spatialized argument do not match \"px\", \"response\", \"X\", \"Y\"")
-    }
-
-    if (!format %in% c("csv","json","geojson")) {
-      stop("Bad export format specified. Must be one of csv, json or geojson. ")
-    }
-    if (isTRUE(write) && is.null(filename)) {
-      warning("Write set to true but no filename specified. Setting filename to 'myfile'. ")
-      filename = "myfile"
-    }
+    # predicting on the grid
+    message("Exporting spatialized data...")
 
     spatializedNoCoords = spatialized %>%
       dplyr::select(c("px", "response" ,"se"))
@@ -48,53 +35,92 @@ exportSpatialization <- function(
       } else{
         csv.con = textConnection("csv.con", "w")
         write.csv(spatializedNoCoords, csv.con, row.names = FALSE)
-        output$value = textConnectionValue(csv.con)
+        string = textConnectionValue(csv.con)
         #cat(csvString)
         close(csv.con)
         message("Success ! Data encoded")
-        bool = TRUE
       }
     }
-
     if (format == "json") {
       message("Encoding data to json...")
       if (isTRUE(write)) {
         jsonlite::write_json(x = spatializedNoCoords, path = paste0(path, "/", filename, ".", format))
         message(paste0("File written to", path, "/", filename, ".", format))
       } else{
-        output$value = jsonlite::toJSON(spatializedNoCoords)
+        string = jsonlite::toJSON(spatializedNoCoords)
         #cat(jsonString)
         message("Success ! Data encoded")
-        bool = TRUE
       }
     }
     if (format == "geojson") {
       message("Encoding data to geojson...")
-      output$value = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
+      string = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
       if (isTRUE(write)) {
-        geojsonio::geojson_write(output$value, file = paste0(path, "/", filename, ".", format))
+        geojsonio::geojson_write(string, file = paste0(path, "/", filename, ".", format))
         message(paste0("File written to", path, "/", filename, ".", format))
       }else{
         #cat(geojsonString)
         message("Success ! Data encoded")
-        bool = TRUE
       }
     }
-  },
-    error = function(cond){
-      error = paste0(
-        "AgrometeoR Error : exportSpatialization failed. Here is the original error message : ",
-        cond,
-        "\n",
-        "value of output set to NULL")
-      output$error = error
-      message(error)
+    return(string)
+  }
+
+  tryCatch(
+
+    expr = {
+
+      # check if Argument spatialized has class data.frame.
+      stopifnot(class(spatialized) == "data.frame")
+
+      # check if Colnames of spatialized argument do match \"px\", \"response\", \"X\", \"Y\
+      stopifnot(all(colnames(spatialized) == c("px", "response", "X", "Y")))
+
+      # check if good export format specified
+      stopifnot(format %in% c("csv","json","geojson"))
+
+      # check filename specified if write = TRUE
+      stopifnot(!isTRUE(write) && is.null(filename))
+
+      # in case everything went fine, do exportSpatialisation
+      output$value = doExportSpatialisation()
+      output$condition$type = "success"
+      output$condition$message = "Dataset created"
+      bool = TRUE
+
     },
-    warning = function(cond){
-      message(cond)
+    warning = function(w){
+      warning = paste0(
+        "AgrometeoR::exportSpatialisation. raised a warning -> ",
+        w)
+      bool <<- TRUE
+      output$value <<- doExportSpatialisation()
+      output$condition$type <<- "warning"
+      output$condition$message <<- warning
+      # warning(warning)
+      # do makeTask
+
+    },
+    error = function(e){
+      error = paste0(
+        "AgrometeoR::exportSpatialisation. raised an error -> ",
+        e,
+        "HINT 1 : check if model has proper class. ",
+        "\n",
+        "HINT 2 : check if features used to build your model are present in your prediction grid. ",
+        "\n")
+      output$processing$type <<- "error"
+      output$processing$message <<- error
+      stop(error)
     },
     finally = {
+      finalMessage = paste0(
+        "All done with exportSpatialisation. ",
+        "The output processing has encountered a condition of type : ",
+        output$condition$type
+      )
+      message(finalMessage)
       return(list(bool = bool, output = output))
-    })
-  return(out)
+    }
+  )
 }
