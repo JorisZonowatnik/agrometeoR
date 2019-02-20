@@ -5,85 +5,95 @@
 #' @param task an object of class mlr::makeRegrTask()
 #' @param learner an object of class mlr::makeLearner()
 #' @return a list containing a boolean and an object of class mlr::train()
+
 makeModel <- function(
   task,
   learner){
- out = tryCatch({
-   output = list(value = NULL, error = NULL)
-   bool = FALSE
 
-   if (!length(which(class(task) %in% "RegrTask")) > 0){
-    stop("The argument task must have class 'RegrTask'. For more information, see mlr package documentation. ")
-   }
+    output = list(value = NULL, condition = list(type = NULL, message = NULL))
+    bool = FALSE
 
-   if (!length(which(class(learner) %in% "Learner")) > 0){
-     stop("The argument learner must have class 'Learner'. For more information, see mlr package documentation. ")
-   }
+    doMakeModel = function(){
+      message("Training the learner to build a model...")
 
-   withCallingHandlers({
-     # message
-     message("Training the learner to build a model...")
+      # benchmark
+      bmr = mlr::benchmark(
+        learners = learner,
+        tasks = task,
+        resamplings = mlr::makeResampleDesc("LOO"),
+        measures = list(rmse, mse, mae, timetrain),
+        show.info = FALSE)
 
-     # benchmark
-     bmr = mlr::benchmark(
-       learners = learner,
-       tasks = task,
-       resamplings = mlr::makeResampleDesc("LOO"),
-       measures = list(rmse, mse, mae, timetrain),
-       show.info = FALSE)
+      # aggregated Performances
+      perfs = getBMRPerformances(bmr, as.df = TRUE)
+      aggPerfs = getBMRAggrPerformances(bmr, as.df = TRUE)
 
-     # aggregated Performances
-     perfs = getBMRPerformances(bmr, as.df = TRUE)
-     aggPerfs = getBMRAggrPerformances(bmr, as.df = TRUE)
+      # training the learner to create the model
+      trained = mlr::train(
+        learner = learner,
+        task = task)
 
-     # training the learner to create the model
-     trained = mlr::train(
-       learner = learner,
-       task = task)
+      # creating the residuals + predictions at stations dataframe
+      predictions = data.frame(predict(trained, newdata = getTaskData(task))$data)
+      predictions = predictions %>%
+        dplyr::mutate(residuals = truth - response)
 
-     # creating the residuals + predictions at stations dataframe
-     predictions = data.frame(predict(trained, newdata = getTaskData(task))$data)
-     residuals = predictions %>%
-       dplyr::mutate(residuals = truth - response) %>%
-       dplyr::select(residuals)
+      # create a list containing all the useful information
+      model = list(
+        trained = trained,
+        predictions = predictions,
+        perfs = list(iters = perfs, agg = aggPerfs)
+        # summary = summary(m$learner.model)
+      )
+      return(model)
+    }
 
+  tryCatch(
 
-     # create a list containing all the useful information
-     model = list(
-       trained = trained,
-       stations_pred = predictions,
-       perfs = list(iters = perfs, agg = aggPerfs),
-       residuals = residuals
-       # summary = summary(m$learner.model)
-     )
+    expr = {
 
-     # storing to output
-     output$value = model
+      # check if task has proper class
+      stopifnot(length(which(class(task) %in% "RegrTask")) > 0)
 
-     # success message
-     message("Success ! Model created")
-     bool = TRUE
+      # check if learner has proper class
+      stopifnot(length(which(class(learner) %in% "Learner")) > 0)
 
-   },
-   warning = function(cond){
-     message("AgrometeoR Warning :")
-     message(cond)
-   })
- },
-   error = function(cond){
-     error = paste0(
-       "AgrometeoR Error : makeModel failed. Here is the original error message : ",
-       cond,
-       "\n",
-       "value of output set to NULL")
-     output$error = error
-     message(error)
-   },
-   finally = {
-     return(list(bool = bool, output = output))
-   })
- return(out)
+      # in case everything went fine, do makeModel
+      output$value = doMakeModel()
+      output$condition$type = "success"
+      output$condition$message = "Dataset created"
+      bool = TRUE
+
+    },
+    warning = function(w){
+      warning = paste0(
+        "AgrometeoR::makeModel raised a warning -> ",
+        w)
+      bool <<- TRUE
+      output$value <<- doMakeModel()
+      output$condition$type <<- "warning"
+      output$condition$message <<- warning
+      # warning(warning)
+      # do makeTask
+
+    },
+    error = function(e){
+      error = paste0(
+        "AgrometeoR::makeModel raised an error -> ",
+        e)
+      output$condition$type <<- "error"
+      output$condition$message <<- error
+      stop(error)
+    },
+    finally = {
+      finalMessage = paste0(
+        "All done with makeModel. ",
+        "The output processing has encountered a condition of type :",
+        output$condition$type
+      )
+      message(finalMessage)
+      return(list(bool = bool, output = output))
+    }
+  )
 }
-
-
 

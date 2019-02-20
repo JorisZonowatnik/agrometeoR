@@ -1,78 +1,107 @@
 #' @export
-#' @title make one mlr regr task(s) for a single set of hourly/daily records
+#' @title make one mlr regr task for a single set of hourly/daily records
 #' @author Thomas Goossens
 #' @param dataset a dataframe containing an hourly/daily set of records you want to transform to a mlr task
 #' @param target a charachter specifying the name of the target variable
 #' @param drop a character vector specifying the explanatory variables you wan to drop.
-#' @return a list containing a boolean and a list which elements are of class mlr::makeRegrTask()
+#' @return a list containing a boolean and a list which single element is of class mlr::makeRegrTask()
 makeTask <- function(
   dataset,
   drop = NULL,
   target
 ){
-  out = tryCatch({
-    output = list(value = NULL, error = NULL)
-    bool = FALSE
 
-    if (!class(dataset) == "data.frame") {
-      stop(paste(
-        "The argument dataset must have class 'data.frame'. ",
-        "\n"
+  output = list(value = NULL, condition = list(type = NULL, message = NULL))
+  bool = FALSE
+
+  doMakeTask = function(){
+    message("Making mlr task(s)...")
+
+    # creating the id of the task
+    task.id = gsub("[^[:digit:]]", "", unique(dataset$mtime))
+
+    # removing the mtime & sid column as not an explanatory information
+    dataset = dataset %>%
+      dplyr::select(-c(mtime, sid))
+
+    # make a machine learning regression task
+    task = mlr::dropFeatures(
+      task = mlr::makeRegrTask(
+        data = dataset,
+        target = target,
+        id = task.id),
+      features = drop)
+
+    return(task)
+  }
+
+   tryCatch(
+
+    expr = {
+
+    # check if dataset has class data.frame
+    stopifnot(class(dataset) == "data.frame")
+
+    # check if target exists in dataframe
+    stopifnot(target %in% colnames(dataset))
+
+    # check if missing values in target or features and raise warning telling dataset has been amputed of stations with missing values if its the case
+    if (!identical(na.omit(dataset), dataset)) {
+      dataset = na.omit(dataset)
+
+      warning(paste(
+        "Your dataset contains missing values at target variable. Stations with missing values are ignored for the task creation. ",
+        "\n",
+        "The sid of the stations used for the stations are : ",
+        "\n",
+        "***begin sid used stations***",
+        "\n",
+        paste0(dataset$sid, sep = ",", collapse = ""),
+        "\n",
+        "***end sid used stations***"
       ))
     }
 
-    if (!target %in% colnames(dataset)) {
-      stop(paste(
-        "Your dataset does not contain a variable that matches your target argument "
-        , target,
-        "\n"
-      ))
-    }
+    # in case everything went fine, do makeTask
+    output$value = doMakeTask()
+    output$condition$type = "success"
+    output$condition$message = "Dataset created"
+    bool = TRUE
 
-    withCallingHandlers({
-
-      # dataset renaming mtime vars for list grouping
-      message("Making mlr task(s)...")
-
-      # creating the id of the task
-      task.id = gsub("[^[:digit:]]", "", unique(dataset$mtime))
-
-      # removing the mtime & sid column as not an explanatory information
-      dataset = dataset %>%
-        dplyr::select(-c(mtime, sid))
-
-      # make a machine learning regression task
-      task = mlr::dropFeatures(
-        task = mlr::makeRegrTask(
-          data = dataset,
-          target = target,
-          id = task.id),
-        features = drop)
-
-      # assigning the task to the output value
-      output$value = task
-
-      # success message and boolean
-      message("Success ! Task created ")
-      bool = TRUE
     },
-      warning = function(cond){
-        message("AgrometeoR Warning :")
-        message(cond)
-      })
-  },
-    error = function(cond){
+    # in case of warning, raise a warning and do makeTask
+    warning = function(w){
+      warning = paste0(
+        "AgrometeoR::makeTask raised a warning -> ",
+        w)
+      bool <<- TRUE
+      output$value <<- doMakeTask()
+      output$condition$type <<- "warning"
+      output$condition$message <<- warning
+      # warning(warning)
+      # do makeTask
+
+    },
+    error = function(e){
       error = paste0(
-        "AgrometeoR Error : makeTask failed. Here is the original error message : ",
-        cond,
-        "Value of output set to NULL.")
-      message(error)
-      output$error = error
+        "AgrometeoR::makeTask raised an error -> ",
+        e)
+      output$condition$type <<- "error"
+      output$condition$message <<- error
+      stop(error)
     },
     finally = {
+
+      finalMessage = paste0(
+        "All done with makeTask. ",
+        "The output processing has encountered a condition of type :",
+        output$condition$type
+      )
+      message(finalMessage)
       return(list(bool = bool, output = output))
-    })
-  return(out)
+    }
+   )
 }
+
 
 

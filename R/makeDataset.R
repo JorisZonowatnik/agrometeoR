@@ -27,53 +27,11 @@ makeDataset <- function(
   dynExpl = NULL
 ){
 
-  out = tryCatch({
-    output = list(value = NULL, error = NULL)
+    output = list(value = NULL, condition = list(type = NULL, message = NULL))
     bool = FALSE
 
-    # check if usertoken provided
-    if (is.null(user_token)) {
-      stop("AgrometeoR Error in makeDataset : Please provide a valid user_token. \n")
-    }
-
-    # check if sensor provided is OK
-    if (!sensor %in% c("tsa", "hra", "hct", "vvt", "ens")) {
-      stop(paste0(
-        "The sensor ",
-        "\"", sensor, "\"",
-        " you have provided is not allowed. \n"))
-    }
-
-    # check if staticExpl provided is ok
-    if (!all(staticExpl %in% c("elevation"))) {
-      good_staticExpl = staticExpl[staticExpl %in% c("elevation")]
-      bad_staticExpl = staticExpl[!staticExpl %in% c("elevation")]
-      staticExpl = good_staticExpl
-      stop(paste0(
-        "The explanatory variable ",
-        "\"", bad_staticExpl, "\"",
-        " you have provided is not allowed. \n"))
-    }
-
-    # check if queried stations exist. If a station does not exist, removed from query
-    if (!isTRUE(all(strsplit(stations, ",")[[1]]  %in% (as.character(stations.df$sid))))) {
-      good_stations = strsplit(stations, ",")[[1]][strsplit(stations, ",")[[1]] %in% (as.character(stations.df$sid))]
-      bad_stations = strsplit(stations, ",")[[1]][!strsplit(stations, ",")[[1]] %in% (as.character(stations.df$sid))]
-      # stations = paste(good_stations, sep = ",")
-      stop(paste0(
-        "The station(s) with sid ",
-        paste(bad_stations, sep = ","),
-        " you have provided not allowed. \n"
-      ))
-    }
-
-    # check for isodatetime
-    # https://www.w3.org/TR/NOTE-datetime
-    # if (grep(x = dfrom, pattern = "/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z)/")){
-    #
-    # }
-
-    withCallingHandlers({
+    doMakeDataset = function(){
+      message("Making dataset...")
 
       if (is.null(json)) {
         # make an API call to retrieve the dynamic data
@@ -98,7 +56,6 @@ makeDataset <- function(
       }
 
       # Keep only the relevant columns
-      message("Making dataset...")
       dataset = dataset %>%
         dplyr::select("sid", "mtime", sensor) %>%
         dplyr::mutate(task.id = gsub("[^[:digit:]]", "", dataset$mtime))
@@ -128,29 +85,61 @@ makeDataset <- function(
             dplyr::select(c(-task.id))
         })
 
-      # assigning to output$value
-      output$value = dataset
+      return(dataset)
+    }
 
-      message("Success ! Dataset created")
+    tryCatch(
+
+    expr = {
+
+      # check if usertoken provided
+      stopifnot(!is.null(user_token))
+
+      # check if sensor provided is OK
+      stopifnot(sensor %in% c("tsa", "hra", "hct", "vvt", "ens", "plu"))
+
+      # check if staticExpl provided is ok
+      stopifnot(all(staticExpl %in% colnames(stations.df[3:9])))
+
+      # check if queried stations exist.
+      stopifnot(isTRUE(all(strsplit(stations, ",")[[1]]  %in% (as.character(stations.df$sid)))))
+
+
+      # in case everything went fine do makeDataset
+      output$value = doMakeDataset()
+      output$condition$type = "success"
+      output$condition$message = "Dataset created"
       bool = TRUE
 
     },
-      warning = function(cond){
-        message("AgrometeoR Warning :")
-        message(cond)
-      })},
-    error = function(cond){
+    warning = function(w){
+      warning = paste0(
+        "AgrometeoR::makeDataset raised a warning -> ",
+        w)
+      bool <<- TRUE
+      output$value <<- doMakeTask()
+      output$condition$type <<- "warning"
+      output$condition$message <<- warning
+      # warning(warning)
+      # do makeTask
+
+    },
+    error = function(e){
       error = paste0(
-        "AgrometeoR Error : makeDataset failed. Here is the original error message : ",
-        cond,
-        "\n",
-        "Value of output set to NULL")
-      output$error = error
-      message(error)
+        "AgrometeoR::makeDataset raised an error -> ",
+        e)
+      output$condition$type <<- "error"
+      output$condition$message <<- error
+      stop(error)
     },
     finally = {
+      finalMessage = paste0(
+        "All done with makeDataset. ",
+        "The output processing has encountered a condition of type :",
+        output$condition$type
+      )
+      message(finalMessage)
       return(list(bool = bool, output = output))
     }
   )
-  return(out)
 }
