@@ -64,7 +64,7 @@ test_badInput = function(){test_that("Good behaviour in case of bad parameter", 
 })}
 
 # test3
-test_goodInput = function(){test_that("Good behaviour in case of good parameter", {
+test_goodInput = function(){test_that("Good behaviour in case of good parameters", {
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
