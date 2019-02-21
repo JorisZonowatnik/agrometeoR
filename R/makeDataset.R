@@ -137,7 +137,7 @@ makeDataset <- function(
     },
     finally = {
       finalMessage = paste0(
-        "makeDataset has encountered a condition of type : ",
+        "makeDataset has encountered : ",
         output$condition$type,
         ". \n",
         "All done with makeDataset. "

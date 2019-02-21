@@ -105,7 +105,7 @@ exportSpatialization <- function(
     },
     finally = {
       finalMessage = paste0(
-        "exportSpatialisation has encountered a condition of type : ",
+        "exportSpatialisation has encountered : ",
         output$condition$type,
         ". \n",
         "All done with exportSpatialisation. "

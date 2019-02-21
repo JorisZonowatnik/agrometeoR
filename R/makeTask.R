@@ -97,7 +97,7 @@ makeTask <- function(
     finally = {
 
       finalMessage = paste0(
-        "makeTask has encountered a condition of type : ",
+        "makeTask has encountered : ",
         output$condition$type,
         ". \n",
         "All done with makeTask. "

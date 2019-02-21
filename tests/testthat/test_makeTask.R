@@ -1,5 +1,5 @@
 #####
-## unit tests for makeDataset
+## unit tests for makeTask
 ## to run these tests, use : devtools::test(filter= "makeTask")
 ## in case you want to debug on of these tests, place browser() where yo uwant the code execution to stop
 
@@ -10,7 +10,7 @@ context("Testing makeTask")
 
 #####
 ## definition of the various function inputs that are tested.
-## the objects used in these function inputs definition comes precompiled. See fodler data-raw for their source file
+## the objects used in these function inputs definition comes precompiled. See folder data-raw for their source file
 
 groups = list(
   good = list(
@@ -55,7 +55,7 @@ test_outputStrucure = function(){test_that("Output has the good structure whatev
 }
 
 # test2
-test_badInput = function(){test_that("Good behaviour in case of bad parameter", {
+test_badInput = function(){test_that("Expected behaviour in case of bad parameter", {
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "bad") {
       for (case in 1:length(group)) {
@@ -69,20 +69,20 @@ test_badInput = function(){test_that("Good behaviour in case of bad parameter", 
 })}
 
 # test3
-test_goodInput = function(){test_that("Good behaviour in case of good parameter", {
+test_goodInput = function(){test_that("Expected behaviour in case of good parameter", {
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
         object = do.call(what = makeTask, args = groups[[group]][[case]])
         expect_true(object$bool)
-        expect_equal(class(object$output$value), c("RegrTask", "SupervisedTask", "Task"))
+        expect_is(object$output$value, class = "RegrTask")
       }
     }
   }
 })}
 
 # test4
-test_NA_values = function(){test_that("Warning is thrown when dataset contains NA values", {
+test_NA_values = function(){test_that("Expected behaviour in case of  NA values", {
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "warning") {
       for (case in 1:length(group)) {
@@ -90,7 +90,7 @@ test_NA_values = function(){test_that("Warning is thrown when dataset contains N
         expect_equal(object$output$condition$type, "warning")
         expect_equal(class(object$output$condition$message), "character")
         expect_true(object$bool)
-        expect_equal(class(object$output$value), c("RegrTask", "SupervisedTask", "Task"))
+        expect_is(object$output$value, class = "RegrTask")
         expect_gte(length(object$output$stations), 1)
       }
     }
