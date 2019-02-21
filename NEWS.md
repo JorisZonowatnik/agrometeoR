@@ -1,4 +1,12 @@
-# agrometeoR 0.0.1.0
+# agrometeoR 0.0.2
+
+* maketTasks ignore stations with missing data
+* better error management
+* review of the unit_testing for makeDataset
+* explorative constructions detailed
+* example available for `makeModel` and `makeTask`
+
+# agrometeoR 0.0.1
 
 * smarter benchmarking function that creates temporary btaches files
 * new documentation articles
