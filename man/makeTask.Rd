@@ -14,7 +14,19 @@ makeTask(dataset, drop = NULL, target)
 \item{target}{a charachter specifying the name of the target variable}
 }
 \value{
-a list containing a boolean and a list which single element is of class mlr::makeRegrTask()
+a list containing a boolean and another list.
+The later contains 4 elements :
+(1) value : corresponds to a list of dataframes where each dataframe contains the hourly sets of records,
+(2) condition : a character specifying if the functions has encountered success, warning, error
+(3) message : the message relative to the condition
+(4) stations : a numeric vector containing the sids of the used stations
+}
+\examples{
+myDataset = makeDataset(
+  dfrom = "2017-03-04T15:00:00Z",
+  dto = "2017-03-04T15:00:00Z",
+  sensor = "tsa")
+myTask = makeTask(dataset = myDataset$output$value, target = "tsa")
 }
 \author{
 Thomas Goossens
