@@ -11,7 +11,7 @@ makeTask <- function(
   target
 ){
 
-  output = list(value = NULL, condition = list(type = NULL, message = NULL))
+  output = list(value = NULL, condition = list(type = NULL, message = NULL), stations = NULL)
   bool = FALSE
 
   doMakeTask = function(){
@@ -54,11 +54,8 @@ makeTask <- function(
         "\n",
         "The sid of the stations used for the stations are : ",
         "\n",
-        "***begin sid used stations***",
-        "\n",
         paste0(dataset$sid, sep = ",", collapse = ""),
-        "\n",
-        "***end sid used stations***"
+        "\n"
       ))
     }
 
@@ -66,6 +63,7 @@ makeTask <- function(
     output$value = doMakeTask()
     output$condition$type = "success"
     output$condition$message = "Dataset created"
+    output$stations = dataset$sid
     bool = TRUE
 
     },
@@ -77,7 +75,8 @@ makeTask <- function(
       bool <<- TRUE
       output$value <<- doMakeTask()
       output$condition$type <<- "warning"
-      output$condition$message <<- warning
+      output$condition$message <<- w$message
+      output$stations <<- dataset$sid
     },
     error = function(e){
       error = paste0(
@@ -99,6 +98,13 @@ makeTask <- function(
     }
    )
 }
+
+#'@example
+#' myDataset = makeDataset(
+#'   dfrom = "2017-03-04T15:00:00Z",
+#'   dto = "2017-03-04T15:00:00Z",
+#'   sensor = "tsa")
+#' myTask = makeTask(dataset = myDataset$output$value, target = "tsa")
 
 
 
