@@ -65,20 +65,14 @@ exportSpatialization <- function(
     }
     return(string)
   }
-
   tryCatch(
-
     expr = {
-
       # check if Argument spatialized has class data.frame.
       stopifnot(class(spatialized) == "data.frame")
-
       # check if Colnames of spatialized argument do match \"px\", \"response\", \"X\", \"Y\
       stopifnot(all(colnames(spatialized) == c("px", "response", "X", "Y")))
-
       # check if good export format specified
       stopifnot(format %in% c("csv","json","geojson"))
-
       # check filename specified if write = TRUE
       stopifnot(!isTRUE(write) && is.null(filename))
 
@@ -97,9 +91,6 @@ exportSpatialization <- function(
       output$value <<- doExportSpatialisation()
       output$condition$type <<- "warning"
       output$condition$message <<- warning
-      # warning(warning)
-      # do makeTask
-
     },
     error = function(e){
       error = paste0(
@@ -111,13 +102,13 @@ exportSpatialization <- function(
         "\n")
       output$processing$type <<- "error"
       output$processing$message <<- error
-      stop(error)
     },
     finally = {
       finalMessage = paste0(
-        "All done with exportSpatialisation. ",
-        "The output processing has encountered a condition of type : ",
-        output$condition$type
+        "exportSpatialisation has encountered a condition of type : ",
+        output$condition$type,
+        ". \n",
+        "All done with exportSpatialisation. "
       )
       message(finalMessage)
       return(list(bool = bool, output = output))

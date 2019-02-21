@@ -74,9 +74,6 @@ makeSpatialization <- function(
       output$value <<- doMakeSpatialisation()
       output$condition$type <<- "warning"
       output$condition$message <<- warning
-      # warning(warning)
-      # do makeTask
-
     },
     error = function(e){
       error = paste0(
@@ -88,13 +85,13 @@ makeSpatialization <- function(
         "\n")
       output$processing$type <<- "error"
       output$processing$message <<- error
-      stop(error)
     },
     finally = {
       finalMessage = paste0(
-        "All done with makeSpatialisation. ",
-        "The output processing has encountered a condition of type : ",
-        output$condition$type
+        "makeSpatialisation has encountered a condition of type : ",
+        output$condition$type,
+        ". \n",
+        "All done with makeSpatialisation. "
       )
       message(finalMessage)
       return(list(bool = bool, output = output))
