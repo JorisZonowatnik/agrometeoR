@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeTask.R
 \name{makeTask}
 \alias{makeTask}
-\title{make one mlr regr task(s) for a single set of hourly/daily records}
+\title{make one mlr regr task for a single set of hourly/daily records}
 \usage{
 makeTask(dataset, drop = NULL, target)
 }
@@ -14,7 +14,7 @@ makeTask(dataset, drop = NULL, target)
 \item{target}{a charachter specifying the name of the target variable}
 }
 \value{
-a list containing a boolean and a list which elements are of class mlr::makeRegrTask()
+a list containing a boolean and a list which single element is of class mlr::makeRegrTask()
 }
 \author{
 Thomas Goossens

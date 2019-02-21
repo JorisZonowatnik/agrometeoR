@@ -94,16 +94,12 @@ makeDataset <- function(
 
       # check if usertoken provided
       stopifnot(!is.null(user_token))
-
       # check if sensor provided is OK
       stopifnot(sensor %in% c("tsa", "hra", "hct", "vvt", "ens", "plu"))
-
       # check if staticExpl provided is ok
       stopifnot(all(staticExpl %in% colnames(stations.df[3:9])))
-
       # check if queried stations exist.
       stopifnot(isTRUE(all(strsplit(stations, ",")[[1]]  %in% (as.character(stations.df$sid)))))
-
 
       # in case everything went fine do makeDataset
       output$value = doMakeDataset()
@@ -120,8 +116,6 @@ makeDataset <- function(
       output$value <<- doMakeTask()
       output$condition$type <<- "warning"
       output$condition$message <<- warning
-      # warning(warning)
-      # do makeTask
 
     },
     error = function(e){
@@ -130,16 +124,23 @@ makeDataset <- function(
         e)
       output$condition$type <<- "error"
       output$condition$message <<- error
-      stop(error)
     },
     finally = {
       finalMessage = paste0(
-        "All done with makeDataset. ",
-        "The output processing has encountered a condition of type :",
-        output$condition$type
+        "makeDataset has encountered a condition of type : ",
+        output$condition$type,
+        ". \n",
+        "All done with makeDataset. "
       )
       message(finalMessage)
       return(list(bool = bool, output = output))
     }
   )
 }
+
+#'@example
+#' myDataset = makeDataset(
+#'   dfrom = "2017-03-04T15:00:00Z",
+#'   dto = "2017-03-04T15:00:00Z",
+#'   sensor = "tsa")
+#'

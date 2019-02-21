@@ -73,9 +73,6 @@ makeModel <- function(
       output$value <<- doMakeModel()
       output$condition$type <<- "warning"
       output$condition$message <<- warning
-      # warning(warning)
-      # do makeTask
-
     },
     error = function(e){
       error = paste0(
@@ -83,13 +80,13 @@ makeModel <- function(
         e)
       output$condition$type <<- "error"
       output$condition$message <<- error
-      stop(error)
     },
     finally = {
       finalMessage = paste0(
-        "All done with makeModel. ",
-        "The output processing has encountered a condition of type :",
-        output$condition$type
+        "makeModel has encountered a condition of type : ",
+        output$condition$type,
+        ". \n",
+        "All done with makeModel. "
       )
       message(finalMessage)
       return(list(bool = bool, output = output))

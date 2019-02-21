@@ -78,9 +78,6 @@ makeTask <- function(
       output$value <<- doMakeTask()
       output$condition$type <<- "warning"
       output$condition$message <<- warning
-      # warning(warning)
-      # do makeTask
-
     },
     error = function(e){
       error = paste0(
@@ -88,14 +85,14 @@ makeTask <- function(
         e)
       output$condition$type <<- "error"
       output$condition$message <<- error
-      stop(error)
     },
     finally = {
 
       finalMessage = paste0(
-        "All done with makeTask. ",
-        "The output processing has encountered a condition of type :",
-        output$condition$type
+        "makeTask has encountered a condition of type : ",
+        output$condition$type,
+        ". \n",
+        "All done with makeTask. "
       )
       message(finalMessage)
       return(list(bool = bool, output = output))
