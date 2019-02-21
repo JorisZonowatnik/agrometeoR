@@ -6,7 +6,7 @@
 #' @param drop a character vector specifying the explanatory variables you wan to drop.
 #' @return a list containing a boolean and another list.
 #' The later contains 4 elements :
-#' (1) value : corresponds to a list of dataframes where each dataframe contains the hourly sets of records,
+#' (1) value : an object which classes are "RegrTask" "SupervisedTask" "Task"
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition
 #' (4) stations : a numeric vector containing the sids of the used stations

@@ -86,12 +86,12 @@ test_NA_values = function(){test_that("Warning is thrown when dataset contains N
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "warning") {
       for (case in 1:length(group)) {
-
         object = do.call(what = makeTask, args = groups[[group]][[case]])
         expect_equal(object$output$condition$type, "warning")
         expect_equal(class(object$output$condition$message), "character")
         expect_true(object$bool)
         expect_equal(class(object$output$value), c("RegrTask", "SupervisedTask", "Task"))
+        expect_gte(length(object$output$stations), 1)
       }
     }
   }
