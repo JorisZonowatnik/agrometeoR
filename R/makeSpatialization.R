@@ -4,7 +4,21 @@
 #' @importFrom magrittr %>%
 #' @param model an object of class mlr::train() that contains the prediction model
 #' @param pred.grid an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained
-#' @return a list containing a boolean and a dataframe containing the spatialized data
+#' @return a list containing a boolean and another list.
+#' The later contains 4 elements :
+#' (1) value : an object of class data.frame
+#' (2) condition : a character specifying if the functions has encountered success, warning, error
+#' (3) message : the message relative to the condition
+#' @examples
+#' myDataset = makeDataset(
+#'   dfrom = "2017-03-04T15:00:00Z",
+#'   dto = "2017-03-04T15:00:00Z",
+#'   sensor = "tsa")
+#' myTask = makeTask(dataset = myDataset$output$value, target = "tsa")
+#' myModel = makeModel(
+#'   task = mytask$out$value,
+#'   learner = learners$baseLearners$lrn.lm.alt)
+#' mySpatialization = makeSpatialization(model = myModel$output$value)
 
 makeSpatialization <- function(
   model,
@@ -83,8 +97,8 @@ makeSpatialization <- function(
         "\n",
         "HINT 2 : check if features used to build your model are present in your prediction grid. ",
         "\n")
-      output$processing$type <<- "error"
-      output$processing$message <<- error
+      output$condition$type <<- "error"
+      output$condition$message <<- error
     },
     finally = {
       finalMessage = paste0(

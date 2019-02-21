@@ -1,82 +1,83 @@
+#####
+## unit tests for makeSpatialization
+## to run these tests, use : devtools::test(filter= "makeSpatialization")
+## in case you want to debug on of these tests, place browser() where yo uwant the code execution to stop
 
+#####
+## library and context.
 library(testthat)
 context("Testing makeSpatialization")
 
+#####
+## definition of the various function inputs that are tested.
+## the objects used in these function inputs definition comes precompiled. See folder data-raw for their source file
+
 groups = list(
   good = list(
-    list(
-      id = "good",
-      model = test_models,
+    all_good = list(
+      model = test_model,
       pred.grid = test_grid
     )),
   bad = list(
-    list(
-      id = "bad_grid",
-      model = test_models,
+    bad_grid = list(
+      model = test_model,
       pred.grid = test_bad_grid
     ),
-    list(
-      id = "bad_model",
+    bad_model = list(
       model = "bad_model",
       pred.grid = test_grid
     )
   ))
 
-test_that("Output has the good structure, whatever error or not", {
+#####
+## definition of the unit tests
+
+# test1
+test_outputStrucure = function(){test_that("Output has the good structure whatever the inputs", {
   for (group in 1:length(groups)) {
     for (case in 1:length(group)) {
-      object = do.call(what = makeSpatialization, args = groups[[group]][[case]][-1])
+      object = do.call(what = makeSpatialization, args = groups[[group]][[case]])
       expect_is(object, class = "list")
-      expect_length(object, 2)
-      expect_equal(names(object), c("bool", "output"))
+      expect_named(object, c("bool", "output"))
+      expect_named(object$output, c("value", "condition"))
     }
   }
 })
+}
 
-test_that("Error are thrown when a bad parameter is passed", {
+# test2
+test_badInput = function(){test_that("Good behaviour in case of bad parameter", {
   for (group in 1:length(groups)) {
-    if (names(groups[1]) == "bad") {
+    if (names(groups[group]) == "bad") {
       for (case in 1:length(group)) {
-        object = do.call(what = makeSpatialization, args = groups[[group]][[case]][-1])
-        expect_error(object)
-      }
-    }
-  }
-})
-
-test_that("When bool isTRUE (no error), output has class dataframe and when bool isFALSE, output has class NULL", {
-  for (group in 1:length(groups)) {
-    for (case in 1:length(group)) {
-      object = do.call(what = makeSpatialization, args = groups[[group]][[case]][-1])
-      if (isTRUE(object$bool)) {
-        expect_is(object$output$value, "data.frame")
-      } else {
+        object = do.call(what = makeSpatialization, args = groups[[group]][[case]])
+        expect_false(object$bool)
+        expect_equal(object$output$condition$type, "error")
         expect_null(object$output$value)
       }
     }
   }
-})
+})}
 
-test_that("When bool isTRUE (no error), number of rows of output dataframe is equal to number of rows of input dataframe", {
+# test3
+test_goodInput = function(){test_that("Good behaviour in case of good parameter", {
   for (group in 1:length(groups)) {
-    for (case in 1:length(group)) {
-      object = do.call(what = makeSpatialization, args = groups[[group]][[case]][-1])
-      if (isTRUE(object$bool)) {
+    if (names(groups[group]) == "good") {
+      for (case in 1:length(group)) {
+        object = do.call(what = makeSpatialization, args = groups[[group]][[case]])
+        expect_true(object$bool)
+        expect_is(object$output$value, "data.frame")
         expect_identical(nrow(object$output$value), nrow(test_grid))
-      }
-    }
-  }
-})
-
-test_that("When bool isTRUE (no error), px references of output dataframe are equal to px references of input dataframe", {
-  for (group in 1:length(groups)) {
-    for (case in 1:length(group)) {
-      object = do.call(what = makeSpatialization, args = groups[[group]][[case]][-1])
-      if (isTRUE(object$bool)) {
         expect_identical(unique(object$output$value$px), unique(test_grid$px))
       }
     }
   }
-})
+})}
 
 
+#####
+## execution of the tests. If you want to skip a test, simply comment it :)
+
+test_outputStrucure()
+test_badInput()
+test_goodInput()
