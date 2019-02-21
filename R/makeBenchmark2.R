@@ -42,7 +42,6 @@ makeBenchmark <- function(
       # hack for tasks length when only a single task
       # ::todo::
 
-
       # split tasks in multiple subgroups to avoid memory saturation
       tasks.groups.start = seq(from = 1, to = length(tasks), by = grouping)
       tasks.groups.end = seq(from = grouping, to = length(tasks), by = grouping)
@@ -100,36 +99,36 @@ makeBenchmark <- function(
             tasks.groups.end[x], "conducted and written to file"))
         })
 
-        # loading all the temp bmr files and merging in a single big bmr object
-        bmr_files = list.files(path = path, pattern = prefix, full.names = TRUE)
-        bmrs = lapply(bmr_files, readRDS)
+      # loading all the temp bmr files and merging in a single big bmr object
+      bmr_files = list.files(path = path, pattern = prefix, full.names = TRUE)
+      bmrs = lapply(bmr_files, readRDS)
 
-        if (length(bmrs) > 1) {bmrs = mergeBenchmarkResults(bmrs)}
-        else {bmrs = bmrs[[1]]}
+      if (length(bmrs) > 1) {bmrs = mergeBenchmarkResults(bmrs)}
+      else {bmrs = bmrs[[1]]}
 
-        # perfs + aggregated Performances
-        perfs = getBMRPerformances(bmrs, as.df = TRUE)
-        aggPerfs = getBMRAggrPerformances(bmrs, as.df = TRUE)
-        summary = aggPerfs %>%
-          dplyr::group_by(learner.id) %>%
-          dplyr::select(rmse.test.rmse) %>%
-          dplyr::summarise_all(
-            funs(count = sum(!is.na(.)),
-              min = min(.,na.rm = TRUE),
-              max = max(.,na.rm = TRUE),
-              mean = mean(.,na.rm = TRUE),
-              median = median(.,na.rm = TRUE),
-              sd = sd(.,na.rm = TRUE)))
+      # perfs + aggregated Performances
+      perfs = getBMRPerformances(bmrs, as.df = TRUE)
+      aggPerfs = getBMRAggrPerformances(bmrs, as.df = TRUE)
+      summary = aggPerfs %>%
+        dplyr::group_by(learner.id) %>%
+        dplyr::select(rmse.test.rmse) %>%
+        dplyr::summarise_all(
+          funs(count = sum(!is.na(.)),
+            min = min(.,na.rm = TRUE),
+            max = max(.,na.rm = TRUE),
+            mean = mean(.,na.rm = TRUE),
+            median = median(.,na.rm = TRUE),
+            sd = sd(.,na.rm = TRUE)))
 
-        # create a list containing all the useful information
-        output$value = list(
-          bmr = bmrs,
-          perfs = perfs,
-          aggPerfs = aggPerfs,
-          summary = summary
-        )
+      # create a list containing all the useful information
+      output$value = list(
+        bmr = bmrs,
+        perfs = perfs,
+        aggPerfs = aggPerfs,
+        summary = summary
+      )
 
-        bool = TRUE
+      bool = TRUE
 
     },
       warning = function(cond){
