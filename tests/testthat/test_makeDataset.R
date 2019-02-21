@@ -1,11 +1,23 @@
+# https://stackoverflow.com/questions/37870941/r-trycatch-with-testthat-expectation
+# https://cran.r-project.org/web/packages/tryCatchLog/vignettes/tryCatchLog-intro.html#better-error-handling-with-the-trycatchlog-package
+# https://bookdown.org/rdpeng/RProgDA/error-handling-and-generation.html
+# https://rsangole.netlify.com/post/try-catch/
 
+#####
+## unit tests for makeDataset
+## to run these tests, use : devtools::test(filter= "makeDataset)
+
+#####
+## library and context.
 library(testthat)
 context("Testing makeDataset")
 
+
+#####
+## definition of the various function inputs that are tested. Structured in 2 main groups : good inputs and bad inputs
 groups = list(
   good = list(
-    list(
-      id = "good",
+    all_good = list(
       stations = test_stations,
       user_token = test_user_token,
       dfrom = test_dfrom,
@@ -16,8 +28,7 @@ groups = list(
       dynExpl = NULL)
     ),
   bad = list(
-     list(
-      id = "bad_user_token",
+    bad_user_token = list(
       stations = test_stations,
       user_token = test_bad_user_token,
       dfrom = test_dfrom,
@@ -26,91 +37,101 @@ groups = list(
       staticExpl = test_staticExpl,
       json = NULL,
       dynExpl = NULL),
-    list(
-      id = "bad_stations",
-      stations = test_bad_stations,
-      user_token = test_user_token,
-      dfrom = test_dfrom,
-      dto = test_dto,
-      sensor = test_sensor,
-      staticExpl = test_staticExpl,
-      json = NULL,
-      dynExpl = NULL),
-    list(
-      id = "bad_dfrom",
-      stations = test_stations,
-      user_token = test_user_token,
-      dfrom = test_bad_dfrom,
-      dto = test_dto,
-      sensor = test_sensor,
-      staticExpl = test_staticExpl,
-      json = NULL,
-      dynExpl = NULL),
-    list(
-      id = "bad_dto",
-      stations = test_stations,
-      user_token = test_user_token,
-      dfrom = test_dfrom,
-      dto = test_bad_dto,
-      sensor = test_sensor,
-      staticExpl = test_staticExpl,
-      json = NULL,
-      dynExpl = NULL),
-    list(
-      id = "bad_sensor",
-      stations = test_stations,
-      user_token = test_user_token,
-      dfrom = test_dfrom,
-      dto = test_dto,
-      sensor = test_bad_sensor,
-      staticExpl = test_staticExpl,
-      json = NULL,
-      dynExpl = NULL),
-    list(
-      id = "bad_staticExpl",
-      stations = test_stations,
-      user_token = test_user_token,
-      dfrom = test_dfrom,
-      dto = test_dto,
-      sensor = test_sensor,
-      staticExpl = test_bad_staticExpl,
-      json = NULL,
-      dynExpl = NULL)))
+  bad_stations = list(
+    stations = test_bad_stations,
+    user_token = test_user_token,
+    dfrom = test_dfrom,
+    dto = test_dto,
+    sensor = test_sensor,
+    staticExpl = test_staticExpl,
+    json = NULL,
+    dynExpl = NULL),
+  bad_dfrom = list(
+    stations = test_stations,
+    user_token = test_user_token,
+    dfrom = test_bad_dfrom,
+    dto = test_dto,
+    sensor = test_sensor,
+    staticExpl = test_staticExpl,
+    json = NULL,
+    dynExpl = NULL),
+  bad_dto = list(
+    stations = test_stations,
+    user_token = test_user_token,
+    dfrom = test_dfrom,
+    dto = test_bad_dto,
+    sensor = test_sensor,
+    staticExpl = test_staticExpl,
+    json = NULL,
+    dynExpl = NULL),
+  bad_sensor = list(
+    stations = test_stations,
+    user_token = test_user_token,
+    dfrom = test_dfrom,
+    dto = test_dto,
+    sensor = test_bad_sensor,
+    staticExpl = test_staticExpl,
+    json = NULL,
+    dynExpl = NULL),
+  bad_staticExpl = list(
+    stations = test_stations,
+    user_token = test_user_token,
+    dfrom = test_dfrom,
+    dto = test_dto,
+    sensor = test_sensor,
+    staticExpl = test_bad_staticExpl,
+    json = NULL,
+    dynExpl = NULL)))
 
-test_that("Output has the good structure, whatever error or not", {
+
+#####
+## definition of the tests
+
+# test1
+test_outputStrucure = function(){test_that("Output has the good structure whatever the inputs", {
   for (group in 1:length(groups)) {
-    for (case in 1:length(group)) {
-      object = do.call(what = makeDataset, args = groups[[group]][[case]][-1])
-      expect_is(object, class = "list")
-      expect_length(object, 2)
-      expect_equal(names(object), c("bool", "output"))
-    }
+      for (case in 1:length(group)) {
+        object = do.call(what = makeDataset, args = groups[[group]][[case]])
+        expect_is(object, class = "list")
+        expect_length(object, 2)
+      }
   }
-})
+})}
 
-test_that("Error are thrown when a bad parameter is passed", {
+
+# test2
+test_badInput = function(){test_that("Good behaviour in case of bad parameter", {
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "bad") {
       for (case in 1:length(group)) {
-        browser()
-        object = do.call(what = makeDataset, args = groups[[group]][[case]][-1])
-        expect_error(object)
+        object = do.call(what = makeDataset, args = groups[[group]][[case]])
+        expect_false(object$bool)
+        expect_equal(object$output$condition$type, "error")
+        expect_null(object$output$value)
       }
     }
   }
-})
+})}
 
-test_that("When bool isTRUE (no error), output has class list and when bool isFALSE, output has class NULL", {
+# test3
+test_goodInput = function(){test_that("Good behaviour in case of good parameter", {
   for (group in 1:length(groups)) {
+    if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
-        object = do.call(what = makeDataset, args = groups[[group]][[case]][-1])
-        if (isTRUE(object$bool)) {
-          expect_is(object$output$value, "list")
-        } else {
-          expect_null(object$output$value)
-        }
+        object = do.call(what = makeDataset, args = groups[[group]][[case]])
+        expect_true(object$bool)
+        expect_equal(class(object$output$value[[1]]), "data.frame")
+        expect_gte(nrow(object$output$value[[1]]), 1)
       }
     }
-})
+  }
+})}
+
+#####
+## execution of the tests. If you want to skip a test, simply comment it :)
+
+test_badInput()
+test_outputStrucure()
+test_goodInput()
 
 
