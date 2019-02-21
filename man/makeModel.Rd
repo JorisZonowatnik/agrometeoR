@@ -12,7 +12,21 @@ makeModel(task, learner)
 \item{learner}{an object of class mlr::makeLearner()}
 }
 \value{
-a list containing a boolean and an object of class mlr::train()
+a list containing a boolean and another list.
+The later contains 4 elements :
+(1) value : an object of class list made of 3 elements which are of classes "Model", "dataframe", and "list"
+(2) condition : a character specifying if the functions has encountered success, warning, error
+(3) message : the message relative to the condition
+}
+\examples{
+myDataset = makeDataset(
+  dfrom = "2017-03-04T15:00:00Z",
+  dto = "2017-03-04T15:00:00Z",
+  sensor = "tsa")
+myTask = makeTask(dataset = myDataset$output$value, target = "tsa")
+myModel = makeModel(
+  task = mytask$out$value,
+  learner = learners$baseLearners$lrn.lm.alt)
 }
 \author{
 Thomas Goossens

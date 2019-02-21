@@ -37,32 +37,23 @@ test_dataset_with_NA = lapply(test_dataset, function(x){
   return(x)})
 
 # makeModel inputs
-test_tasks = lapply(test_dataset,
-  function(x){
-    makeTask(
-      dataset = x,
-      drop = NULL,
-      target = test_sensor
-    )$output$value
-  })
+test_task = makeTask(
+  dataset = test_dataset[[1]],
+  drop = NULL,
+  target = test_sensor
+)$output$value
 
 test_bad_task = NULL
 
 # makeSpatialization inputs
-test_models = lapply(test_tasks,
-  function(x){
-    makeModel(
-      task = x,
-      learner = learners$baseLearners$lrn.lm.alt)$output$value$trained
-  })
+test_model = makeModel(
+  task = test_task,
+  learner = learners$baseLearners$lrn.lm.alt)$output$value$trained
 
 # exportSpatialization inputs
-test_spatialized = lapply(test_models,
-  function(x){
-    makeSpatialization(
-      model = x,
-      pred.grid = test_grid)$output$value
-  })
+test_spatialized = makeSpatialization(
+  model = test_models,
+  pred.grid = test_grid)$output$value
 
 test_bad_spatialized = lapply(test_spatialized,
   function(x){
@@ -87,9 +78,9 @@ devtools::use_data(
   test_dataset,
   test_bad_dataset,
   test_dataset_with_NA,
-  test_tasks,
+  test_task,
   test_bad_task,
-  test_models,
+  test_model,
   test_spatialized,
   test_bad_spatialized,
   overwrite = TRUE,

@@ -104,7 +104,7 @@ test_outputStructure = function(){test_that("Output has the good structure whate
 
 
 # test2
-test_badInput = function(){test_that("Good behaviour in case of bad parameter", {
+test_badInput = function(){test_that("Expected behaviour in case of bad parameter", {
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "bad") {
       for (case in 1:length(group)) {
@@ -118,13 +118,13 @@ test_badInput = function(){test_that("Good behaviour in case of bad parameter", 
 })}
 
 # test3
-test_goodInput = function(){test_that("Good behaviour in case of good parameter", {
+test_goodInput = function(){test_that("Expected behaviour in case of good parameter", {
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
         object = do.call(what = makeDataset, args = groups[[group]][[case]])
         expect_true(object$bool)
-        expect_equal(class(object$output$value[[1]]), "data.frame")
+        expect_is(object$output$value[[1]], class = "data.frame")
         expect_gte(nrow(object$output$value[[1]]), 1)
       }
     }

@@ -88,7 +88,7 @@ makeSpatialization <- function(
     },
     finally = {
       finalMessage = paste0(
-        "makeSpatialisation has encountered a condition of type : ",
+        "makeSpatialisation has encountered : ",
         output$condition$type,
         ". \n",
         "All done with makeSpatialisation. "
