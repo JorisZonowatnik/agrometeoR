@@ -55,7 +55,7 @@ test_outputStrucure = function(){test_that("Output has the good structure whatev
 }
 
 # test2
-test_badInput = function(){test_that("Expected behaviour in case of bad parameter", {
+test_badInput = function(){test_that("Expected behaviour in case of bad parameters", {
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "bad") {
       for (case in 1:length(group)) {

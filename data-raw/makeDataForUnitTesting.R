@@ -52,7 +52,7 @@ test_model = makeModel(
 
 # exportSpatialization inputs
 test_spatialized = makeSpatialization(
-  model = test_models,
+  model = test_model,
   pred.grid = test_grid)$output$value
 
 test_bad_spatialized = lapply(test_spatialized,

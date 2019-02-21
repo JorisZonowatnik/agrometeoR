@@ -8,7 +8,7 @@
 #' @param filename a character specifying the name you want to give to the file. Default = NULL
 #' @param format a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"
 #' @param write a boolean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)
-#' @return a list containing a boolean and a character containing the data encoded in the required format. Default = csv
+#' @return a list containing a boolean and a character containing the data encoded in the required format.
 exportSpatialization <- function(
   spatialized,
   path = getwd(),
@@ -100,8 +100,8 @@ exportSpatialization <- function(
         "\n",
         "HINT 2 : check if features used to build your model are present in your prediction grid. ",
         "\n")
-      output$processing$type <<- "error"
-      output$processing$message <<- error
+      output$condition$type <<- "error"
+      output$condition$message <<- error
     },
     finally = {
       finalMessage = paste0(
