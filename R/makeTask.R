@@ -4,7 +4,19 @@
 #' @param dataset a dataframe containing an hourly/daily set of records you want to transform to a mlr task
 #' @param target a charachter specifying the name of the target variable
 #' @param drop a character vector specifying the explanatory variables you wan to drop.
-#' @return a list containing a boolean and a list which single element is of class mlr::makeRegrTask()
+#' @return a list containing a boolean and another list.
+#' The later contains 4 elements :
+#' (1) value : corresponds to a list of dataframes where each dataframe contains the hourly sets of records,
+#' (2) condition : a character specifying if the functions has encountered success, warning, error
+#' (3) message : the message relative to the condition
+#' (4) stations : a numeric vector containing the sids of the used stations
+#' @examples
+#' myDataset = makeDataset(
+#'   dfrom = "2017-03-04T15:00:00Z",
+#'   dto = "2017-03-04T15:00:00Z",
+#'   sensor = "tsa")
+#' myTask = makeTask(dataset = myDataset$output$value, target = "tsa")
+
 makeTask <- function(
   dataset,
   drop = NULL,
@@ -50,12 +62,9 @@ makeTask <- function(
       dataset = na.omit(dataset)
 
       warning(paste(
-        "Your dataset contains missing values at target variable. Stations with missing values are ignored for the task creation. ",
-        "\n",
+        "Your dataset contains missing values either at target variable and/or features. Stations with missing values are ignored for the task creation. ",
         "The sid of the stations used for the stations are : ",
-        "\n",
-        paste0(dataset$sid, sep = ",", collapse = ""),
-        "\n"
+        paste0(dataset$sid, sep = ",", collapse = "")
       ))
     }
 
@@ -99,12 +108,6 @@ makeTask <- function(
    )
 }
 
-#'@example
-#' myDataset = makeDataset(
-#'   dfrom = "2017-03-04T15:00:00Z",
-#'   dto = "2017-03-04T15:00:00Z",
-#'   sensor = "tsa")
-#' myTask = makeTask(dataset = myDataset$output$value, target = "tsa")
 
 
 

@@ -15,7 +15,17 @@
 #' Any combinations of inca, ens
 #' @param staticExpl a character vector specifying the static explanatory variables you want to add to the tasks.
 #' Any combinations of "altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided. Default = "Elevation"
-#' @return a list containing a boolean and a list of dataframes containing the desired records
+#' @return a list containing a boolean and another list.
+#' The later contains 3 elements :
+#' (1) value : corresponds to a list of dataframes where each dataframe contains the hourly sets of records,
+#' (2) condition : a character specifying if the functions has encountered success, warning, error
+#' (3) message : the message relative to the condition
+#' @examples
+#' myDataset = makeDataset(
+#'   dfrom = "2017-03-04T15:00:00Z",
+#'   dto = "2017-03-04T15:00:00Z",
+#'   sensor = "tsa")
+#'
 makeDataset <- function(
   user_token = Sys.getenv("AGROMET_API_V1_KEY"),
   stations = paste0(as.character(stations.df$sid), collapse = ","),
@@ -138,9 +148,3 @@ makeDataset <- function(
   )
 }
 
-#'@example
-#' myDataset = makeDataset(
-#'   dfrom = "2017-03-04T15:00:00Z",
-#'   dto = "2017-03-04T15:00:00Z",
-#'   sensor = "tsa")
-#'

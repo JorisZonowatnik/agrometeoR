@@ -33,7 +33,18 @@ Any combinations of inca, ens}
 \item{token}{a character specifying your agrometAPI token}
 }
 \value{
-a list containing a boolean and a list of dataframes containing the desired records
+a list containing a boolean and another list.
+The later contains 3 elements :
+(1) value : corresponds to a list of dataframes where each dataframe contains the hourly sets of records,
+(2) condition : a character specifying if the functions has encountered success, warning, error
+(3) message : the message relative to the condition
+}
+\examples{
+myDataset = makeDataset(
+  dfrom = "2017-03-04T15:00:00Z",
+  dto = "2017-03-04T15:00:00Z",
+  sensor = "tsa")
+
 }
 \author{
 Thomas Goossens

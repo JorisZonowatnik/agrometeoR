@@ -5,16 +5,18 @@
 
 #####
 ## unit tests for makeDataset
-## to run these tests, use : devtools::test(filter= "makeDataset)
+## to run these tests, use : devtools::test(filter= "makeDataset")
+## in case you want to debug on of these tests, place browser() where yo uwant the code execution to stop
 
 #####
 ## library and context.
 library(testthat)
 context("Testing makeDataset")
 
-
 #####
-## definition of the various function inputs that are tested. Structured in 2 main groups : good inputs and bad inputs
+## definition of the various function inputs that are tested.
+## the objects used in these function inputs definition comes precompiled. See fodler data-raw for their source file
+
 groups = list(
   good = list(
     all_good = list(
@@ -85,15 +87,17 @@ groups = list(
 
 
 #####
-## definition of the tests
+## definition of the unit tests
 
 # test1
-test_outputStrucure = function(){test_that("Output has the good structure whatever the inputs", {
+test_outputStructure = function(){test_that("Output has the good structure whatever the inputs", {
   for (group in 1:length(groups)) {
       for (case in 1:length(group)) {
         object = do.call(what = makeDataset, args = groups[[group]][[case]])
         expect_is(object, class = "list")
         expect_length(object, 2)
+        expect_named(object, c("bool", "output"))
+        expect_named(object$output, c("value", "condition"))
       }
   }
 })}
@@ -130,8 +134,8 @@ test_goodInput = function(){test_that("Good behaviour in case of good parameter"
 #####
 ## execution of the tests. If you want to skip a test, simply comment it :)
 
+test_outputStructure()
 test_badInput()
-test_outputStrucure()
 test_goodInput()
 
 
