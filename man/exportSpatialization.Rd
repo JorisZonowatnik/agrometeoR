@@ -19,7 +19,7 @@ exportSpatialization(spatialized, path = getwd(), filename = NULL,
 \item{write}{a boolean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)}
 }
 \value{
-a list containing a boolean and a character containing the data encoded in the required format. Default = csv
+a list containing a boolean and a character containing the data encoded in the required format.
 }
 \description{
 you can both store the encoded string in a variable and in a file by specifying write = TRUE
