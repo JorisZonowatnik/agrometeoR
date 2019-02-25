@@ -8,7 +8,7 @@
 #' @param tasks a list which elements are object of class mlr::makeRegrTask()
 #' @param learners a list which elements are object of class mlr::makeLearner()
 #' @param measures a list of the mlr performance metrics you want to get. Default is list(rmse)
-#' @param keep.pred a boolean specifying if you want to keep the bmr preds. defaut = FALSE
+#' @param keep.pred a boolean specifying if you want to keep the bmr preds. defaut = TRUE
 #' @param models a boolean specifying if you want to keep the bmr models. defaut = FALSE
 #' @param grouping a numeric specifying the number of tasks you want to benchamrk in a single batch. Default to 1000
 #' @param level a character specifying the paralelllization level. Default  = "mlr.benchmark"
@@ -23,7 +23,7 @@ makeBatchOfBenchExp <- function(
   tasks,
   learners,
   measures = list(rmse),
-  keep.pred = FALSE,
+  keep.pred = TRUE,
   models = FALSE,
   grouping = 1000,
   level = "mlr.benchmark",
