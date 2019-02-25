@@ -60,6 +60,15 @@ test_bad_spatialized = lapply(test_spatialized,
     x[-2]
   })
 
+# makeBatchOfBenchExp inputs
+test_tasks = lapply(
+  test_dataset,
+  function(x){
+    makeTask(x, target = test_sensor)$output$value
+  })
+
+
+# saving all the unit_test data object
 devtools::use_data(
   test_user_token,
   test_bad_user_token,
@@ -83,6 +92,7 @@ devtools::use_data(
   test_model,
   test_spatialized,
   test_bad_spatialized,
+  test_tasks,
   overwrite = TRUE,
   internal = TRUE)
 
