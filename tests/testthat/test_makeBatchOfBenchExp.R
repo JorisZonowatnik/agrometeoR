@@ -17,15 +17,21 @@ groups = list(
     all_good = list(
       cpus = 2,
       tasks = test_task,
-      learners = learners[c(1, 2, 6, 8)],
-      resamplings = "LOO")
-  ),
-  bad = list(
-    bad_ = list(
-      cpus = NULL,
-      tasks = test_task,
-      learners = "learners",
-      resamplings = "LOO")))
+      learners = list(
+        learners$baseLearners$lrn.lm.alt,
+        learners$baseLearners$lrn.gstat.idw,
+        learners$baseLearners$lrn.gstat.krige),
+      resamplings = "LOO",
+      grouping = 2,
+      prefix = "ut_",
+      path = "./")
+  ))
+  # bad = list(
+  #   bad_ = list(
+  #     cpus = NULL,
+  #     tasks = test_task,
+  #     learners = "learners",
+  #     resamplings = "LOO")))
 
 #####
 ## definition of the unit tests
@@ -34,6 +40,7 @@ groups = list(
 test_outputStrucure = function(){test_that("Output has the good structure whatever the inputs", {
   for (group in 1:length(groups)) {
     for (case in 1:length(group)) {
+      browser()
       object = do.call(what = makeBatchOfBenchExp, args = groups[[group]][[case]])
       expect_is(object, class = "list")
       expect_named(object, c("bool", "output"))
@@ -77,44 +84,8 @@ test_goodInput = function(){test_that("Good behaviour in case of good parameter"
 ## execution of the tests. If you want to skip a test, simply comment it :)
 
 test_outputStrucure()
-test_badInput()
-test_goodInput()
+# test_badInput()
+# test_goodInput()
 
 
-# test_that("Output has the good structure, whatever error or not", {
-#   for (group in 1:length(groups)) {
-#     for (case in 1:length(group)) {
-#       object = do.call(what = makeBenchmark, args = groups[[group]][[case]][-1])
-#       expect_is(object, class = "list")
-#       expect_length(object, 2)
-#       expect_equal(names(object), c("bool", "output"))
-#     }
-#   }
-# })
-#
-# test_that("Error are thrown when a bad parameter is passed", {
-#   for (group in 1:length(groups)) {
-#     if (names(groups[1]) == "bad") {
-#       for (case in 1:length(group)) {
-#         object = do.call(what = makeBenchmark, args = groups[[group]][[case]][-1])
-#         expect_error(object)
-#       }
-#     }
-#   }
-# })
-#
-# test_that("When bool isTRUE (no error), output has class list and when bool isFALSE, output has class NULL", {
-#   for (group in 1:length(groups)) {
-#     for (case in 1:length(group)) {
-#       args = groups[[group]][[case]][-1]
-#       object = do.call(what = makeBenchmark, args = args)
-#       if (isTRUE(object$bool)) {
-#         expect_is(object$output$value, "list")
-#       } else {
-#         expect_null(object$output$value)
-#       }
-#     }
-#   }
-# })
-#
-#
+
