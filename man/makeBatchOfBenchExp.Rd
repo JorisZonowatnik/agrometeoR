@@ -5,7 +5,7 @@
 \title{make a multicore parallelized mlr benchmark experiment for various learners on multiple tasks}
 \usage{
 makeBatchOfBenchExp(tasks, learners, measures = list(rmse),
-  keep.pred = FALSE, models = FALSE, grouping = 1000,
+  keep.pred = TRUE, models = FALSE, grouping = 1000,
   level = "mlr.benchmark", resamplings = "LOO", cpus = 1, prefix = "",
   output_dir = "./", removeTemp = FALSE)
 }
@@ -16,7 +16,7 @@ makeBatchOfBenchExp(tasks, learners, measures = list(rmse),
 
 \item{measures}{a list of the mlr performance metrics you want to get. Default is list(rmse)}
 
-\item{keep.pred}{a boolean specifying if you want to keep the bmr preds. defaut = FALSE}
+\item{keep.pred}{a boolean specifying if you want to keep the bmr preds. defaut = TRUE}
 
 \item{models}{a boolean specifying if you want to keep the bmr models. defaut = FALSE}
 
