@@ -14,18 +14,46 @@ context("Testing makeBatchOfBenchExp")
 
 groups = list(
   good = list(
-    all_good = list(
-      cpus = 2,
-      tasks = test_task,
-      learners = list(
-        learners$baseLearners$lrn.lm.alt,
-        learners$baseLearners$lrn.gstat.idw,
-        learners$baseLearners$lrn.gstat.krige),
-      resamplings = "LOO",
-      grouping = 2,
-      prefix = "ut_",
-      path = "./")
-  ))
+    # all_good_removeTemp = list(
+    #   cpus = 2,
+    #   tasks = test_tasks,
+    #   learners = list(
+    #     learners$baseLearners$lrn.lm.alt,
+    #     learners$baseLearners$lrn.gstat.idw,
+    #     learners$baseLearners$lrn.gstat.krige),
+    #   resamplings = "LOO",
+    #   grouping = 1,
+    #   prefix = "ut_",
+    #   output_dir = "./makeBatchOfBenchExp/all_good/",
+    #   removeTemp = TRUE),
+  all_good_keepTemp = list(
+    cpus = 2,
+    tasks = test_tasks,
+    learners = list(
+      learners$baseLearners$lrn.lm.alt,
+      learners$baseLearners$lrn.gstat.idw,
+      learners$baseLearners$lrn.gstat.krige),
+    resamplings = "LOO",
+    grouping = 1,
+    prefix = "ut_",
+    output_dir = "./test",
+    removeTemp = FALSE)
+))
+  # warning = list(
+  #   groupingBiggerLengthTasks = list(
+  #     cpus = 2,
+  #     tasks = test_tasks,
+  #     learners = list(
+  #       learners$baseLearners$lrn.lm.alt,
+  #       learners$baseLearners$lrn.gstat.idw,
+  #       learners$baseLearners$lrn.gstat.krige),
+  #     resamplings = "LOO",
+  #     grouping = 10,
+  #     prefix = "ut_",
+  #     output_dir = "./makeBatchOfBenchExp/groupingBiggerLengthTasks/",
+  #     removeTemp = TRUE)
+  #   )
+  # )
   # bad = list(
   #   bad_ = list(
   #     cpus = NULL,
@@ -40,8 +68,9 @@ groups = list(
 test_outputStrucure = function(){test_that("Output has the good structure whatever the inputs", {
   for (group in 1:length(groups)) {
     for (case in 1:length(group)) {
-      browser()
+
       object = do.call(what = makeBatchOfBenchExp, args = groups[[group]][[case]])
+
       expect_is(object, class = "list")
       expect_named(object, c("bool", "output"))
       expect_named(object$output, c("value", "condition"))
