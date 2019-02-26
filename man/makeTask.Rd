@@ -14,8 +14,7 @@ makeTask(dataset, drop = NULL, target)
 \item{target}{a charachter specifying the name of the target variable}
 }
 \value{
-a list containing a boolean and another list.
-The later contains 4 elements :
+a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains 4 elements :
 (1) value : an object which classes are "RegrTask" "SupervisedTask" "Task"
 (2) condition : a character specifying if the functions has encountered success, warning, error
 (3) message : the message relative to the condition

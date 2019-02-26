@@ -8,7 +8,10 @@
 #' @param filename a character specifying the name you want to give to the file. Default = NULL
 #' @param format a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"
 #' @param write a boolean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)
-#' @return a list containing a boolean and a character containing the data encoded in the required format.
+#' @return a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains :
+#' (1) value : a character vector containing the data encoded into the desired exportation format
+#' (2) condition : a character specifying if the functions has encountered success, warning, error
+#' (3) message : the message relative to the condition
 exportSpatialization <- function(
   spatialized,
   path = getwd(),
@@ -36,7 +39,6 @@ exportSpatialization <- function(
         csv.con = textConnection("csv.con", "w")
         write.csv(spatializedNoCoords, csv.con, row.names = FALSE)
         string = textConnectionValue(csv.con)
-        #cat(csvString)
         close(csv.con)
         message("Success ! Data encoded")
       }

@@ -4,9 +4,8 @@
 #' @importFrom magrittr %>%
 #' @param model an object of class mlr::train() that contains the prediction model
 #' @param pred.grid an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained
-#' @return a list containing a boolean and another list.
-#' The later contains 4 elements :
-#' (1) value : an object of class data.frame
+#' @return a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains
+#' (1) value : an object of class data.frame containing the spatialized data
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition
 #' @examples

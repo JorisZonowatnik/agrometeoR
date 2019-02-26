@@ -19,7 +19,10 @@ exportSpatialization(spatialized, path = getwd(), filename = NULL,
 \item{write}{a boolean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)}
 }
 \value{
-a list containing a boolean and a character containing the data encoded in the required format.
+a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains :
+(1) value : a character vector containing the data encoded into the desired exportation format
+(2) condition : a character specifying if the functions has encountered success, warning, error
+(3) message : the message relative to the condition
 }
 \description{
 you can both store the encoded string in a variable and in a file by specifying write = TRUE
