@@ -98,14 +98,16 @@ test_NA_values = function(){test_that("Expected behaviour in case of  NA values"
       for (case in 1:length(group)) {
         object = do.call(what = makeTask, args = groups[[group]][[case]])
 
-        browser()
-
         # the snitch is at TRUE
         expect_true(object$snitch)
         # the slot condition type is at warning
         expect_equal(object$output$condition$type, "warning")
-        # the returned object at slot value is of class RegrTask
-        expect_is(object$output$value, class = "RegrTask")
+        # the returned object at slot value is of class list  list
+        expect_is(object$output$value, class = "list")
+        # the returned object at slot value task is of class RegrTask
+        expect_is(object$output$value$task, class = "RegrTask")
+        # the returned object at slot value summary is of class data.frame
+        expect_is(object$output$value$summary, class = "data.frame")
         # the returned object at slot output stations used is not NULL and has length >= 1
         expect_is(object$output$stations$used, class = "integer")
         expect_gte(length(object$output$stations$used), 1)
