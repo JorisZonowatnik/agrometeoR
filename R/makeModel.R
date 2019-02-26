@@ -4,8 +4,7 @@
 #' @import mlr
 #' @param task an object of class mlr::makeRegrTask()
 #' @param learner an object of class mlr::makeLearner()
-#' @return a list containing a boolean and another list.
-#' The later contains 4 elements :
+#' @return a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains :
 #' (1) value : an object of class list made of 3 elements which are of classes "Model", "dataframe", and "list"
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition

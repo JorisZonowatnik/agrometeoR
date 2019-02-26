@@ -4,8 +4,7 @@
 #' @param dataset a dataframe containing an hourly/daily set of records you want to transform to a mlr task
 #' @param target a charachter specifying the name of the target variable
 #' @param drop a character vector specifying the explanatory variables you wan to drop.
-#' @return a list containing a boolean and another list.
-#' The later contains 4 elements :
+#' @return a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains 4 elements :
 #' (1) value : an object which classes are "RegrTask" "SupervisedTask" "Task"
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition

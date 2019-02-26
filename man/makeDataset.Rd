@@ -33,8 +33,7 @@ Any combinations of inca, ens}
 \item{token}{a character specifying your agrometAPI token}
 }
 \value{
-a list containing a boolean and another list.
-The later contains 3 elements :
+a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains 3 elements :
 (1) value : a list of dataframes where each dataframe contains the hourly sets of records,
 (2) condition : a character specifying if the functions has encountered success, warning, error
 (3) message : the message relative to the condition
