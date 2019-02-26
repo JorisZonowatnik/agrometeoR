@@ -13,7 +13,7 @@ makeSpatialization(model, pred.grid = grid.df)
 }
 \value{
 a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains
-(1) value : an object of class data.frame containing the spatialized data
+(1) value : an object of class list where first element is a data.frame containing the spatialized data and the second element is a data.frame containing the summary data
 (2) condition : a character specifying if the functions has encountered success, warning, error
 (3) message : the message relative to the condition
 }

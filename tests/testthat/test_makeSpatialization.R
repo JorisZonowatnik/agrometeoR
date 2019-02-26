@@ -37,6 +37,7 @@ test_outputStrucure = function(){test_that("Output has the good structure whatev
   for (group in 1:length(groups)) {
     for (case in 1:length(group)) {
       object = do.call(what = makeSpatialization, args = groups[[group]][[case]])
+
       expect_is(object, class = "list")
       expect_named(object, c("snitch", "output"))
       expect_named(object$output, c("value", "condition"))
@@ -51,6 +52,7 @@ test_badInput = function(){test_that("Good behaviour in case of bad parameters",
     if (names(groups[group]) == "bad") {
       for (case in 1:length(group)) {
         object = do.call(what = makeSpatialization, args = groups[[group]][[case]])
+
         expect_false(object$snitch)
         expect_equal(object$output$condition$type, "error")
         expect_null(object$output$value)
@@ -65,10 +67,18 @@ test_goodInput = function(){test_that("Good behaviour in case of good parameter"
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
         object = do.call(what = makeSpatialization, args = groups[[group]][[case]])
+
+        # the snitch is at TRUE
         expect_true(object$snitch)
-        expect_is(object$output$value, "data.frame")
-        expect_identical(nrow(object$output$value), nrow(test_grid))
-        expect_identical(unique(object$output$value$px), unique(test_grid$px))
+        # the returned object at slot value is of class list
+        expect_is(object$output$value, "list")
+        # the returned object at slot value summary and value spatialized are of class data.frame
+        expect_is(object$output$value$summary, "data.frame")
+        expect_is(object$output$value$spatialized, "data.frame")
+        # the number of spatilized points is equal the size of the spatialization grid
+        expect_identical(nrow(object$output$value$spatialized), nrow(test_grid))
+        # the px ids are equa
+        expect_identical(unique(object$output$value$spatialized$px), unique(test_grid$px))
       }
     }
   }

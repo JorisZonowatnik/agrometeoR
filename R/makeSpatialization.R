@@ -5,7 +5,7 @@
 #' @param model an object of class mlr::train() that contains the prediction model
 #' @param pred.grid an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained
 #' @return a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains
-#' (1) value : an object of class data.frame containing the spatialized data
+#' (1) value : an object of class list where first element is a data.frame containing the spatialized data and the second element is a data.frame containing the summary data
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition
 #' @examples
@@ -59,7 +59,10 @@ makeSpatialization <- function(
     spatialized %>%
       dplyr::bind_cols(data.frame(coords))
 
-    return(spatialized)
+    # compute a summary for both response and standard error
+    summary = data.frame(do.call(cbind, lapply(spatialized[c("response","se")], summary)))
+
+    return(list(spatialized = spatialized, summary = summary))
   }
 
   tryCatch(

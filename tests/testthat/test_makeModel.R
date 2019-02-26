@@ -41,6 +41,7 @@ test_outputStrucure = function(){test_that("Output has the good structure whatev
   for (group in 1:length(groups)) {
     for (case in 1:length(group)) {
       object = do.call(what = makeModel, args = groups[[group]][[case]])
+
       expect_is(object, class = "list")
       expect_named(object, c("snitch", "output"))
       expect_named(object$output, c("value", "condition"))
@@ -55,6 +56,7 @@ test_badInput = function(){test_that("Good behaviour in case of bad parameter", 
     if (names(groups[group]) == "bad") {
       for (case in 1:length(group)) {
         object = do.call(what = makeModel, args = groups[[group]][[case]])
+
         expect_false(object$snitch)
         expect_equal(object$output$condition$type, "error")
         expect_null(object$output$value)
@@ -69,9 +71,23 @@ test_goodInput = function(){test_that("Good behaviour in case of good parameters
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
         object = do.call(what = makeModel, args = groups[[group]][[case]])
+
+        browser()
+
+        # the snitch is at TRUE
         expect_true(object$snitch)
+        # the returned object at slot value is a named list
+        expect_is(object$output$value, class = "list")
+        # with names "trained","predictions","perfs"
         expect_named(object$output$value, c("trained","predictions","perfs"))
+        # and its trained slot is of an object of class WrappedModel
         expect_is(object$output$value$trained, class = "WrappedModel")
+        # the object at slot value predictions is of class data.frame
+        expect_is(object$output$value$trained, class = "data.frame")
+        # the colnames of the predictions dataframe are truth, response, se and residuals
+        expect_named(object$output$value$predictions, c("truth", "response", "se", "residuals"))
+        # the size of the predictions dataframe is equal to the size of the input task
+        expect_equal(mlr::getTaskSize(test_task), nrow(object$output$value$predictions))
       }
     }
   }
