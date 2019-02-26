@@ -12,7 +12,7 @@ makeSpatialization(model, pred.grid = grid.df)
 \item{pred.grid}{an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained}
 }
 \value{
-a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains
+a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains
 (1) value : an object of class data.frame containing the spatialized data
 (2) condition : a character specifying if the functions has encountered success, warning, error
 (3) message : the message relative to the condition

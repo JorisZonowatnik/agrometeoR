@@ -124,7 +124,7 @@ test_goodInput = function(){test_that("Expected behaviour in case of good parame
       for (case in 1:length(group)) {
         object = do.call(what = makeDataset, args = groups[[group]][[case]])
 
-        # the sntitch is at TRUE
+        # the snitch is at TRUE
         expect_true(object$snitch)
         # the returned object at slot value is of class list
         expect_is(object$output$value, class = "list")
