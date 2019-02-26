@@ -43,6 +43,11 @@ makeTask <- function(
         id = task.id),
       features = drop)
 
+    # compute a summary for both response and standard error
+    summary = data.frame(do.call(cbind, lapply(mlr::getTaskData(task), summary)))
+
+    return(list(task = task, summary = summary))
+
     return(task)
   }
 

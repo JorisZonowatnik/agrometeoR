@@ -98,9 +98,11 @@ test_NA_values = function(){test_that("Expected behaviour in case of  NA values"
       for (case in 1:length(group)) {
         object = do.call(what = makeTask, args = groups[[group]][[case]])
 
+        browser()
+
         # the snitch is at TRUE
         expect_true(object$snitch)
-        # the slod condition type is at warning
+        # the slot condition type is at warning
         expect_equal(object$output$condition$type, "warning")
         # the returned object at slot value is of class RegrTask
         expect_is(object$output$value, class = "RegrTask")
@@ -118,8 +120,8 @@ test_NA_values = function(){test_that("Expected behaviour in case of  NA values"
 
 #####
 ## execution of the tests. If you want to skip a test, simply comment it :)
-
-test_outputStrucure()
-test_badInput()
-test_goodInput()
+#
+# test_outputStrucure()
+# test_badInput()
+# test_goodInput()
 test_NA_values()
