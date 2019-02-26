@@ -49,6 +49,7 @@ test_outputStrucure = function(){test_that("Output has the good structure whatev
       expect_is(object, class = "list")
       expect_named(object, c("snitch", "output"))
       expect_named(object$output, c("value", "condition", "stations"))
+      expect_named(object$output$stations, c("used", "ignored"))
     }
   }
 })
@@ -74,8 +75,17 @@ test_goodInput = function(){test_that("Expected behaviour in case of good parame
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
         object = do.call(what = makeTask, args = groups[[group]][[case]])
+
+        # the snitch is at TRUE
         expect_true(object$snitch)
+        # the returned object at slot output value is of class RegrTask
         expect_is(object$output$value, class = "RegrTask")
+        # the returned object at slot output stations used is not NULL and has length >= 1
+        expect_is(object$output$stations$used, class = "integer")
+        expect_gte(length(object$output$stations$used), 1)
+        # the returned object at slot output stations ignored is NULL
+        expect_null(object$output$stations$ignored)
+
       }
     }
   }
@@ -87,16 +97,23 @@ test_NA_values = function(){test_that("Expected behaviour in case of  NA values"
     if (names(groups[group]) == "warning") {
       for (case in 1:length(group)) {
         object = do.call(what = makeTask, args = groups[[group]][[case]])
-        expect_equal(object$output$condition$type, "warning")
-        expect_equal(class(object$output$condition$message), "character")
+
+        # the snitch is at TRUE
         expect_true(object$snitch)
+        # the slod condition type is at warning
+        expect_equal(object$output$condition$type, "warning")
+        # the returned object at slot value is of class RegrTask
         expect_is(object$output$value, class = "RegrTask")
-        expect_gte(length(object$output$stations), 1)
+        # the returned object at slot output stations used is not NULL and has length >= 1
+        expect_is(object$output$stations$used, class = "integer")
+        expect_gte(length(object$output$stations$used), 1)
+        # the returned object at slot output stations ignored is not NULL and has length >= 1
+        expect_is(object$output$stations$ignored, class = "integer")
+        expect_gte(length(object$output$stations$ignored), 1)
       }
     }
   }
-})
-}
+})}
 
 
 #####

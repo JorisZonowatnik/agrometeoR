@@ -22,7 +22,7 @@ makeTask <- function(
   target
 ){
 
-  output = list(value = NULL, condition = list(type = NULL, message = NULL), stations = NULL)
+  output = list(value = NULL, condition = list(type = NULL, message = NULL), stations = list(used = NULL, ignored = NULL))
   snitch = FALSE
 
   doMakeTask = function(){
@@ -56,35 +56,42 @@ makeTask <- function(
     # check if target exists in dataframe
     stopifnot(target %in% colnames(dataset))
 
-    # check if missing values in target or features and raise warning telling dataset has been amputed of stations with missing values if its the case
+    # check if missing values in target or features
     if (!identical(na.omit(dataset), dataset)) {
+
+      # store the sids of the stations with missing data
+      output$stations$ignored = as.integer(setdiff(dataset$sid, na.omit(dataset)$sid))
+
+      # remove stations with missing data from the dataset
       dataset = na.omit(dataset)
 
+      # raise warning telling dataset has been amputed of stations with missing values
       warning(paste(
         "Your dataset contains missing values either at target variable and/or features. Stations with missing values are ignored for the task creation. ",
-        "The sid of the stations used for the stations are : ",
-        paste0(dataset$sid, sep = ",", collapse = "")
+        "The sid of the ignored stations are : ",
+        paste0(output$stations$ignored, sep = ",", collapse = "")
       ))
     }
 
     # in case everything went fine, do makeTask
     output$value = doMakeTask()
+    output$stations$used = as.integer(dataset$sid)
     output$condition$type = "success"
     output$condition$message = "Dataset created"
-    output$stations = dataset$sid
     snitch = TRUE
 
     },
-    # in case of warning, raise a warning and do makeTask
+    # in case of warning, store the warning and do makeTask
     warning = function(w){
+
       warning = paste0(
         "AgrometeoR::makeTask raised a warning -> ",
         w)
-      snitch <<- TRUE
       output$value <<- doMakeTask()
       output$condition$type <<- "warning"
-      output$condition$message <<- w$message
-      output$stations <<- dataset$sid
+      output$condition$message <<- warning
+      output$stations$used <<- as.integer(dataset$sid)
+      snitch <<- TRUE
     },
     error = function(e){
       error = paste0(

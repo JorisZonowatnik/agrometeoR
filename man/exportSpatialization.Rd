@@ -16,10 +16,10 @@ exportSpatialization(spatialized, path = getwd(), filename = NULL,
 
 \item{format}{a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"}
 
-\item{write}{a boolean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)}
+\item{write}{a snitchean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)}
 }
 \value{
-a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains :
+a 2 elements named list : (1) bool and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains :
 (1) value : a character vector containing the data encoded into the desired exportation format
 (2) condition : a character specifying if the functions has encountered success, warning, error
 (3) message : the message relative to the condition

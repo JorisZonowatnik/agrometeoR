@@ -24,7 +24,7 @@ Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 \item{sensor}{a character specifying the sensor data you want to spatialize.
 One of tsa, hct, hra}
 
-\item{staticExpl}{a character vector specifying the static explanatory variables you want to add to the tasks.
+\item{staticExpl}{a character vector specifying the desired static explanatory variables
 Any combinations of "altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided. Default = "Elevation"}
 
 \item{dynExpl}{a character vector specifying the dynamic explanatory variables you want to add to the task.
@@ -33,8 +33,8 @@ Any combinations of inca, ens}
 \item{token}{a character specifying your agrometAPI token}
 }
 \value{
-a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains 3 elements :
-(1) value : a list of dataframes where each dataframe contains the hourly sets of records,
+a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains 3 elements :
+(1) value : a list of dataframes where each dataframe contains the sid, the mtime, the sensor data, x position (longitude), y position (latitude) and the explanatory variables
 (2) condition : a character specifying if the functions has encountered success, warning, error
 (3) message : the message relative to the condition
 }
