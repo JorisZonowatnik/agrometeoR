@@ -4,7 +4,7 @@
 #' @importFrom magrittr %>%
 #' @param model an object of class mlr::train() that contains the prediction model
 #' @param pred.grid an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained
-#' @return a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains
+#' @return a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains
 #' (1) value : an object of class data.frame containing the spatialized data
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition
@@ -24,7 +24,7 @@ makeSpatialization <- function(
   pred.grid = grid.df){
 
   output = list(value = NULL, condition = list(type = NULL, message = NULL))
-  bool = FALSE
+  snitch = FALSE
 
   doMakeSpatialisation = function(){
     # predicting on the grid
@@ -76,14 +76,14 @@ makeSpatialization <- function(
       output$value = doMakeSpatialisation()
       output$condition$type = "success"
       output$condition$message = "Dataset created"
-      bool = TRUE
+      snitch = TRUE
 
     },
     warning = function(w){
       warning = paste0(
         "AgrometeoR::makeSpatialisation. raised a warning -> ",
         w)
-      bool <<- TRUE
+      snitch <<- TRUE
       output$value <<- doMakeSpatialisation()
       output$condition$type <<- "warning"
       output$condition$message <<- warning
@@ -107,7 +107,7 @@ makeSpatialization <- function(
         "All done with makeSpatialisation. "
       )
       message(finalMessage)
-      return(list(bool = bool, output = output))
+      return(list(snitch = snitch, output = output))
     }
   )
 }

@@ -34,7 +34,7 @@ makeBatchOfBenchExp <- function(
   removeTemp = FALSE){
 
   output = list(value = NULL, condition = list(type = NULL, message = NULL))
-  bool = FALSE
+  snitch = FALSE
 
   doBenchmark = function(){
     #browser()
@@ -165,14 +165,14 @@ makeBatchOfBenchExp <- function(
       output$value = doBenchmark()
       output$condition$type = "success"
       output$condition$message = "Dataset created"
-      bool = TRUE
+      snitch = TRUE
 
     },
     warning = function(w){
       warning = paste0(
         "AgrometeoR::makeBatchOfBenchExp raised a warning -> ",
         w)
-      bool <<- TRUE
+      snitch <<- TRUE
       output$value <<- doBenchmark()
       output$condition$type <<- "warning"
       output$condition$message <<- warning
@@ -192,7 +192,7 @@ makeBatchOfBenchExp <- function(
         "All done with makeBatchOfBenchExp "
       )
       message(finalMessage)
-      return(list(bool = bool, output = output))
+      return(list(snitch = snitch, output = output))
     }
   )
 }

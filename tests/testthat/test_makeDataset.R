@@ -96,7 +96,7 @@ test_outputStructure = function(){test_that("Output has the good structure whate
         object = do.call(what = makeDataset, args = groups[[group]][[case]])
         expect_is(object, class = "list")
         expect_length(object, 2)
-        expect_named(object, c("bool", "output"))
+        expect_named(object, c("snitch", "output"))
         expect_named(object$output, c("value", "condition"))
       }
   }
@@ -109,7 +109,7 @@ test_badInput = function(){test_that("Expected behaviour in case of bad paramete
     if (names(groups[group]) == "bad") {
       for (case in 1:length(group)) {
         object = do.call(what = makeDataset, args = groups[[group]][[case]])
-        expect_false(object$bool)
+        expect_false(object$snitch)
         expect_equal(object$output$condition$type, "error")
         expect_null(object$output$value)
       }
@@ -123,7 +123,7 @@ test_goodInput = function(){test_that("Expected behaviour in case of good parame
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
         object = do.call(what = makeDataset, args = groups[[group]][[case]])
-        expect_true(object$bool)
+        expect_true(object$snitch)
         expect_is(object$output$value[[1]], class = "data.frame")
         expect_gte(nrow(object$output$value[[1]]), 1)
       }
