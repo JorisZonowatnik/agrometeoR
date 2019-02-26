@@ -4,7 +4,7 @@
 #' @import mlr
 #' @param task an object of class mlr::makeRegrTask()
 #' @param learner an object of class mlr::makeLearner()
-#' @return a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains :
+#' @return a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains :
 #' (1) value : an object of class list made of 3 elements which are of classes "Model", "dataframe", and "list"
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition
@@ -23,7 +23,7 @@ makeModel <- function(
   learner){
 
     output = list(value = NULL, condition = list(type = NULL, message = NULL))
-    bool = FALSE
+    snitch = FALSE
 
     doMakeModel = function(){
       message("Training the learner to build a model...")
@@ -74,14 +74,14 @@ makeModel <- function(
       output$value = doMakeModel()
       output$condition$type = "success"
       output$condition$message = "Dataset created"
-      bool = TRUE
+      snitch = TRUE
 
     },
     warning = function(w){
       warning = paste0(
         "AgrometeoR::makeModel raised a warning -> ",
         w)
-      bool <<- TRUE
+      snitch <<- TRUE
       output$value <<- doMakeModel()
       output$condition$type <<- "warning"
       output$condition$message <<- warning
@@ -101,7 +101,7 @@ makeModel <- function(
         "All done with makeModel. "
       )
       message(finalMessage)
-      return(list(bool = bool, output = output))
+      return(list(snitch = snitch, output = output))
     }
   )
 }

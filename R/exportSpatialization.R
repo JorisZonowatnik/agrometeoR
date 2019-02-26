@@ -7,8 +7,8 @@
 #' @param path a character specifying the path where you want your geosonfile to be stored. Default = wd
 #' @param filename a character specifying the name you want to give to the file. Default = NULL
 #' @param format a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"
-#' @param write a boolean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)
-#' @return a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains :
+#' @param write a snitchean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)
+#' @return a 2 elements named list : (1) bool and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains :
 #' (1) value : a character vector containing the data encoded into the desired exportation format
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition
@@ -20,7 +20,7 @@ exportSpatialization <- function(
   write = FALSE){
 
   output = list(value = NULL, condition = list(type = NULL, message = NULL))
-  bool = FALSE
+  snitch = FALSE
 
   doExportSpatialisation = function(){
 
@@ -82,14 +82,14 @@ exportSpatialization <- function(
       output$value = doExportSpatialisation()
       output$condition$type = "success"
       output$condition$message = "Dataset created"
-      bool = TRUE
+      snitch = TRUE
 
     },
     warning = function(w){
       warning = paste0(
         "AgrometeoR::exportSpatialisation. raised a warning -> ",
         w)
-      bool <<- TRUE
+      snitch <<- TRUE
       output$value <<- doExportSpatialisation()
       output$condition$type <<- "warning"
       output$condition$message <<- warning
@@ -113,7 +113,7 @@ exportSpatialization <- function(
         "All done with exportSpatialisation. "
       )
       message(finalMessage)
-      return(list(bool = bool, output = output))
+      return(list(snitch = snitch, output = output))
     }
   )
 }

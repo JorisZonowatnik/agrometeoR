@@ -4,7 +4,7 @@
 #' @param dataset a dataframe containing an hourly/daily set of records you want to transform to a mlr task
 #' @param target a charachter specifying the name of the target variable
 #' @param drop a character vector specifying the explanatory variables you wan to drop.
-#' @return a 2 elements named list : bool and output. bool is TRUE if function has provided the expected result. output is a named list which contains 4 elements :
+#' @return a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains 4 elements :
 #' (1) value : an object which classes are "RegrTask" "SupervisedTask" "Task"
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition
@@ -23,7 +23,7 @@ makeTask <- function(
 ){
 
   output = list(value = NULL, condition = list(type = NULL, message = NULL), stations = NULL)
-  bool = FALSE
+  snitch = FALSE
 
   doMakeTask = function(){
     message("Making mlr task(s)...")
@@ -72,7 +72,7 @@ makeTask <- function(
     output$condition$type = "success"
     output$condition$message = "Dataset created"
     output$stations = dataset$sid
-    bool = TRUE
+    snitch = TRUE
 
     },
     # in case of warning, raise a warning and do makeTask
@@ -80,7 +80,7 @@ makeTask <- function(
       warning = paste0(
         "AgrometeoR::makeTask raised a warning -> ",
         w)
-      bool <<- TRUE
+      snitch <<- TRUE
       output$value <<- doMakeTask()
       output$condition$type <<- "warning"
       output$condition$message <<- w$message
@@ -102,7 +102,7 @@ makeTask <- function(
         "All done with makeTask. "
       )
       message(finalMessage)
-      return(list(bool = bool, output = output))
+      return(list(snitch = snitch, output = output))
     }
    )
 }

@@ -75,7 +75,7 @@ test_outputStrucure = function(){test_that("Output has the good structure whatev
       object = do.call(what = makeBatchOfBenchExp, args = groups[[group]][[case]])
 
       expect_is(object, class = "list")
-      expect_named(object, c("bool", "output"))
+      expect_named(object, c("snitch", "output"))
       expect_named(object$output, c("value", "condition"))
     }
   }
@@ -90,7 +90,7 @@ test_badInput = function(){test_that("Good behaviour in case of bad parameters",
         object = do.call(what = makeBatchOfBenchExp, args = groups[[group]][[case]])
 
         browser()
-        expect_false(object$bool)
+        expect_false(object$snitch)
         expect_equal(object$output$condition$type, "error")
         expect_null(object$output$value)
       }
@@ -105,7 +105,7 @@ test_goodInput = function(){test_that("Good behaviour in case of good parameter"
       for (case in 1:length(group)) {
         object = do.call(what = makeBatchOfBenchExp, args = groups[[group]][[case]])
 
-        expect_true(object$bool)
+        expect_true(object$snitch)
         expect_is(object$output$value, "list")
         expect_named(object$output, c("value", "condition"))
         expect_named(object$output$value, c("perfs", "aggPerfs", "summary"))
