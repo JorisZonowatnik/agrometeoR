@@ -123,9 +123,17 @@ test_goodInput = function(){test_that("Expected behaviour in case of good parame
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
         object = do.call(what = makeDataset, args = groups[[group]][[case]])
+
+        # the sntitch is at TRUE
         expect_true(object$snitch)
-        expect_is(object$output$value[[1]], class = "data.frame")
+        # the returned object at slot value is of class list
+        expect_is(object$output$value, class = "list")
+        # each element of this list is of class dataframe
+        lapply(object$output$value, function(x){expect_is(x, class = "data.frame")})
+        # each of these dataframe has at least one row of information
         expect_gte(nrow(object$output$value[[1]]), 1)
+        # the colnames of these dataframes all contain the desired sensor and desired explanatory variables
+        expect_true(all(c(test_staticExpl, test_sensor) %in% unlist(lapply(object$output$value, function(x) {colnames(x)}))))
       }
     }
   }
