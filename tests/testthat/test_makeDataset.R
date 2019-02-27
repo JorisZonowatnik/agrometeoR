@@ -20,68 +20,68 @@ context("Testing makeDataset")
 groups = list(
   good = list(
     all_good = list(
-      stations = test_stations,
-      user_token = test_user_token,
-      dfrom = test_dfrom,
-      dto = test_dto,
-      sensor = test_sensor,
-      staticExpl = test_staticExpl,
+      stations = ex_stations,
+      user_token = ex_user_token,
+      dfrom = ex_dfrom,
+      dto = ex_dto,
+      sensor = ex_sensor,
+      staticExpl = ex_staticExpl,
       json = NULL,
       dynExpl = NULL)
     ),
   bad = list(
     bad_user_token = list(
-      stations = test_stations,
-      user_token = test_bad_user_token,
-      dfrom = test_dfrom,
-      dto = test_dto,
-      sensor = test_sensor,
-      staticExpl = test_staticExpl,
+      stations = ex_stations,
+      user_token = ex_bad_user_token,
+      dfrom = ex_dfrom,
+      dto = ex_dto,
+      sensor = ex_sensor,
+      staticExpl = ex_staticExpl,
       json = NULL,
       dynExpl = NULL),
   bad_stations = list(
-    stations = test_bad_stations,
-    user_token = test_user_token,
-    dfrom = test_dfrom,
-    dto = test_dto,
-    sensor = test_sensor,
-    staticExpl = test_staticExpl,
+    stations = ex_bad_stations,
+    user_token = ex_user_token,
+    dfrom = ex_dfrom,
+    dto = ex_dto,
+    sensor = ex_sensor,
+    staticExpl = ex_staticExpl,
     json = NULL,
     dynExpl = NULL),
   bad_dfrom = list(
-    stations = test_stations,
-    user_token = test_user_token,
-    dfrom = test_bad_dfrom,
-    dto = test_dto,
-    sensor = test_sensor,
-    staticExpl = test_staticExpl,
+    stations = ex_stations,
+    user_token = ex_user_token,
+    dfrom = ex_bad_dfrom,
+    dto = ex_dto,
+    sensor = ex_sensor,
+    staticExpl = ex_staticExpl,
     json = NULL,
     dynExpl = NULL),
   bad_dto = list(
-    stations = test_stations,
-    user_token = test_user_token,
-    dfrom = test_dfrom,
-    dto = test_bad_dto,
-    sensor = test_sensor,
-    staticExpl = test_staticExpl,
+    stations = ex_stations,
+    user_token = ex_user_token,
+    dfrom = ex_dfrom,
+    dto = ex_bad_dto,
+    sensor = ex_sensor,
+    staticExpl = ex_staticExpl,
     json = NULL,
     dynExpl = NULL),
   bad_sensor = list(
-    stations = test_stations,
-    user_token = test_user_token,
-    dfrom = test_dfrom,
-    dto = test_dto,
-    sensor = test_bad_sensor,
-    staticExpl = test_staticExpl,
+    stations = ex_stations,
+    user_token = ex_user_token,
+    dfrom = ex_dfrom,
+    dto = ex_dto,
+    sensor = ex_bad_sensor,
+    staticExpl = ex_staticExpl,
     json = NULL,
     dynExpl = NULL),
   bad_staticExpl = list(
-    stations = test_stations,
-    user_token = test_user_token,
-    dfrom = test_dfrom,
-    dto = test_dto,
-    sensor = test_sensor,
-    staticExpl = test_bad_staticExpl,
+    stations = ex_stations,
+    user_token = ex_user_token,
+    dfrom = ex_dfrom,
+    dto = ex_dto,
+    sensor = ex_sensor,
+    staticExpl = ex_bad_staticExpl,
     json = NULL,
     dynExpl = NULL)))
 
@@ -90,7 +90,7 @@ groups = list(
 ## definition of the unit tests
 
 # test1
-test_outputStructure = function(){test_that("Output has the good structure whatever the inputs", {
+ex_outputStructure = function(){test_that("Output has the good structure whatever the inputs", {
   for (group in 1:length(groups)) {
       for (case in 1:length(group)) {
         object = do.call(what = makeDataset, args = groups[[group]][[case]])
@@ -104,7 +104,7 @@ test_outputStructure = function(){test_that("Output has the good structure whate
 
 
 # test2
-test_badInput = function(){test_that("Expected behaviour in case of bad parameter", {
+ex_badInput = function(){test_that("Expected behaviour in case of bad parameter", {
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "bad") {
       for (case in 1:length(group)) {
@@ -118,7 +118,7 @@ test_badInput = function(){test_that("Expected behaviour in case of bad paramete
 })}
 
 # test3
-test_goodInput = function(){test_that("Expected behaviour in case of good parameters", {
+ex_goodInput = function(){test_that("Expected behaviour in case of good parameters", {
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
@@ -133,7 +133,7 @@ test_goodInput = function(){test_that("Expected behaviour in case of good parame
         # each of these dataframe has at least one row of information
         expect_gte(nrow(object$output$value[[1]]), 1)
         # the colnames of these dataframes all contain the desired sensor and desired explanatory variables
-        expect_true(all(c(test_staticExpl, test_sensor) %in% unlist(lapply(object$output$value, function(x) {colnames(x)}))))
+        expect_true(all(c(ex_staticExpl, ex_sensor) %in% unlist(lapply(object$output$value, function(x) {colnames(x)}))))
       }
     }
   }
@@ -142,8 +142,8 @@ test_goodInput = function(){test_that("Expected behaviour in case of good parame
 #####
 ## execution of the tests. If you want to skip a test, simply comment it :)
 
-test_outputStructure()
-test_badInput()
-test_goodInput()
+ex_outputStructure()
+ex_badInput()
+ex_goodInput()
 
 

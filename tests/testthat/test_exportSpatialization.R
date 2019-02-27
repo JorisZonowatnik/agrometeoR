@@ -15,7 +15,7 @@ context("Testing exportSpatialization")
 groups = list(
   good = list(
     all_good = list(
-      spatialized = test_spatialized,
+      spatialized = ex_makeSpatialization$output$value$spatialized,
       path = paste0(getwd(), "/test/testthat/exports/"),
       filename = NULL,
       format = "csv",
@@ -23,14 +23,14 @@ groups = list(
     )),
   bad = list(
     bad_spatialized = list(
-      spatialized = test_bad_spatialized,
+      spatialized = ex_bad_makeSpatialization,
       path = paste0(getwd(), "/test/testthat/exports/"),
       filename = NULL,
       format = "csv",
       write = FALSE
     ),
     bad_format = list(
-      spatialized = test_spatialized,
+      spatialized = ex_makeSpatialization$output$value$spatialized,
       path = paste0(getwd(), "/test/testthat/exports/"),
       filename = NULL,
       format = "xls",
@@ -45,6 +45,7 @@ groups = list(
 test_outputStrucure = function(){test_that("Output has the good structure whatever the inputs", {
   for (group in 1:length(groups)) {
     for (case in 1:length(group)) {
+
       object = do.call(what = exportSpatialization, args = groups[[group]][[case]])
       expect_is(object, class = "list")
       expect_named(object, c("snitch", "output"))
@@ -72,6 +73,9 @@ test_goodInput = function(){test_that("Good behaviour in case of good parameters
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
+
+        browser()
+
         object = do.call(what = exportSpatialization, args = groups[[group]][[case]])
         expect_true(object$snitch)
         expect_is(object$output$value, "character")

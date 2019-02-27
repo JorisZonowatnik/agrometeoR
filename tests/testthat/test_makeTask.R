@@ -15,24 +15,24 @@ context("Testing makeTask")
 groups = list(
   good = list(
     all_good = list(
-      dataset = test_dataset[[1]],
+      dataset = ex_makeDataset$output$value[[1]],
       drop = NULL,
       target = "tsa"
       )),
   bad = list(
     bad_colname = list(
-      dataset = test_bad_dataset[[1]],
+      dataset = ex_bad_makeDataset[[1]],
       drop = NULL,
       target = "tsa"
       ),
     bad_param = list(
-      dataset = test_dataset[[1]],
+      dataset = ex_makeDataset$output$value[[1]],
       drop = NULL,
       target = "foo"
       )),
   warning = list(
     dataset_with_NA = list(
-      dataset = test_dataset_with_NA[[1]],
+      dataset = ex_makeDataset_with_NA[[1]],
       drop = NULL,
       target = "tsa"
     ))

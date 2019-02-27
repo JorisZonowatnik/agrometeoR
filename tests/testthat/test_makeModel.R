@@ -15,20 +15,20 @@ context("Testing makeModel")
 groups = list(
   good = list(
     good.lm = list(
-      task = test_task,
+      task = ex_makeTask$output$value$task,
       learner = learners$baseLearners$lrn.lm.alt
     ),
     good.gstat = list(
-      task = test_task,
+      task = ex_makeTask$output$value$task,
       learner = learners$baseLearners$lrn.gstat.krige
     )),
   bad = list(
     bad_task = list(
-      task = test_bad_task,
+      task = ex_bad_makeTask,
       learner = learners$baseLearners$lrn.gstat.krige
     ),
     bad_learner = list(
-      task = test_task,
+      task = ex_makeTask$output$value$task,
       learner = "a_bad_learner"
     )
   ))
@@ -72,8 +72,6 @@ test_goodInput = function(){test_that("Good behaviour in case of good parameters
       for (case in 1:length(group)) {
         object = do.call(what = makeModel, args = groups[[group]][[case]])
 
-        browser()
-
         # the snitch is at TRUE
         expect_true(object$snitch)
         # the returned object at slot value is a named list
@@ -83,11 +81,11 @@ test_goodInput = function(){test_that("Good behaviour in case of good parameters
         # and its trained slot is of an object of class WrappedModel
         expect_is(object$output$value$trained, class = "WrappedModel")
         # the object at slot value predictions is of class data.frame
-        expect_is(object$output$value$trained, class = "data.frame")
+        expect_is(object$output$value$predictions, class = "data.frame")
         # the colnames of the predictions dataframe are truth, response, se and residuals
         expect_named(object$output$value$predictions, c("truth", "response", "se", "residuals"))
         # the size of the predictions dataframe is equal to the size of the input task
-        expect_equal(mlr::getTaskSize(test_task), nrow(object$output$value$predictions))
+        expect_equal(mlr::getTaskSize(ex_makeTask$output$value$task), nrow(object$output$value$predictions))
       }
     }
   }

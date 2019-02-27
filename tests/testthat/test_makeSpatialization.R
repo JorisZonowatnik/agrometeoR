@@ -15,17 +15,17 @@ context("Testing makeSpatialization")
 groups = list(
   good = list(
     all_good = list(
-      model = test_model,
-      pred.grid = test_grid
+      model = ex_makeModel$output$value$trained,
+      pred.grid = ex_grid
     )),
   bad = list(
     bad_grid = list(
-      model = test_model,
-      pred.grid = test_bad_grid
+      model = ex_makeModel$output$value$trained,
+      pred.grid = ex_bad_grid
     ),
     bad_model = list(
       model = "bad_model",
-      pred.grid = test_grid
+      pred.grid = ex_grid
     )
   ))
 
@@ -53,6 +53,8 @@ test_badInput = function(){test_that("Good behaviour in case of bad parameters",
       for (case in 1:length(group)) {
         object = do.call(what = makeSpatialization, args = groups[[group]][[case]])
 
+        browser()
+
         expect_false(object$snitch)
         expect_equal(object$output$condition$type, "error")
         expect_null(object$output$value)
@@ -76,9 +78,9 @@ test_goodInput = function(){test_that("Good behaviour in case of good parameter"
         expect_is(object$output$value$summary, "data.frame")
         expect_is(object$output$value$spatialized, "data.frame")
         # the number of spatilized points is equal the size of the spatialization grid
-        expect_identical(nrow(object$output$value$spatialized), nrow(test_grid))
+        expect_identical(nrow(object$output$value$spatialized), nrow(ex_grid))
         # the px ids are equa
-        expect_identical(unique(object$output$value$spatialized$px), unique(test_grid$px))
+        expect_identical(unique(object$output$value$spatialized$px), unique(ex_grid$px))
       }
     }
   }
@@ -89,5 +91,5 @@ test_goodInput = function(){test_that("Good behaviour in case of good parameter"
 ## execution of the tests. If you want to skip a test, simply comment it :)
 
 test_outputStrucure()
-test_badInput()
+# test_badInput()
 test_goodInput()

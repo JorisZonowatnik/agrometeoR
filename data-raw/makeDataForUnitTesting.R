@@ -14,7 +14,7 @@ ex_bad_sensor = "foo"
 ex_staticExpl = "elevation"
 ex_bad_staticExpl = "blah"
 ex_grid = grid.df
-ex_bad_grid = ex_grid[-2]
+ex_bad_grid = ex_grid[-3] # elevation column
 
 # makeTasks inputs
 ex_makeDataset = makeDataset(
@@ -52,7 +52,7 @@ ex_makeModel = makeModel(
 
 # exportSpatialization inputs
 ex_makeSpatialization = makeSpatialization(
-  model = ex_makeModel$$output$value$trained,
+  model = ex_makeModel$output$value$trained,
   pred.grid = ex_grid)
 
 ex_bad_makeSpatialization = lapply(ex_makeSpatialization,
