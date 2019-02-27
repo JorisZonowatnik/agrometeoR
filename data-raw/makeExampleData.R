@@ -1,3 +1,5 @@
+# creating function output example datasets for both users and unit_tests + bad_examples for unit_tests only
+
 data("learners")
 
 # makeDataset inputs
@@ -68,33 +70,37 @@ ex_makeTasks = lapply(
   })
 
 
-# saving all the unit_test data object
+# saving all the good data object as INTERNAL = FALSE
 devtools::use_data(
   ex_user_token,
-  ex_bad_user_token,
   ex_dfrom,
-  ex_bad_dfrom,
   ex_dto,
-  ex_bad_dto,
   ex_stations,
-  ex_bad_stations,
   ex_sensor,
-  ex_bad_sensor,
   ex_staticExpl,
-  ex_bad_staticExpl,
   ex_grid = grid.df,
-  ex_bad_grid,
   ex_makeDataset,
-  ex_bad_makeDataset,
-  ex_makeDataset_with_NA,
   ex_makeTask,
-  ex_bad_makeTask,
   ex_makeModel,
   ex_makeSpatialization,
+  overwrite = TRUE,
+  internal = FALSE)
+
+devtools::use_data(
+  ex_bad_user_token,
+  ex_bad_dfrom,
+  ex_bad_dto,
+  ex_bad_stations,
+  ex_bad_sensor,
+  ex_bad_staticExpl,
+  ex_bad_grid,
+  ex_bad_makeDataset,
+  ex_makeDataset_with_NA,
+  ex_bad_makeTask,
   ex_bad_makeSpatialization,
   ex_makeTasks,
   overwrite = TRUE,
-  internal = FALSE)
+  internal = TRUE)
 
 # makeBenchmark inputs
 # makeModel inputs
