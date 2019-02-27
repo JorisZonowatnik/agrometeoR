@@ -74,8 +74,6 @@ test_goodInput = function(){test_that("Good behaviour in case of good parameters
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
 
-        browser()
-
         object = do.call(what = exportSpatialization, args = groups[[group]][[case]])
         expect_true(object$snitch)
         expect_is(object$output$value, "character")
