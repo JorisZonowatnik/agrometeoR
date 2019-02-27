@@ -94,7 +94,7 @@ devtools::use_data(
   ex_bad_makeSpatialization,
   ex_makeTasks,
   overwrite = TRUE,
-  internal = TRUE)
+  internal = FALSE)
 
 # makeBenchmark inputs
 # makeModel inputs
