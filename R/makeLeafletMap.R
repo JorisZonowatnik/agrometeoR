@@ -1,5 +1,25 @@
+#' @export
+#' @title make an interactive leaflet map of your sptialized data
+#' @author Thomas Goossens
+#' @import mlr
+#' @param task an object of class mlr::makeRegrTask()
+#' @param learner an object of class mlr::makeLearner()
+#' @return a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains :
+#' (1) value : an object of class list made of 3 elements which are of classes "Model", "dataframe", and "list"
+#' (2) condition : a character specifying if the functions has encountered success, warning, error
+#' (3) message : the message relative to the condition
+#' @examples
+#' myDataset = makeDataset(
+#'   dfrom = "2017-03-04T15:00:00Z",
+#'   dto = "2017-03-04T15:00:00Z",
+#'   sensor = "tsa")
+#' myTask = makeTask(dataset = myDataset$output$value, target = "tsa")
+#' myModel = makeModel(
+#'   task = mytask$out$value,
+#'   learner = learners$baseLearners$lrn.lm.alt)
+
 # Definition of the function to build a leaflet map for prediction with associated uncertainty
-leafletize <- function(data.sf, borders, stations){
+makeLeafletMap <- function(data.sf, borders, stations){
 
   # be sure we are in the proper 4326 EPSG
   data.sf = sf::st_transform(data.sf, 4326)
