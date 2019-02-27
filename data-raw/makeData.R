@@ -20,15 +20,17 @@ devtools::load_all()
 ## ADMIN BOUNDARIES
 #####
 
-# downloading admin boundaries of Belgium
-belgium = sf::st_as_sf((rnaturalearth::ne_states(country = 'belgium')))
-# subsetting Wallonia
-wallonia = belgium %>% dplyr::filter(region == "Walloon") %>%
-  dplyr::select(name_fr)
-wallonia = sf::st_union(wallonia)
-# saving objects
-# devtools::use_data(belgium, overwrite = TRUE)
-# devtools::use_data(wallonia, overwrite = TRUE)
+# #downloading admin boundaries of Belgium from Internet ( /!\ simplified shapes)
+# belgium = sf::st_as_sf((rnaturalearth::ne_states(country = 'belgium')))
+# # subsetting Wallonia
+# wallonia = belgium %>% dplyr::filter(region == "Walloon") %>%
+#   dplyr::select(name_fr)
+# wallonia = sf::st_union(wallonia)
+
+# loading wallonia boundaries from local geojson file created by JP huart
+wallonia = sf::st_read(dsn = "./data-raw/extdata/AGROMET/wallonie.geojson")
+
+
 
 #####
 ## RMI INCA EMPTY GRID + CUSTOM EMPTY GRID FOR INTERPOLATION
@@ -47,11 +49,9 @@ customGrid = sf::st_transform(customGrid, crs = 4326)
 # incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_buffer(st_transform(wallonia, 3812), 5000)), 4326)
 # # incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_transform(wallonia, 3812)), 4326)
 # incaGrid = incaGrid[c("px")]
-# load the INCAgrid built from january 2019 RMI data by jphuart
-incaGrid = sf::st_read("./data-raw/extdata/AGROMET/inca.geojson")
+# load the INCAgrid + buffer 5km built from january 2019 RMI data by jphuart
+incaGrid = sf::st_read("./data-raw/extdata/AGROMET/agromet_inca_grid_buf_5km.geojson")
 incaGrid = incaGrid[c("px")]
-
-# devtools::use_data(incaGrid, overwrite = TRUE)
 
 #####
 ## RMI INCA 1 MONTH HISTORICAL DATA HOURLY
@@ -96,7 +96,7 @@ records.data = records.data %>%
   filter(!is.na(tsa)) %>%
   filter(!is.na(ens))
 # saving as an object
-# devtools::use_data(records.data, overwrite = TRUE)
+
 
 #####
 ## AGROMET STATIONS HISTORICAL DATA 1 month corresponding to inca.hourly.1month
@@ -122,7 +122,7 @@ DEM = elevatr::get_elev_raster(
       "Spatial"),
   z = 9,
   src = "aws")
-# cliping to Wallonia + 5km buffer
+# cliping to bbox of Wallonia + 5km buffer
 DEM = raster::mask(DEM,
   as(
     sf::st_transform(
@@ -195,7 +195,7 @@ inca.elevation.ext <- raster::extract(
     crs = (sf::st_crs(incaGrid))$proj4string
   ),
   as(incaGrid, "Spatial"),
-  buffer = 200,
+  buffer = 500, # the buffer on which calculate the mean elevation around grid centroids
   fun = mean,
   na.rm = TRUE,
   df = TRUE
@@ -209,7 +209,7 @@ inca.slope.ext <- raster::extract(
     crs = (sf::st_crs(incaGrid))$proj4string
   ),
   as(incaGrid, "Spatial"),
-  buffer = 200,
+  buffer = 500,
   fun = mean,
   na.rm = TRUE,
   df = TRUE
@@ -221,7 +221,7 @@ inca.aspect.ext <- raster::extract(
     crs = (sf::st_crs(incaGrid))$proj4string
   ),
   as(incaGrid, "Spatial"),
-  buffer = 200,
+  buffer = 500,
   fun = mean,
   na.rm = TRUE,
   df = TRUE
@@ -232,7 +232,8 @@ inca.ext = bind_cols(incaGrid, inca.elevation.ext, inca.slope.ext, inca.aspect.e
 # devtools::use_data(inca.ext, overwrite = TRUE)
 
 # Make a 500m radius buffer around  points for CLC extract
-inca.buff.grd = sf::st_buffer(sf::st_transform(incaGrid, 3812), dist = 500)
+# inca.buff.grd = sf::st_buffer(sf::st_transform(incaGrid, 3812), dist = 500)
+inca.buff.grd = incaGrid # the grid is already buffered by JP Huart
 
 # extract cover information into the buffered points
 corine.inca = sf::st_intersection(inca.buff.grd, sf::st_transform(corine, 3812))
@@ -292,7 +293,7 @@ stations.DEM.ext <- raster::extract(
     crs = (sf::st_crs(stations))$proj4string
   ),
   as(stations, "Spatial"),
-  buffer = 200,
+  buffer = 500,
   fun = mean,
   na.rm = TRUE,
   df = TRUE
@@ -306,7 +307,7 @@ stations.slope.ext <- raster::extract(
     crs = (sf::st_crs(stations))$proj4string
   ),
   as(stations, "Spatial"),
-  buffer = 200,
+  buffer = 500,
   fun = mean,
   na.rm = TRUE,
   df = TRUE
@@ -318,7 +319,7 @@ stations.aspect.ext <- raster::extract(
     crs = (sf::st_crs(stations))$proj4string
   ),
   as(stations, "Spatial"),
-  buffer = 200,
+  buffer = 500,
   fun = mean,
   na.rm = TRUE,
   df = TRUE
