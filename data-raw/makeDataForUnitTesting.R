@@ -1,107 +1,107 @@
 data("learners")
 
 # makeDataset inputs
-test_user_token = Sys.getenv("AGROMET_API_V1_KEY")
-test_bad_user_token = NULL
-test_dfrom = "2017-03-04T15:00:00Z"
-test_bad_dfrom = "timea"
-test_dto = "2017-03-04T18:00:00Z"
-test_bad_dto = "timeb"
-test_stations = paste0(as.character(stations.df$sid), collapse = ",")
-test_bad_stations = "1,2,3,4,5,8"
-test_sensor = "tsa"
-test_bad_sensor = "foo"
-test_staticExpl = "elevation"
-test_bad_staticExpl = "blah"
-test_grid = grid.df
-test_bad_grid = test_grid[-2]
+ex_user_token = Sys.getenv("AGROMET_API_V1_KEY")
+ex_bad_user_token = NULL
+ex_dfrom = "2017-03-04T15:00:00Z"
+ex_bad_dfrom = "timea"
+ex_dto = "2017-03-04T18:00:00Z"
+ex_bad_dto = "timeb"
+ex_stations = paste0(as.character(stations.df$sid), collapse = ",")
+ex_bad_stations = "1,2,3,4,5,8"
+ex_sensor = "tsa"
+ex_bad_sensor = "foo"
+ex_staticExpl = "elevation"
+ex_bad_staticExpl = "blah"
+ex_grid = grid.df
+ex_bad_grid = ex_grid[-2]
 
 # makeTasks inputs
-test_dataset = makeDataset(
-  stations = test_stations,
-  user_token = test_user_token,
-  dfrom = test_dfrom,
-  dto = test_dto,
-  sensor = test_sensor,
-  staticExpl = test_staticExpl,
+ex_makeDataset = makeDataset(
+  stations = ex_stations,
+  user_token = ex_user_token,
+  dfrom = ex_dfrom,
+  dto = ex_dto,
+  sensor = ex_sensor,
+  staticExpl = ex_staticExpl,
   json = NULL,
-  dynExpl = NULL)$output$value
+  dynExpl = NULL)
 
 # dataset with wrong target variable name
-test_bad_dataset = lapply(test_dataset, function(x){
+ex_bad_makeDataset = lapply(ex_makeDataset$output$value, function(x){
   x = dplyr::rename(x, "foo" = "tsa")})
 
 # dataset with some NA values
-test_dataset_with_NA = lapply(test_dataset, function(x){
+ex_makeDataset_with_NA = lapply(ex_makeDataset$output$value, function(x){
   x$tsa[3] = NA
   return(x)})
 
 # makeModel inputs
-test_task = makeTask(
-  dataset = test_dataset[[1]],
+ex_makeTask = makeTask(
+  dataset = ex_makeDataset$output$value[[1]],
   drop = NULL,
-  target = test_sensor
-)$output$value
+  target = ex_sensor
+)
 
-test_bad_task = NULL
+ex_bad_makeTask = NULL
 
 # makeSpatialization inputs
-test_model = makeModel(
-  task = test_task,
-  learner = learners$baseLearners$lrn.lm.alt)$output$value$trained
+ex_makeModel = makeModel(
+  task = ex_makeTask$output$value$task,
+  learner = learners$baseLearners$lrn.lm.alt)
 
 # exportSpatialization inputs
-test_spatialized = makeSpatialization(
-  model = test_model,
-  pred.grid = test_grid)$output$value
+ex_makeSpatialization = makeSpatialization(
+  model = ex_makeModel$$output$value$trained,
+  pred.grid = ex_grid)
 
-test_bad_spatialized = lapply(test_spatialized,
+ex_bad_makeSpatialization = lapply(ex_makeSpatialization,
   function(x){
     x[-2]
   })
 
 # makeBatchOfBenchExp inputs
-test_tasks = lapply(
-  test_dataset,
+ex_makeTasks = lapply(
+  ex_makeDataset$output$value,
   function(x){
-    makeTask(x, target = test_sensor)$output$value
+    makeTask(x, target = ex_sensor)$output$value
   })
 
 
 # saving all the unit_test data object
 devtools::use_data(
-  test_user_token,
-  test_bad_user_token,
-  test_dfrom,
-  test_bad_dfrom,
-  test_dto,
-  test_bad_dto,
-  test_stations,
-  test_bad_stations,
-  test_sensor,
-  test_bad_sensor,
-  test_staticExpl,
-  test_bad_staticExpl,
-  test_grid = grid.df,
-  test_bad_grid,
-  test_dataset,
-  test_bad_dataset,
-  test_dataset_with_NA,
-  test_task,
-  test_bad_task,
-  test_model,
-  test_spatialized,
-  test_bad_spatialized,
-  test_tasks,
+  ex_user_token,
+  ex_bad_user_token,
+  ex_dfrom,
+  ex_bad_dfrom,
+  ex_dto,
+  ex_bad_dto,
+  ex_stations,
+  ex_bad_stations,
+  ex_sensor,
+  ex_bad_sensor,
+  ex_staticExpl,
+  ex_bad_staticExpl,
+  ex_grid = grid.df,
+  ex_bad_grid,
+  ex_makeDataset,
+  ex_bad_makeDataset,
+  ex_makeDataset_with_NA,
+  ex_makeTask,
+  ex_bad_makeTask,
+  ex_makeModel,
+  ex_makeSpatialization,
+  ex_bad_makeSpatialization,
+  ex_makeTasks,
   overwrite = TRUE,
   internal = TRUE)
 
 # makeBenchmark inputs
 # makeModel inputs
-# test_tasks = makeTasks(
-#   dataset = test_dataset,
+# ex_makeTasks = makeTasks(
+#   dataset = ex_makeDataset,
 #   drop = NULL,
-#   target = test_sensor)$output$value
-# test_bad_task = NULL
+#   target = ex_sensor)$output$value
+# ex_bad_makeTask = NULL
 
 
