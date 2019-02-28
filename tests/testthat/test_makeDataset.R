@@ -122,6 +122,7 @@ ex_goodInput = function(){test_that("Expected behaviour in case of good paramete
   for (group in 1:length(groups)) {
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
+
         object = do.call(what = makeDataset, args = groups[[group]][[case]])
 
         # the snitch is at TRUE
