@@ -1,6 +1,6 @@
 # creating function output example datasets for both users and unit_tests + bad_examples for unit_tests only
-
 data("learners")
+devtools::load_all()
 
 # makeDataset inputs
 ex_user_token = Sys.getenv("AGROMET_API_V1_KEY")
@@ -9,7 +9,16 @@ ex_dfrom = "2017-03-04T15:00:00Z"
 ex_bad_dfrom = "timea"
 ex_dto = "2017-03-04T18:00:00Z"
 ex_bad_dto = "timeb"
-ex_stations = paste0(as.character(stations.df$sid), collapse = ",")
+
+ex_stations = typeData(meta_and_records.l = getData(dfrom = ex_dfrom, dto = ex_dto), table_name = "cleandata")
+ex_stations = ex_stations %>%
+  filter(network_name == "pameseb") %>%
+  filter(type_name != "Sencrop") %>%
+  filter(!is.na(to)) %>%
+  filter(state == "Ok")
+ex_stations = unique(ex_stations$sid)
+ex_stations = paste0(as.character(ex_stations), collapse = ",")
+
 ex_bad_stations = "1,2,3,4,5,8"
 ex_sensor = "tsa"
 ex_bad_sensor = "foo"
