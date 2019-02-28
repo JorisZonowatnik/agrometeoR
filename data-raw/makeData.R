@@ -1,6 +1,6 @@
 #####
 ## LIBRARIES
-#####
+
 
 library(tidyverse)
 library(lubridate)
@@ -13,103 +13,26 @@ library(rnaturalearth)
 library(rnaturalearthhires)
 library(jsonlite)
 library(elevatr)
-devtools::load_all()
+source("./R/agrometAPI.R")
 
 
 #####
 ## ADMIN BOUNDARIES
-#####
 
-# #downloading admin boundaries of Belgium from Internet ( /!\ simplified shapes)
+
+# # downloading admin boundaries of Belgium from Internet ( /!\ simplified shapes)
 # belgium = sf::st_as_sf((rnaturalearth::ne_states(country = 'belgium')))
 # # subsetting Wallonia
 # wallonia = belgium %>% dplyr::filter(region == "Walloon") %>%
 #   dplyr::select(name_fr)
 # wallonia = sf::st_union(wallonia)
 
-# loading wallonia boundaries from local geojson file created by JP huart
+# loading wallonia boundaries from local geojson file created by JP huart and removing all attributes
 wallonia = sf::st_read(dsn = "./data-raw/extdata/AGROMET/wallonie.geojson")
-
-
-
-#####
-## RMI INCA EMPTY GRID + CUSTOM EMPTY GRID FOR INTERPOLATION
-#####
-
-# building custom grid at 1 km² resolution
-customGrid = sf::st_sf(sf::st_make_grid(x = sf::st_transform(wallonia, crs = 3812),  cellsize = 1000, what = "centers"))
-# limit it to Wallonia and not full extent
-customGrid = sf::st_intersection(customGrid, sf::st_transform(wallonia, crs = 3812))
-# reproject it to standard 4326
-customGrid = sf::st_transform(customGrid, crs = 4326)
-# loading INCA (RMI) grid for whole BE
-# load("./data-raw/extdata/INCA_BE_DAY/INCA_TT_2013.Rdata")
-# incaGrid = sf::st_transform(sf::st_as_sf(inca), crs = 4326)
-# # limit it to Wallonia + 5km buffer and not full extent
-# incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_buffer(st_transform(wallonia, 3812), 5000)), 4326)
-# # incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_transform(wallonia, 3812)), 4326)
-# incaGrid = incaGrid[c("px")]
-# load the INCAgrid + buffer 5km built from january 2019 RMI data by jphuart
-incaGrid = sf::st_read("./data-raw/extdata/AGROMET/agromet_inca_grid_buf_5km.geojson")
-incaGrid = incaGrid[c("px")]
-
-#####
-## RMI INCA 1 MONTH HISTORICAL DATA HOURLY
-#####
-
-# load all the hourly datasets
-inca.hourly.file.list = list.files(path = "./data-raw/extdata/INCA_BE_H/", pattern = ".Rdata")
-# extract only 1 month because to heavy to load all at once
-inca.hourly.1month =  lapply(inca.hourly.file.list[(length(inca.hourly.file.list) - 24)], function(x) {
-  load(file = paste0("./data-raw/extdata/INCA_BE_H/",x))
-  get(ls()[ls() != "filename"])
-})
-#names(inca.hourly.1month) <- inca.hourly.file.list[(length(inca.hourly.file.list) - 24)]
-inca.hourly.1month = data.frame(inca.hourly.1month)
-colnames(inca.hourly.1month) = c("hour", "date", "px", "tsahp1")
-# make it spatial to only keep Wallonia
-inca.hourly.1month = inca.hourly.1month %>%
-  dplyr::filter(px %in% incaGrid$px) %>%
-  # convert date and hour to posixct
-  dplyr::mutate(mtime = paste(date, as.character(hour), sep = " ")) %>%
-  dplyr::mutate_at(.vars = "mtime", .funs = as.POSIXct, format = "%Y%m%d %H") %>%
-  dplyr::select(-one_of(c("hour", "date")))
-
-
-#####
-## AGROMET STATIONS HISTORICAL DATA 2015-2018
-#####
-
-# Read data from the API exported json file downloaded from PAMESEB FTP & create a dataframe
-records = jsonlite::fromJSON(
-    "./data-raw/extdata/AGROMET/twoYears.json") # available on AGROMET FTP
-records.data = records$results
-records.meta = records$references$stations
-records.l <- list(metadata = records.meta, data = records.data)
-records.data <- typeData(records.l, "cleandata")
-# Filtering records to keep only the useful ones (removing non relevant stations)
-records.data = records.data %>%
-  filter(network_name == "pameseb") %>%
-  filter(type_name != "Sencrop") %>%
-  filter(!is.na(to)) %>%
-  filter(state == "Ok") %>%
-  filter(!is.na(tsa)) %>%
-  filter(!is.na(ens))
-# saving as an object
-
-
-#####
-## AGROMET STATIONS HISTORICAL DATA 1 month corresponding to inca.hourly.1month
-#####
-
-# filtering according to what is present in inca.hourly.1month
-records.hourly.1month = records.data %>%
-  dplyr::filter(mtime %in% inca.hourly.1month$mtime)
-
+wallonia = wallonia[,-(1:length(wallonia))]
 
 #####
 ## DEM
-#####
 
 # downloading the raster tile data using elevatr
 # for resolution corresponding to z parameter check elevatr doc https://cran.r-project.org/web/packages/elevatr/vignettes/introduction_to_elevatr.html#get_raster_elevation_data
@@ -119,7 +42,7 @@ DEM = elevatr::get_elev_raster(
     sf::st_transform(
       sf::st_buffer(sf::st_transform(wallonia, 3812), 5000),
       4326),
-      "Spatial"),
+    "Spatial"),
   z = 9,
   src = "aws")
 # cliping to bbox of Wallonia + 5km buffer
@@ -140,7 +63,7 @@ aspect = raster::terrain(DEM, "aspect")
 
 #####
 ## CORINE LAND COVER
-#####
+
 
 # Download CORINE land cover for Belgium from http://inspire.ngi.be/download-free/atomfeeds/AtomFeed-en.xml
 # read the downlaoded .shp
@@ -179,14 +102,39 @@ corine = corine %>%
       code_12 == 322 ~ "Herbaceous vegetation",
       code_12 == 324 ~ "Forest",
       code_12 > 400 ~ "Water")
-    )
+  )
 corine = sf::st_transform(corine, 4326)
 # saving as an object
 # devtools::use_data(corine, overwrite = TRUE)
 
+
 #####
-## INCA GRID EXTRACTIONS
+## RMI INCA EMPTY GRID
+
+
+# # building custom grid at 1 km² resolution
+# customGrid = sf::st_sf(sf::st_make_grid(x = sf::st_transform(wallonia, crs = 3812),  cellsize = 1000, what = "centers"))
+# # limit it to Wallonia and not full extent
+# customGrid = sf::st_intersection(customGrid, sf::st_transform(wallonia, crs = 3812))
+# # reproject it to standard 4326
+# customGrid = sf::st_transform(customGrid, crs = 4326)
+
+# # loading INCA (with RMI M.Journée px refs) grid for whole BE
+# load("./data-raw/extdata/INCA_BE_DAY/INCA_TT_2013.Rdata")
+# incaGrid = sf::st_transform(sf::st_as_sf(inca), crs = 4326)
+#
+# # limit it to Wallonia + 5km buffer and not full extent
+# incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_buffer(st_transform(wallonia, 3812), 5000)), 4326)
+# # incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_transform(wallonia, 3812)), 4326)
+
+# load the INCAgrid + buffer 5km built from january 2019 RMI data (with AGROMET px refs by jphuart)
+incaGrid_pxAg = sf::st_read("./data-raw/extdata/AGROMET/agromet_inca_grid_buf_5km.geojson")
+
+# overwriting old incaGrid
+incaGrid = incaGrid_pxAg
+
 #####
+## INCA GRID EXTRACTIONS : DEM
 
 # extracting DEM
 inca.elevation.ext <- raster::extract(
@@ -231,9 +179,13 @@ inca.ext = bind_cols(incaGrid, inca.elevation.ext, inca.slope.ext, inca.aspect.e
 # saving as an object
 # devtools::use_data(inca.ext, overwrite = TRUE)
 
+
+#####
+## INCA GRID EXTRACTIONS : CLC
+
 # Make a 500m radius buffer around  points for CLC extract
-# inca.buff.grd = sf::st_buffer(sf::st_transform(incaGrid, 3812), dist = 500)
-inca.buff.grd = incaGrid # the grid is already buffered by JP Huart
+inca.buff.grd = sf::st_buffer(sf::st_transform(incaGrid, 3812), dist = 500)
+# inca.buff.grd = incaGrid # the grid is already buffered by JP Huart
 
 # extract cover information into the buffered points
 corine.inca = sf::st_intersection(inca.buff.grd, sf::st_transform(corine, 3812))
@@ -276,8 +228,103 @@ excluded_vars = c("ID1", "ID2")
 inca.ext  = dplyr::select(inca.ext, -one_of(excluded_vars))
 
 #####
-## STATIONS EXTRACTIONS
+## FINALISING THE GRID
+
+# static independent vars at grid points + grid points geography objects
+grid.sf = inca.ext
+
+# adding lat/lon data from from grid.sf to grid & limiting to Wallonia without buffer
+grid.sf = sf::st_intersection(sf::st_transform(grid.sf, 3812), sf::st_transform(wallonia, 3812))
+
+grid.df = grid.sf
+
+grid.sf = grid.sf %>%
+  dplyr::select(c(px))
+
+grid.df = grid.df %>%
+  dplyr::select(c(px, elevation, slope, aspect, Agricultural_areas, Artificials_surfaces, Forest, Herbaceous_vegetation))
+
+grid.df = grid.df %>%
+  dplyr::left_join(
+    (data.frame(st_coordinates(st_transform(grid.sf, 3812))) %>%
+        dplyr::bind_cols(grid.sf["px"]) %>%
+        dplyr::select(-geometry)
+    ),
+    by = "px"
+  )
+sf::st_geometry(grid.df) = NULL
+
+# exporting the grid to geojson file
+grid.data.sf = grid.sf %>% left_join(grid.df, by = "px")
+sf::st_write(grid.data.sf, dsn = "./data-raw/grid.geojson", driver = "GeoJSON")
+
 #####
+## SAVING ALL THE GEO OBJECTS TO PACKAGE DATA
+# doc : http://r-pkgs.had.co.nz/data.html
+
+# saving in ./data/*.rda
+devtools::use_data(wallonia, grid.sf, grid.df, internal = FALSE, overwrite = TRUE)
+
+
+#####
+## RMI INCA 1 MONTH HISTORICAL DATA HOURLY
+
+# # load all the hourly datasets
+# inca.hourly.file.list = list.files(path = "./data-raw/extdata/INCA_BE_H/", pattern = ".Rdata")
+# # extract only 1 month because to heavy to load all at once
+# inca.hourly.1month =  lapply(inca.hourly.file.list[(length(inca.hourly.file.list) - 24)], function(x) {
+#   load(file = paste0("./data-raw/extdata/INCA_BE_H/",x))
+#   get(ls()[ls() != "filename"])
+# })
+# # names(inca.hourly.1month) <- inca.hourly.file.list[(length(inca.hourly.file.list) - 24)]
+# inca.hourly.1month = data.frame(inca.hourly.1month)
+# colnames(inca.hourly.1month) = c("hour", "date", "px", "tsahp1")
+# # make it spatial to only keep Wallonia
+# inca.hourly.1month = inca.hourly.1month %>%
+#   dplyr::filter(px %in% incaGrid$px) %>%
+#   # convert date and hour to posixct
+#   dplyr::mutate(mtime = paste(date, as.character(hour), sep = " ")) %>%
+#   dplyr::mutate_at(.vars = "mtime", .funs = as.POSIXct, format = "%Y%m%d %H") %>%
+#   dplyr::select(-one_of(c("hour", "date")))
+
+
+#####
+## AGROMET STATIONS HISTORICAL DATA 2015-2018
+
+
+# # Read data from the API exported json file downloaded from PAMESEB FTP & create a dataframe
+# records = jsonlite::fromJSON(
+#     "./data-raw/extdata/AGROMET/twoYears.json") # available on AGROMET FTP
+# records.data = records$results
+# records.meta = records$references$stations
+# records.l <- list(metadata = records.meta, data = records.data)
+# records.data <- typeData(records.l, "cleandata")
+# # Filtering records to keep only the useful ones (removing non relevant stations)
+# records.data = records.data %>%
+#   filter(network_name == "pameseb") %>%
+#   filter(type_name != "Sencrop") %>%
+#   filter(!is.na(to)) %>%
+#   filter(state == "Ok") %>%
+#   filter(!is.na(tsa)) %>%
+#   filter(!is.na(ens))
+# # saving as an object
+#
+#
+# #####
+# ## AGROMET STATIONS HISTORICAL DATA 1 month corresponding to inca.hourly.1month
+#
+# # filtering according to what is present in inca.hourly.1month
+# records.hourly.1month = records.data %>%
+#   dplyr::filter(mtime %in% inca.hourly.1month$mtime)
+#
+
+
+
+
+
+#####
+## STATIONS EXTRACTIONS
+
 
 # getting only one hour dataset
 stations = records.data %>%
@@ -293,7 +340,7 @@ stations.DEM.ext <- raster::extract(
     crs = (sf::st_crs(stations))$proj4string
   ),
   as(stations, "Spatial"),
-  buffer = 500,
+  buffer = 200,
   fun = mean,
   na.rm = TRUE,
   df = TRUE
@@ -307,7 +354,7 @@ stations.slope.ext <- raster::extract(
     crs = (sf::st_crs(stations))$proj4string
   ),
   as(stations, "Spatial"),
-  buffer = 500,
+  buffer = 200,
   fun = mean,
   na.rm = TRUE,
   df = TRUE
@@ -319,7 +366,7 @@ stations.aspect.ext <- raster::extract(
     crs = (sf::st_crs(stations))$proj4string
   ),
   as(stations, "Spatial"),
-  buffer = 500,
+  buffer = 200,
   fun = mean,
   na.rm = TRUE,
   df = TRUE
@@ -327,8 +374,8 @@ stations.aspect.ext <- raster::extract(
 # storing in a sf object
 stations.ext = bind_cols(stations, stations.DEM.ext, stations.slope.ext, stations.aspect.ext)
 
-# Make a 500m radius buffer around  points for CLC extract
-stations.buff = sf::st_buffer(sf::st_transform(stations, 3812), dist = 500)
+# Make a 200m radius buffer around  points for CLC extract
+stations.buff = sf::st_buffer(sf::st_transform(stations, 3812), dist = 200)
 
 # extract cover information into the buffered points
 corine.stations = sf::st_intersection(stations.buff, sf::st_transform(corine, 3812))
@@ -374,7 +421,7 @@ stations.ext  = dplyr::select(stations.ext, -one_of(excluded_vars))
 
 #####
 ## CREATING THE FINAL OBJECTS WITH SIZE OPTIMIZATION
-#####
+
 
 # static independent vars at stations + station geography objects
 stations.df = stations.ext
@@ -387,31 +434,7 @@ stations.df = stations.df %>%
 # devtools::use_data(stations.sf, overwrite = TRUE)
 # devtools::use_data(stations.df, overwrite = TRUE)
 
-# static independent vars at grid points + grid points geography objects
-grid.sf = inca.ext
 
-# adding lat/lon data from from grid.sf to grid & limiting to Wallonia without buffer
-grid.sf = sf::st_intersection(sf::st_transform(grid.sf, 3812), sf::st_transform(wallonia, 3812))
-
-grid.df = grid.sf
-
-grid.sf = grid.sf %>%
-  dplyr::select(c(px))
-
-grid.df = grid.df %>%
-  dplyr::select(c(px, elevation, slope, aspect, Agricultural_areas, Artificials_surfaces, Forest, Herbaceous_vegetation))
-# devtools::use_data(grid.sf, overwrite = TRUE)
-# devtools::use_data(grid.df, overwrite = TRUE)
-
-grid.df = grid.df %>%
-  dplyr::left_join(
-    (data.frame(st_coordinates(st_transform(grid.sf, 3812))) %>%
-        dplyr::bind_cols(grid.sf["px"]) %>%
-        dplyr::select(-geometry)
-    ),
-    by = "px"
-  )
-sf::st_geometry(grid.df) = NULL
 
 # dynamic records at stations
 stations.dyn = records.hourly.1month
@@ -448,23 +471,6 @@ stations.df = stations.df %>%
 sf::st_geometry(stations.df) = NULL
 
 
-# exporting the grid to geojson file
-grid.data.sf = grid.sf %>% left_join(grid.df) %>% dplyr::select(one_of(c("px", "elevation", "slope",   "aspect")))
-sf::st_write(grid.data.sf, dsn = "./data-raw/grid.geojson", driver = "GeoJSON")
-
-#####
-## SAVING ALL THE OBJECTS TO PACKAGE DATA
-# doc : http://r-pkgs.had.co.nz/data.html
-#####
-
-# saving in ./R/sysdata.rda
-devtools::use_data(wallonia, stations.sf, grid.sf, grid.df, stations.df, internal = FALSE, overwrite = TRUE)
-
-# saving all the objects in a session file
-# save.image("dev.RData")
-
-# remove all the created objects from the workspace
-# rm(list = ls())
 
 #+ ---------------------------------
 #' ## Terms of service
