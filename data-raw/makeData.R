@@ -19,14 +19,6 @@ source("./R/agrometAPI.R")
 #####
 ## ADMIN BOUNDARIES
 
-
-# # downloading admin boundaries of Belgium from Internet ( /!\ simplified shapes)
-# belgium = sf::st_as_sf((rnaturalearth::ne_states(country = 'belgium')))
-# # subsetting Wallonia
-# wallonia = belgium %>% dplyr::filter(region == "Walloon") %>%
-#   dplyr::select(name_fr)
-# wallonia = sf::st_union(wallonia)
-
 # loading wallonia boundaries from local geojson file created by JP huart and removing all attributes
 wallonia = sf::st_read(dsn = "./data-raw/extdata/AGROMET/wallonie.geojson")
 wallonia = wallonia[,-(1:length(wallonia))]
@@ -56,10 +48,7 @@ elevation = DEM
 # computing slope and aspect
 slope = raster::terrain(DEM, "slope")
 aspect = raster::terrain(DEM, "aspect")
-# saving as objects
-# devtools::use_data(elevation, overwrite = TRUE)
-# devtools::use_data(aspect, overwrite = TRUE)
-# devtools::use_data(slope, overwrite = TRUE)
+
 
 #####
 ## CORINE LAND COVER
@@ -104,33 +93,14 @@ corine = corine %>%
       code_12 > 400 ~ "Water")
   )
 corine = sf::st_transform(corine, 4326)
-# saving as an object
-# devtools::use_data(corine, overwrite = TRUE)
-
 
 #####
-## RMI INCA EMPTY GRID
-
-
-# # building custom grid at 1 km² resolution
-# customGrid = sf::st_sf(sf::st_make_grid(x = sf::st_transform(wallonia, crs = 3812),  cellsize = 1000, what = "centers"))
-# # limit it to Wallonia and not full extent
-# customGrid = sf::st_intersection(customGrid, sf::st_transform(wallonia, crs = 3812))
-# # reproject it to standard 4326
-# customGrid = sf::st_transform(customGrid, crs = 4326)
-
-# # loading INCA (with RMI M.Journée px refs) grid for whole BE
-# load("./data-raw/extdata/INCA_BE_DAY/INCA_TT_2013.Rdata")
-# incaGrid = sf::st_transform(sf::st_as_sf(inca), crs = 4326)
-#
-# # limit it to Wallonia + 5km buffer and not full extent
-# incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_buffer(st_transform(wallonia, 3812), 5000)), 4326)
-# # incaGrid = sf::st_transform(sf::st_intersection(sf::st_transform(incaGrid, 3812), sf::st_transform(wallonia, 3812)), 4326)
+## RMI INCA GRID
 
 # load the INCAgrid + buffer 5km built from january 2019 RMI data (with AGROMET px refs by jphuart)
 incaGrid_pxAg = sf::st_read("./data-raw/extdata/AGROMET/agromet_inca_grid_buf_5km.geojson")
 
-# overwriting old incaGrid
+# rename
 incaGrid = incaGrid_pxAg
 
 #####
@@ -176,9 +146,6 @@ inca.aspect.ext <- raster::extract(
 )
 # storing in a sf object
 inca.ext = bind_cols(incaGrid, inca.elevation.ext, inca.slope.ext, inca.aspect.ext)
-# saving as an object
-# devtools::use_data(inca.ext, overwrite = TRUE)
-
 
 #####
 ## INCA GRID EXTRACTIONS : CLC
@@ -259,12 +226,156 @@ grid.data.sf = grid.sf %>% left_join(grid.df, by = "px")
 sf::st_write(grid.data.sf, dsn = "./data-raw/grid.geojson", driver = "GeoJSON")
 
 #####
-## SAVING ALL THE GEO OBJECTS TO PACKAGE DATA
+## SAVING ALL THE GRID + WALLONIA OBJECTS TO PACKAGE DATA
 # doc : http://r-pkgs.had.co.nz/data.html
 
 # saving in ./data/*.rda
 devtools::use_data(wallonia, grid.sf, grid.df, internal = FALSE, overwrite = TRUE)
 
+
+#####
+## STATIONS STATIC FEATURE EXTRACTION
+
+stations = typeData(meta_and_records.l = getData(dfrom = "2018-01-01T00:00:00Z", dto = "2018-01-01T00:01:00Z"), table_name = "cleandata")
+stations = stations %>%
+  dplyr::filter(type_name != "Sencrop") %>%
+  dplyr::filter(state == "Ok") %>%
+  dplyr::select(c("sid", "poste", "longitude", "latitude", "network_name", "type_name"))
+
+stations = st_as_sf(stations, coords = c("longitude", "latitude"))
+stations = sf::st_set_crs(stations, 4326)
+
+# extracting DEM
+stations.DEM.ext <- raster::extract(
+  raster::projectRaster(
+    DEM,
+    crs = (sf::st_crs(stations))$proj4string
+  ),
+  as(stations, "Spatial"),
+  buffer = 200,
+  fun = mean,
+  na.rm = TRUE,
+  df = TRUE
+)
+# rename column layer to elevation
+colnames(stations.DEM.ext) = c("ID", "elevation")
+
+# extracting slope
+stations.slope.ext <- raster::extract(
+  raster::projectRaster(
+    slope,
+    crs = (sf::st_crs(stations))$proj4string
+  ),
+  as(stations, "Spatial"),
+  buffer = 200,
+  fun = mean,
+  na.rm = TRUE,
+  df = TRUE
+)
+
+# extracting aspect
+stations.aspect.ext <- raster::extract(
+  raster::projectRaster(
+    aspect,
+    crs = (sf::st_crs(stations))$proj4string
+  ),
+  as(stations, "Spatial"),
+  buffer = 200,
+  fun = mean,
+  na.rm = TRUE,
+  df = TRUE
+)
+
+# storing in a sf object
+stations.ext = bind_cols(stations, stations.DEM.ext, stations.slope.ext, stations.aspect.ext)
+
+# Make a 200m radius buffer around  points for CLC extract
+stations.buff = sf::st_buffer(sf::st_transform(stations, 3812), dist = 200)
+
+# extract cover information into the buffered points
+corine.stations = sf::st_intersection(stations.buff, sf::st_transform(corine, 3812))
+# create an id for each buffer
+corine.stations <- corine.stations %>%
+  dplyr::mutate(
+    bid = paste0(seq_along(1:nrow(corine.stations))))
+# create new column with area of each intersected cover polygon
+corine.stations.area <- corine.stations %>%
+  dplyr::group_by(bid) %>%
+  dplyr::summarise() %>%
+  mutate(shape.area = st_area(.))
+# Make a column with percentage of occupation of each land cover inside each grid point buffer
+# https://github.com/r-spatial/sf/issues/239
+cover.rate <- sf::st_join(
+  x = corine.stations,
+  y = corine.stations.area,
+  join = sf::st_covered_by
+) %>%
+  dplyr::select(sid, custom.class, shape.area) %>%
+  dplyr::mutate(cover_rate = as.numeric(shape.area)/(pi*500^2) * 100) #500 = buffer radius
+# transposing to dataframe for data spreading (impossible (?) to achieve with dplyr spread)
+cover2df = function(data.sf) {
+  # Delete geometry column
+  data.df <- data.frame(data.sf)
+  # Reshape data with CLASS labels as columns names
+  # https://stackoverflow.com/questions/39053451/using-spread-with-duplicate-identifiers-for-rows
+  data.df <- data.df %>%
+    dplyr::select(sid, custom.class, cover_rate) %>%
+    reshape2::dcast(sid ~ custom.class, fun = sum)
+  return(data.df)
+}
+# transposing to dataframe for data spreading (impossible (?) to achieve with dplyr spread)
+cover.rate = cover2df(cover.rate)
+# replacing white space by underscores
+colnames(cover.rate) <- gsub(" ","_",colnames(cover.rate))
+# merge cover data with stations
+stations.ext = merge(stations.ext, cover.rate, by = "sid")
+# removing duplicated ID cols resulting from bind_cols operation
+excluded_vars = c("ID1", "ID2")
+stations.ext  = dplyr::select(stations.ext, -one_of(excluded_vars))
+
+# renaming to stations.sf
+stations.sf = stations.ext
+
+####HERE WE ARE#####
+
+# Injecting the ref of the closest px into the station locations
+closest_px <- list()
+for (st in seq_len(nrow(stations.sf))) {
+  closest_px[[st]] <- grid.sf[which.min(
+    st_distance(grid.sf, sf::st_transform(stations.sf[st,], sf::st_crs(grid.sf)))),]
+}
+closest_px = do.call(rbind.data.frame, closest_px)
+stations.sf = stations.sf %>%
+  dplyr::bind_cols(data.frame(closest_px$px)) %>%
+  dplyr::rename(closest_px = closest_px.px )
+
+# creating the stations static features dataset
+stations.df = stations.sf
+
+# adding lat/lon data from stations.sf to stations.df
+stations.df = stations.df %>%
+  dplyr::left_join(
+    (data.frame(st_coordinates(st_transform(stations.sf, 3812))) %>%
+        dplyr::bind_cols(stations.sf["sid"]) %>%
+        dplyr::select(-geometry)
+    ),
+    by = "sid"
+  )
+
+# converting to dataframe
+sf::st_geometry(stations.df) = NULL
+
+
+# station geography object
+stations.sf = stations.sf %>%
+  dplyr::select(c(sid, poste, network_name))
+
+#####
+## SAVING the stations OBJECTS TO PACKAGE DATA
+# doc : http://r-pkgs.had.co.nz/data.html
+
+# saving in ./data/*.rda
+devtools::use_data(stations.sf, stations.df, internal = FALSE, overwrite = TRUE)
 
 #####
 ## RMI INCA 1 MONTH HISTORICAL DATA HOURLY
@@ -322,153 +433,42 @@ devtools::use_data(wallonia, grid.sf, grid.df, internal = FALSE, overwrite = TRU
 
 
 
-#####
-## STATIONS EXTRACTIONS
-
-
-# getting only one hour dataset
-stations = records.data %>%
-  dplyr::filter(mtime == unique(records.data["mtime"])[1,])
-# making it spatial for extraction
-stations = sf::st_as_sf(stations, coords = c("longitude", "latitude"))
-sf::st_crs(stations) = 4326
-
-# extracting DEM
-stations.DEM.ext <- raster::extract(
-  raster::projectRaster(
-    DEM,
-    crs = (sf::st_crs(stations))$proj4string
-  ),
-  as(stations, "Spatial"),
-  buffer = 200,
-  fun = mean,
-  na.rm = TRUE,
-  df = TRUE
-)
-# rename column layer to elevation
-colnames(stations.DEM.ext) = c("ID", "elevation")
-# extracting slope
-stations.slope.ext <- raster::extract(
-  raster::projectRaster(
-    slope,
-    crs = (sf::st_crs(stations))$proj4string
-  ),
-  as(stations, "Spatial"),
-  buffer = 200,
-  fun = mean,
-  na.rm = TRUE,
-  df = TRUE
-)
-# extracting aspect
-stations.aspect.ext <- raster::extract(
-  raster::projectRaster(
-    aspect,
-    crs = (sf::st_crs(stations))$proj4string
-  ),
-  as(stations, "Spatial"),
-  buffer = 200,
-  fun = mean,
-  na.rm = TRUE,
-  df = TRUE
-)
-# storing in a sf object
-stations.ext = bind_cols(stations, stations.DEM.ext, stations.slope.ext, stations.aspect.ext)
-
-# Make a 200m radius buffer around  points for CLC extract
-stations.buff = sf::st_buffer(sf::st_transform(stations, 3812), dist = 200)
-
-# extract cover information into the buffered points
-corine.stations = sf::st_intersection(stations.buff, sf::st_transform(corine, 3812))
-# create an id for each buffer
-corine.stations <- corine.stations %>%
-  dplyr::mutate(
-    bid = paste0(seq_along(1:nrow(corine.stations))))
-# create new column with area of each intersected cover polygon
-corine.stations.area <- corine.stations %>%
-  dplyr::group_by(bid) %>%
-  dplyr::summarise() %>%
-  mutate(shape.area = st_area(.))
-# Make a column with percentage of occupation of each land cover inside each grid point buffer
-# https://github.com/r-spatial/sf/issues/239
-cover.rate <- sf::st_join(
-  x = corine.stations,
-  y = corine.stations.area,
-  join = sf::st_covered_by
-) %>%
-  dplyr::select(sid, custom.class, shape.area) %>%
-  dplyr::mutate(cover_rate = as.numeric(shape.area)/(pi*500^2) * 100) #500 = buffer radius
-# transposing to dataframe for data spreading (impossible (?) to achieve with dplyr spread)
-cover2df = function(data.sf) {
-  # Delete geometry column
-  data.df <- data.frame(data.sf)
-  # Reshape data with CLASS labels as columns names
-  # https://stackoverflow.com/questions/39053451/using-spread-with-duplicate-identifiers-for-rows
-  data.df <- data.df %>%
-    dplyr::select(sid, custom.class, cover_rate) %>%
-    reshape2::dcast(sid ~ custom.class, fun = sum)
-  return(data.df)
-}
-# transposing to dataframe for data spreading (impossible (?) to achieve with dplyr spread)
-cover.rate = cover2df(cover.rate)
-# replacing white space by underscores
-colnames(cover.rate) <- gsub(" ","_",colnames(cover.rate))
-# merge cover data with stations
-stations.ext = merge(stations.ext, cover.rate, by = "sid")
-# removing duplicated ID cols resulting from bind_cols operation
-excluded_vars = c("ID1", "ID2")
-stations.ext  = dplyr::select(stations.ext, -one_of(excluded_vars))
-
-
-#####
-## CREATING THE FINAL OBJECTS WITH SIZE OPTIMIZATION
-
-
-# static independent vars at stations + station geography objects
-stations.df = stations.ext
-stations.sf = stations.df %>%
-  dplyr::select(c(sid, poste))
-# creating the stations static dataset
-st_geometry(stations.df) = NULL
-stations.df = stations.df %>%
-  dplyr::select(c(sid, altitude, elevation, slope, aspect, Agricultural_areas, Artificials_surfaces, Forest, Herbaceous_vegetation))
-# devtools::use_data(stations.sf, overwrite = TRUE)
-# devtools::use_data(stations.df, overwrite = TRUE)
 
 
 
-# dynamic records at stations
-stations.dyn = records.hourly.1month
-stations.dyn = stations.dyn %>%
-  dplyr::select(c(sid, mtime, tsa, ens))
-# devtools::use_data(stations.dyn, overwrite = TRUE)
-
-# dynamic records at grid points
-grid.dyn = inca.hourly.1month
-colnames(grid.dyn) = c("px", "tsa_hp1", "mtime")
-# devtools::use_data(grid.dyn, overwrite = TRUE)
-
-# adding the px of closest point of grid to each stations of stations.sf
-closest_px <- list()
-for (st in seq_len(nrow(stations.sf))) {
-  closest_px[[st]] <- grid.sf[which.min(
-    st_distance(grid.sf, sf::st_transform(stations.sf[st,], sf::st_crs(grid.sf)))),]
-}
-closest_px = do.call(rbind.data.frame, closest_px)
-stations.sf = stations.sf %>%
-  dplyr::bind_cols(data.frame(closest_px$px)) %>%
-  dplyr::rename(px = closest_px.px )
-# devtools::use_data(stations.sf, overwrite = TRUE)
-
-# adding lat/lon data from stations.sf to stations.df
-stations.df = stations.df %>%
-  dplyr::left_join(
-    (data.frame(st_coordinates(st_transform(stations.sf, 3812))) %>%
-        dplyr::bind_cols(stations.sf["sid"]) %>%
-        dplyr::select(-geometry)
-    ),
-    by = "sid"
-  )
-sf::st_geometry(stations.df) = NULL
+# # dynamic records at stations
+# stations.dyn = records.hourly.1month
+# stations.dyn = stations.dyn %>%
+#   dplyr::select(c(sid, mtime, tsa, ens))
+# # devtools::use_data(stations.dyn, overwrite = TRUE)
+#
+# # dynamic records at grid points
+# grid.dyn = inca.hourly.1month
+# colnames(grid.dyn) = c("px", "tsa_hp1", "mtime")
+# # devtools::use_data(grid.dyn, overwrite = TRUE)
+#
+# # adding the px of closest point of grid to each stations of stations.sf
+# closest_px <- list()
+# for (st in seq_len(nrow(stations.sf))) {
+#   closest_px[[st]] <- grid.sf[which.min(
+#     st_distance(grid.sf, sf::st_transform(stations.sf[st,], sf::st_crs(grid.sf)))),]
+# }
+# closest_px = do.call(rbind.data.frame, closest_px)
+# stations.sf = stations.sf %>%
+#   dplyr::bind_cols(data.frame(closest_px$px)) %>%
+#   dplyr::rename(px = closest_px.px )
+# # devtools::use_data(stations.sf, overwrite = TRUE)
+#
+# # adding lat/lon data from stations.sf to stations.df
+# stations.df = stations.df %>%
+#   dplyr::left_join(
+#     (data.frame(st_coordinates(st_transform(stations.sf, 3812))) %>%
+#         dplyr::bind_cols(stations.sf["sid"]) %>%
+#         dplyr::select(-geometry)
+#     ),
+#     by = "sid"
+#   )
+# sf::st_geometry(stations.df) = NULL
 
 
 
