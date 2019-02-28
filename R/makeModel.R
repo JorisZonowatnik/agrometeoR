@@ -40,6 +40,8 @@ makeModel <- function(
       perfs = getBMRPerformances(bmr, as.df = TRUE)
       aggPerfs = getBMRAggrPerformances(bmr, as.df = TRUE)
 
+      browser()
+
       # training the learner to create the model
       trained = mlr::train(
         learner = learner,

@@ -60,7 +60,16 @@ makeSpatialization <- function(
       dplyr::bind_cols(data.frame(coords))
 
     # compute a summary for both response and standard error
-    summary = data.frame(do.call(cbind, lapply(spatialized[c("response","se")], summary)))
+
+    summary = (data.frame(
+      min.response = min(spatialized[["response"]]),
+      max.response = max(spatialized[["response"]]),
+      mean.response = mean(spatialized[["response"]]),
+
+      min.se = min(spatialized[["se"]]),
+      max.se = max(spatialized[["se"]]),
+      mean.se = mean(spatialized[["se"]])
+    ))
 
     return(list(spatialized = spatialized, summary = summary))
   }

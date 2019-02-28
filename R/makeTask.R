@@ -44,7 +44,11 @@ makeTask <- function(
       features = drop)
 
     # compute a summary for both response and standard error
-    summary = data.frame(do.call(cbind, lapply(mlr::getTaskData(task), summary)))
+    min = min(mlr::getTaskData(task)[[target]])
+    max = max(mlr::getTaskData(task)[[target]])
+    mean = mean(mlr::getTaskData(task)[[target]])
+
+    summary = data.frame(min, max, mean)
 
     return(list(task = task, summary = summary))
 
