@@ -225,12 +225,20 @@ sf::st_geometry(grid.df) = NULL
 grid.data.sf = grid.sf %>% left_join(grid.df, by = "px")
 sf::st_write(grid.data.sf, dsn = "./data-raw/grid.geojson", driver = "GeoJSON")
 
+# the points grid as square polygons for map rendering
+grid.squares.sf = sf::st_make_grid(
+  x = grid.sf, cellsize = 1000, what = "polygons",
+  offset = c(min(grid.df$X), min(grid.df$Y)))
+
+grid.squares.sf = sf::st_intersection(sf::st_transform(grid.squares.sf, 3812), sf::st_transform(wallonia, 3812))
+
+
 #####
 ## SAVING ALL THE GRID + WALLONIA OBJECTS TO PACKAGE DATA
 # doc : http://r-pkgs.had.co.nz/data.html
 
 # saving in ./data/*.rda
-devtools::use_data(wallonia, grid.sf, grid.df, internal = FALSE, overwrite = TRUE)
+devtools::use_data(wallonia, grid.sf, grid.df, grid.squares.sf, internal = FALSE, overwrite = TRUE)
 
 
 #####
@@ -366,9 +374,10 @@ stations.df = stations.df %>%
 sf::st_geometry(stations.df) = NULL
 
 
-# station geography object
+# station points geography object
 stations.sf = stations.sf %>%
   dplyr::select(c(sid, poste, network_name))
+
 
 #####
 ## SAVING the stations OBJECTS TO PACKAGE DATA
