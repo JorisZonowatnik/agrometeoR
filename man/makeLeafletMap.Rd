@@ -20,8 +20,19 @@ makeLeafletMap(target, spatialized, polygon_grid = grid.squares.sf, stations,
 
 \item{stations_coords}{a character vector specifying the name of the coordinates columns of the stations dataframe}
 
-\item{crs}{a numeric corresponding to the EPSG code of the stations spatial coordinates
-https://stackoverflow.com/questions/28665918/create-square-polygons-from-single-centre-coordinates-and-area-in-r}
+\item{crs}{a numeric corresponding to the EPSG code of the stations spatial coordinates}
+}
+\examples{
+myDataset = makeDataset(
+  dfrom = "2017-03-04T15:00:00Z",
+  dto = "2017-03-04T15:00:00Z",
+  sensor = "tsa")
+myTask = makeTask(dataset = myDataset$output$value, target = "tsa")
+myModel = makeModel(
+  task = mytask$out$value,
+  learner = learners$baseLearners$lrn.lm.alt)
+mySpatialization = makeSpatialization(model = myModel$output$value)
+https://stackoverflow.com/questions/28665918/create-square-polygons-from-single-centre-coordinates-and-area-in-r
 }
 \author{
 Thomas Goossens
