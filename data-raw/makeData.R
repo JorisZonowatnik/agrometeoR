@@ -231,7 +231,8 @@ grid.squares.sf = sf::st_make_grid(
   offset = c(min(grid.df$X), min(grid.df$Y)))
 
 grid.squares.sf = sf::st_intersection(sf::st_transform(grid.squares.sf, 3812), sf::st_transform(wallonia, 3812))
-
+grid.squares.sf = sf::st_join(sf::st_transform(sf::st_sf(grid.squares.sf), 3812), sf::st_transform(grid.sf, 3812))
+grid.squares.sf = na.omit(grid.squares.sf)
 
 #####
 ## SAVING ALL THE GRID + WALLONIA OBJECTS TO PACKAGE DATA
