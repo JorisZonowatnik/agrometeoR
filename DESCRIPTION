@@ -17,6 +17,7 @@ Imports: mlr,
     sf (>= 0.6-1),
     leaflet (>= 2.0.0),
     leaflet.extras (>= 1.0.0),
+    leaflet.opacity(>= 0.1.0),
     geojsonio (>= 0.6.0),
     geojsonlint (>= 0.2.0),
     jsonlite (>= 1.5),
@@ -29,5 +30,6 @@ Suggests:
     elevatr (>= 0.1.4),
     testthat (>= 2.0.0)
 Remotes: github::pokyah/mlr@gstat,
-    github::ropensci/rnaturalearthhires@master
+    github::ropensci/rnaturalearthhires@master,
+    github::be-marc/leaflet.opacity@master
 RoxygenNote: 6.0.1
