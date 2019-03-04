@@ -365,7 +365,7 @@ stations.df = stations.sf
 stations.df = stations.df %>%
   dplyr::left_join(
     (data.frame(st_coordinates(st_transform(stations.sf, 3812))) %>%
-        dplyr::bind_cols(stations.sf["sid"]) %>%
+        dplyr::bind_cols(stations.sf[c("sid")]) %>%
         dplyr::select(-geometry)
     ),
     by = "sid"
@@ -377,7 +377,7 @@ sf::st_geometry(stations.df) = NULL
 
 # station points geography object
 stations.sf = stations.sf %>%
-  dplyr::select(c(sid, poste, network_name))
+  dplyr::select(c(sid, poste, network_name, closest_px))
 
 
 #####
