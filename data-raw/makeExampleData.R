@@ -12,7 +12,6 @@ ex_bad_dto = "timeb"
 
 ex_stations = typeData(meta_and_records.l = getData(dfrom = ex_dfrom, dto = ex_dto), table_name = "cleandata")
 ex_stations = ex_stations %>%
-  filter(network_name == "pameseb") %>%
   filter(type_name != "Sencrop") %>%
   filter(!is.na(to)) %>%
   filter(state == "Ok")
