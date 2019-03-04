@@ -5,15 +5,16 @@ devtools::load_all()
 # makeDataset inputs
 ex_user_token = Sys.getenv("AGROMET_API_V1_KEY")
 ex_bad_user_token = NULL
-ex_dfrom = "2017-03-04T15:00:00Z"
+ex_dfrom = "2016-02-04T15:00:00Z"
 ex_bad_dfrom = "timea"
-ex_dto = "2017-03-04T18:00:00Z"
+ex_dto = "2016-02-04T18:00:00Z"
 ex_bad_dto = "timeb"
 
-ex_stations = typeData(meta_and_records.l = getData(dfrom = ex_dfrom, dto = ex_dto), table_name = "cleandata")
+ex_stations = typeData(meta_and_records.l = getData(dfrom = ex_dfrom, dto = ex_dto, sid = "all"), table_name = "cleandata")
 ex_stations = ex_stations %>%
   filter(type_name != "Sencrop") %>%
-  filter(!is.na(to)) %>%
+  filter(network_name != "carah") %>%
+  filter(network_name != "mobile") %>%
   filter(state == "Ok")
 ex_stations = unique(ex_stations$sid)
 ex_stations = paste0(as.character(ex_stations), collapse = ",")

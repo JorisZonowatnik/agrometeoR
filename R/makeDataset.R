@@ -27,7 +27,7 @@
 #'
 makeDataset <- function(
   user_token = Sys.getenv("AGROMET_API_V1_KEY"),
-  stations = paste0(as.character(stations.df$sid), collapse = ","),
+  stations,
   json = NULL,
   dfrom = NULL,
   dto = NULL,
@@ -42,7 +42,7 @@ makeDataset <- function(
     doMakeDataset = function(){
       message("Making dataset...")
 
-      browser()
+      #browser()
 
       if (is.null(json)) {
         # make an API call to retrieve the dynamic data
@@ -109,8 +109,8 @@ makeDataset <- function(
       stopifnot(sensor %in% c("tsa", "hra", "hct", "vvt", "ens", "plu"))
       # check if staticExpl provided is ok
       stopifnot(all(staticExpl %in% colnames(stations.df[3:9])))
-      # check if queried stations exist.
-      stopifnot(isTRUE(all(strsplit(stations, ",")[[1]]  %in% (as.character(stations.df$sid)))))
+      # check if queried stations exist.::todo:: better dynamic check of exisitng stations
+      # stopifnot(isTRUE(all(strsplit(stations, ",")[[1]]  %in% (as.character(stations.df$sid)))))
 
       # in case everything went fine do makeDataset
       output$value = doMakeDataset()
