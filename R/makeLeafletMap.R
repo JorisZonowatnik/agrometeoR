@@ -80,10 +80,11 @@ makeLeafletMap = function(
     ) %>%
     # adding layer control button
     addLayersControl(baseGroups = c("Stamen", "Satellite"),
-      overlayGroups = c("prediction"),
-      #overlayGroups = c("prediction", "se", "Stations", "Admin"),
+      overlayGroups = c("prediction", "se", "Stations", "Admin"),
       options = layersControlOptions(collapsed = TRUE)
     ) %>%
+    # layer opacity slider :: https://cran.r-project.org/web/packages/leaflet.opacity/vignettes/leaflet-opacity.html
+    leaflet.opacity::addOpacitySlider(layerId = "prediction")
     # fullscreen button
     leaflet.extras::addFullscreenControl() %>%
     # location button
@@ -99,7 +100,7 @@ makeLeafletMap = function(
     addPolygons(
       group = "prediction",
       color = "#444444", stroke = FALSE, weight = 1, smoothFactor = 0.8,
-      opacity = 1.0, fillOpacity = 0.8,
+      opacity = 1.0, fillOpacity = 1.0,
       fillColor = ~varPal(response),
       label = ~ paste(
         "prediction:", format(round(spatialized$response, 2), nsmall = 2),
@@ -141,23 +142,23 @@ makeLeafletMap = function(
   #     )
   # }
 
-  # prediction.map = prediction.map %>%
-  #   # admin boundaries
-  #   addPolygons(
-  #     data = wallonia,
-  #     group = "Admin",
-  #     color = "#444444", weight = 1, smoothFactor = 0.5,
-  #     opacity = 1, fillOpacity = 0, fillColor = FALSE) %>%
-  #   # stations location
-  #   addCircleMarkers(
-  #     data = stations,
-  #     group = "Stations",
-  #     color = "black",
-  #     weight = 2,
-  #     fillColor = ~varPal(tsa),
-  #     stroke = TRUE,
-  #     fillOpacity = 1,
-  #     label = ~htmltools::htmlEscape(as.character(tsa)))
+  prediction.map = prediction.map %>%
+    # admin boundaries
+    addPolygons(
+      data = wallonia,
+      group = "Admin",
+      color = "#444444", weight = 1, smoothFactor = 0.5,
+      opacity = 1, fillOpacity = 0, fillColor = FALSE) %>%
+    # stations location
+    addCircleMarkers(
+      data = stations,
+      group = "Stations",
+      color = "black",
+      weight = 2,
+      fillColor = ~varPal(tsa),
+      stroke = TRUE,
+      fillOpacity = 1,
+      label = ~htmltools::htmlEscape(as.character(tsa)))
 
   return(prediction.map)
 
