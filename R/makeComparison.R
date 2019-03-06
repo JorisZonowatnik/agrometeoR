@@ -1,3 +1,34 @@
+
+h.is_it_day <- function(records.df){
+
+  # loading the required package
+  library(chron)
+
+  # declaration of the function to return a boolean for day state
+  returnDayState <- function(mtime, sunrise, sunset){
+    if(times(strftime(mtime,"%H:%M:%S")) >= sunrise && times(strftime(mtime, format="%H:%M:%S")) <= sunset){
+      day <- TRUE
+    }else{
+      day <- FALSE
+    }
+    return(day)
+  }
+  # add a boolean column for day = TRUE or FALSE
+  records.df <- records.df %>%
+    rowwise() %>%
+    mutate(day=returnDayState(mtime, sunrise, sunset))
+
+  # reorder and return the dataframe
+  meta <-subset(records.df, select=(1:12))
+  sun <-subset(records.df, select=(c(13,14,length(records.df))))
+  sensors <- subset(records.df, select=(15:(length(records.df)-1)))
+  records.df <- data.frame(bind_cols(meta, sun, sensors))
+  return(records.df)
+}
+
+
+
+
 #' @export
 #' @title make a comparison between 2 stations
 #' @author Thomas Goossens

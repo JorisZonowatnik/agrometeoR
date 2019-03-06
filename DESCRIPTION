@@ -21,7 +21,9 @@ Imports: mlr,
     geojsonio (>= 0.6.0),
     geojsonlint (>= 0.2.0),
     jsonlite (>= 1.5),
-    tictoc
+    tictoc (>= 1.0),
+    BlandAltmanLeh (>= 0.3.1),
+    ggplot2 (>= 2.2.1)
 Suggests:
     rgeos (>= 0.3-26),
     raster (>= 2.6-7),
