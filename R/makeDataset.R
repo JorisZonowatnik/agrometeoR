@@ -2,15 +2,15 @@
 #' @title make a dataframe of stations records
 #' @author Thomas Goossens
 #' @param token a character specifying your agrometAPI token
-#' @param stations a character specifying the sid's of the stations to use separated by commas
+#' @param stations a character vector specifying the sid's of the stations to use
 #' @param json a character specifying the path of a json file constructed from a batch db export.
 #' If NULL the API will be called.
 #' @param dfrom a datetime string specifying the dateTime
 #' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
 #' @param dto a datetime string specifying the dateTime
 #' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
-#' @param sensor a character specifying the sensor data you want to spatialize.
-#' One of tsa, hct, hra
+#' @param sensor a character vector specifying the sensor data you want to spatialize.
+#' One of tsa, hct, hra, ens, plu, vvt, sunrise, sunset
 #' @param dynExpl a character vector specifying the dynamic explanatory variables you want to add to the task.
 #' Any combinations of inca, ens
 #' @param staticExpl a character vector specifying the desired static explanatory variables
@@ -47,8 +47,14 @@ makeDataset <- function(
       if (is.null(json)) {
         # make an API call to retrieve the dynamic data
         message("Calling Agromet API...")
+
         dataset = typeData(
-          getData(user_token = user_token, dfrom = dfrom, dto = dto, sensors = sensor, sid = stations ))
+          getData(user_token = user_token,
+            dfrom = dfrom,
+            dto = dto,
+            sensors = paste0(sensor, collapse = ","),
+            sid = paste0(stations, collapse = "," ))
+        )
 
       } else{
         # read the json FILE
@@ -106,7 +112,7 @@ makeDataset <- function(
       # check if usertoken provided
       stopifnot(!is.null(user_token))
       # check if sensor provided is OK
-      stopifnot(sensor %in% c("tsa", "hra", "hct", "vvt", "ens", "plu"))
+      stopifnot(sensor %in% c("tsa", "hra", "hct", "vvt", "ens", "plu" , "sunrise", "sunset"))
       # check if staticExpl provided is ok
       stopifnot(all(staticExpl %in% colnames(stations.df[3:9])))
       # check if queried stations exist.::todo:: better dynamic check of exisitng stations

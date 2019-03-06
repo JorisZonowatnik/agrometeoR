@@ -4,8 +4,7 @@
 \alias{makeDataset}
 \title{make a dataframe of stations records}
 \usage{
-makeDataset(user_token = Sys.getenv("AGROMET_API_V1_KEY"),
-  stations = paste0(as.character(stations.df$sid), collapse = ","),
+makeDataset(user_token = Sys.getenv("AGROMET_API_V1_KEY"), stations,
   json = NULL, dfrom = NULL, dto = NULL, sensor = "tsa",
   staticExpl = "elevation", dynExpl = NULL)
 }
