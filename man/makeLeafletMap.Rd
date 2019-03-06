@@ -4,8 +4,9 @@
 \alias{makeLeafletMap}
 \title{make an interactive leaflet map of your spatialized data}
 \usage{
-makeLeafletMap(target, spatialized, polygon_grid = grid.squares.sf, stations,
-  key = "px", stations_coords = c("x", "y"), crs = 3812)
+makeLeafletMap(target, spatialized, polygon_grid = grid.squares.sf,
+  stations_data, stations_meta = stations.df, key_grid = "px",
+  key_stations = "sid", stations_coords = c("x", "y"), crs = 3812, title)
 }
 \arguments{
 \item{target}{a character specifying the sensor your want to map}
@@ -14,13 +15,13 @@ makeLeafletMap(target, spatialized, polygon_grid = grid.squares.sf, stations,
 
 \item{polygon_grid}{a sf object containing the polygonized grid and the px references}
 
-\item{stations}{a dataframe containing the stations observations of the sensor}
-
-\item{key}{a character specifying the key used to match the spatialized dataframe with the polygonized grid}
-
 \item{stations_coords}{a character vector specifying the name of the coordinates columns of the stations dataframe}
 
 \item{crs}{a numeric corresponding to the EPSG code of the stations spatial coordinates}
+
+\item{stations}{a dataframe containing the stations observations of the sensor}
+
+\item{key}{a character specifying the key used to match the spatialized dataframe with the polygonized grid}
 }
 \examples{
 myDataset = makeDataset(
@@ -32,6 +33,7 @@ myModel = makeModel(
   task = mytask$out$value,
   learner = learners$baseLearners$lrn.lm.alt)
 mySpatialization = makeSpatialization(model = myModel$output$value)
+lmap = makeLeafletMap(target = "tsa", spatialized = ex_makeSpatialization$output$value$spatialized, stations = stations = ex_bad_makeDataset[[1]])
 https://stackoverflow.com/questions/28665918/create-square-polygons-from-single-centre-coordinates-and-area-in-r
 }
 \author{
