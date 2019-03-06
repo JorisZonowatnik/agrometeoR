@@ -24,6 +24,7 @@
 #' lmap = makeLeafletMap(target = "tsa", spatialized = ex_makeSpatialization$output$value$spatialized, stations = stations = ex_bad_makeDataset[[1]])
 #'https://stackoverflow.com/questions/28665918/create-square-polygons-from-single-centre-coordinates-and-area-in-r
 # https://github.com/ldavadan/agromet_test/blob/master/R/create_map.
+# https://stackoverflow.com/questions/33084728/plotting-shp-file-in-leaflet-works-in-ggplot
 
 makeLeafletMap = function(
   target,
@@ -132,6 +133,7 @@ makeLeafletMap = function(
       fillColor = ~varPal(response),
       label = ~ paste(
         "prediction:", format(round(spatialized$response, 2), nsmall = 2),
+        "°C ",
         "se: ", format(round(spatialized$se, 2), nsmall = 2)),
       # popup = ~as.character(response),
       highlightOptions = highlightOptions(color = "white", weight = 2,
