@@ -180,8 +180,8 @@ typeData <- function(meta_and_records.l, table_name="cleandata"){
     stations_meta.df <- as.data.frame(dplyr::bind_cols(stations_meta.df, tmy_period.df))
     # Transform from & to column to posix format for easier time handling
     data.df <- stations_meta.df %>%
-      dplyr::mutate_at("from", as.POSIXct, format = "%Y-%m-%dT%H:%M:%S", tz = "GMT-2") %>%
-      dplyr::mutate_at("to", as.POSIXct, format = "%Y-%m-%dT%H:%M:%S", tz = "GMT-2")
+      dplyr::mutate_at(.vars = vars(from), as.POSIXct, format = "%Y-%m-%dT%H:%M:%S", tz = "GMT-2") %>%
+      dplyr::mutate_at(.vars = vars(to), as.POSIXct, format = "%Y-%m-%dT%H:%M:%S", tz = "GMT-2")
   }else{
     data.df <- NULL
   }
