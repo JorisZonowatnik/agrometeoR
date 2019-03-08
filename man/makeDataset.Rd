@@ -9,7 +9,7 @@ makeDataset(user_token = Sys.getenv("AGROMET_API_V1_KEY"), stations,
   staticExpl = "elevation", dynExpl = NULL)
 }
 \arguments{
-\item{stations}{a character specifying the sid's of the stations to use separated by commas}
+\item{stations}{a character vector specifying the sid's of the stations to use}
 
 \item{json}{a character specifying the path of a json file constructed from a batch db export.
 If NULL the API will be called.}
@@ -20,8 +20,8 @@ Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 \item{dto}{a datetime string specifying the dateTime
 Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 
-\item{sensor}{a character specifying the sensor data you want to spatialize.
-One of tsa, hct, hra}
+\item{sensor}{a character vector specifying the sensor data you want to spatialize.
+One of tsa, hct, hra, ens, plu, vvt, sunrise, sunset}
 
 \item{staticExpl}{a character vector specifying the desired static explanatory variables
 Any combinations of "altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided. Default = "Elevation"}
