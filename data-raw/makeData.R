@@ -345,7 +345,6 @@ stations.ext  = dplyr::select(stations.ext, -one_of(excluded_vars))
 # renaming to stations.sf
 stations.sf = stations.ext
 
-####HERE WE ARE#####
 
 # Injecting the ref of the closest px into the station locations
 closest_px <- list()
