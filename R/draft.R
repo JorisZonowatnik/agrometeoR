@@ -63,7 +63,7 @@ makeComparison = function(dataset){
   names(output_plots) = sensors
 
 
-}
+  }
 
 
 # declaration of the function to return a boolean for day state
@@ -117,11 +117,11 @@ am_makePlots = function(records, sensor, interactive = TRUE){
 
   # adding a color factor column for plots that depends of the time extent of the records.
   if (length(unique(records$month)) > 3) {
-      scatterColors = "month"
+    scatterColors = "month"
   }
   else {
     if (length(unique(records$date)) > 14) {
-        scatterColors = "week"
+      scatterColors = "week"
     }
     else {
       if (length(unique(records$date)) > 1) {
@@ -174,10 +174,10 @@ am_makePlots = function(records, sensor, interactive = TRUE){
     ggplot(
       data = .,
       aes_string(
-      x = as.name(names(recordsWide)[3]),
-      y = as.name(names(recordsWide)[4]),
-      colour = as.name(names(recordsWide)[2])
-    )) +
+        x = as.name(names(recordsWide)[3]),
+        y = as.name(names(recordsWide)[4]),
+        colour = as.name(names(recordsWide)[2])
+      )) +
     geom_point() +
     geom_smooth(method = lm, color = "black", fill = "blue") +
     labs(caption=title) +
@@ -198,7 +198,7 @@ am_makePlots = function(records, sensor, interactive = TRUE){
         y = as.name(names(blandAltDf)[2]),
         colour = as.name(names(blandAltDf)[4]))
     ) +
-        #colour = as.name(colnames(blandAltDf)[which(names(blandAltDf) %in% scatterColors)])) +
+    #colour = as.name(colnames(blandAltDf)[which(names(blandAltDf) %in% scatterColors)])) +
     geom_point() +
     geom_smooth(method = glm, se = TRUE, color = "black", linetype = "dashed") +
     geom_hline(yintercept =  0, color = "black", size = 0.5) +

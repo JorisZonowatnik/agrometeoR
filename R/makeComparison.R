@@ -1,189 +1,65 @@
-
-h.is_it_day <- function(records.df){
-
-  # loading the required package
-  library(chron)
-
-  # declaration of the function to return a boolean for day state
-  returnDayState <- function(mtime, sunrise, sunset){
-    if(times(strftime(mtime,"%H:%M:%S")) >= sunrise && times(strftime(mtime, format="%H:%M:%S")) <= sunset){
-      day <- TRUE
-    }else{
-      day <- FALSE
-    }
-    return(day)
-  }
-  # add a boolean column for day = TRUE or FALSE
-  records.df <- records.df %>%
-    rowwise() %>%
-    mutate(day=returnDayState(mtime, sunrise, sunset))
-
-  # reorder and return the dataframe
-  meta <-subset(records.df, select=(1:12))
-  sun <-subset(records.df, select=(c(13,14,length(records.df))))
-  sensors <- subset(records.df, select=(15:(length(records.df)-1)))
-  records.df <- data.frame(bind_cols(meta, sun, sensors))
-  return(records.df)
-}
-
-
-
-
 #' @export
 #' @title make a comparison between 2 stations
 #' @author Thomas Goossens
 #' @import mlr
-#' @import parallelMap
+#' @import ggplot2
 #' @importFrom magrittr %>%
-#' @param station1 an integer specifying the id of the first station you want to compare
-#' @param station2 an integer specifying the id of the second station you want to compare
-#' @param tasks a list which elements are object of class mlr::makeRegrTask()
-#' @param learners a list which elements are object of class mlr::makeLearner()
-#' @param measures a list of the mlr performance metrics you want to get. Default is list(rmse)
-#' @param keep.pred a boolean specifying if you want to keep the bmr preds. defaut = FALSE
-#' @param models a boolean specifying if you want to keep the bmr models. defaut = FALSE
-#' @param grouping a numeric specifying the number of tasks you want to benchamrk in a single batch. Default to 1000
-#' @param level a character specifying the paralelllization level. Default  = "mlr.benchmark"
-#' @param resampling  a character specifying the type of mlr's CV. Default = LOO
-#' @param path a character specifying the path where you want to save the bmr files.
-#' @param prefix a character specifying the prefix you want to use for the bmr file names.
-#' @return a list wihch elements are objects of class mlr::benchmark()
+#' @param dataset a dataframe containing the records from the 2 stations you want to compare. ::TODO ::Must contain sunset and sunrise !
+#' @param sensor a character specifying the name of the sensor you want to compare
+#' @param sensor a character specifying the name of the sids you want to compare
+#' @return a list which elements are objects of class mlr::benchmark()
 
-makeComparison <- function(
-  tasks,
-  learners,
-  measures = list(rmse),
-  keep.pred = FALSE,
-  models = FALSE,
-  grouping = 1000,
-  level = "mlr.benchmark",
-  resamplings = "LOO",
-  cpus = 1,
-  prefix = "",
-  path = "./"){
+makeComparison = function(dataset, sensor, sids, dfrom, dto){
 
-  out = tryCatch({
-    output = list(value = NULL, error = NULL)
-    bool = FALSE
+  dataset = dataset %>%
+    dplyr::filter(sid %in% sids) %>%
+    dplyr::filter(mtime >= as.POSIXct(dfom)) %>%
+    dplyr::filter(mtime <= as.POSIXct(dto))
 
-    withCallingHandlers({
+  stopifnot(length(unique(dataset$sid)) = 2)
 
-      # set seed to make bmr experiments reproducibles
-      set.seed(1985)
+  # removing potential NA values and raise warning
+  logNa = dataset[rowSums(is.na(dataset[sensor])) > 0,]
+  datasetDfNoNa = dataset[rowSums(is.na(dataset[sensor])) == 0,]
+  if (!is.null(nrow(logNa))) {
+    warning("Your dataset contains NA values that will be removed from the comparison.
+      These values were logged and are accessible")
+  }
 
-      # hack for tasks length when only a single task
-      # ::todo::
+  # keeping only the commonly shared mtime by the 2 stations
+  datasetDfclean = subset(dataset, !as.character(mtime) %in% as.character(logNa$mtime))
+
+  # adding day or night
+  # datasetDfDay = data.frame(
+  #   datasetDfclean %>%
+  #     rowwise() %>% dplyr::mutate(day = am_returnDayState(mtime, sunrise, sunset)))
 
 
-      # split tasks in multiple subgroups to avoid memory saturation
-      tasks.groups.start = seq(from = 1, to = length(tasks), by = grouping)
-      tasks.groups.end = seq(from = grouping, to = length(tasks), by = grouping)
 
-      # conducting the bmrs by subgroups
-      lapply(seq_along(as.list(tasks.groups.start)),
-        function(x) {
+  # Compute the descriptive stats for the sensor
 
-          # message
-          message(paste0(
-            "Conducting Benchmark for tasks " ,
-            tasks.groups.start[x], "-",
-            tasks.groups.end[x]))
 
-          # starting counting time of the current bmr execution
-          tictoc::tic()
 
-          # enable parallelization with level = mlr.resample
-          if (cpus > 1) {
-            parallelMap::parallelStart(mode = "multicore", cpus = cpus, level = level)
-          }
-
-          # hack to avoid wrong last task number
-          if (is.na(tasks.groups.end[x])) {tasks.groups.end[x] = tasks.groups.start[x]}
-
-          # benchmark
-          bmr = mlr::benchmark(
-            learners = learners,
-            tasks = tasks[tasks.groups.start[x] :tasks.groups.end[x]],
-            resamplings = mlr::makeResampleDesc(resamplings),
-            measures = measures,
-            keep.pred = keep.pred,
-            models = models)
-
-          # stop the parallelized computing
-          if (cpus > 1) {
-            parallelMap::parallelStop()
-          }
-
-          # stoping counting time
-          exectime = tictoc::toc()
-          exectime = exectime$toc - exectime$tic
-
-          # save the bmr object to a file
-          saveRDS(object = bmr, file = paste0(path,
-            prefix, "_bmr_",  tasks.groups.start[x], "_", tasks.groups.end[x], ".rds"))
-
-          # remove the object stored in RAM
-          rm(bmr)
-
-          # success message and boolean
-          message(paste0(
-            "Success ! Benchmark for tasks " ,
-            tasks.groups.start[x], "-",
-            tasks.groups.end[x], "conducted and written to file"))
-        })
-
-      # loading all the temp bmr files and merging in a single big bmr object
-      bmr_files = list.files(path = path, pattern = prefix, full.names = TRUE)
-      bmrs = lapply(bmr_files, readRDS)
-
-      if (length(bmrs) > 1) {bmrs = mergeBenchmarkResults(bmrs)}
-      else {bmrs = bmrs[[1]]}
-
-      # perfs + aggregated Performances
-      perfs = getBMRPerformances(bmrs, as.df = TRUE)
-      aggPerfs = getBMRAggrPerformances(bmrs, as.df = TRUE)
-      summary = aggPerfs %>%
-        dplyr::group_by(learner.id) %>%
-        dplyr::select(rmse.test.rmse) %>%
-        dplyr::summarise_all(
-          funs(count = sum(!is.na(.)),
-            min = min(.,na.rm = TRUE),
-            max = max(.,na.rm = TRUE),
-            mean = mean(.,na.rm = TRUE),
-            median = median(.,na.rm = TRUE),
-            sd = sd(.,na.rm = TRUE)))
-
-      # create a list containing all the useful information
-      output$value = list(
-        bmr = bmrs,
-        perfs = perfs,
-        aggPerfs = aggPerfs,
-        summary = summary
-      )
-
-      bool = TRUE
-
-    },
-      warning = function(cond){
-        message("AgrometeoR Warning :")
-        message(cond)
-      })
-  },
-    error = function(cond){
-      error = paste0(
-        "AgrometeoR Error : makeBenchmark failed. Here is the original error message : ",
-        cond,
-        "\n",
-        "value of output set to NULL")
-      output$error = error
-      message(error)
-    },
-    finally = {
-      return(list(bool = bool, output = output))
-    })
-  return(out)
+  # compute the classic plots
+  output_plots = lapply(sensors, function(x){
+    am_makePlots(datasetDfDayDmax, x, TRUE)
+  })
+  names(output_plots) = sensors
 
 }
+
+
+# declaration of the function to return a boolean for day state
+am_returnDayState = function(mtime, sunrise, sunset){
+  if (times(strftime(mtime,"%H:%M:%S")) >= sunrise && chron::times(strftime(mtime, format = "%H:%M:%S")) <= sunset){
+    day = TRUE
+  } else{
+    day = FALSE
+  }
+  return(day)
+}
+
+
 
 
 
