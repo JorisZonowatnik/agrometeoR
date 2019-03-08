@@ -42,8 +42,6 @@ makeDataset <- function(
     doMakeDataset = function(){
       message("Making dataset...")
 
-      #browser()
-
       if (is.null(json)) {
         # make an API call to retrieve the dynamic data
         message("Calling Agromet API...")
