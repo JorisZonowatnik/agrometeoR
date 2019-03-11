@@ -9,14 +9,15 @@
 #' @param sensor a character specifying the name of the sids you want to compare
 #' @return a list which elements are objects of class mlr::benchmark()
 
-makeComparison = function(dataset, sensor, sids, dfrom, dto){
+makeComparison = function(
+  dataset,
+  sensor,sids, dfrom, dto){
 
   dataset = dataset %>%
     dplyr::filter(sid %in% sids) %>%
     dplyr::filter(mtime >= as.POSIXct(dfom)) %>%
     dplyr::filter(mtime <= as.POSIXct(dto))
 
-  stopifnot(length(unique(dataset$sid)) = 2)
 
   # removing potential NA values and raise warning
   logNa = dataset[rowSums(is.na(dataset[sensor])) > 0,]
