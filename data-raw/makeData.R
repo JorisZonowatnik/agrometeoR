@@ -15,6 +15,10 @@ library(jsonlite)
 library(elevatr)
 source("./R/agrometAPI.R")
 
+#####
+## SENSORS
+sensors = c("tsa", "plu", "ens", "vvt", "hct")
+devtools::use_data(sensors, internal = FALSE, overwrite = TRUE)
 
 #####
 ## ADMIN BOUNDARIES

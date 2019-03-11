@@ -4,37 +4,17 @@
 \alias{makeComparison}
 \title{make a comparison between 2 stations}
 \usage{
-makeComparison(tasks, learners, measures = list(rmse), keep.pred = FALSE,
-  models = FALSE, grouping = 1000, level = "mlr.benchmark",
-  resamplings = "LOO", cpus = 1, prefix = "", path = "./")
+makeComparison(dataset, sensor, sids, dfrom, dto)
 }
 \arguments{
-\item{tasks}{a list which elements are object of class mlr::makeRegrTask()}
+\item{dataset}{a dataframe containing the records from the 2 stations you want to compare. ::TODO ::Must contain sunset and sunrise !}
 
-\item{learners}{a list which elements are object of class mlr::makeLearner()}
+\item{sensor}{a character specifying the name of the sensor you want to compare}
 
-\item{measures}{a list of the mlr performance metrics you want to get. Default is list(rmse)}
-
-\item{keep.pred}{a boolean specifying if you want to keep the bmr preds. defaut = FALSE}
-
-\item{models}{a boolean specifying if you want to keep the bmr models. defaut = FALSE}
-
-\item{grouping}{a numeric specifying the number of tasks you want to benchamrk in a single batch. Default to 1000}
-
-\item{level}{a character specifying the paralelllization level. Default  = "mlr.benchmark"}
-
-\item{prefix}{a character specifying the prefix you want to use for the bmr file names.}
-
-\item{path}{a character specifying the path where you want to save the bmr files.}
-
-\item{station1}{an integer specifying the id of the first station you want to compare}
-
-\item{station2}{an integer specifying the id of the second station you want to compare}
-
-\item{resampling}{a character specifying the type of mlr's CV. Default = LOO}
+\item{sensor}{a character specifying the name of the sids you want to compare}
 }
 \value{
-a list wihch elements are objects of class mlr::benchmark()
+a list which elements are objects of class mlr::benchmark()
 }
 \author{
 Thomas Goossens
