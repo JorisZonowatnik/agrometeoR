@@ -4,17 +4,23 @@
 \alias{makePlots}
 \title{make plots for a sensor of a station for a specific period of time}
 \usage{
-makePlots(records, sensor, sid, dfrom, dto, interactive = TRUE)
+makePlots(records, combs, dfrom = NULL, dto = NULL, interactive = TRUE)
 }
 \arguments{
-\item{sensor}{a character specifying the name of the sensor you want to plot}
+\item{records}{a list of hourly dataframes or a single dataframe ::TODO ::Must contain sunset and sunrise !}
 
-\item{sid}{a character specifying the sid of the station you want to plot}
+\item{combs}{a named character vector specifying the sid's combinations of the stations you want to put on the same plot}
 
-\item{dataset}{a dataframe containing the records from the 2 stations you want to compare. ::TODO ::Must contain sunset and sunrise !}
+\item{dfrom}{a character vector}
+
+\item{dto}{a character vector}
+
+\item{sensor}{a character vector specifying the name of the sensors you want to get the descriptive statistics}
 }
 \value{
-a list wihch elements are objects of class mlr::benchmark()
+a list
+
+records = makeDataset(dfrom = ex_dfrom, dto = ex_dto, sensor = c("tsa", "vvt"), stations = unique(stations.df$sid))
 }
 \author{
 Thomas Goossens
