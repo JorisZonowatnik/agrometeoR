@@ -111,14 +111,14 @@ makePlots = function(
         }
         records = records %>%
           dplyr::mutate(timeGroup = as.factor(get(lubridate_TimeGroup)(mtime)))
+        colnames(records)[colnames(records) == "timeGroup"] = lubridate_TimeGroup
+
 
         # putting in wide format for scatter & blandAltman
         recordsWide = records %>%
-          dplyr::select(one_of(c("mtime", "timeGroup", "sid", records_sensor))) %>%
+          dplyr::select(one_of(c("mtime", lubridate_TimeGroup, "sid", records_sensor))) %>%
           tidyr::spread_("sid", records_sensor) %>%
-          rename_at(vars(comb),function(x) paste0("station_", x))
-
-        browser()
+          dplyr::rename_at(vars(comb),function(x) paste0("station_", x))
 
         # scatter plot
         plots$scatter = recordsWide %>%
@@ -164,6 +164,9 @@ makePlots = function(
           labs(caption = title) +
           theme(plot.caption = element_text(hjust = 0.5, size = rel(1.2)))
       }
+
+      # only keep the non-null plots
+      plots = plots[lengths(plots) != 0]
 
       # interactivity ?
       if (isTRUE(interactive)) {
