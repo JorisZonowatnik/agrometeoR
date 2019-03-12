@@ -9,7 +9,7 @@
 #' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
 #' @param dto a datetime string specifying the dateTime
 #' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
-#' @param sensor a character vector specifying the sensor data you want to spatialize.
+#' @param sensors a character vector specifying the sensor data you want to spatialize.
 #' One of tsa, hct, hra, ens, plu, vvt, sunrise, sunset
 #' @param dynExpl a character vector specifying the dynamic explanatory variables you want to add to the task.
 #' Any combinations of inca, ens
@@ -31,7 +31,7 @@ makeDataset <- function(
   json = NULL,
   dfrom = NULL,
   dto = NULL,
-  sensor = "tsa",
+  sensors = "tsa",
   staticExpl = "elevation",
   dynExpl = NULL
 ){
@@ -50,7 +50,7 @@ makeDataset <- function(
           getData(user_token = user_token,
             dfrom = dfrom,
             dto = dto,
-            sensors = paste0(sensor, collapse = ","),
+            sensors = paste0(sensors, collapse = ","),
             sid = paste0(stations, collapse = "," ))
         )
 
@@ -72,7 +72,7 @@ makeDataset <- function(
 
       # Keep only the relevant columns
       dataset = dataset %>%
-        dplyr::select("sid", "mtime", sensor) %>%
+        dplyr::select("sid", "mtime", sensors) %>%
         dplyr::mutate(task.id = gsub("[^[:digit:]]", "", dataset$mtime))
 
       # join with static explanatory vars
@@ -110,7 +110,7 @@ makeDataset <- function(
       # check if usertoken provided
       stopifnot(!is.null(user_token))
       # check if sensor provided is OK
-      stopifnot(sensor %in% c("tsa", "hra", "hct", "vvt", "ens", "plu" , "sunrise", "sunset"))
+      stopifnot(sensors %in% c("tsa", "hra", "hct", "vvt", "ens", "plu" , "sunrise", "sunset"))
       # check if staticExpl provided is ok
       stopifnot(all(staticExpl %in% colnames(stations.df[3:9])))
       # check if queried stations exist.::todo:: better dynamic check of exisitng stations

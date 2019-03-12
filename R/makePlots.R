@@ -32,6 +32,11 @@ makePlots = function(
   # from list of df's to big df
   records = dataframizeRecords(records)
 
+  # filter according to dfrom and dto
+  records = records %>%
+    dplyr::filter(mtime >= as.POSIXct(dfrom)) %>%
+    dplyr::filter(mtime <= as.POSIXct(dto))
+
   # extracting the unique sids
   sids = as.character(unique(records$sid))
 
@@ -128,7 +133,7 @@ makePlots = function(
           dplyr::mutate(timeGroup = as.factor(get(lubridate_TimeGroup)(mtime)))
         colnames(records)[colnames(records) == "timeGroup"] = lubridate_TimeGroup
 
-        if (!is.na(colnames(records)["as_date"])) {
+        if ("as_date" %in% colnames(records)) {
           colnames(records)[colnames(records) == "as_date"] = "date"
           lubridate_TimeGroup = "date"
         }
