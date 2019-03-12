@@ -4,23 +4,29 @@
 \alias{makePlots}
 \title{make plots for a sensor of a station for a specific period of time}
 \usage{
-makePlots(records, combs, dfrom = NULL, dto = NULL, interactive = TRUE)
+makePlots(records, dfrom = NULL, dto = NULL, interactive = TRUE,
+  sensors = NULL, combs = NULL, grouping = NULL)
 }
 \arguments{
 \item{records}{a list of hourly dataframes or a single dataframe ::TODO ::Must contain sunset and sunrise !}
 
-\item{combs}{a named character vector specifying the sid's combinations of the stations you want to put on the same plot}
+\item{dfrom}{a character}
 
-\item{dfrom}{a character vector}
+\item{dto}{a character}
 
-\item{dto}{a character vector}
+\item{combs}{(optional) a named list which elements are chatacter vectors containing the sid's combinations of the stations you want to put on the same plot.
+If not provided, the function will create a single plot for each sid and will not compute blandAltman and scatter}
 
-\item{sensor}{a character vector specifying the name of the sensors you want to get the descriptive statistics}
+\item{grouping}{(optional) a character specifying how you want to group points on scatter and blandAltman plots. One of lubridate functions : "month", "week","as_date", "hour".
+if not provided, the function will choose the most appropriate according to the whole timeframe of your records}
+
+\item{sensor}{(optional) a character vector specifying the name of the sensors you want to get the descriptive statistics.
+If not provided, the function will compute the plots for all the sensors available in your records dataset. These must be one of c("tsa", "plu", "ens", "vvt", "hct")}
 }
 \value{
 a list
 
-records = makeDataset(dfrom = ex_dfrom, dto = ex_dto, sensor = c("tsa", "vvt"), stations = unique(stations.df$sid))
+records = makeDataset(dfrom = "2016-02-04T15:00:00Z", dto = "2016-03-04T15:00:00Z", sensor = c("tsa", "vvt"), stations = stations.df$sid)
 }
 \author{
 Thomas Goossens
