@@ -6,7 +6,7 @@
 dataframizeRecords = function(records){
   if (class(records) == "list") {
     records = records %>%
-      purrr::reduce(bind_rows)
+      purrr::reduce(dplyr::bind_rows)
   }
 }
 

@@ -77,9 +77,10 @@ makeDescStats = function(
 
     stats = do.call(c, list(stats, quants))
 
-    descStats = records %>% select_("sid", sensor) %>%
-      group_by_("sid") %>%
-      summarise_(.dots = stats)
+    descStats = records %>%
+      dplyr::select_("sid", sensor) %>%
+      dplyr::group_by_("sid") %>%
+      dplyr::summarise_(.dots = stats)
 
     return(data.frame(descStats))
   }

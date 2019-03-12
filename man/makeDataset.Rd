@@ -5,7 +5,7 @@
 \title{make a dataframe of stations records}
 \usage{
 makeDataset(user_token = Sys.getenv("AGROMET_API_V1_KEY"), stations,
-  json = NULL, dfrom = NULL, dto = NULL, sensor = "tsa",
+  json = NULL, dfrom = NULL, dto = NULL, sensors = "tsa",
   staticExpl = "elevation", dynExpl = NULL)
 }
 \arguments{
@@ -20,7 +20,7 @@ Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 \item{dto}{a datetime string specifying the dateTime
 Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 
-\item{sensor}{a character vector specifying the sensor data you want to spatialize.
+\item{sensors}{a character vector specifying the sensor data you want to spatialize.
 One of tsa, hct, hra, ens, plu, vvt, sunrise, sunset}
 
 \item{staticExpl}{a character vector specifying the desired static explanatory variables

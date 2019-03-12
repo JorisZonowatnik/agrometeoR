@@ -4,8 +4,8 @@
 \alias{makeDescStats}
 \title{make the descriptive stats of a sensor for a station on a specific period of time}
 \usage{
-makeDescStats(records, sensors = sensors, stations, dfrom = NULL,
-  dto = NULL)
+makeDescStats(records, sensors, stations = unique(records$sid),
+  dfrom = NULL, dto = NULL)
 }
 \arguments{
 \item{records}{a list of hourly dataframes or a single dataframe ::TODO ::Must contain sunset and sunrise !}
