@@ -13,6 +13,9 @@ inst/tutorials/presentation/packrat/src*/
 # Big ext-data files
 data-raw/extdata/*
 
+# pptx and pdfs assets for vignettes
+vignettes/assets/*
+
 # History files
 .Rhistory
 .Rapp.history
