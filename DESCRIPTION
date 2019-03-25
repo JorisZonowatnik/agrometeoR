@@ -18,7 +18,6 @@ Imports: dplyr (>= 0.8.0.9006),
     sf (>= 0.6-1),
     leaflet (>= 2.0.0),
     leaflet.extras (>= 1.0.0),
-    leaflet.opacity(>= 0.1.0),
     geojsonio (>= 0.6.0),
     geojsonlint (>= 0.2.0),
     tictoc (>= 1.0),
@@ -34,14 +33,8 @@ Suggests:
     testthat (>= 2.0.0)
 Remotes: github::pokyah/mlr@gstat,
     github::ropensci/rnaturalearthhires@master,
-    github::be-marc/leaflet.opacity@master,
-    github::r-lib/rlang@master,
-    github::r-lib/pillar@master,
-    github::r-lib/pkgconfig@master,
-    github::RcppCore/Rcpp@master,
     github::tidyverse/ggplot2@master,
     github::tidyverse/tidyr@master,
-    github::ramnathv/htmlwidgets@master,
-    github::ropensci/plotly@master,
-    github::jeroen/jsonlite@master
+    github::tidyverse/dplyr@master,
+    github::ropensci/plotly@master
 RoxygenNote: 6.0.1
