@@ -11,7 +11,7 @@ inst/tutorials/presentation/packrat/lib*/
 inst/tutorials/presentation/packrat/src*/
 
 # Big ext-data files
-data-raw/extdata/
+data-raw/extdata/*
 
 # History files
 .Rhistory
