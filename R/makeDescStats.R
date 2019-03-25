@@ -1,5 +1,5 @@
 #' @export
-#' @title make the descriptive stats of a sensor for a station on a specific period of time
+#' @title make the descriptive stats of a sensor for a station for a specific period of time
 #' @author Thomas Goossens
 #' @import mlr
 #' @import ggplot2
@@ -7,8 +7,10 @@
 #' @param records a list of hourly dataframes or a single dataframe ::TODO ::Must contain sunset and sunrise !
 #' @param sensor a character vector specifying the name of the sensors you want to get the descriptive statistics
 #' @param stations a character vector specifying the sid's of the stations to use
-#' @param dfrom a character vector
-#' @param dto a character vector
+#' @param dfrom a datetime string specifying the dateTime
+#' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
+#' @param dto a datetime string specifying the dateTime
+#' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
 #' @return a list
 
 makeDescStats = function(
@@ -70,7 +72,7 @@ makeDescStats = function(
     names(stats) = funs
     as.list(stats)
 
-    probs = c("25", "50", "75")
+    probs = c("10", "20", "25", "30", "40", "50", "70", "75", "80", "90")
     quants = paste0("quantile(", sensor, ", probs=.", probs, ", na.rm=TRUE)")
     names(quants) = paste0("q", probs)
     as.list(quants)

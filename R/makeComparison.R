@@ -36,11 +36,6 @@ makeComparison = function(
   #     rowwise() %>% dplyr::mutate(day = am_returnDayState(mtime, sunrise, sunset)))
 
 
-
-  # Compute the descriptive stats for the sensor
-
-
-
   # compute the classic plots
   output_plots = lapply(sensors, function(x){
     am_makePlots(datasetDfDayDmax, x, TRUE)
