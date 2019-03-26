@@ -12,6 +12,7 @@ Encoding: UTF-8
 LazyData: true
 Imports: dplyr (>= 0.8.0.9006),
     tidyr(>= 0.8.0),
+    lubridate(>= 1.7.4),
     ggplot2 (>= 3.1.0.9000),
     plotly(>= 4.8.0.9000),
     chron (>= 2.3-52),
@@ -33,6 +34,7 @@ Suggests:
     testthat (>= 2.0.0)
 Remotes: github::pokyah/mlr@gstat,
     github::ropensci/rnaturalearthhires@master,
+    github::tidyverse/lubridate@master,
     github::tidyverse/ggplot2@master,
     github::tidyverse/tidyr@master,
     github::tidyverse/dplyr@master,

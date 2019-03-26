@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeDescStats.R
 \name{makeDescStats}
 \alias{makeDescStats}
-\title{make the descriptive stats of a sensor for a station on a specific period of time}
+\title{make the descriptive stats of a sensor for a station for a specific period of time}
 \usage{
 makeDescStats(records, sensors, stations = unique(records$sid),
   dfrom = NULL, dto = NULL)
@@ -12,9 +12,11 @@ makeDescStats(records, sensors, stations = unique(records$sid),
 
 \item{stations}{a character vector specifying the sid's of the stations to use}
 
-\item{dfrom}{a character vector}
+\item{dfrom}{a datetime string specifying the dateTime
+Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 
-\item{dto}{a character vector}
+\item{dto}{a datetime string specifying the dateTime
+Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 
 \item{sensor}{a character vector specifying the name of the sensors you want to get the descriptive statistics}
 }
