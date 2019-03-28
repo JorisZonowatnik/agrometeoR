@@ -28,9 +28,9 @@
 makeDataset <- function(
   user_token = Sys.getenv("AGROMET_API_V1_KEY"),
   baseURL = "https://app.pameseb.be/agromet/api",
-  api_request = "v2/sp/cleandata/",
+  api_request = "v2/sp/cleandata",
   sensors = "tsa",
-  sids = "all",
+  stations = "all",
   dfrom = NULL,
   dto = NULL,
   json = NULL,
@@ -56,7 +56,7 @@ makeDataset <- function(
         api_call = paste(
           baseURL,
           api_request,
-          sensors, sid, dfrom, dto, sep = "/")
+          sensors, stations, dfrom, dto, sep = "/")
 
         message(paste("Your API URL call is : ", api_call, " \n"))
 
@@ -101,7 +101,7 @@ makeDataset <- function(
         dplyr::filter(network_name == "pameseb") %>%
         dplyr::filter(type_name != "Sencrop") %>%
         dplyr::filter(state == "Ok") %>%
-        dplyr::mutate_at("sid", as.character) %>%
+        dplyr::mutate_at("sid", as.character)
 
       # joining the results and the stations metadata
       dataset = dataset$results %>%
@@ -128,6 +128,22 @@ makeDataset <- function(
       dataset = suppressWarnings(
         dataset %>%
           dplyr::mutate_at(dplyr::vars(dplyr::one_of(c(sensors, "altitude", "x", "y", "sid"))), dplyr::funs(as.numeric)))
+
+      # Create a task.id column for later task splittings
+      dataset = dataset %>%
+        dplyr::mutate(task.id = gsub("[^[:digit:]]", "", dataset$mtime))
+
+      # group by task.id and make lists of dataframes
+      dataset = split(
+        x = dataset,
+        f = as.factor(dataset$task.id))
+
+      # remove the task.id column from each dataset
+      dataset = lapply(dataset,
+        function(x){
+          x = x %>%
+            dplyr::select(c(-task.id))
+        })
 
       return(dataset)
     }
