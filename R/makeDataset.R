@@ -27,11 +27,13 @@
 #'
 makeDataset <- function(
   user_token = Sys.getenv("AGROMET_API_V1_KEY"),
-  stations,
-  json = NULL,
+  baseURL = "https://app.pameseb.be/agromet/api",
+  api_request = "v2/sp/cleandata/",
+  sensors = "tsa",
+  sids = "all",
   dfrom = NULL,
   dto = NULL,
-  sensors = "tsa",
+  json = NULL,
   staticExpl = "elevation",
   dynExpl = NULL
 ){
@@ -46,34 +48,65 @@ makeDataset <- function(
         # make an API call to retrieve the dynamic data
         message("Calling Agromet API...")
 
-        dataset = typeData(
-          getData(user_token = user_token,
-            dfrom = dfrom,
-            dto = dto,
-            sensors = paste0(sensors, collapse = ","),
-            sid = paste0(stations, collapse = "," ))
-        )
+        # Clean the eventual spaces in the sensors string
+        if (!is.null(sensors)) {
+          sensors = gsub(" ","",sensors)
+        }
+        # Building the API call URL
+        api_call = paste(
+          baseURL,
+          api_request,
+          sensors, sid, dfrom, dto, sep = "/")
 
-      } else{
+        message(paste("Your API URL call is : ", api_call, " \n"))
+
+        # Add user token into the HTTP authentication header and call API (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
+        api_resp = httr::GET(
+          api_call,
+          httr::add_headers("Authorization" = paste("Token", user_token, sep = " ")))
+
+        # Check the status of the API response
+        if (api_resp$status_code != 200) {
+          stop(paste0("The API responded with an error ", api_resp$status_code, ". Please check your token and the validity + order of the parameters you provided. API documentation available at https://app.pameseb.be/fr/pages/api_call_test/" ))
+        }else {
+          message(paste0("The API responded with a status code ", api_resp$status_code, ". \n Data has been downloaded. \n"))
+        }
+
+        # Getting the JSON data from the API response
+        api_json = httr::content(api_resp, as = "text", encoding = "UTF-8")
+
+        # Transform the JSON response to R-friendly list format
+        dataset = jsonlite::fromJSON(api_json)
+
+      }else { # ! is.null json
         # read the json FILE
         message("Reading JSON file...")
         dataset = jsonlite::fromJSON(json)
-        dataset.data = dataset$results
-        dataset.meta = dataset$references$stations
-        dataset = list(metadata = dataset.meta, data = dataset.data)
-        dataset = typeData(dataset, "cleandata")
-
-        dataset = dataset %>%
-          dplyr::filter(network_name == "pameseb") %>%
-          dplyr::filter(type_name != "Sencrop") %>%
-          dplyr::filter(state == "Ok") %>%
-          tidyr::drop_na()
       }
 
-      # Keep only the relevant columns
-      dataset = dataset %>%
-        dplyr::select("sid", "mtime", sensors) %>%
-        dplyr::mutate(task.id = gsub("[^[:digit:]]", "", dataset$mtime))
+      # keeping only what we need
+      dataset = list(references.stations = dataset$references$stations, results = dataset$results)
+
+      # Keeping what we need in results
+      good_columns = c("mtime", "sid", sensors, paste0(sensors, "state"))
+      dataset$results = dataset$results %>%
+        dplyr::select(dplyr::one_of(good_columns)) %>%
+        dplyr::mutate_at("sid", as.character)
+
+      # keeping what we need in stations medatadata
+      good_columns = c("sid", "poste", "longitude", "latitude", "altitude", "network_name", "type_name", "state")
+      dataset$references.stations = dataset$references.stations %>%
+        dplyr::select(dplyr::one_of(c(good_columns))) %>%
+        # filtering to only keep the good stations
+        dplyr::filter(network_name == "pameseb") %>%
+        dplyr::filter(type_name != "Sencrop") %>%
+        dplyr::filter(state == "Ok") %>%
+        dplyr::mutate_at("sid", as.character) %>%
+
+      # joining the results and the stations metadata
+      dataset = dataset$results %>%
+        dplyr::left_join(dataset$references.stations, by = c("sid")) %>%
+        dplyr::mutate_at("sid", as.numeric) #hack to join with static explanatory vars
 
       # join with static explanatory vars
       dataset = dataset %>%
@@ -87,18 +120,14 @@ makeDataset <- function(
         dplyr::rename("y" = "Y") %>%
         dplyr::rename("x" = "X")
 
-      # group by task.id and make lists of dataframes
-      dataset = split(
-        x = dataset,
-        f = as.factor(dataset$task.id))
+      # Transform mtime column to posix format for easier time handling
+      dataset = dataset %>%
+        dplyr::mutate_at(.vars = vars(mtime), as.POSIXct, format = "%Y-%m-%dT%H:%M:%S", tz = "GMT-2")
 
-
-      # remove the task.id column from each dataset
-      dataset = lapply(dataset,
-        function(x){
-          x = x %>%
-            dplyr::select(c(-task.id))
-        })
+      # Transform sid, sensors cols, altitude, longitude, latitude columns from character to numeric
+      dataset = suppressWarnings(
+        dataset %>%
+          dplyr::mutate_at(dplyr::vars(dplyr::one_of(c(sensors, "altitude", "x", "y", "sid"))), dplyr::funs(as.numeric)))
 
       return(dataset)
     }
@@ -128,7 +157,7 @@ makeDataset <- function(
         "AgrometeoR::makeDataset raised a warning -> ",
         w)
       snitch <<- TRUE
-      output$value <<- doMakeTask()
+      output$value <<- doMakeDataset()
       output$condition$type <<- "warning"
       output$condition$message <<- warning
 
