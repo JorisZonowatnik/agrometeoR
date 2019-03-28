@@ -27,8 +27,7 @@
 #'
 makeDataset <- function(
   user_token = Sys.getenv("AGROMET_API_V1_KEY"),
-  baseURL = "https://app.pameseb.be/agromet/api",
-  api_request = "v2/sp/cleandata",
+  api_request = "https://app.pameseb.be/agromet/api/v2/sp/cleandata",
   sensors = "tsa",
   stations = "all",
   dfrom = NULL,
@@ -54,7 +53,6 @@ makeDataset <- function(
         }
         # Building the API call URL
         api_call = paste(
-          baseURL,
           api_request,
           sensors, stations, dfrom, dto, sep = "/")
 
@@ -78,7 +76,7 @@ makeDataset <- function(
         # Transform the JSON response to R-friendly list format
         dataset = jsonlite::fromJSON(api_json)
 
-      }else { # ! is.null json
+      }else {# ! is.null json
         # read the json FILE
         message("Reading JSON file...")
         dataset = jsonlite::fromJSON(json)
