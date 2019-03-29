@@ -92,20 +92,21 @@ makeDataset <- function(
         dplyr::mutate_at("sid", as.character)
 
       # keeping what we need in stations medatadata
-      good_columns = c("sid", "poste", "longitude", "latitude", "altitude", "network_name", "type_name", "state")
+      good_columns = c("sid", "poste", "network_name", "type_name", "state")
       dataset$references.stations = dataset$references.stations %>%
         dplyr::select(dplyr::one_of(c(good_columns))) %>%
         # filtering to only keep the good stations
-        dplyr::filter(network_name == "pameseb") %>%
+        dplyr::filter(network_name == "pameseb" | network_name == "irm") %>%
         dplyr::filter(type_name != "Sencrop") %>%
         dplyr::filter(state == "Ok") %>%
         dplyr::mutate_at("sid", as.character)
 
       # joining the results and the stations metadata
       dataset = dataset$results %>%
-        dplyr::left_join(dataset$references.stations, by = c("sid")) %>%
+        dplyr::right_join(dataset$references.stations, by = c("sid")) %>%
         dplyr::mutate_at("sid", as.numeric) #hack to join with static explanatory vars
 
+      browser()
       # join with static explanatory vars
       dataset = dataset %>%
         dplyr::left_join(

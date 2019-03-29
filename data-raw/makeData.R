@@ -32,7 +32,7 @@ wallonia = wallonia[,-(1:length(wallonia))]
 DEM = elevatr::get_elev_raster(
   as(
     sf::st_transform(
-      sf::st_buffer(sf::st_transform(wallonia, 3812), 5000),
+      sf::st_buffer(sf::st_transform(wallonia, 3812), 20000),
       4326),
     "Spatial"),
   z = 9,
@@ -41,7 +41,7 @@ DEM = elevatr::get_elev_raster(
 DEM = raster::mask(DEM,
   as(
     sf::st_transform(
-      sf::st_buffer(sf::st_transform(wallonia, 3812), 5000),
+      sf::st_buffer(sf::st_transform(wallonia, 3812), 20000),
       4326),
     "Spatial"))
 elevation = DEM
@@ -54,45 +54,45 @@ aspect = raster::terrain(DEM, "aspect")
 ## CORINE LAND COVER
 
 
-# Download CORINE land cover for Belgium from http://inspire.ngi.be/download-free/atomfeeds/AtomFeed-en.xml
-# read the downlaoded .shp
-corine <- sf::st_read("./data-raw/extdata/CLC/CLC12_BE.shp")
-# project to 4326
-corine = sf::st_transform(corine, 4326)
-# crop to Wallonia + 5 km buffer
-corine = sf::st_intersection(sf::st_transform(corine, 3812), sf::st_buffer(sf::st_transform(wallonia, 3812), 5000))
-# Download legend for CLC
-download.file("http://www.eea.europa.eu/data-and-maps/data/corine-land-cover-2006-raster-1/corine-land-cover-classes-and/clc_legend.csv/at_download/file",
-  destfile = "./data-raw/extdata/CLC/clc_legend.csv")
-corine.lgd = read.csv(file = "./data-raw/extdata/CLC/clc_legend.csv", header = TRUE, sep = ",")
-corine.lgd$CLC_CODE = as.numeric(corine.lgd$CLC_CODE)
-# Legend codes present in Wallonia
-lgd.codes = data.frame(unique(corine$code_12))
-colnames(lgd.codes) = "CLC_CODE"
-lgd.codes$CLC_CODE = as.numeric(as.character(lgd.codes$CLC_CODE))
-# Legend for CLC in Wallonia
-wal.lgd = corine.lgd %>%
-  dplyr::filter(CLC_CODE %in% lgd.codes$CLC_CODE)
-# Reclass all types of CLC to create 6 groups
-corine$code_12 = as.numeric(as.character(corine$code_12))
-corine = corine %>%
-  dplyr::mutate(
-    custom.class = dplyr::case_when(
-      code_12 <= 142 ~ "Artificials surfaces",
-      code_12 == 211 ~ "Agricultural areas",
-      code_12 == 222 ~ "Agricultural areas",
-      code_12 == 231 ~ "Herbaceous vegetation",
-      code_12 == 242 ~ "Agricultural areas",
-      code_12 == 243 ~ "Agricultural areas",
-      code_12 == 311 ~ "Forest",
-      code_12 == 312 ~ "Forest",
-      code_12 == 313 ~ "Forest",
-      code_12 == 321 ~ "Herbaceous vegetation",
-      code_12 == 322 ~ "Herbaceous vegetation",
-      code_12 == 324 ~ "Forest",
-      code_12 > 400 ~ "Water")
-  )
-corine = sf::st_transform(corine, 4326)
+# # Download CORINE land cover for Belgium from http://inspire.ngi.be/download-free/atomfeeds/AtomFeed-en.xml
+# # read the downlaoded .shp
+# corine <- sf::st_read("./data-raw/extdata/CLC/CLC12_BE.shp")
+# # project to 4326
+# corine = sf::st_transform(corine, 4326)
+# # crop to Wallonia + 5 km buffer
+# corine = sf::st_intersection(sf::st_transform(corine, 3812), sf::st_buffer(sf::st_transform(wallonia, 3812), 5000))
+# # Download legend for CLC
+# download.file("http://www.eea.europa.eu/data-and-maps/data/corine-land-cover-2006-raster-1/corine-land-cover-classes-and/clc_legend.csv/at_download/file",
+#   destfile = "./data-raw/extdata/CLC/clc_legend.csv")
+# corine.lgd = read.csv(file = "./data-raw/extdata/CLC/clc_legend.csv", header = TRUE, sep = ",")
+# corine.lgd$CLC_CODE = as.numeric(corine.lgd$CLC_CODE)
+# # Legend codes present in Wallonia
+# lgd.codes = data.frame(unique(corine$code_12))
+# colnames(lgd.codes) = "CLC_CODE"
+# lgd.codes$CLC_CODE = as.numeric(as.character(lgd.codes$CLC_CODE))
+# # Legend for CLC in Wallonia
+# wal.lgd = corine.lgd %>%
+#   dplyr::filter(CLC_CODE %in% lgd.codes$CLC_CODE)
+# # Reclass all types of CLC to create 6 groups
+# corine$code_12 = as.numeric(as.character(corine$code_12))
+# corine = corine %>%
+#   dplyr::mutate(
+#     custom.class = dplyr::case_when(
+#       code_12 <= 142 ~ "Artificials surfaces",
+#       code_12 == 211 ~ "Agricultural areas",
+#       code_12 == 222 ~ "Agricultural areas",
+#       code_12 == 231 ~ "Herbaceous vegetation",
+#       code_12 == 242 ~ "Agricultural areas",
+#       code_12 == 243 ~ "Agricultural areas",
+#       code_12 == 311 ~ "Forest",
+#       code_12 == 312 ~ "Forest",
+#       code_12 == 313 ~ "Forest",
+#       code_12 == 321 ~ "Herbaceous vegetation",
+#       code_12 == 322 ~ "Herbaceous vegetation",
+#       code_12 == 324 ~ "Forest",
+#       code_12 > 400 ~ "Water")
+#   )
+# corine = sf::st_transform(corine, 4326)
 
 #####
 ## RMI INCA GRID
@@ -150,49 +150,49 @@ inca.ext = bind_cols(incaGrid, inca.elevation.ext, inca.slope.ext, inca.aspect.e
 #####
 ## INCA GRID EXTRACTIONS : CLC
 
-# Make a 500m radius buffer around  points for CLC extract
-inca.buff.grd = sf::st_buffer(sf::st_transform(incaGrid, 3812), dist = 500)
-# inca.buff.grd = incaGrid # the grid is already buffered by JP Huart
-
-# extract cover information into the buffered points
-corine.inca = sf::st_intersection(inca.buff.grd, sf::st_transform(corine, 3812))
-# create an id for each buffer
-corine.inca <- corine.inca %>%
-  dplyr::mutate(
-    bid = paste0(seq_along(1:nrow(corine.inca))))
-# create new column with area of each intersected cover polygon
-corine.inca.area.grd <- corine.inca %>%
-  dplyr::group_by(bid) %>%
-  dplyr::summarise() %>%
-  mutate(shape.area = st_area(.))
-# Make a column with percentage of occupation of each land cover inside each grid point buffer
-# https://github.com/r-spatial/sf/issues/239
-cover.rate <- sf::st_join(
-  x = corine.inca,
-  y = corine.inca.area.grd,
-  join = sf::st_covered_by
-) %>%
-  dplyr::select(px, custom.class, shape.area) %>%
-  dplyr::mutate(cover_rate = as.numeric(shape.area)/(pi*500^2) * 100) #500 = buffer radius
-# transposing to dataframe for data spreading (impossible (?) to achieve with dplyr spread)
-cover2df = function(data.sf) {
-  # Delete geometry column
-  data.df <- data.frame(data.sf)
-  # Reshape data with CLASS labels as columns names
-  # https://stackoverflow.com/questions/39053451/using-spread-with-duplicate-identifiers-for-rows
-  data.df <- data.df %>%
-    dplyr::select(px, custom.class, cover_rate) %>%
-    reshape2::dcast(px ~ custom.class, fun = sum)
-  return(data.df)
-}
-cover.rate = cover2df(cover.rate)
-# replacing white space by underscores
-colnames(cover.rate) <- gsub(" ","_",colnames(cover.rate))
-# merge cover data with grid
-inca.ext = merge(inca.ext, cover.rate, by = "px")
-# removing duplicated ID cols resulting from bind_cols operation
-excluded_vars = c("ID1", "ID2")
-inca.ext  = dplyr::select(inca.ext, -one_of(excluded_vars))
+# # Make a 500m radius buffer around  points for CLC extract
+# inca.buff.grd = sf::st_buffer(sf::st_transform(incaGrid, 3812), dist = 500)
+# # inca.buff.grd = incaGrid # the grid is already buffered by JP Huart
+#
+# # extract cover information into the buffered points
+# corine.inca = sf::st_intersection(inca.buff.grd, sf::st_transform(corine, 3812))
+# # create an id for each buffer
+# corine.inca = corine.inca %>%
+#   dplyr::mutate(
+#     bid = paste0(seq_along(1:nrow(corine.inca))))
+# # create new column with area of each intersected cover polygon
+# corine.inca.area.grd = corine.inca %>%
+#   dplyr::group_by(bid) %>%
+#   dplyr::summarise() %>%
+#   mutate(shape.area = st_area(.))
+# # Make a column with percentage of occupation of each land cover inside each grid point buffer
+# # https://github.com/r-spatial/sf/issues/239
+# cover.rate <- sf::st_join(
+#   x = corine.inca,
+#   y = corine.inca.area.grd,
+#   join = sf::st_covered_by
+# ) %>%
+#   dplyr::select(px, custom.class, shape.area) %>%
+#   dplyr::mutate(cover_rate = as.numeric(shape.area)/(pi*500^2) * 100) #500 = buffer radius
+# # transposing to dataframe for data spreading (impossible (?) to achieve with dplyr spread)
+# cover2df = function(data.sf) {
+#   # Delete geometry column
+#   data.df <- data.frame(data.sf)
+#   # Reshape data with CLASS labels as columns names
+#   # https://stackoverflow.com/questions/39053451/using-spread-with-duplicate-identifiers-for-rows
+#   data.df <- data.df %>%
+#     dplyr::select(px, custom.class, cover_rate) %>%
+#     reshape2::dcast(px ~ custom.class, fun = sum)
+#   return(data.df)
+# }
+# cover.rate = cover2df(cover.rate)
+# # replacing white space by underscores
+# colnames(cover.rate) <- gsub(" ","_",colnames(cover.rate))
+# # merge cover data with grid
+# inca.ext = merge(inca.ext, cover.rate, by = "px")
+# # removing duplicated ID cols resulting from bind_cols operation
+# excluded_vars = c("ID1", "ID2")
+# inca.ext  = dplyr::select(inca.ext, -one_of(excluded_vars))
 
 #####
 ## FINALISING THE GRID
@@ -245,14 +245,17 @@ devtools::use_data(wallonia, grid.sf, grid.df, grid.squares.sf, internal = FALSE
 #####
 ## STATIONS STATIC FEATURE EXTRACTION
 
-stations = typeData(meta_and_records.l = getData(dfrom = "2018-01-01T00:00:00Z", dto = "2018-01-01T00:01:00Z"), table_name = "cleandata")
-stations = stations %>%
+stations.df = getData(table_name = "station")$stations_meta.df
+stations.df = stations.df %>%
+  dplyr::filter(network_name == "pameseb" | network_name == "irm") %>%
   dplyr::filter(type_name != "Sencrop") %>%
   dplyr::filter(state == "Ok") %>%
-  dplyr::select(c("sid", "poste", "longitude", "latitude", "network_name", "type_name"))
+  dplyr::select(one_of(c("altitude", "latitude", "longitude", "sid", "poste"))) %>%
+  dplyr::mutate_at(
+    dplyr::vars(dplyr::one_of(c("altitude", "latitude", "longitude", "sid"))), dplyr::funs(as.numeric))
 
-stations = st_as_sf(stations, coords = c("longitude", "latitude"))
-stations = sf::st_set_crs(stations, 4326)
+stations.sf = sf::st_as_sf(stations.df, coords = c("longitude", "latitude"))
+stations.sf = sf::st_set_crs(stations.sf, 4326)
 
 # extracting DEM
 stations.DEM.ext <- raster::extract(
@@ -298,49 +301,49 @@ stations.aspect.ext <- raster::extract(
 # storing in a sf object
 stations.ext = bind_cols(stations, stations.DEM.ext, stations.slope.ext, stations.aspect.ext)
 
-# Make a 200m radius buffer around  points for CLC extract
-stations.buff = sf::st_buffer(sf::st_transform(stations, 3812), dist = 200)
-
-# extract cover information into the buffered points
-corine.stations = sf::st_intersection(stations.buff, sf::st_transform(corine, 3812))
-# create an id for each buffer
-corine.stations <- corine.stations %>%
-  dplyr::mutate(
-    bid = paste0(seq_along(1:nrow(corine.stations))))
-# create new column with area of each intersected cover polygon
-corine.stations.area <- corine.stations %>%
-  dplyr::group_by(bid) %>%
-  dplyr::summarise() %>%
-  mutate(shape.area = st_area(.))
-# Make a column with percentage of occupation of each land cover inside each grid point buffer
-# https://github.com/r-spatial/sf/issues/239
-cover.rate <- sf::st_join(
-  x = corine.stations,
-  y = corine.stations.area,
-  join = sf::st_covered_by
-) %>%
-  dplyr::select(sid, custom.class, shape.area) %>%
-  dplyr::mutate(cover_rate = as.numeric(shape.area)/(pi*500^2) * 100) #500 = buffer radius
-# transposing to dataframe for data spreading (impossible (?) to achieve with dplyr spread)
-cover2df = function(data.sf) {
-  # Delete geometry column
-  data.df <- data.frame(data.sf)
-  # Reshape data with CLASS labels as columns names
-  # https://stackoverflow.com/questions/39053451/using-spread-with-duplicate-identifiers-for-rows
-  data.df <- data.df %>%
-    dplyr::select(sid, custom.class, cover_rate) %>%
-    reshape2::dcast(sid ~ custom.class, fun = sum)
-  return(data.df)
-}
-# transposing to dataframe for data spreading (impossible (?) to achieve with dplyr spread)
-cover.rate = cover2df(cover.rate)
-# replacing white space by underscores
-colnames(cover.rate) <- gsub(" ","_",colnames(cover.rate))
-# merge cover data with stations
-stations.ext = merge(stations.ext, cover.rate, by = "sid")
-# removing duplicated ID cols resulting from bind_cols operation
-excluded_vars = c("ID1", "ID2")
-stations.ext  = dplyr::select(stations.ext, -one_of(excluded_vars))
+# # Make a 200m radius buffer around  points for CLC extract
+# stations.buff = sf::st_buffer(sf::st_transform(stations, 3812), dist = 200)
+#
+# # extract cover information into the buffered points
+# corine.stations = sf::st_intersection(stations.buff, sf::st_transform(corine, 3812))
+# # create an id for each buffer
+# corine.stations <- corine.stations %>%
+#   dplyr::mutate(
+#     bid = paste0(seq_along(1:nrow(corine.stations))))
+# # create new column with area of each intersected cover polygon
+# corine.stations.area <- corine.stations %>%
+#   dplyr::group_by(bid) %>%
+#   dplyr::summarise() %>%
+#   mutate(shape.area = st_area(.))
+# # Make a column with percentage of occupation of each land cover inside each grid point buffer
+# # https://github.com/r-spatial/sf/issues/239
+# cover.rate <- sf::st_join(
+#   x = corine.stations,
+#   y = corine.stations.area,
+#   join = sf::st_covered_by
+# ) %>%
+#   dplyr::select(sid, custom.class, shape.area) %>%
+#   dplyr::mutate(cover_rate = as.numeric(shape.area)/(pi*500^2) * 100) #500 = buffer radius
+# # transposing to dataframe for data spreading (impossible (?) to achieve with dplyr spread)
+# cover2df = function(data.sf) {
+#   # Delete geometry column
+#   data.df <- data.frame(data.sf)
+#   # Reshape data with CLASS labels as columns names
+#   # https://stackoverflow.com/questions/39053451/using-spread-with-duplicate-identifiers-for-rows
+#   data.df <- data.df %>%
+#     dplyr::select(sid, custom.class, cover_rate) %>%
+#     reshape2::dcast(sid ~ custom.class, fun = sum)
+#   return(data.df)
+# }
+# # transposing to dataframe for data spreading (impossible (?) to achieve with dplyr spread)
+# cover.rate = cover2df(cover.rate)
+# # replacing white space by underscores
+# colnames(cover.rate) <- gsub(" ","_",colnames(cover.rate))
+# # merge cover data with stations
+# stations.ext = merge(stations.ext, cover.rate, by = "sid")
+# # removing duplicated ID cols resulting from bind_cols operation
+# excluded_vars = c("ID1", "ID2")
+# stations.ext  = dplyr::select(stations.ext, -one_of(excluded_vars))
 
 # renaming to stations.sf
 stations.sf = stations.ext

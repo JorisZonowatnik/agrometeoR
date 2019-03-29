@@ -74,7 +74,7 @@ getData <- function(
   # Add your user token into the HTTP authentication header and call API (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
   api_table_req.resp <- httr::GET(api_table_url.chr, httr::add_headers("Authorization" = paste("Token", user_token, sep=" ")))
 
-  if (api_table_req.resp$status_code != 200) {
+  if (api_table_req.resp$status_code!=200){
     stop(paste0("The API responded with an error ", api_table_req.resp$status_code, ". Function execution halted. \n Please check your token and the validity + order of the parameters you provided. API documentation available at https://app.pameseb.be/fr/pages/api_call_test/" ))
   }
   message(paste0("The API responded with a status code ", api_table_req.resp$status_code, ". \n Data has been downloaded \n"))
@@ -127,7 +127,6 @@ getData <- function(
 
   # Return the results and the station_meta dataframes stored in as a list
   return(results)
-
 }
 
 
@@ -188,13 +187,8 @@ typeData <- function(meta_and_records.l, table_name="cleandata"){
   }
 
   if (!is.null(records.df)) {
-    # Join stations_meta and records by "sid"
-
+    # Join stations_meta and records by "id"
     if (!is.null(data.df)) {
-      data.df = data.df %>%
-        dplyr::mutate_at("sid", as.character)
-      records.df = records.df %>%
-        dplyr::mutate_at("sid", as.character)
       records.df <- as.data.frame(dplyr::left_join(data.df, records.df, by = c("sid")))
     }
 

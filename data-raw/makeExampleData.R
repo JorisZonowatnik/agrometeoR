@@ -10,7 +10,7 @@ ex_bad_dfrom = "timea"
 ex_dto = "2016-02-04T18:00:00Z"
 ex_bad_dto = "timeb"
 
-ex_stations = typeData(meta_and_records.l = getData(dfrom = ex_dfrom, dto = ex_dto, sid = "all"), table_name = "cleandata")
+ex_stations = makeDataset(dfrom = ex_dfrom, dto = ex_dto)
 ex_stations = ex_stations %>%
   filter(type_name != "Sencrop") %>%
   filter(network_name != "carah") %>%
