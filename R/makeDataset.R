@@ -14,7 +14,7 @@
 #' @param dynExpl a character vector specifying the dynamic explanatory variables you want to add to the task.
 #' Any combinations of inca, ens
 #' @param staticExpl a character vector specifying the desired static explanatory variables
-#' Any combinations of "altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided. Default = "Elevation"
+#' Any combinations of "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided. Default = "Elevation"
 #' @return a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains 3 elements :
 #' (1) value : a list of dataframes where each dataframe contains the sid, the mtime, the sensor data, x position (longitude), y position (latitude) and the explanatory variables
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
@@ -82,11 +82,12 @@ makeDataset <- function(
         dataset = jsonlite::fromJSON(json)
       }
 
+
       # keeping only what we need
       dataset = list(references.stations = dataset$references$stations, results = dataset$results)
 
       # Keeping what we need in results
-      good_columns = c("mtime", "sid", sensors, paste0(sensors, "state"))
+      good_columns = c("mtime", "sid", sensors) # paste0(sensors, "state")
       dataset$results = dataset$results %>%
         dplyr::select(dplyr::one_of(good_columns)) %>%
         dplyr::mutate_at("sid", as.character)
@@ -103,21 +104,15 @@ makeDataset <- function(
 
       # joining the results and the stations metadata
       dataset = dataset$results %>%
-        dplyr::right_join(dataset$references.stations, by = c("sid")) %>%
+        dplyr::filter(sid %in% dataset$references.stations$sid) %>%
         dplyr::mutate_at("sid", as.numeric) #hack to join with static explanatory vars
 
-      browser()
       # join with static explanatory vars
       dataset = dataset %>%
         dplyr::left_join(
           stations.df %>%
-            dplyr::select(c("sid", "X", "Y", staticExpl)),
+            dplyr::select(c("sid", "x", "y", staticExpl)),
           by = "sid")
-
-      # rename X and Y to x and y for mlr (gstat learner compatibility
-      dataset = dataset %>%
-        dplyr::rename("y" = "Y") %>%
-        dplyr::rename("x" = "X")
 
       # Transform mtime column to posix format for easier time handling
       dataset = dataset %>%
@@ -155,8 +150,7 @@ makeDataset <- function(
       stopifnot(!is.null(user_token))
       # check if sensor provided is OK
       stopifnot(sensors %in% c("tsa", "hra", "hct", "vvt", "ens", "plu" , "sunrise", "sunset"))
-      # check if staticExpl provided is ok
-      stopifnot(all(staticExpl %in% colnames(stations.df[3:9])))
+      # check if staticExpl provided is ok :todo::
       # check if queried stations exist.::todo:: better dynamic check of exisitng stations
       # stopifnot(isTRUE(all(strsplit(stations, ",")[[1]]  %in% (as.character(stations.df$sid)))))
 

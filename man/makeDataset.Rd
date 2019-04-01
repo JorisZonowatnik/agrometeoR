@@ -4,15 +4,16 @@
 \alias{makeDataset}
 \title{make a dataframe of stations records}
 \usage{
-makeDataset(user_token = Sys.getenv("AGROMET_API_V1_KEY"), stations,
-  json = NULL, dfrom = NULL, dto = NULL, sensors = "tsa",
-  staticExpl = "elevation", dynExpl = NULL)
+makeDataset(user_token = Sys.getenv("AGROMET_API_V1_KEY"),
+  api_request = "https://app.pameseb.be/agromet/api/v2/sp/cleandata",
+  sensors = "tsa", stations = "all", dfrom = NULL, dto = NULL,
+  json = NULL, staticExpl = "elevation", dynExpl = NULL)
 }
 \arguments{
-\item{stations}{a character vector specifying the sid's of the stations to use}
+\item{sensors}{a character vector specifying the sensor data you want to spatialize.
+One of tsa, hct, hra, ens, plu, vvt, sunrise, sunset}
 
-\item{json}{a character specifying the path of a json file constructed from a batch db export.
-If NULL the API will be called.}
+\item{stations}{a character vector specifying the sid's of the stations to use}
 
 \item{dfrom}{a datetime string specifying the dateTime
 Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
@@ -20,11 +21,11 @@ Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 \item{dto}{a datetime string specifying the dateTime
 Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 
-\item{sensors}{a character vector specifying the sensor data you want to spatialize.
-One of tsa, hct, hra, ens, plu, vvt, sunrise, sunset}
+\item{json}{a character specifying the path of a json file constructed from a batch db export.
+If NULL the API will be called.}
 
 \item{staticExpl}{a character vector specifying the desired static explanatory variables
-Any combinations of "altitude", "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided. Default = "Elevation"}
+Any combinations of "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided. Default = "Elevation"}
 
 \item{dynExpl}{a character vector specifying the dynamic explanatory variables you want to add to the task.
 Any combinations of inca, ens}

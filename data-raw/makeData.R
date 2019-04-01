@@ -209,7 +209,8 @@ grid.sf = grid.sf %>%
   dplyr::select(c(px))
 
 grid.df = grid.df %>%
-  dplyr::select(c(px, elevation, slope, aspect, Agricultural_areas, Artificials_surfaces, Forest, Herbaceous_vegetation))
+  # dplyr::select(c(px, elevation, slope, aspect, Agricultural_areas, Artificials_surfaces, Forest, Herbaceous_vegetation))
+  dplyr::select(c(px, elevation, slope, aspect))
 
 grid.df = grid.df %>%
   dplyr::left_join(
@@ -220,6 +221,11 @@ grid.df = grid.df %>%
     by = "px"
   )
 sf::st_geometry(grid.df) = NULL
+
+# rename x and y for gstat compatibility
+grid.df = grid.df %>%
+  dplyr::rename("x" = "X") %>%
+  dplyr::rename("y" = "Y")
 
 # exporting the grid to geojson file
 grid.data.sf = grid.sf %>% left_join(grid.df, by = "px")
@@ -261,9 +267,9 @@ stations.sf = sf::st_set_crs(stations.sf, 4326)
 stations.DEM.ext <- raster::extract(
   raster::projectRaster(
     DEM,
-    crs = (sf::st_crs(stations))$proj4string
+    crs = (sf::st_crs(stations.sf))$proj4string
   ),
-  as(stations, "Spatial"),
+  as(stations.sf, "Spatial"),
   buffer = 200,
   fun = mean,
   na.rm = TRUE,
@@ -276,9 +282,9 @@ colnames(stations.DEM.ext) = c("ID", "elevation")
 stations.slope.ext <- raster::extract(
   raster::projectRaster(
     slope,
-    crs = (sf::st_crs(stations))$proj4string
+    crs = (sf::st_crs(stations.sf))$proj4string
   ),
-  as(stations, "Spatial"),
+  as(stations.sf, "Spatial"),
   buffer = 200,
   fun = mean,
   na.rm = TRUE,
@@ -289,9 +295,9 @@ stations.slope.ext <- raster::extract(
 stations.aspect.ext <- raster::extract(
   raster::projectRaster(
     aspect,
-    crs = (sf::st_crs(stations))$proj4string
+    crs = (sf::st_crs(stations.sf))$proj4string
   ),
-  as(stations, "Spatial"),
+  as(stations.sf, "Spatial"),
   buffer = 200,
   fun = mean,
   na.rm = TRUE,
@@ -299,7 +305,7 @@ stations.aspect.ext <- raster::extract(
 )
 
 # storing in a sf object
-stations.ext = bind_cols(stations, stations.DEM.ext, stations.slope.ext, stations.aspect.ext)
+stations.sf = bind_cols(stations.sf, stations.DEM.ext, stations.slope.ext, stations.aspect.ext)
 
 # # Make a 200m radius buffer around  points for CLC extract
 # stations.buff = sf::st_buffer(sf::st_transform(stations, 3812), dist = 200)
@@ -345,9 +351,6 @@ stations.ext = bind_cols(stations, stations.DEM.ext, stations.slope.ext, station
 # excluded_vars = c("ID1", "ID2")
 # stations.ext  = dplyr::select(stations.ext, -one_of(excluded_vars))
 
-# renaming to stations.sf
-stations.sf = stations.ext
-
 
 # Injecting the ref of the closest px into the station locations
 closest_px <- list()
@@ -358,7 +361,8 @@ for (st in seq_len(nrow(stations.sf))) {
 closest_px = do.call(rbind.data.frame, closest_px)
 stations.sf = stations.sf %>%
   dplyr::bind_cols(data.frame(closest_px$px)) %>%
-  dplyr::rename(closest_px = closest_px.px )
+  dplyr::rename(closest_px = closest_px.px ) %>%
+  dplyr::select(-one_of(c("ID", "ID1", "ID2")))
 
 # creating the stations static features dataset
 stations.df = stations.sf
@@ -376,10 +380,17 @@ stations.df = stations.df %>%
 # converting to dataframe
 sf::st_geometry(stations.df) = NULL
 
+# renaming X and Y for gstat compatibility
+stations.df = stations.df %>%
+  dplyr::rename("x" = "X") %>%
+  dplyr::rename("y" = "Y")
+# removing altitude because we already have elevation
+  dplyr::select(-c("altitude"))
 
 # station points geography object
 stations.sf = stations.sf %>%
-  dplyr::select(c(sid, poste, network_name, closest_px))
+  sf::st_transform(3812) %>%
+  dplyr::select(c(sid, poste, closest_px))
 
 
 #####

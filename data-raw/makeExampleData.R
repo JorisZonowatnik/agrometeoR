@@ -1,6 +1,6 @@
 # creating function output example datasets for both users and unit_tests + bad_examples for unit_tests only
-data("learners")
 devtools::load_all()
+data("learners")
 
 # makeDataset inputs
 ex_user_token = Sys.getenv("AGROMET_API_V1_KEY")
@@ -10,14 +10,13 @@ ex_bad_dfrom = "timea"
 ex_dto = "2016-02-04T18:00:00Z"
 ex_bad_dto = "timeb"
 
-ex_stations = makeDataset(dfrom = ex_dfrom, dto = ex_dto)
-ex_stations = ex_stations %>%
-  filter(type_name != "Sencrop") %>%
-  filter(network_name != "carah") %>%
-  filter(network_name != "mobile") %>%
-  filter(state == "Ok")
+ex_stations = stations.df # created in makeData
 ex_stations = unique(ex_stations$sid)
+ex_stations_pameseb = ex_stations[1:30]
+ex_stations_irm = ex_stations[31:46]
 ex_stations = paste0(as.character(ex_stations), collapse = ",")
+ex_stations_pameseb = paste0(as.character(ex_stations_pameseb), collapse = ",")
+ex_stations_irm = paste0(as.character(ex_stations_irm), collapse = ",")
 
 ex_bad_stations = "1,2,3,4,5,8"
 ex_sensor = "tsa"
@@ -33,7 +32,7 @@ ex_makeDataset = makeDataset(
   user_token = ex_user_token,
   dfrom = ex_dfrom,
   dto = ex_dto,
-  sensor = ex_sensor,
+  sensors = ex_sensor,
   staticExpl = ex_staticExpl,
   json = NULL,
   dynExpl = NULL)
