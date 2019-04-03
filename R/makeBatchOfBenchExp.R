@@ -30,7 +30,7 @@ makeBatchOfBenchExp <- function(
   resamplings = "LOO",
   cpus = 1,
   prefix = "",
-  output_dir = "./",
+  output_dir = "/",
   removeTemp = FALSE){
 
   output = list(value = NULL, condition = list(type = NULL, message = NULL))
@@ -95,9 +95,11 @@ makeBatchOfBenchExp <- function(
           parallelMap::parallelStop()
         }
 
+        browser()
         # save the bmr object to a file with creation of directory if not existing
         if (!dir.exists(output_dir)) {
-          dir.create(output_dir)
+          dir.create(
+            paste0(getwd(), output_dir))
         }
         saveRDS(object = bmr, file = paste0(output_dir,
           "/",
