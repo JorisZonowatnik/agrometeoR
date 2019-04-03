@@ -95,7 +95,7 @@ makeBatchOfBenchExp <- function(
           parallelMap::parallelStop()
         }
 
-        browser()
+
         # save the bmr object to a file with creation of directory if not existing
         if (!dir.exists(output_dir)) {
           dir.create(

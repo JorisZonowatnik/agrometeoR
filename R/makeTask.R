@@ -28,7 +28,6 @@ makeTask <- function(
   doMakeTask = function(){
     message("Making mlr task(s)...")
 
-    browser()
 
     # creating the id of the task
     task.id = gsub("[^[:digit:]]", "", unique(dataset$mtime))
@@ -67,7 +66,6 @@ makeTask <- function(
     # check if target exists in dataframe
     stopifnot(target %in% colnames(dataset))
 
-    browser()
 
     # check if missing values in target or features
     if (!identical(na.omit(dataset), dataset)) {
