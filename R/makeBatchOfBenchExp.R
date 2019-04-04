@@ -132,6 +132,7 @@ makeBatchOfBenchExp <- function(
         else {bmrs = bmrs[[1]]}
 
         # perfs + aggregated Performances
+        bmrs = bmrs
         perfs = getBMRPerformances(bmrs, as.df = TRUE)
         aggPerfs = getBMRAggrPerformances(bmrs, as.df = TRUE)
         rmse_summary = aggPerfs %>%
@@ -150,9 +151,10 @@ makeBatchOfBenchExp <- function(
 
         # return all the bmr results in a list
         return(batchOfBenchmarkExp = list(
-          perfs = perfs,
+          bmrs = bmrs,
           aggPerfs = aggPerfs,
-          rmse_summary = rmse_summary
+          rmse_summary = rmse_summary,
+          residuals = residuals
         ))
   }
 
