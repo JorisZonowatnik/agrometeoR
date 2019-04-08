@@ -49,7 +49,6 @@ ex_makeDataset_with_NA = lapply(ex_makeDataset$output$value, function(x){
 # makeModel inputs
 ex_makeTask = makeTask(
   dataset = ex_makeDataset$output$value[[1]],
-  drop = NULL,
   target = ex_sensor
 )
 

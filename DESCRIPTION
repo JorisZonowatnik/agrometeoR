@@ -24,6 +24,7 @@ Imports: dplyr (>= 0.8.0.9006),
     tictoc (>= 1.0),
     BlandAltmanLeh (>= 0.3.1),
     gstat (== 1.1-6),
+    purrr (>= 0.2.4),
     mlr
 Suggests:
     rgeos (>= 0.3-26),

@@ -58,7 +58,6 @@ makeBatchOfBenchExp <- function(
     lapply(seq_along(as.list(tasks.groups.start)),
       function(x) {
 
-
         # message
         message(paste0(
           "Conducting batch of benchmark experiments for tasks " ,
@@ -131,31 +130,10 @@ makeBatchOfBenchExp <- function(
         if (length(bmrs) > 1) {bmrs = mergeBenchmarkResults(bmrs)}
         else {bmrs = bmrs[[1]]}
 
-        # perfs + aggregated Performances
-        bmrs = bmrs
-        perfs = getBMRPerformances(bmrs, as.df = TRUE)
-        aggPerfs = getBMRAggrPerformances(bmrs, as.df = TRUE)
-        rmse_summary = aggPerfs %>%
-          dplyr::group_by(learner.id) %>%
-          dplyr::select(rmse.test.rmse) %>%
-          dplyr::summarise_all(
-            funs(count = sum(!is.na(.)),
-              min = min(.,na.rm = TRUE),
-              max = max(.,na.rm = TRUE),
-              mean = mean(.,na.rm = TRUE),
-              median = median(.,na.rm = TRUE),
-              sd = sd(.,na.rm = TRUE)))
-
         # Throw a success message
         message("Success, batch of benchmark experiment conducted")
 
-        # return all the bmr results in a list
-        return(batchOfBenchmarkExp = list(
-          bmrs = bmrs,
-          aggPerfs = aggPerfs,
-          rmse_summary = rmse_summary,
-          residuals = residuals
-        ))
+        return(list(benchmarkResult = bmrs))
   }
 
   tryCatch(
@@ -166,7 +144,7 @@ makeBatchOfBenchExp <- function(
       # in case everything went fine, do makeBatchOfBenchExp
       output$value = doBenchmark()
       output$condition$type = "success"
-      output$condition$message = "Dataset created"
+      output$condition$message = "benchmarks conducted"
       snitch = TRUE
 
     },

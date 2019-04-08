@@ -75,7 +75,7 @@ test_goodInput = function(){test_that("Expected behaviour in case of good parame
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
         object = do.call(what = makeTask, args = groups[[group]][[case]])
-
+        # browser()
         # the snitch is at TRUE
         expect_true(object$snitch)
         # the returned object at slot output value is of class RegrTask

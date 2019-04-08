@@ -28,11 +28,10 @@ makeTask <- function(
   doMakeTask = function(){
     message("Making mlr task(s)...")
 
-
     # creating the id of the task
     task.id = gsub("[^[:digit:]]", "", unique(dataset$mtime))
 
-    # removing the mtime & sid column as not an explanatory information
+    # Removing mtimeand sid as not explanatory var
     dataset = dataset %>%
       dplyr::select(-c(mtime, sid))
 
@@ -44,7 +43,7 @@ makeTask <- function(
         id = task.id),
       features = drop)
 
-    # compute a summary for both response and standard error
+    # compute a summary
     min = min(mlr::getTaskData(task)[[target]])
     max = max(mlr::getTaskData(task)[[target]])
     mean = mean(mlr::getTaskData(task)[[target]])
@@ -65,7 +64,6 @@ makeTask <- function(
 
     # check if target exists in dataframe
     stopifnot(target %in% colnames(dataset))
-
 
     # check if missing values in target or features
     if (!identical(na.omit(dataset), dataset)) {

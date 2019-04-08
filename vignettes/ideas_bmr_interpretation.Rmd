@@ -1,0 +1,130 @@
+---
+title: "ideas bmr interpretation"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+library(dplyr)
+library(parallelMap)
+library(mlr)
+devtools::load_all()
+```
+
+
+# Création du jeu de donnnées.
+
+Appel à l'API Agromet `spcleandata`. Cette appel permet de récupérer les darta hourly pameseb + IRM.
+Ici nous récupérons un extract de la db au format json que nous chargeons dans un object R que nous appelerons `dataset`.
+```{r}
+
+dataset = makeDataset(json = "../data-raw/extdata/AGROMET/spCleandataSensorstsaForallFm2016-01-01To2017-12-31.json", sensors = "tsa" )
+dataset = dataset$output$value
+```
+
+Création d'un subset de 20 jeux d'enregistrements horaires pour phase de test
+```{r}
+dataset_20 = dataset[1000:1019]
+```
+
+Création jeu de donnée PAmeseb only
+```{r}
+filterIRM = function(x){
+  x = x %>%
+    dplyr::filter(sid < 1000)
+}
+
+dataset_20_pameseb = lapply(dataset_20, filterIRM)
+```
+
+# Implémentation des learners
+
+Les learners viennent précompilés avec le package agrometeoR
+```{r}
+data(learners)
+learners = learners$baseLearners
+```
+
+
+# Exécution des 2 batch of benchmarks experiments
+
+## bmr Pameseb + IRM
+
+Création des tâches et récupération de l'information pertinente
+```{r}
+tasks_20_pameseb = lapply(dataset_20_pameseb,
+               function(x){
+                 makeTask(dataset = x,target = "tsa")
+               })
+
+# removing the useless part of each task - subsetting list elements
+tasks_20_pameseb_bmr = lapply(tasks_20_pameseb, `[[`, 2)
+tasks_20_pameseb_bmr = lapply(tasks_20_pameseb_bmr, `[[`, 1)
+tasks_20_pameseb_bmr = lapply(tasks_20_pameseb_bmr, `[[`, 1)
+```
+
+Exécution à proprement parlé du bmr. Attention si gros benchmark de deux ans, il faut lancer le calcul depuis un terminal et non depuis rstudio server. Voir # https://stackoverflow.com/questions/15668893/r-multicore-mcfork-unable-to-fork-cannot-allocate-memory.
+::TODO:: expliqué comment rendre fichier R exécutable depuis terminal
+```{r}
+bmrs_20_pameseb = makeBatchOfBenchExp(
+  tasks = tasks_20_pameseb_bmr,
+  learners = learners,
+  measures = list(rmse, mae, mse),
+  keep.pred = TRUE, # necessary to compute residuals
+  models = FALSE,
+  grouping = 100,
+  level = "mlr.benchmark",
+  resamplings = "LOO",
+  cpus = 1, 
+  prefix = "test_20_pameseb_",
+  output_dir = "./outputs",
+  removeTemp = FALSE
+)
+```
+
+Using the benchmark results to compute residuals and other statistics
+```{r}
+bmrs_20_pameseb_result = bmrs_20_pameseb$output$value$benchmarkResult
+
+bmrs_20_pameseb_result_analysis = analyzeBatchOfBenchExp(benchmarkResult = bmrs_20_pameseb_result, tasks = tasks_20_pameseb)
+```
+
+
+
+## PLus value de la combinaison Pameseb + IRM
+
+* 1 bmr seulement PAmeseb non-corrigé
+* 1 bmr Pameseb + IRM
+
+## Robustesse
+
+* Est-ce que les valeurs prédites aux stations sont cohérentes? Dans la gamme des observations au stations
+* Analyser les résidus par station : moyenne, min, max, variance
+* idem mais globalement pour chacun des learners
+
+
+
+## Robustness
+
+## 
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
