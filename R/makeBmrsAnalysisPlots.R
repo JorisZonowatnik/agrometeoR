@@ -6,7 +6,7 @@
 #' @param bmrsAnalysis a list of class BenchmarkResult returned in the outputs of makeBmrsAnalysisPLots
 #' @return a list of plots
 
-makeBmrsAnalysisPLots <- function(
+makeBmrsAnalysisPlots <- function(
   bmrsAnalysis){
 
   output = list(value = NULL, condition = list(type = NULL, message = NULL))
