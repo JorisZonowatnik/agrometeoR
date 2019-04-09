@@ -8,6 +8,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE)
 library(dplyr)
 library(parallelMap)
 library(mlr)
+library(ggplot2)
 devtools::load_all()
 ```
 
@@ -82,7 +83,7 @@ bmrs_20_pameseb = makeBatchOfBenchExp(
 )
 ```
 
-Using the benchmark results to compute residuals and other statistics
+Using the benchmark results to compute bmr analysis
 ```{r}
 bmrs_20_pameseb_result = bmrs_20_pameseb$output$value$benchmarkResult
 
@@ -90,41 +91,19 @@ bmrs_20_pameseb_result_analysis = analyzeBatchOfBenchExp(benchmarkResult = bmrs_
 ```
 
 
+# plots from bmr analysis
+```{r}
+bmrs_20_pameseb_result_analysis = bmrs_20_pameseb_result_analysis$output$value
+test = bmrs_20_pameseb_result_analysis$multiReg.alt_x_y.filtered$data_summary %>%
+  dplyr::mutate_at(vars("sid", "datetime"), as.factor)
 
-## PLus value de la combinaison Pameseb + IRM
-
-* 1 bmr seulement PAmeseb non-corrigé
-* 1 bmr Pameseb + IRM
-
-## Robustesse
-
-* Est-ce que les valeurs prédites aux stations sont cohérentes? Dans la gamme des observations au stations
-* Analyser les résidus par station : moyenne, min, max, variance
-* idem mais globalement pour chacun des learners
-
-
-
-## Robustness
-
-## 
-
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+boxplot_rmse = ggplot(test, aes(x=sid, y=rmse)) + 
+  geom_boxplot(notch=FALSE) + stat_summary(fun.y=mean, geom="point", shape=23, size=2) +
+  labs(title="rmse",x="stations (sid)", y = "rmse")
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
