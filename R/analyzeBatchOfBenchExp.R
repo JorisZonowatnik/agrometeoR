@@ -3,8 +3,8 @@
 #' @author Thomas Goossens
 #' @import mlr
 #' @importFrom magrittr %>%
-#' @param benchmarkResult a list of class BenchmarkResult returned in the outputs of makeBatchOfBenchExp
-#' @param tasks a list of the mlr taks that were passed to makeBatchOfBenchExp
+#' @param benchmarkResult a list of class BenchmarkResult returned in the outputs of analyzeBatchOfBenchExp
+#' @param tasks a list of the mlr taks that were passed to analyzeBatchOfBenchExp
 #' @return a list containing relevant performance indications by learners
 
 analyzeBatchOfBenchExp <- function(
@@ -167,10 +167,11 @@ analyzeBatchOfBenchExp <- function(
 
   tryCatch(
     expr = {
-      # add checks
-      # ::TODO:
 
-      # in case everything went fine, do makeBatchOfBenchExp
+      # check if passed tasks and bmr outputs are corresponding
+      stopifnot(identical(getBMRTaskIds(benchmarkResult), names(tasks)))
+
+      # in case everything went fine, do analyzeBatchOfBenchExp
       output$value = doAnalysis()
       output$condition$type = "success"
       output$condition$message = "Analysis performed"
@@ -179,7 +180,7 @@ analyzeBatchOfBenchExp <- function(
     },
     warning = function(w){
       warning = paste0(
-        "AgrometeoR::makeBatchOfBenchExp raised a warning -> ",
+        "AgrometeoR::analyzeBatchOfBenchExp raised a warning -> ",
         w)
       snitch <<- TRUE
       output$value <<- doAnalysis()
@@ -188,17 +189,17 @@ analyzeBatchOfBenchExp <- function(
     },
     error = function(e){
       error = paste0(
-        "AgrometeoR::makeBatchOfBenchExp raised an error -> ",
+        "AgrometeoR::analyzeBatchOfBenchExp raised an error -> ",
         e)
       output$condition$type <<- "error"
       output$condition$message <<- error
     },
     finally = {
       finalMessage = paste0(
-        "makeBatchOfBenchExp has encountered : ",
+        "analyzeBatchOfBenchExp has encountered : ",
         output$condition$type,
         ". \n",
-        "All done with makeBatchOfBenchExp "
+        "All done with analyzeBatchOfBenchExp "
       )
       message(finalMessage)
       return(list(snitch = snitch, output = output))

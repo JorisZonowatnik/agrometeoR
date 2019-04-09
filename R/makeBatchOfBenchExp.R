@@ -46,8 +46,8 @@ makeBatchOfBenchExp <- function(
 
     # split tasks in multiple subgroups to avoid memory saturation
     if (length(tasks) <= grouping) {
-      warning("AgrometeoR warning : length of your tasks list smaller than your grouping parameter.
-        Setting the grouping value equal to the length of your tasks. ")
+      # warning("AgrometeoR warning : length of your tasks list smaller than your grouping parameter.
+      # Setting the grouping value equal to the length of your tasks. ")
       grouping = length(tasks)
     }
 
@@ -93,11 +93,7 @@ makeBatchOfBenchExp <- function(
           parallelMap::parallelStop()
         }
 
-        # save the bmr object to a file with creation of directory if not existing
-        if (!dir.exists(output_dir)) {
-          dir.create(
-            paste0(output_dir))
-        }
+        # save the bmr object to a file
         saveRDS(object = bmr, file = paste0(output_dir,
           "/",
           prefix,
@@ -138,8 +134,8 @@ makeBatchOfBenchExp <- function(
 
   tryCatch(
     expr = {
-      # add checks
-      # ::TODO:
+      # check if output dir exists
+      stopifnot(dir.exists(output_dir))
 
       # in case everything went fine, do makeBatchOfBenchExp
       output$value = doBenchmark()

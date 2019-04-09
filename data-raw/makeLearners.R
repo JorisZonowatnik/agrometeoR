@@ -57,7 +57,7 @@ agrometeorLearners = list(
       predict.type = "se"),
     fw.method = "linear.correlation",
     fw.mandatory.feat = c("elevation", "y", "x"),
-    fw.abs = 2)
+    fw.abs = 3)
 )
 
 

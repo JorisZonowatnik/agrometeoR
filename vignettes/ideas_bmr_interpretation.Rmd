@@ -4,7 +4,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE , warning = FALSE)
 library(dplyr)
 library(parallelMap)
 library(mlr)
@@ -25,7 +25,8 @@ dataset = dataset$output$value
 
 Création d'un subset de 20 jeux d'enregistrements horaires pour phase de test
 ```{r}
-dataset_20 = dataset[1000:1019]
+dataset_100 = dataset[1000:1099]
+dataset_20 = dataset_100
 ```
 
 Création jeu de donnée PAmeseb only
@@ -42,8 +43,8 @@ dataset_20_pameseb = lapply(dataset_20, filterIRM)
 
 Les learners viennent précompilés avec le package agrometeoR
 ```{r}
-data(learners)
-learners = learners$baseLearners
+data(agrometeorLearners)
+learners = agrometeorLearners
 ```
 
 
@@ -53,10 +54,8 @@ learners = learners$baseLearners
 
 Création des tâches et récupération de l'information pertinente
 ```{r}
-tasks_20_pameseb = lapply(dataset_20_pameseb,
-               function(x){
-                 makeTask(dataset = x,target = "tsa")
-               })
+tasks_20_pameseb = purrr::map(dataset_20_pameseb, makeTask, target = "tsa")
+
 
 # removing the useless part of each task - subsetting list elements
 tasks_20_pameseb_bmr = lapply(tasks_20_pameseb, `[[`, 2)
@@ -66,14 +65,14 @@ tasks_20_pameseb_bmr = lapply(tasks_20_pameseb_bmr, `[[`, 1)
 
 Exécution à proprement parlé du bmr. Attention si gros benchmark de deux ans, il faut lancer le calcul depuis un terminal et non depuis rstudio server. Voir # https://stackoverflow.com/questions/15668893/r-multicore-mcfork-unable-to-fork-cannot-allocate-memory.
 ::TODO:: expliqué comment rendre fichier R exécutable depuis terminal
-```{r}
+```{r echo = T, results='hide'}
 bmrs_20_pameseb = makeBatchOfBenchExp(
-  tasks = tasks_20_pameseb_bmr,
+  tasks = tasks_20_pameseb_bmr[1:5],
   learners = learners,
   measures = list(rmse, mae, mse),
   keep.pred = TRUE, # necessary to compute residuals
   models = FALSE,
-  grouping = 100,
+  grouping = 10,
   level = "mlr.benchmark",
   resamplings = "LOO",
   cpus = 1, 
@@ -87,19 +86,29 @@ Using the benchmark results to compute bmr analysis
 ```{r}
 bmrs_20_pameseb_result = bmrs_20_pameseb$output$value$benchmarkResult
 
-bmrs_20_pameseb_result_analysis = analyzeBatchOfBenchExp(benchmarkResult = bmrs_20_pameseb_result, tasks = tasks_20_pameseb)
+bmrs_20_pameseb_result_analysis = analyzeBatchOfBenchExp(benchmarkResult = bmrs_20_pameseb_result, tasks = tasks_20_pameseb[1:5])
 ```
 
 
 # plots from bmr analysis
 ```{r}
-bmrs_20_pameseb_result_analysis = bmrs_20_pameseb_result_analysis$output$value
-test = bmrs_20_pameseb_result_analysis$multiReg.alt_x_y.filtered$data_summary %>%
-  dplyr::mutate_at(vars("sid", "datetime"), as.factor)
+test = bmrs_20_pameseb_result_analysis$output$value$multiReg.alt_x_y.filtered$data_summary
 
-boxplot_rmse = ggplot(test, aes(x=sid, y=rmse)) + 
+all_plots = makeBmrsAnalysisPLots(bmrs_20_pameseb_result_analysis)
+
+a = test %>%
+  dplyr::left_join(stations.df, by = "sid") %>%
+  dplyr::mutate_at(vars("sid", "poste", "datetime"), as.factor)
+
+boxplot_rmse = ggplot(a, aes(x=poste, y=rmse)) + 
   geom_boxplot(notch=FALSE) + stat_summary(fun.y=mean, geom="point", shape=23, size=2) +
-  labs(title="rmse",x="stations (sid)", y = "rmse")
+  labs(title="rmse",x="stations (sid)", y = "rmse") +
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+
+boxplot_residuals = ggplot(a, aes(x=poste, y=residuals)) + 
+  geom_boxplot(notch=FALSE) + stat_summary(fun.y=mean, geom="point", shape=23, size=2) +
+  labs(title="boxplot_residuals",x="stations (sid)", y = "boxplot_residuals") +
+  theme(axis.text.x=element_text(angle=45, hjust=1))
 ```
 
 
