@@ -18,8 +18,6 @@ analyzeBatchOfBenchExp <- function(
 
     # purrr solutions inspired from slack https://r-grrr.slack.com by https://www.benjaminlouis-stat.fr/
 
-    #####
-    ## working on the hourly/daily sets
     benchmark_preds = getBMRPredictions(benchmarkResult) %>% purrr::transpose() #transposing to sort by learners rather than by date
     benchmark_perfs = getBMRPerformances(benchmarkResult) %>% purrr::transpose()
 
@@ -56,18 +54,16 @@ analyzeBatchOfBenchExp <- function(
     # colbinding the perfs to the residuals for later global summary
     bind_perfs = function(l1, l2) {
       test = map2(l1, l2, dplyr::bind_cols)
-
+      test = map(test, ~ dplyr::select(., -c("iter1", "set")))
       return(test)
     }
-    test = map2(benchmark_perfs, residuals, bind_perfs)
-    browser()
+    data_summary = map2(benchmark_perfs, residuals, bind_perfs)
 
-
-
-    # summarizing each set of records regarding min max, residuals, etc
-    summarize_by_set = function(l){
-      summarize = function(set){
-        summary = set %>%
+    #####
+    ## globally summarizing by datetime on all the stations
+    summarize_by_datetime = function(l){
+      summarize = function(df){
+        summary = df %>%
           dplyr::summarise(
             min_obs = min(truth),
             min_pred = min(response),
@@ -82,58 +78,90 @@ analyzeBatchOfBenchExp <- function(
             var_obs = var(truth),
             var_pred = var(response),
             stdev_obs = sd(truth),
-            stdev_pred = sd(response)
-        )
+            stdev_pred = sd(response),
+            min_rmse = min(rmse),
+            max_rmse = max(rmse),
+            mean_rmse = mean(rmse),
+            min_abs_res = mean(abs(residuals), na.rm = TRUE),
+            max_abs_res = max(abs(residuals), na.rm = TRUE),
+            mean_abs_res = min(abs(residuals), na.rm = TRUE),
+            mean_se = mean(se, na.rm = TRUE))
       }
       summarizes = l %>%
         purrr::map(summarize)
-      return(summarizes)
+      summarizes.df = map2_df(summarizes, names(summarizes), ~purrr::update_list(.x, datetime = .y))
+      return(summarizes.df)
     }
-    summarizes = residuals %>%
-      purrr::modify_depth(1, summarize_by_set)
-
-
-    # globally summarizing residuals by stations on all the sets of records
-    summarize_by_sid = function(df){
-
-      df = df %>%
-        dplyr::group_by(sid) %>%
-        dplyr::summarise(
-          mean_obs = mean(response, na.rm = TRUE),
-          mean_pred = mean(response, na.rm = TRUE),
-          mean_abs_res = mean(abs(residuals), na.rm = TRUE),
-          mean_se = mean(se, na.rm = TRUE)) %>%
-        dplyr::left_join(stations.df, by = "sid")
-    }
-    residuals_summary = residuals %>%
-      purrr::modify_depth(1, dplyr::bind_rows) %>%
-      purrr::modify_depth(1, summarize_by_sid)
-
+    summarized_by_datetime = data_summary %>%
+      purrr::modify_depth(1, summarize_by_datetime)
 
     #####
-    ## working on performance indicators - rmse
-    benchmark_perfs = getBMRPerformances(benchmarkResult) %>% purrr::transpose()
-    aggPerfs = getBMRAggrPerformances(benchmarkResult, as.df = TRUE)
+    ## globally summarizing by stations on all the datetimes
+    transpose_sid_date = function(l){
+      l =  map2(l, names(l), ~update_list(.x, datetime = .y))
+      l = l %>%
+        dplyr::bind_rows() %>%
+        dplyr::group_split(sid, keep = TRUE)
+      names(l) = map(l, ~unique(.$sid))
+      return(l)
+    }
+    data_summary_sid = data_summary %>%
+      purrr::modify_depth(1, transpose_sid_date)
+    summarize_by_sid = function(l){
+      summarize = function(df){
+        summary = df %>%
+          dplyr::group_by(sid) %>%
+          dplyr::summarise(
+            min_obs = min(truth),
+            min_pred = min(response),
+            min_diff_op = min(truth) - min(response),
+            min_ratio_op = min(truth)/min(response),
+            max_obs = max(truth),
+            max_pred = max(response),
+            max_diff_op = max(truth) - max(response),
+            max_ratio_op = max(truth)/max(response),
+            mean_obs = mean(truth),
+            mean_pred = mean(response),
+            var_obs = var(truth),
+            var_pred = var(response),
+            stdev_obs = sd(truth),
+            stdev_pred = sd(response),
+            min_rmse = min(rmse),
+            max_rmse = max(rmse),
+            mean_rmse = mean(rmse),
+            min_abs_res = mean(abs(residuals), na.rm = TRUE),
+            max_abs_res = max(abs(residuals), na.rm = TRUE),
+            mean_abs_res = min(abs(residuals), na.rm = TRUE),
+            mean_se = mean(se, na.rm = TRUE))
+      }
+      summarizes = l %>%
+        purrr::map(summarize)
+      summarizes.df = map2_df(summarizes, names(summarizes), ~purrr::update_list(.x, sid = .y))
+      return(summarizes.df)
+    }
+    summarized_by_sid = data_summary_sid %>%
+      purrr::modify_depth(1, summarize_by_sid)
 
-     rmse_summary = aggPerfs %>%
-      dplyr::group_by(learner.id) %>%
-      dplyr::select(rmse.test.rmse) %>%
-      dplyr::summarise_all(
-        funs(count = sum(!is.na(.)),
-          min = min(.,na.rm = TRUE),
-          max = max(.,na.rm = TRUE),
-          mean = mean(.,na.rm = TRUE),
-          median = median(.,na.rm = TRUE),
-          sd = sd(.,na.rm = TRUE)))
+    #####
+    ## making a big dataframe for plots
+    group_all_datetimes = function(l){
+      df = l %>%
+        dplyr::bind_rows(.id = "datetime")
+    }
+    data_summary = data_summary %>%
+      purrr::modify_depth(1, group_all_datetimes)
 
-     # Throw a success message
+    # Throw a success message
     message("Success, Analysis of batch of benchmark experiments performed")
 
-    # return all the bmr results in a list
-    return(analysis = list(
-      rmse_summary = rmse_summary,
-      residuals_summary = residuals_summary
-    ))
+    # return all the analysis results in a list
+    analysis = list(
+      data_summary = data_summary,
+      summarized_by_sid = summarized_by_sid,
+      summarized_by_datetime = summarized_by_datetime
+    ) %>% purrr::transpose()
+
+    return(analysis)
 
   }
 
