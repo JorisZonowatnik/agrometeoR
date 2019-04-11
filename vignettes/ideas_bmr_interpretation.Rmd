@@ -64,6 +64,10 @@ tmux new-session -s bmr
 
 cd Rprojects/currentProject/
 
+tmux attach
+
+chmod +x script_execute_bmr.R # must load it via system.file
+
 ./makeBenchmark
 
 # type ctrl+b et puis d => hide the plex
@@ -114,21 +118,9 @@ bmrs_20_pameseb_result_analysis = analyzeBatchOfBenchExp(benchmarkResult = bmrs_
 ```{r}
 test = bmrs_20_pameseb_result_analysis$output$value$multiReg.alt_x_y.filtered$data_summary
 
-all_plots = makeBmrsAnalysisPlots(bmrs_20_pameseb_result_analysis$output$value)
+all_plots = makeBmrsAnalysisPlots(bmrs_20_pameseb_result, bmrs_20_pameseb_result_analysis$output$value)
 
-a = test %>%
-  dplyr::left_join(stations.df, by = "sid") %>%
-  dplyr::mutate_at(vars("sid", "poste", "datetime"), as.factor)
 
-boxplot_rmse = ggplot(a, aes(x=poste, y=rmse)) + 
-  geom_boxplot(notch=FALSE) + stat_summary(fun.y=mean, geom="point", shape=23, size=2) +
-  labs(title="rmse",x="stations (sid)", y = "rmse") +
-  theme(axis.text.x=element_text(angle=45, hjust=1))
-
-boxplot_residuals = ggplot(a, aes(x=poste, y=residuals)) + 
-  geom_boxplot(notch=FALSE) + stat_summary(fun.y=mean, geom="point", shape=23, size=2) +
-  labs(title="boxplot_residuals",x="stations (sid)", y = "boxplot_residuals") +
-  theme(axis.text.x=element_text(angle=45, hjust=1))
 ```
 
 
