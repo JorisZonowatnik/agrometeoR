@@ -18,7 +18,7 @@ files = list.files("./data-created")
 if ("dataForBmrs.rds" %in% files) {
   readRDS("./data-created/dataForBmrs.rds")
 }else{
-  dataForBmrs = makedataForBmrs(json = "./data-raw/spCleandataSensorstsaForallFm2016-01-01To2017-12-31.json", sensor = "tsa" )
+  dataForBmrs = makeDataset(json = "./data-raw/spCleandataSensorstsaForallFm2016-01-01To2017-12-31.json", sensor = "tsa" )
   dataForBmrs = dataForBmrs$output$value
   saveRDS(object = dataForBmrs, file = "./data-created/dataForBmrs.rds")
 }
@@ -28,7 +28,7 @@ if ("tasksForBmrs.rds" %in% files) {
   readRDS("./data-created/tasksForBmrs.rds")
 }else{
   tasksForBmrs = purrr::map(dataForBmrs, makeTask, target = "tsa")
-  saveRDS(object = dataForBmrs, file = "./data-created/dataForBmrs.rds")
+  saveRDS(object = tasksForBmrs, file = "./data-created/tasksForBmrs.rds")
 }
 
 # checkNrowEqual = function(x){

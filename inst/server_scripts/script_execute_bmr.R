@@ -3,16 +3,18 @@
 
 # load the libraries
 message("loading the required libs")
-library(parallelMap)
-library(mlr)
-library(agrometeoR)
+suppressMessages(library(parallelMap))
+suppressMessages(library(mlr))
+suppressMessages(library(agrometeoR))
+suppressMessages(library(dplyr))
+
 
 # load the data for the bmrs
-message("loading the dataset")
-readRDS("./tasksForBmr.rds")
+message("loading the tasks")
+tasksForBmrs = readRDS("./data-created/tasksForBmrs.rds")
 
 # extract the required part of the tasksForBmr object
-tasksOutputs = tasksForBmr %>% modify_depth(1, ~.$"output"$"value"$"task")
+tasksOutputs = tasksForBmrs %>% purrr::modify_depth(1, ~.$"output"$"value"$"task")
 
 # perform the benchmarks
 message("starting to conduct the benchmarks")
@@ -32,7 +34,11 @@ bmrsResult = makeBatchOfBenchExp(
 )
 
 # save the bmrs result
-saveRDS(object = bmrsResult, file = "./data-created/bmrsResult.rds")
+message("Saving the result...")
+saveRDS(object = bmrsResult, file = paste0(
+  "./data-created/",
+  as.character(Sys.Date()),
+  "_bmrsResult.rds"))
 
 # purge the memory
 rm(list = ls())
