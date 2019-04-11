@@ -16,6 +16,9 @@ analyzeBatchOfBenchExp <- function(
 
   doAnalysis = function(){
 
+    # subsetting to task to remove the ones that have failed in the bmr
+    tasks = tasks[names(tasks) %in% getBMRTaskIds(benchmarkResult)]
+
     # purrr solutions inspired from slack https://r-grrr.slack.com by https://www.benjaminlouis-stat.fr/
 
     benchmark_preds = getBMRPredictions(benchmarkResult) %>% purrr::transpose() #transposing to sort by learners rather than by date
@@ -28,7 +31,7 @@ analyzeBatchOfBenchExp <- function(
       cv_data = l$data
       cv_data = cv_data %>%
         dplyr::mutate(residuals = response - truth) # %>%
-        # dplyr::mutate(res_sqrtsq = sqrt(residuals*residuals))
+      # dplyr::mutate(res_sqrtsq = sqrt(residuals*residuals))
       return(cv_data)
 
     }
@@ -168,9 +171,6 @@ analyzeBatchOfBenchExp <- function(
   tryCatch(
     expr = {
 
-      # check if passed tasks and bmr outputs are corresponding
-      stopifnot(identical(getBMRTaskIds(benchmarkResult), names(tasks)))
-
       # in case everything went fine, do analyzeBatchOfBenchExp
       output$value = doAnalysis()
       output$condition$type = "success"
@@ -205,8 +205,7 @@ analyzeBatchOfBenchExp <- function(
       return(list(snitch = snitch, output = output))
     }
   )
-  }
-
+}
 
 
 

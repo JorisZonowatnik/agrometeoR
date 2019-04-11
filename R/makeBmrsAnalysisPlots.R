@@ -14,13 +14,29 @@ makeBmrsAnalysisPlots <- function(
 
   doPlots = function(){
 
-    print("ahah")
+    makeBoxPlots = function(l, learner){
+      browser()
+      df = l$data_summary
+      df = df %>%
+        dplyr::left_join(stations.df, by = "sid") %>%
+        dplyr::mutate_at(vars("sid", "poste", "datetime"), as.factor)
 
+      indicators = list("rmse", "truth", "response", "se", "residuals", "abs_red")
 
-#
-#     bmrsAnalysis = bmrsAnalysis %>%
-#       dplyr::left_join(stations.df, by = "sid") %>%
-#       dplyr::mutate_at(vars("sid", "poste", "datetime"), as.factor)
+      doBoxPlot = function(df, x, y, name){
+        print(name)
+        ggplot2::ggplot(df, aes(x = x, y = y)) +
+          geom_boxplot(notch = FALSE) + stat_summary(fun.y = mean, geom = "point", shape = 23, size = 2) +
+          labs(title = "boxplot",x = x , y = y) +
+          theme(axis.text.x = element_text(angle = 45, hjust = 1))
+        return(boxplot)
+      }
+      all_plots = purrr::pmap(.x = indicators, .y = df, doBoxPlot, name = learner)
+
+    }
+
+    plots = bmrsAnalysis %>% purrr::imap(makeBoxPlots)
+
 
 
     # Throw a success message
@@ -39,7 +55,6 @@ makeBmrsAnalysisPlots <- function(
 
   tryCatch(
     expr = {
-
 
       # in case everything went fine, do makeBmrsAnalysisPLots
       output$value = doPlots()

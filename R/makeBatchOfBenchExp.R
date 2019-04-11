@@ -68,52 +68,41 @@ makeBatchOfBenchExp <- function(
           tasks.groups.start[x], "-",
           tasks.groups.end[x]))
 
+        # hack to avoid wrong last task number
+        if (is.na(tasks.groups.end[x])) {tasks.groups.end[x] = tasks.groups.start[x]}
+
         # enable parallelization with level = mlr.resample
         if (cpus > 1) {
           parallelMap::parallelStart(mode = "multicore", cpus = cpus, level = level)
         }
 
-        # hack to avoid wrong last task number
-        if (is.na(tasks.groups.end[x])) {tasks.groups.end[x] = tasks.groups.start[x]}
-
         #####
-        ## explorative code in case
+        ## explorative code in case https://stackoverflow.com/questions/55608882/how-to-make-the-benchmark-function-not-to-fail-if-a-specific-learner-fails-on-a
         # [1] "AgrometeoR::makeBatchOfBenchExp raised an error -> Error in stopWithJobErrorMessages(inds, vcapply(result.list[inds], as.character)): Errors occurred in 1 slave jobs, displaying at most 10 of them:\n\n00499: Error in load.variogram.model(object$model[[name]], c(i - 1, i - 1), max_dist = max_dist) : \n  variogram range can never be negative\n\n\n"
-          resample_by_task = function(t) {
-           learners %>% purrr::map(possibly(
-             ~ mlr::resample(.,
-               task = t,
-               resampling = mlr::makeResampleDesc(resamplings),
-               measures = measures,
-               keep.pred = keep.pred,
-               models = models), NULL)
-           )
-         }
-
-         bmrs = purrr::map(tasks[tasks.groups.start[x]:tasks.groups.end[x]], ~resample_by_task(.))
+         #  resample_by_task = function(t) {
+         #    print(keep.pred)
+         #   learners %>% purrr::map(possibly(
+         #     ~ mlr::resample(.,
+         #       task = t,
+         #       resampling = mlr::makeResampleDesc(resamplings),
+         #       measures = measures,
+         #       keep.pred = keep.pred,
+         #       models = models), NULL)
+         #   )
+         # }
+         #
+         # bmrs = purrr::map(tasks[tasks.groups.start[x]:tasks.groups.end[x]], ~resample_by_task(.))
         #####
 
-        # tasks = tasks[tasks.groups.start[x]:tasks.groups.end[x]]
-        #
-        # bmrs = tasks %>%
-        #   purrr::map(possibly(~mlr::benchmark(.,
-        #     learners = learners,
-        #     resamplings = mlr::makeResampleDesc(resamplings),
-        #     measures = measures,
-        #     keep.pred = keep.pred,
-        #     models = models), NULL))
+        tasks = tasks[tasks.groups.start[x]:tasks.groups.end[x]]
 
-        # bmr = mlr::benchmark(
-        #   learners = learners,
-        #   tasks = tasks[tasks.groups.start[x]:tasks.groups.end[x]],
-        #   resamplings = mlr::makeResampleDesc(resamplings),
-        #   measures = measures,
-        #   keep.pred = keep.pred,
-        #   models = models)
-
-        # # stoping counting time
-        # exectime = tictoc::toc()
-        # exectime = exectime$toc - exectime$tic
+        bmrs = tasks %>%
+          purrr::map(possibly(~mlr::benchmark(.,
+            learners = learners,
+            resamplings = mlr::makeResampleDesc(resamplings),
+            measures = measures,
+            keep.pred = keep.pred,
+            models = models), NULL))
 
         # stop the parallelized computing
         if (cpus > 1) {
@@ -141,24 +130,31 @@ makeBatchOfBenchExp <- function(
 
       })
 
+
         # loading all the temp bmr files and merging in a single big bmr object
         bmr_files = list.files(path = output_dir, pattern = prefix, full.names = TRUE)
-        bmrs = lapply(bmr_files, readRDS)
+        bmrs = map(bmr_files, readRDS)
 
         # deleting temporary .rds files is removeTemp = true
         if (isTRUE(removeTemp)) {
           file.remove(bmr_files)
         }
 
-        # if (length(bmrs) > 1) {bmrs = mergeBenchmarkResults(bmrs)}
-        # else {bmrs = bmrs[[1]]}
 
+        # extracting only the good ones (task without failure)
         bmrs = bmrs %>% purrr::flatten()
+        bmrs = bmrs %>% purrr::compact()
+
+        if (length(bmrs) > 1) {
+          bmrs = mergeBenchmarkResults(bmrs)
+          warning("Some bmr results were excluded become of possible learner failure")
+        }
+        else {bmrs = bmrs[[1]]}
 
         # Throw a success message
         message("Success, batch of benchmark experiment conducted")
 
-        return(list(bmrs = bmrs))
+        return(bmrs)
   }
 
   tryCatch(

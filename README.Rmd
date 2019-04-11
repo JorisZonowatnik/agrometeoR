@@ -126,48 +126,19 @@ This API key is required to get data from the PAMESEB database. At the root of y
 
 You are now ready to go ! 
 
+## Usage
+
+### benchrmark experiments
+
+The bmrs are computationaly intensive.
+
 ## Packages datasets 
 
 Multiple objects are availble with the package. We have created a serie of examplative datasets that correspond to functions outputs. Their names are always prefixed by `ex_`. These examplative objects are used in our unit tests performed using `testthat` package. You can laod those using the command `data("ex_<DATASET>")`. Rstudio should automatically suggest you the names. 
 
 ## Features
 
-### Main functionalities
 
-* Query the agromet DB using the AGROMET API
-* Create explanatory datasets both for training and predicting
-* Spatialize hourly our daily (soon) dataset using any of the 60 + [mlr learners](https://mlr.mlr-org.com/articles/tutorial/integrated_learners.html#regression-60)
-* Export your spatialized data to various formats (csv, json, geojson)
-* Conduct benchmark experiment to compare and rank various learners, hyperparameters and features (explanatory variables) according to your desired performance metrics
-* Quickly create an interactive leaflet map for data vizualization (soon)
-* Compare stations 2 by 2 using a [blandAltman analysis](https://pokyah.github.io/AWS-Humain-comparison/reporting/Humain-SC-presentation.html#/a-potential-explanation-station-design)
-* Interactive tutorial about the use of R as a GIS
-
-## Datasets
-
-The package is provided with multiple datasets required to build the explanatory variables used for weather param predictions.
-
-The target weather parameter values at the stations are 
-
-## explanatory variables
-
-### static
-
-All the static explanatory variables were prepared both for the stations locations and the RMI inca grid points locations. The script used to generate these datasets is available under `./data-raw/makeData.R`
-
-The currently available static explanatory variables are :
-
-`elevation`, `aspect`, `slope`, `Y` (lat), `X` (lon), `Agricultural_areas`, `Artificials_surfaces`, `Forest`,  `Herbaceous_vegetation`, `Water`
-
-The script used to generate the static explanatory variables datasets (`grid.df` and `stations.df`) are available under `./raw-data/makeData.R` 
-
-### dynamic 
-
-These are not yet implemented as they require a working API to make queries in our Agromet DB.
-
-## learners
-
-The package will allow you to use a configuration file where you can list the various learning algorithms you want to use to spatialize data
 
 
 ## Logo
