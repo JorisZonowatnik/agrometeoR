@@ -62,7 +62,7 @@ tmux ls #list
 
 tmux new-session -s bmr
 
-cd Rprojects
+cd Rprojects/currentProject/
 
 ./makeBenchmark
 
