@@ -52,22 +52,42 @@ learners = agrometeorLearners
 
 ## bmr Pameseb + IRM
 
-Création des tâches et récupération de l'information pertinente
+Création des tâches et récupération de l'information pertinente. 
+
+la fonction makeTask() supprime les observations pour lesquelles il y a une donnée manquante. Donnée manquante gérée par API de JP : tsa state != 1 ou trou dans les data
+
+```{bash}
+ssh agromet
+tmux ls #list
+
+tmux new-session -s bmr
+
+cd Rprojects
+
+./makeBenchmark
+
+# type ctrl+b et puis d => hide the plex
+
+tmux attach
+
+# type exit to kill a plex
+```
+
+
 ```{r}
 tasks_20_pameseb = purrr::map(dataset_20_pameseb, makeTask, target = "tsa")
 
 
 # removing the useless part of each task - subsetting list elements
-tasks_20_pameseb_bmr = lapply(tasks_20_pameseb, `[[`, 2)
-tasks_20_pameseb_bmr = lapply(tasks_20_pameseb_bmr, `[[`, 1)
-tasks_20_pameseb_bmr = lapply(tasks_20_pameseb_bmr, `[[`, 1)
+tasks_20_pameseb_2bmr =  tasks_20_pameseb %>% modify_depth(1, ~.$"output"$"value"$"task")
+
 ```
 
 Exécution à proprement parlé du bmr. Attention si gros benchmark de deux ans, il faut lancer le calcul depuis un terminal et non depuis rstudio server. Voir # https://stackoverflow.com/questions/15668893/r-multicore-mcfork-unable-to-fork-cannot-allocate-memory.
 ::TODO:: expliqué comment rendre fichier R exécutable depuis terminal
 ```{r echo = T, results='hide'}
 bmrs_20_pameseb = makeBatchOfBenchExp(
-  tasks = tasks_20_pameseb_bmr[1:5],
+  tasks = tasks_20_pameseb_2bmr[1:5],
   learners = learners,
   measures = list(rmse, mae, mse),
   keep.pred = TRUE, # necessary to compute residuals
@@ -75,7 +95,7 @@ bmrs_20_pameseb = makeBatchOfBenchExp(
   grouping = 10,
   level = "mlr.benchmark",
   resamplings = "LOO",
-  cpus = 1, 
+  cpus = 4, 
   prefix = "test_20_pameseb_",
   output_dir = "./outputs",
   removeTemp = FALSE
@@ -84,7 +104,7 @@ bmrs_20_pameseb = makeBatchOfBenchExp(
 
 Using the benchmark results to compute bmr analysis
 ```{r}
-bmrs_20_pameseb_result = bmrs_20_pameseb$output$value$benchmarkResult
+bmrs_20_pameseb_result = bmrs_20_pameseb$output$value
 
 bmrs_20_pameseb_result_analysis = analyzeBatchOfBenchExp(benchmarkResult = bmrs_20_pameseb_result, tasks = tasks_20_pameseb[1:5])
 ```
@@ -94,7 +114,7 @@ bmrs_20_pameseb_result_analysis = analyzeBatchOfBenchExp(benchmarkResult = bmrs_
 ```{r}
 test = bmrs_20_pameseb_result_analysis$output$value$multiReg.alt_x_y.filtered$data_summary
 
-all_plots = makeBmrsAnalysisPLots(bmrs_20_pameseb_result_analysis)
+all_plots = makeBmrsAnalysisPlots(bmrs_20_pameseb_result_analysis$output$value)
 
 a = test %>%
   dplyr::left_join(stations.df, by = "sid") %>%
@@ -110,7 +130,6 @@ boxplot_residuals = ggplot(a, aes(x=poste, y=residuals)) +
   labs(title="boxplot_residuals",x="stations (sid)", y = "boxplot_residuals") +
   theme(axis.text.x=element_text(angle=45, hjust=1))
 ```
-
 
 
 

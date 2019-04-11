@@ -38,11 +38,12 @@ makeBatchOfBenchExp <- function(
 
   doBenchmark = function(){
 
+    # configure mlr to avoid crash if a learner fails on a task
+    # https://stackoverflow.com/questions/55608882/how-to-make-the-benchmark-function-not-to-fail-if-a-specific-learner-fails-on-a
+    mlr::configureMlr(on.learner.error = "warn", on.error.dump = TRUE)
+
     # set seed to make bmr experiments reproducibles
     set.seed(1985)
-
-    # hack for tasks length when only a single task
-    # ::todo::
 
     # split tasks in multiple subgroups to avoid memory saturation
     if (length(tasks) <= grouping) {
@@ -72,9 +73,6 @@ makeBatchOfBenchExp <- function(
         # hack to avoid wrong last task number
         if (is.na(tasks.groups.end[x])) {tasks.groups.end[x] = tasks.groups.start[x]}
 
-        # starting counting time of the current bmr execution
-        tictoc::tic()
-
         # benchmark
         bmr = mlr::benchmark(
           learners = learners,
@@ -84,9 +82,11 @@ makeBatchOfBenchExp <- function(
           keep.pred = keep.pred,
           models = models)
 
-        # stoping counting time
-        exectime = tictoc::toc()
-        exectime = exectime$toc - exectime$tic
+        # success message
+        message(paste0(
+          "Results of batch of Benchmark experiments for tasks " ,
+          mlr::getTaskId(tasks[[tasks.groups.start[x]]]), " - ",
+          mlr::getTaskId(tasks[[tasks.groups.end[x]]]), " conducted"))
 
         # stop the parallelized computing
         if (cpus > 1) {
@@ -110,7 +110,7 @@ makeBatchOfBenchExp <- function(
         message(paste0(
           "Results of batch of Benchmark experiments for tasks " ,
           mlr::getTaskId(tasks[[tasks.groups.start[x]]]), " - ",
-          mlr::getTaskId(tasks[[tasks.groups.end[x]]]), " conducted and written to file. "))
+          mlr::getTaskId(tasks[[tasks.groups.end[x]]]), "written to file. "))
 
       })
 
@@ -129,7 +129,11 @@ makeBatchOfBenchExp <- function(
         # Throw a success message
         message("Success, batch of benchmark experiment conducted")
 
-        return(list(benchmarkResult = bmrs))
+        # Set mlr back to default settings
+        mlr::configureMlr(on.learner.error = "stop", on.error.dump = FALSE)
+
+        # return the bmrs results
+        return(benchmarkResult = bmrs)
   }
 
   tryCatch(
