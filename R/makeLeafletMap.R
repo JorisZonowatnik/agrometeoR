@@ -7,10 +7,13 @@
 #' @param target a character specifying the sensor your want to map
 #' @param spatialized a dataframe containing the spatialized data and their px reference
 #' @param polygon_grid a sf object containing the polygonized grid and the px references
-#' @param stations a dataframe containing the stations observations of the sensor
-#' @param key a character specifying the key used to match the spatialized dataframe with the polygonized grid
+#' @param stations_data a dataframe containing the stations observations of the sensor
+#' @param stations_meta a dataframe containing the stations metadata
+#' @param key_grid a character specifying the key used to match the spatialized dataframe with the polygonized grid
+#' @param key_stations a character specifying the key used to match the station_data with the station meta
 #' @param stations_coords a character vector specifying the name of the coordinates columns of the stations dataframe
 #' @param crs a numeric corresponding to the EPSG code of the stations spatial coordinates
+#' @param title a character specifying the name yo uwant to give to your map
 #' @examples
 #' myDataset = makeDataset(
 #'   dfrom = "2017-03-04T15:00:00Z",
@@ -28,7 +31,7 @@
 
 makeLeafletMap = function(
   target,
-  spatialized,
+  spatialized = NULL,
   polygon_grid = grid.squares.sf,
   stations_data,
   stations_meta = stations.df,
@@ -39,8 +42,8 @@ makeLeafletMap = function(
   title
 ){
 
-  # injecting the spatialized data into the polygon grid ::todo:: check for same nrow
-  spatialized = dplyr::left_join(polygon_grid, spatialized, by = key_grid)
+  # to make the map responsive
+  responsiveness = "\'<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\'"
 
   # injecting the station meta information into the passed stations dataframe
   stations = stations_data %>%
@@ -49,17 +52,24 @@ makeLeafletMap = function(
   # making the stations data a spatial object
   stations = sf::st_set_crs(sf::st_as_sf(stations, coords = stations_coords), crs)
 
+  # fullDomain for colorpalette
+  fulLDomain = stations[[target]]
+
   # be sure we are in the proper 4326 EPSG => ::TODO:: must be a warning
-  spatialized = sf::st_transform(spatialized, 4326)
   stations = sf::st_transform(stations, 4326)
 
-  # to make the map responsive
-  responsiveness = "\'<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\'"
+  if (!is.null(spatialized)){
+    # injecting the spatialized data into the polygon grid ::todo:: check for same nrow
+    spatialized = dplyr::left_join(polygon_grid, spatialized, by = key_grid)
 
-  # Sometimes the interpolation and the stations don't have values in the same domain.
-  # this lead to mapping inconsistency (transparent color for stations)
-  # Thus we create a fullDomain which is a rowbinding of interpolated and original data
-  fullDomain = c(spatialized$response, stations[[target]])
+    # be sure we are in the proper 4326 EPSG => ::TODO:: must be a warning
+    spatialized = sf::st_transform(spatialized, 4326)
+
+    # Sometimes the interpolation and the stations don't have values in the same domain.
+    # this lead to mapping inconsistency (transparent color for stations)
+    # Thus we create a fullDomain which is a rowbinding of interpolated and original data
+    fullDomain = c(spatialized$response, stations[[target]])
+  }
 
   # defining the color palette for the response
   varPal <- leaflet::colorNumeric(
@@ -82,7 +92,7 @@ makeLeafletMap = function(
   }
 
   # actually building the map
-  prediction.map = leaflet::leaflet(spatialized) %>%
+  map = leaflet::leaflet(stations) %>%
     # basemaps
     addProviderTiles(group = "Stamen",
       providers$Stamen.Toner,
@@ -93,10 +103,10 @@ makeLeafletMap = function(
       options = providerTileOptions(opacity = 1)
     ) %>%
     # centering the map
-    fitBounds(sf::st_bbox(spatialized)[[1]],
-      sf::st_bbox(spatialized)[[2]],
-      sf::st_bbox(spatialized)[[3]],
-      sf::st_bbox(spatialized)[[4]]
+    fitBounds(sf::st_bbox(stations)[[1]],
+      sf::st_bbox(stations)[[2]],
+      sf::st_bbox(stations)[[3]],
+      sf::st_bbox(stations)[[4]]
     ) %>%
     # adding title
     addControl(tags$div(
@@ -105,7 +115,8 @@ makeLeafletMap = function(
     # adding layer control button
     addLayersControl(baseGroups = c("Stamen", "Satellite"),
       # overlayGroups = c("prediction"),
-      overlayGroups = c(paste0(target, ".pred"), "se", "Stations", "Admin"),
+      # overlayGroups = c(paste0(target, ".pred"), "se", "Stations", "Admin"),
+      overlayGroups = c("Stations"),
       options = layersControlOptions(collapsed = TRUE)
     ) %>%
     # fullscreen button
@@ -119,27 +130,6 @@ makeLeafletMap = function(
       $('head').append(",responsiveness,");
       }")
     ) %>%
-    # admin boundaries
-    # addPolygons(
-    #   data = wallonia,
-    #   group = "Admin",
-    #   color = "#444444", weight = 1, smoothFactor = 0.5,
-    #   opacity = 1, fillOpacity = 0, fillColor = FALSE) %>%
-    # predictions
-    addPolygons(
-      group = paste0(target, ".pred"),
-      color = "#444444", stroke = FALSE, weight = 1, smoothFactor = 0.8,
-      opacity = 1.0, fillOpacity = 1.0,
-      fillColor = ~varPal(response),
-      label = ~ paste(
-        "prediction:", format(round(spatialized$response, 2), nsmall = 2),
-        "°C ",
-        "se: ", format(round(spatialized$se, 2), nsmall = 2)),
-      # popup = ~as.character(response),
-      highlightOptions = highlightOptions(color = "white", weight = 2,
-        bringToFront = TRUE)
-    ) %>%
-    # observations (stations)
     addCircleMarkers(
       data = stations,
       group = "Stations",
@@ -149,43 +139,40 @@ makeLeafletMap = function(
       stroke = TRUE,
       fillOpacity = 1,
       label = ~htmltools::htmlEscape(paste0(poste, " (", sid, ") - ", network_name, " ", tsa, "°C"))) %>%
-    # layer opacity slider :: https://cran.r-project.org/web/packages/leaflet.opacity/vignettes/leaflet-opacity.html
-    # leaflet.opacity::addOpacitySlider(layerId = paste0(target, ".pred")) %>%
     addLegend(
-      position = "bottomright", pal = varPal, values = ~response,
-      title = paste0(target, ".pred"),
-      group = paste0(target, ".pred"),
+      position = "bottomright", pal = varPal, values = as.formula(paste0("~",target)),
+      title = paste0(target),
+      group = paste0(target),
       opacity = 1
     )
 
-  # if se.bool = TRUE
-  # if (!is.null(spatialized$se)) {
-  #   uncPal <- leaflet::colorNumeric(
-  #     palette = alphaPal("#5af602"),
-  #     domain = spatialized$se,
-  #     alpha = TRUE
-  #   )
-  #
-  #   prediction.map = prediction.map %>%
-  #     addPolygons(
-  #       group = "se",
-  #       color = "#444444", stroke = FALSE, weight = 1, smoothFactor = 0.5,
-  #       opacity = 1.0, fillOpacity = 1,
-  #       fillColor = ~uncPal(se),
-  #       highlightOptions = highlightOptions(color = "white", weight = 2,
-  #         bringToFront = TRUE),
-  #       label = ~ paste("prediction:", signif(spatialized$response, 2), "\n","se: ", signif(spatialized$se, 2))
-  #     ) %>%
-  #     addLegend(
-  #       group = "se",
-  #       position = "bottomleft", pal = uncPal, values = ~se,
-  #       title = "se",
-  #       opacity = 1
-  #     )
-  # }
+  if (!is.null(spatialized)) {
+    map = map %>%
+      addPolygons(
+        data = spatialized,
+        group = paste0(target, ".pred"),
+        color = "#444444", stroke = FALSE, weight = 1, smoothFactor = 0.8,
+        opacity = 1.0, fillOpacity = 1.0,
+        fillColor = ~varPal(response),
+        label = ~ paste(
+          "prediction:", format(round(spatialized$response, 2), nsmall = 2),
+          "°C ",
+          "se: ", format(round(spatialized$se, 2), nsmall = 2)),
+        # popup = ~as.character(response),
+        highlightOptions = highlightOptions(color = "white", weight = 2,
+          bringToFront = TRUE)
+      ) %>%
+      # layer opacity slider :: https://cran.r-project.org/web/packages/leaflet.opacity/vignettes/leaflet-opacity.html
+      # leaflet.opacity::addOpacitySlider(layerId = paste0(target, ".pred")) %>%
+      addLegend(
+        position = "bottomright", pal = varPal, values = ~response,
+        title = paste0(target, ".pred"),
+        group = paste0(target, ".pred"),
+        opacity = 1
+      )
+  }
 
-  return(prediction.map)
-
+  return(map)
 
 }
 

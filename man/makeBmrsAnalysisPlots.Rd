@@ -4,9 +4,11 @@
 \alias{makeBmrsAnalysisPlots}
 \title{Plot analyse batch of benchmark experiments output}
 \usage{
-makeBmrsAnalysisPlots(bmrsAnalysis)
+makeBmrsAnalysisPlots(bmrsResult, bmrsAnalysis)
 }
 \arguments{
+\item{bmrsResult}{an object of class mlr::benchmarkResult}
+
 \item{bmrsAnalysis}{a list of class BenchmarkResult returned in the outputs of makeBmrsAnalysisPLots}
 }
 \value{

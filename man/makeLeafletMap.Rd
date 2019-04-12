@@ -4,7 +4,7 @@
 \alias{makeLeafletMap}
 \title{make an interactive leaflet map of your spatialized data}
 \usage{
-makeLeafletMap(target, spatialized, polygon_grid = grid.squares.sf,
+makeLeafletMap(target, spatialized = NULL, polygon_grid = grid.squares.sf,
   stations_data, stations_meta = stations.df, key_grid = "px",
   key_stations = "sid", stations_coords = c("x", "y"), crs = 3812, title)
 }
@@ -15,13 +15,19 @@ makeLeafletMap(target, spatialized, polygon_grid = grid.squares.sf,
 
 \item{polygon_grid}{a sf object containing the polygonized grid and the px references}
 
+\item{stations_data}{a dataframe containing the stations observations of the sensor}
+
+\item{stations_meta}{a dataframe containing the stations metadata}
+
+\item{key_grid}{a character specifying the key used to match the spatialized dataframe with the polygonized grid}
+
+\item{key_stations}{a character specifying the key used to match the station_data with the station meta}
+
 \item{stations_coords}{a character vector specifying the name of the coordinates columns of the stations dataframe}
 
 \item{crs}{a numeric corresponding to the EPSG code of the stations spatial coordinates}
 
-\item{stations}{a dataframe containing the stations observations of the sensor}
-
-\item{key}{a character specifying the key used to match the spatialized dataframe with the polygonized grid}
+\item{title}{a character specifying the name yo uwant to give to your map}
 }
 \examples{
 myDataset = makeDataset(

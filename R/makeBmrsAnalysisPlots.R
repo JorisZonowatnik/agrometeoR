@@ -16,93 +16,109 @@ makeBmrsAnalysisPlots <- function(
 
   doPlots = function(){
 
-    browser()
-
     # making a single big df
-    dataset = bmrsAnalysis %>%
+    bmrsAnalysis = bmrsAnalysis %>%
       purrr::transpose()
-    dataset = dataset$data_summary %>%
+
+    dataset_stations = bmrsAnalysis$summarized_by_sid %>%
+      purrr::map_df(.,c, .id = "learner") %>%
+      dplyr::mutate_at(vars("sid"), as.numeric)
+
+    dataset_full = bmrsAnalysis$data_summary %>%
       purrr::map_df(.,c, .id = "learner") %>%
       dplyr::left_join(stations.df, by = "sid") %>%
-      dplyr::mutate_at(vars("sid", "poste", "datetime"), as.factor)
-
-    # making df for distribution vlines
-    dataInt_residuals_stations = dataset %>%
-      group_by(sid) %>%
-      summarize(Int_residuals_stations = mean(residuals))
-
-    dataset = dataset %>%
-      dplyr::left_join(dataInt_residuals_stations, by="sid")
-
-    boxplot_rmse_stations = ggplot(dataset,
-      aes_string(x="poste", y="rmse")) +
-      geom_boxplot(notch=FALSE) + stat_summary(fun.y=mean, geom="point", shape=23, size=2) +
-      labs(title = "rmse", x = "stations", y = "rmse") +
-      theme(axis.text.x=element_text(angle=45, hjust=1))
-
-    boxplot_rmse_learners = ggplot(dataset,
-      aes_string(x="learner", y="rmse")) +
-      geom_boxplot(notch=FALSE) + stat_summary(fun.y=mean, geom="point", shape=23, size=2) +
-      labs(title = "rmse", x = "learners", y = "rmse") +
-      theme(axis.text.x=element_text(angle=45, hjust=1))
-
-    boxplot_residuals_stations = ggplot(dataset,
-      aes_string(x="poste", y="residuals")) +
-      geom_boxplot(notch=FALSE) + stat_summary(fun.y=mean, geom="point", shape=23, size=2) +
-      labs(title = "residuals", x = "stations", y = "residuals") +
-      theme(axis.text.x=element_text(angle=45, hjust=1))
-
-    boxplot_residuals_learners = ggplot(dataset,
-      aes_string(x="learner", y="residuals")) +
-      geom_boxplot(notch=FALSE) + stat_summary(fun.y=mean, geom="point", shape=23, size=2) +
-      labs(title = "residuals", x = "learners", y = "residuals") +
-      theme(axis.text.x=element_text(angle=45, hjust=1))
-
-    hist_residuals_learners = ggplot(dataset,
-      aes_string(x = "residuals")) +
-      geom_histogram(fill="white", color = "black") +
-      geom_vline(aes(xintercept=mean(residuals)), color="blue",
-        linetype="dashed") +
-      geom_density() +
-      ggtitle("Histogram of residuals by learner") +
-      facet_wrap(learner ~ ., ncol = 2)
-
-    hist_residuals_stations = ggplot(dataset,
-      aes_string(x = "residuals", color = "learner")) +
-      geom_histogram(fill="white", position="dodge") +
-      geom_density() +
-      geom_vline(aes(xintercept=Int_residuals_stations), color="blue",
-        linetype="dashed") +
-      ggtitle("Histogram of residuals by station") +
-      ggforce::facet_grid_paginate(poste ~ ., ncol = 3, nrow=3, page = 1)
-
-    hist_residuals_stations = ggplot(dataset,
-      aes_string(x = "residuals", color = "learner")) +
-      geom_histogram(fill="white", position="dodge") +
-      geom_density() +
-      geom_vline(aes(xintercept=Int_residuals_stations), color="blue",
-        linetype="dashed") +
-      ggtitle("Histogram of residuals by station") +
-      ggforce::facet_grid_paginate(poste ~ learner, ncol = 5, nrow=3, page = 1)
+      dplyr::left_join(dataset_stations, by = "sid") %>%
+      dplyr::mutate_at(vars("sid", "poste", "datetime"), as.factor) %>%
+      dplyr::rename("learner" = "learner.x") %>%
+      dplyr::select(-c("learner.y"))
 
 
-    scatter_residuals_learners = ggplot(dataset,
-      aes_string("truth", "response")) +
-      geom_point() +
-      geom_smooth(se = FALSE) +
-      geom_rug(color = "red") +
-      ggtitle("True value vs. fitted value") +
-      facet_wrap(. ~ learner, ncol=2)
+    # # making df for distribution vlines
+    # Int_residuals_stations = dataset_full %>%
+    #   group_by(sid) %>%
+    #   summarize(Int_residuals_stations = mean(residuals))
+    # Int_residuals_learners = dataset_full %>%
+    #   group_by(learner) %>%
+    #   summarize(Int_residuals_learners = mean(residuals))
+    #
+    # # joining to the original dataset_full
+    # dataset_full = dataset_full %>%
+    #   dplyr::left_join(Int_residuals_stations, by="sid") %>%
+    #   dplyr::left_join(Int_residuals_learners, by="learner")
 
-    scatter_residuals_stations = ggplot(dataset,
-      aes_string("truth", "response")) +
-      geom_point() +
-      geom_smooth(se = FALSE) +
-      geom_rug(color = "red") +
-      ggtitle("True value vs. fitted value") +
-      facet_wrap(. ~ poste, scales = "free", ncol=4)
+    # https://stackoverflow.com/questions/4946964/in-ggplot2-what-do-the-end-of-the-boxplot-lines-represent
+    # https://www.r-bloggers.com/exploring-ggplot2-boxplots-defining-limits-and-adjusting-style/
 
+    # function for boxplots
+    doBoxPlot = function(param, group){
+      bp = ggplot(dataset_full,
+        aes_string(x=group, y= param, color = group)) +
+        stat_boxplot(geom ='errorbar') +
+        geom_boxplot(notch=FALSE) + stat_summary(fun.y = mean, geom="point", shape=23, size=2) +
+        theme(axis.text.x=element_text(angle = 45, hjust = 1), legend.position="none") +
+        labs(title = paste0("Boxplot ", param, " by station"), x = "stations", y = param)# +
+      if (param %in% c("rmse", "residuals")){
+        if(group == "poste"){
+          n_learners = seq(1,length(unique(dataset_full$learner)),1)
+          names(n_learners) = sort(unique(dataset_full$learner))
+          #  facet_wrap(learner ~ ., nrow = length(unique(dataset_full$learner)))
+          bp = n_learners %>% purrr::map(., ~bp + ggforce::facet_grid_paginate(learner ~ ., ncol = 1, nrow=1, page = .))
+        }
+        if (group == "learner") {
+          bp = bp +
+            labs(title = paste0("boxplot global ", param, " by learner"), x = "learners", y = "rmse")
+        }
+      }
+      return(bp)
+    }
 
+    # function for maps
+    doMaps = function(param){
+      m = makeLeafletMap(
+        target = param,
+        stations_data = dataset_full.summary,
+        title = paste0("Map of ", param)
+      )$outputvalue
+      return(m)
+    }
+
+    # function for residuals scatters
+    doScatterResiduals = function(group){
+      sr = ggplot(dataset_full,
+        aes_string("truth", "response")) +
+        geom_point() +
+        geom_smooth(se = FALSE) +
+        geom_rug(color = "red") +
+        ggtitle("True value vs. fitted value") +
+        theme(axis.text.x=element_text(angle = 45, hjust = 1), legend.position="none")
+      if (group == "learner") {
+        sr = sr +
+          facet_wrap(as.formula(paste(". ~", group)), ncol = 2)
+      }
+      if (group == "poste") {
+        n_postes = seq(1,length(unique(dataset_full$poste)),1)
+        names(n_postes) = sort(unique(dataset_full$poste))
+        #  facet_wrap(learner ~ ., nrow = length(unique(dataset_full$learner)))
+        sr = n_postes %>% purrr::map(., ~sr + ggforce::facet_grid_paginate(poste ~ ., ncol = 1, nrow=1, page = .))
+        # sr = sr +
+        #   facet_wrap(as.formula(paste(". ~", group)), ncol = 4)
+      }
+      return(sr)
+    }
+
+    # browser()
+    groups = list(poste = "poste", learner = "learner")
+    browser()
+    boxPlots_rmse = purrr::map(groups, ~doBoxPlot("rmse", .))
+    boxPlots_residuals = purrr::map(groups, ~doBoxPlot("residuals", .))
+    boxPlots_observations = doBoxPlot("truth", "poste")
+    boxPlots_predictions = purrr::map(groups, ~doBoxPlot("response", .))
+    scatter_residuals = purrr::map(groups, ~doScatterResiduals(.))
+
+    # summary for maps
+    dataset_summ = dataset_full %>%
+
+    # boxPlots = purrr::map(params, ~purrr::map2(., groups, doBoxPlot_perfs))
     # globalPlots = bmrsResult %>% mlr::plotBMRBoxplots(pretty.names = FALSE)
     # learnersPlots = bmrsAnalysis %>% purrr::map(~makeLearnerPlots(.))
 
