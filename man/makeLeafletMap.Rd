@@ -15,7 +15,7 @@ makeLeafletMap(target, spatialized = NULL, polygon_grid = grid.squares.sf,
 
 \item{polygon_grid}{a sf object containing the polygonized grid and the px references}
 
-\item{stations_data}{a dataframe containing the stations observations of the sensor}
+\item{stations_data}{a dataframe containing the stations data}
 
 \item{stations_meta}{a dataframe containing the stations metadata}
 

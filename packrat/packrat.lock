@@ -249,6 +249,12 @@ Version: 0.2.0
 Hash: 867b5e4320d9fac14c4d6f7abe732f9f
 Requires: V8, httr, jsonlite, jsonvalidate
 
+Package: ggforce
+Source: CRAN
+Version: 0.1.1
+Hash: d10065dc66734cc88e5b014f6f36a4b7
+Requires: Rcpp, dplyr, ggplot2, gtable, lazyeval, scales, tweenr, units
+
 Package: ggplot2
 Source: github
 Version: 3.1.0.9000
@@ -714,6 +720,12 @@ RemoteHost: https://api.github.com
 RemoteRepo: tidyselect
 RemoteUsername: tidyverse
 RemoteSha: 19150c05d4e40abe118be1457e6c1416e22cbc3f
+
+Package: tweenr
+Source: CRAN
+Version: 0.1.5
+Hash: c9b470765b24601af9f2ffb98c27648d
+Requires: Rcpp
 
 Package: udunits2
 Source: CRAN

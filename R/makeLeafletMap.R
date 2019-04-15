@@ -7,7 +7,7 @@
 #' @param target a character specifying the sensor your want to map
 #' @param spatialized a dataframe containing the spatialized data and their px reference
 #' @param polygon_grid a sf object containing the polygonized grid and the px references
-#' @param stations_data a dataframe containing the stations observations of the sensor
+#' @param stations_data a dataframe containing the stations data
 #' @param stations_meta a dataframe containing the stations metadata
 #' @param key_grid a character specifying the key used to match the spatialized dataframe with the polygonized grid
 #' @param key_stations a character specifying the key used to match the station_data with the station meta

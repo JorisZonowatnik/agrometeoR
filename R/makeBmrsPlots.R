@@ -3,46 +3,32 @@
 #' @author Thomas Goossens
 #' @import mlr
 #' @importFrom magrittr %>%
-#' @param bmrsResult an object of class mlr::benchmarkResult
-#' @param bmrsAnalysis a list of class BenchmarkResult returned in the outputs of makeBmrsAnalysisPLots
+#' @param bmrsExtraction a list
 #' @return a list of plots
 
-makeBmrsAnalysisPlots <- function(
-  bmrsResult,
-  bmrsAnalysis){
+makeBmrsPLots <- function(
+  bmrsExtraction){
 
   output = list(value = NULL, condition = list(type = NULL, message = NULL))
   snitch = FALSE
 
   doPlots = function(){
 
-    # making a single big df
-    bmrsAnalysis = bmrsAnalysis %>%
-      purrr::transpose()
 
-    dataset_stations = bmrsAnalysis$summarized_by_sid %>%
-      purrr::map_df(.,c, .id = "learner") %>%
-      dplyr::mutate_at(vars("sid"), as.numeric)
-
-    dataset_full = bmrsAnalysis$data_summary %>%
-      purrr::map_df(.,c, .id = "learner") %>%
+    dataset = bmrsExtraction$dataset %>%
       dplyr::left_join(stations.df, by = "sid") %>%
-      dplyr::left_join(dataset_stations, by = "sid") %>%
-      dplyr::mutate_at(vars("sid", "poste", "datetime"), as.factor) %>%
-      dplyr::rename("learner" = "learner.x") %>%
-      dplyr::select(-c("learner.y"))
-
+      dplyr::mutate_at(vars("sid", "poste", "datetime"), as.factor)
 
     # # making df for distribution vlines
-    # Int_residuals_stations = dataset_full %>%
+    # Int_residuals_stations = dataset %>%
     #   group_by(sid) %>%
     #   summarize(Int_residuals_stations = mean(residuals))
-    # Int_residuals_learners = dataset_full %>%
+    # Int_residuals_learners = dataset %>%
     #   group_by(learner) %>%
     #   summarize(Int_residuals_learners = mean(residuals))
     #
-    # # joining to the original dataset_full
-    # dataset_full = dataset_full %>%
+    # # joining to the original dataset
+    # dataset = dataset %>%
     #   dplyr::left_join(Int_residuals_stations, by="sid") %>%
     #   dplyr::left_join(Int_residuals_learners, by="learner")
 
@@ -51,7 +37,7 @@ makeBmrsAnalysisPlots <- function(
 
     # function for boxplots
     doBoxPlot = function(param, group){
-      bp = ggplot(dataset_full,
+      bp = ggplot(dataset,
         aes_string(x=group, y= param, color = group)) +
         stat_boxplot(geom ='errorbar') +
         geom_boxplot(notch=FALSE) + stat_summary(fun.y = mean, geom="point", shape=23, size=2) +
@@ -59,9 +45,9 @@ makeBmrsAnalysisPlots <- function(
         labs(title = paste0("Boxplot ", param, " by station"), x = "stations", y = param)# +
       if (param %in% c("rmse", "residuals")){
         if(group == "poste"){
-          n_learners = seq(1,length(unique(dataset_full$learner)),1)
-          names(n_learners) = sort(unique(dataset_full$learner))
-          #  facet_wrap(learner ~ ., nrow = length(unique(dataset_full$learner)))
+          n_learners = seq(1,length(unique(dataset$learner)),1)
+          names(n_learners) = sort(unique(dataset$learner))
+          #  facet_wrap(learner ~ ., nrow = length(unique(dataset$learner)))
           bp = n_learners %>% purrr::map(., ~bp + ggforce::facet_grid_paginate(learner ~ ., ncol = 1, nrow=1, page = .))
         }
         if (group == "learner") {
@@ -73,32 +59,41 @@ makeBmrsAnalysisPlots <- function(
     }
 
     # function for maps
-    doMaps = function(param){
-      m = makeLeafletMap(
-        target = param,
-        stations_data = dataset_full.summary,
-        title = paste0("Map of ", param)
-      )$outputvalue
-      return(m)
+    doLeafletMap = function(dataset){
+      browser()
+      params = colnames(dataset)
+      dataset = dataset %>% mutate_at("sid", as.numeric)
+      maps = params %>% purrr::map(
+      ~makeLeafletMap(
+        target = .,
+        spatialized = NULL,
+        polygon_grid = grid.squares.sf,
+        stations_data = dataset,
+        stations_meta = stations.df,
+        key_grid = "px",
+        key_stations = "sid",
+        stations_coords = c("x", "y"),
+        crs = 3812,
+        title))
     }
 
     # function for residuals scatters
     doScatterResiduals = function(group){
-      sr = ggplot(dataset_full,
+      sr = ggplot(dataset,
         aes_string("truth", "response")) +
         geom_point() +
         geom_smooth(se = FALSE) +
         geom_rug(color = "red") +
         ggtitle("True value vs. fitted value") +
-        theme(axis.text.x=element_text(angle = 45, hjust = 1), legend.position="none")
+        theme(legend.position="none")
       if (group == "learner") {
         sr = sr +
           facet_wrap(as.formula(paste(". ~", group)), ncol = 2)
       }
       if (group == "poste") {
-        n_postes = seq(1,length(unique(dataset_full$poste)),1)
-        names(n_postes) = sort(unique(dataset_full$poste))
-        #  facet_wrap(learner ~ ., nrow = length(unique(dataset_full$learner)))
+        n_postes = seq(1,length(unique(dataset$poste)),1)
+        names(n_postes) = sort(unique(dataset$poste))
+        #  facet_wrap(learner ~ ., nrow = length(unique(dataset$learner)))
         sr = n_postes %>% purrr::map(., ~sr + ggforce::facet_grid_paginate(poste ~ ., ncol = 1, nrow=1, page = .))
         # sr = sr +
         #   facet_wrap(as.formula(paste(". ~", group)), ncol = 4)
@@ -108,19 +103,26 @@ makeBmrsAnalysisPlots <- function(
 
     # browser()
     groups = list(poste = "poste", learner = "learner")
-    browser()
     boxPlots_rmse = purrr::map(groups, ~doBoxPlot("rmse", .))
     boxPlots_residuals = purrr::map(groups, ~doBoxPlot("residuals", .))
+    scatter_residuals = purrr::map(groups, ~doScatterResiduals(.))
     boxPlots_observations = doBoxPlot("truth", "poste")
     boxPlots_predictions = purrr::map(groups, ~doBoxPlot("response", .))
-    scatter_residuals = purrr::map(groups, ~doScatterResiduals(.))
 
-    # summary for maps
-    dataset_summ = dataset_full %>%
+
+    browser()
+    # summaries for maps
+    dataTomap = bmrsExtraction$summarized_by_sid
+    # maps = dataTomap %>% purrr::map(doLeafletMap)
+
+    browser()
+
+    print("finished")
+
 
     # boxPlots = purrr::map(params, ~purrr::map2(., groups, doBoxPlot_perfs))
     # globalPlots = bmrsResult %>% mlr::plotBMRBoxplots(pretty.names = FALSE)
-    # learnersPlots = bmrsAnalysis %>% purrr::map(~makeLearnerPlots(.))
+    # learnersPlots = bmrsExtraction %>% purrr::map(~makeLearnerPlots(.))
 
     # https://stackoverflow.com/questions/44196384/how-to-produce-different-geom-vline-in-different-facets-in-r
     # https://stackoverflow.com/questions/39736655/ggplot2-plots-over-multiple-pageshttps://stackoverflow.com/questions/39736655/ggplot2-plots-over-multiple-pages
@@ -137,7 +139,7 @@ makeBmrsAnalysisPlots <- function(
     expr = {
 
 
-      # in case everything went fine, do makeBmrsAnalysisPLots
+      # in case everything went fine, do makebmrsExtractionPLots
       output$value = doPlots()
       output$condition$type = "success"
       output$condition$message = "Plots created"
@@ -146,7 +148,7 @@ makeBmrsAnalysisPlots <- function(
     },
     warning = function(w){
       warning = paste0(
-        "AgrometeoR::makeBmrsAnalysisPLots raised a warning -> ",
+        "AgrometeoR::makeBmrsPLots raised a warning -> ",
         w)
       snitch <<- TRUE
       output$value <<- doPlots()
@@ -155,17 +157,17 @@ makeBmrsAnalysisPlots <- function(
     },
     error = function(e){
       error = paste0(
-        "AgrometeoR::makeBmrsAnalysisPLots raised an error -> ",
+        "AgrometeoR::makeBmrsPLots raised an error -> ",
         e)
       output$condition$type <<- "error"
       output$condition$message <<- error
     },
     finally = {
       finalMessage = paste0(
-        "makeBmrsAnalysisPLots has encountered : ",
+        "makebmrsExtractionPLots has encountered : ",
         output$condition$type,
         ". \n",
-        "All done with makeBmrsAnalysisPLots "
+        "All done with makeBmrsPLots "
       )
       message(finalMessage)
       return(list(snitch = snitch, output = output))

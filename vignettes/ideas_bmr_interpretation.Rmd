@@ -110,15 +110,14 @@ Using the benchmark results to compute bmr analysis
 ```{r}
 bmrs_20_pameseb_result = bmrs_20_pameseb$output$value
 
-bmrs_20_pameseb_result_analysis = analyzeBatchOfBenchExp(benchmarkResult = bmrs_20_pameseb_result, tasks = tasks_20_pameseb[1:5])
+bmrs_20_pameseb_result_analysis = makeBmrsExtraction(benchmarkResult = bmrs_20_pameseb_result, tasks = tasks_20_pameseb[1:5], as.df = TRUE)
 ```
 
 
 # plots from bmr analysis
 ```{r}
-test = bmrs_20_pameseb_result_analysis$output$value$multiReg.alt_x_y.filtered$data_summary
 
-all_plots = makeBmrsAnalysisPlots(bmrs_20_pameseb_result, bmrs_20_pameseb_result_analysis$output$value)
+all_plots = makeBmrsPLots(bmrs_20_pameseb_result_analysis$output$value)
 
 
 ```
