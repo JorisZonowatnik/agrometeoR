@@ -1,6 +1,6 @@
 Package: agrometeoR
 Type: Package
-Title: Spatial interpolation for Agromet
+Title: Spatial interpolation for Agromet project @ CRA-W
 Version: 0.0.2
 Authors@R: person("Thomas", "Goossens", email = "hello.pokyah@gmail.com",
   role = c("aut", "cre"))
