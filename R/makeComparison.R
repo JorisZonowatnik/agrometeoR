@@ -6,7 +6,7 @@
 #' @importFrom magrittr %>%
 #' @param dataset a dataframe containing the records from the 2 stations you want to compare. ::TODO ::Must contain sunset and sunrise !
 #' @param sensor a character specifying the name of the sensor you want to compare
-#' @param sensor a character specifying the name of the sids you want to compare
+#' @param sid a numeric vector specifying the sids you want to compare
 #' @return a list which elements are objects of class mlr::benchmark()
 
 makeComparison = function(

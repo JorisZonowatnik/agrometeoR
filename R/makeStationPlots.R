@@ -20,7 +20,7 @@
 #' @return a list
 #'
 #' records = makeDataset(dfrom = "2016-02-04T15:00:00Z", dto = "2016-03-04T15:00:00Z", sensor = c("tsa", "vvt"), stations = stations.df$sid)
-makePlots = function(
+makeStationPlots = function(
   records,
   dfrom = NULL,
   dto = NULL,

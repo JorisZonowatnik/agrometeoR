@@ -101,7 +101,7 @@ bmrs_20_pameseb = makeBatchOfBenchExp(
   resamplings = "LOO",
   cpus = 4, 
   prefix = "test_20_pameseb_",
-  output_dir = "./outputs",
+  temp_dir = "./outputs",
   removeTemp = FALSE
 )
 ```
@@ -122,7 +122,18 @@ all_plots = makeBmrsPLots(bmrs_20_pameseb_result_analysis$output$value)
 
 ```
 
+## outputs for CA
 
+* boxplots par learner chaque station : rmse + residuals => OK
+* boxplots par learner moyenne stations : rmse + residuals => Ok
+* plot obs vs response par learner => OK
+* map stations par learner : rmse moyenne + moyen abs(residuals) + min, max, var, median
+* ex map residuals d'une ou deux heures typique pour un learner
+* plot timeseries par learner moyenne stations : residuals et stats associés (ts les learners sur meme plot) + rmse
+* plot timeseries par learner chaque stations : residuals et (0 stat associée) + rmse
+* map spatialiée : exemple en fct TS
+* un exemple de dataset bug krigeage
+* 
 
 
 

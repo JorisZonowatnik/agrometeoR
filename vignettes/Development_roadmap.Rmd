@@ -49,7 +49,7 @@ A specific terminology is important as we need precise definitions to avoid conf
 * __Learner__ : an implementation of an algorithm (e.g. multiple linear regression, ANN, SVM, etc) for which a filtering of the explanatory variables to use might be applied and where its hyper-parameters values are set if required.
 * __Benchmark Experiment__ : comparison of multiples iterated leave-one-out cross validations results operated on the same set of records but with different explorative constructions
 * __Batch of benchmarks experiments__ : set of benchmark experiments conducted on multiple set of records (typically : on an historical dataset containing 2 years of records at a certain time resolution).
-* __explorative construction__ : a specific combination of the 4  __exploration parameters__.
+* __explorative construction__ : a specific combination of the 3  __exploration parameters__.
 * __exploration parameters__ : the set of parameters that can influence the quality of the spatialization. These are, the considered explanatory variables (also called features), the stations of interests, the choosen algorithm and its hyperparameters values if relevant.
 
 

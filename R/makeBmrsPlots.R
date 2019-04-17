@@ -3,7 +3,7 @@
 #' @author Thomas Goossens
 #' @import mlr
 #' @importFrom magrittr %>%
-#' @param bmrsExtraction a list
+#' @param bmrsExtraction a dataframe
 #' @return a list of plots
 
 makeBmrsPLots <- function(
@@ -14,10 +14,10 @@ makeBmrsPLots <- function(
 
   doPlots = function(){
 
-
-    dataset = bmrsExtraction$dataset %>%
+    dataset = bmrsExtraction %>%
       dplyr::left_join(stations.df, by = "sid") %>%
-      dplyr::mutate_at(vars("sid", "poste", "datetime"), as.factor)
+      dplyr::mutate_at(vars("sid", "poste", "datetime"), as.factor) %>%
+      dplyr::mutate_at(vars("datetime"), lubridate::ymd_hms)
 
     # # making df for distribution vlines
     # Int_residuals_stations = dataset %>%
@@ -36,46 +36,95 @@ makeBmrsPLots <- function(
     # https://www.r-bloggers.com/exploring-ggplot2-boxplots-defining-limits-and-adjusting-style/
 
     # function for boxplots
+    # https://stackoverflow.com/questions/5677885/ignore-outliers-in-ggplot2-boxplot
     doBoxPlot = function(param, group){
+
+      # filtering the NA values
+
       bp = ggplot(dataset,
         aes_string(x=group, y= param, color = group)) +
         stat_boxplot(geom ='errorbar') +
-        geom_boxplot(notch=FALSE) + stat_summary(fun.y = mean, geom="point", shape=23, size=2) +
-        theme(axis.text.x=element_text(angle = 45, hjust = 1), legend.position="none") +
+        geom_boxplot(notch=FALSE, outlier.shape = NA) + stat_summary(fun.y = mean, geom = "point", shape = 23, size = 2) +
+        scale_y_continuous(limits = quantile(dataset[[param]], c(0.1, 0.9), na.rm = TRUE)) +
+       # theme(axis.text.x=element_text(angle = 45, hjust = 1), legend.position = "none") +
         labs(title = paste0("Boxplot ", param, " by station"), x = "stations", y = param)# +
       if (param %in% c("rmse", "residuals")){
         if(group == "poste"){
           n_learners = seq(1,length(unique(dataset$learner)),1)
           names(n_learners) = sort(unique(dataset$learner))
-          #  facet_wrap(learner ~ ., nrow = length(unique(dataset$learner)))
-          bp = n_learners %>% purrr::map(., ~bp + ggforce::facet_grid_paginate(learner ~ ., ncol = 1, nrow=1, page = .))
+          facet_wrap(learner ~ ., nrow = length(unique(dataset$learner)))
+          #bp = n_learners %>% purrr::map(., ~bp + ggforce::facet_grid_paginate(learner ~ ., ncol = 1, nrow=1, page = .))
         }
         if (group == "learner") {
           bp = bp +
-            labs(title = paste0("boxplot global ", param, " by learner"), x = "learners", y = "rmse")
+            labs(title = paste0("boxplot global ", param, " by learner"), x = "learners", y = param)
         }
       }
       return(bp)
     }
 
-    # function for maps
-    doLeafletMap = function(dataset){
-      browser()
-      params = colnames(dataset)
-      dataset = dataset %>% mutate_at("sid", as.numeric)
-      maps = params %>% purrr::map(
-      ~makeLeafletMap(
-        target = .,
-        spatialized = NULL,
-        polygon_grid = grid.squares.sf,
-        stations_data = dataset,
-        stations_meta = stations.df,
-        key_grid = "px",
-        key_stations = "sid",
-        stations_coords = c("x", "y"),
-        crs = 3812,
-        title))
+    doBoxPlotStats = function(param, group){
+      doStatsBylearner = function(l){
+
+        dataset = dataset %>%
+          dplyr::filter(learner == l )
+        stats = as.data.frame(as.list(boxplot.stats(dataset[[param]])$stats))
+        colnames(stats) = c("Q1", "Q2", "median", "min", "max")
+        return(stats)
+      }
+      learners = unique(dataset$learner)
+      statsByLearner = learners %>% purrr::map(., doStatsBylearner)
+      names(statsByLearner) = learners
+      return(statsByLearner)
     }
+
+    # function for timeseries
+    # n_learners = seq(1,length(unique(dataset$learner)),1)
+    # names(n_learners) = sort(unique(dataset$learner))
+    #
+    # doTimeSerie = function(param, group, global = FALSE){
+    #   doTimeSerieByStation = function(p){
+    #     df = dataset %>% dplyr::filter(poste %in% p)
+    #     ggplot2::ggplot(data = df) +
+    #       geom_line(aes_string(x = "datetime", y = param, color = group),
+    #         alpha = 0.6,
+    #         size = 0.6) +
+    #       labs(x = "Datetime",
+    #         y = param,
+    #         title = paste0("Timeserie of ", param, " for station ",  p, " by ", group)) +
+    #       theme_minimal()
+    #   }
+    #   if (isTRUE(global)) {
+    #     postes = unique(dataset$poste)
+    #     timeseries_by_sid = postes %>% purrr::map(doTimeSerieByStation)
+    #     names(timeseries_by_sid) = postes
+    #   }
+    #   else{
+    #     browser()
+    #     summary_by_learner = dataset %>%
+    #       dplyr::group_by(learner) %>%
+    #       dplyr::summarise_at(param, min, max, mean, median, var)
+    #   }
+    #   return(timeseries_by_sid)
+    # }
+    #
+    # # function for maps
+    # doLeafletMap = function(dataset){
+    #   params = colnames(dataset)
+    #   dataset = dataset %>% mutate_at("sid", as.numeric)
+    #   maps = params %>% purrr::map(
+    #   ~makeLeafletMap(
+    #     target = .,
+    #     spatialized = NULL,
+    #     polygon_grid = grid.squares.sf,
+    #     stations_data = dataset,
+    #     stations_meta = stations.df,
+    #     key_grid = "px",
+    #     key_stations = "sid",
+    #     stations_coords = c("x", "y"),
+    #     crs = 3812,
+    #     title))
+    # }
 
     # function for residuals scatters
     doScatterResiduals = function(group){
@@ -95,29 +144,27 @@ makeBmrsPLots <- function(
         names(n_postes) = sort(unique(dataset$poste))
         #  facet_wrap(learner ~ ., nrow = length(unique(dataset$learner)))
         sr = n_postes %>% purrr::map(., ~sr + ggforce::facet_grid_paginate(poste ~ ., ncol = 1, nrow=1, page = .))
-        # sr = sr +
-        #   facet_wrap(as.formula(paste(". ~", group)), ncol = 4)
+        sr = sr +
+          facet_wrap(as.formula(paste(". ~", group)), ncol = 4)
       }
       return(sr)
     }
 
-    # browser()
-    groups = list(poste = "poste", learner = "learner")
+
+    #groups = list(poste = "poste", learner = "learner")
+    groups = list(learner = "learner")
     boxPlots_rmse = purrr::map(groups, ~doBoxPlot("rmse", .))
     boxPlots_residuals = purrr::map(groups, ~doBoxPlot("residuals", .))
     scatter_residuals = purrr::map(groups, ~doScatterResiduals(.))
-    boxPlots_observations = doBoxPlot("truth", "poste")
-    boxPlots_predictions = purrr::map(groups, ~doBoxPlot("response", .))
-
-
-    browser()
+    stats_residuals = purrr::map(groups, ~doBoxPlotStats("residuals", .))
+    stats_rmse = purrr::map(groups, ~doBoxPlotStats("rmse", .))
+    # boxPlots_observations = doBoxPlot("truth", "poste")
+    # boxPlots_predictions = purrr::map(groups, ~doBoxPlot("response", .))
+    # timeSeries_residuals = doTimeSerie("residuals", "learner")
+    #timeSeries_rmse = doTimeSerie("rmse", "learner")
     # summaries for maps
-    dataTomap = bmrsExtraction$summarized_by_sid
+    #dataTomap = bmrsExtraction$summarized_by_sid
     # maps = dataTomap %>% purrr::map(doLeafletMap)
-
-    browser()
-
-    print("finished")
 
 
     # boxPlots = purrr::map(params, ~purrr::map2(., groups, doBoxPlot_perfs))
@@ -131,7 +178,14 @@ makeBmrsPLots <- function(
     message("Success, plots created")
 
     # return all the plots
-    return(plots)
+    return(list(
+      stats_residuals = purrr::map(groups, ~doBoxPlotStats("residuals", .)),
+      stats_rmse = purrr::map(groups, ~doBoxPlotStats("rmse", .)),
+      boxPlots_rmse = boxPlots_rmse,
+      boxPlots_residuals = boxPlots_residuals,
+      scatter_residuals = scatter_residuals
+      #timeSeries_residuals = timeSeries_residuals
+    ))
 
   }
 

@@ -11,7 +11,7 @@ makeComparison(dataset, sensor, sids, dfrom, dto)
 
 \item{sensor}{a character specifying the name of the sensor you want to compare}
 
-\item{sensor}{a character specifying the name of the sids you want to compare}
+\item{sid}{a numeric vector specifying the sids you want to compare}
 }
 \value{
 a list which elements are objects of class mlr::benchmark()

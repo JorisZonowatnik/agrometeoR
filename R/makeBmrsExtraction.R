@@ -9,7 +9,8 @@
 #' @return a list containing relevant performance indications by learners
 
 makeBmrsExtraction <- function(
-  benchmarkResult,
+  benchmark_preds,
+  benchmark_perfs,
   tasks,
   as.df = TRUE){
 
@@ -19,11 +20,10 @@ makeBmrsExtraction <- function(
   doAnalysis = function(){
     #purrr solutions inspired from slack https://r-grrr.slack.com by https://www.benjaminlouis-stat.fr/
 
-
     #####
     ## computing the residuals for each iteration of CV of each datetime of each learner
-      benchmark_preds = getBMRPredictions(benchmarkResult) %>% purrr::transpose() #transposing to sort by learners rather than by date
-      benchmark_perfs = getBMRPerformances(benchmarkResult) %>% purrr::transpose()
+      benchmark_preds = benchmark_preds %>% purrr::transpose() #transposing to sort by learners rather than by date
+      benchmark_perfs = benchmark_perfs %>% purrr::transpose()
 
       # benchmark_aggPerfs = getBMRAggrPerformances(benchmarkResult, as.df = FALSE) %>% purrr::transpose()
 
@@ -46,6 +46,7 @@ makeBmrsExtraction <- function(
         colnames(used) = "sid"
         return(used)
       }
+
       used_sids = tasks %>% purrr::modify_depth(1, get_used_sids)
 
       # colbinding the sids to the residuals for later global summary
@@ -66,88 +67,88 @@ makeBmrsExtraction <- function(
 
     #####
     ## globally summarizing each learner by datetime on all the stations
-    summarize_by_datetime = function(l){
-      summarize = function(df){
-        summary = df %>%
-          dplyr::summarise(
-            min_obs = min(truth),
-            min_pred = min(response),
-            min_diff_op = min(truth) - min(response),
-            min_ratio_op = min(truth)/min(response),
-            max_obs = max(truth),
-            max_pred = max(response),
-            max_diff_op = max(truth) - max(response),
-            max_ratio_op = max(truth)/max(response),
-            mean_obs = mean(truth),
-            mean_pred = mean(response),
-            var_obs = var(truth),
-            var_pred = var(response),
-            stdev_obs = sd(truth),
-            stdev_pred = sd(response),
-            min_rmse = min(rmse),
-            max_rmse = max(rmse),
-            mean_rmse = mean(rmse),
-            min_abs_res = mean(abs(residuals), na.rm = TRUE),
-            max_abs_res = max(abs(residuals), na.rm = TRUE),
-            mean_abs_res = min(abs(residuals), na.rm = TRUE),
-            mean_se = mean(se, na.rm = TRUE))
-      }
-      summarizes = l %>%
-        purrr::map(summarize)
-      summarizes.df = map2_df(summarizes, names(summarizes), ~purrr::update_list(.x, datetime = .y))
-      return(summarizes.df)
-    }
-    summarized_by_datetime = dataset %>%
-      purrr::modify_depth(1, summarize_by_datetime)
+    # summarize_by_datetime = function(l){
+    #   summarize = function(df){
+    #     summary = df %>%
+    #       dplyr::summarise(
+    #         min_obs = min(truth),
+    #         min_pred = min(response),
+    #         min_diff_op = min(truth) - min(response),
+    #         min_ratio_op = min(truth)/min(response),
+    #         max_obs = max(truth),
+    #         max_pred = max(response),
+    #         max_diff_op = max(truth) - max(response),
+    #         max_ratio_op = max(truth)/max(response),
+    #         mean_obs = mean(truth),
+    #         mean_pred = mean(response),
+    #         var_obs = var(truth),
+    #         var_pred = var(response),
+    #         stdev_obs = sd(truth),
+    #         stdev_pred = sd(response),
+    #         min_rmse = min(rmse),
+    #         max_rmse = max(rmse),
+    #         mean_rmse = mean(rmse),
+    #         min_abs_res = mean(abs(residuals), na.rm = TRUE),
+    #         max_abs_res = max(abs(residuals), na.rm = TRUE),
+    #         mean_abs_res = min(abs(residuals), na.rm = TRUE),
+    #         mean_se = mean(se, na.rm = TRUE))
+    #   }
+    #   summarizes = l %>%
+    #     purrr::map(summarize)
+    #   summarizes.df = map2_df(summarizes, names(summarizes), ~purrr::update_list(.x, datetime = .y))
+    #   return(summarizes.df)
+    # }
+    # summarized_by_datetime = dataset %>%
+    #   purrr::modify_depth(1, summarize_by_datetime)
 
 
     #####
     ## globally summarizing each learner by stations on all the datetimes
-    transpose_sid_date = function(l){
-      l =  purrr::map2(l, names(l), ~purrr::update_list(.x, datetime = .y))
-      l = l %>%
-        dplyr::bind_rows() %>%
-        dplyr::group_split(sid, keep = TRUE)
-      names(l) = purrr::map(l, ~unique(.$sid))
-      return(l)
-    }
-
-    dataset_by_sid = dataset %>%
-      purrr::modify_depth(1, transpose_sid_date)
-    summarize_by_sid = function(l){
-      summarize = function(df){
-        summary = df %>%
-          dplyr::group_by(sid) %>%
-          dplyr::summarise(
-            min_obs = min(truth),
-            min_pred = min(response),
-            min_diff_op = min(truth) - min(response),
-            min_ratio_op = min(truth)/min(response),
-            max_obs = max(truth),
-            max_pred = max(response),
-            max_diff_op = max(truth) - max(response),
-            max_ratio_op = max(truth)/max(response),
-            mean_obs = mean(truth),
-            mean_pred = mean(response),
-            var_obs = var(truth),
-            var_pred = var(response),
-            stdev_obs = sd(truth),
-            stdev_pred = sd(response),
-            min_rmse = min(rmse),
-            max_rmse = max(rmse),
-            mean_rmse = mean(rmse),
-            min_abs_res = mean(abs(residuals), na.rm = TRUE),
-            max_abs_res = max(abs(residuals), na.rm = TRUE),
-            mean_abs_res = min(abs(residuals), na.rm = TRUE),
-            mean_se = mean(se, na.rm = TRUE))
-      }
-      summarizes = l %>%
-        purrr::map(summarize)
-      summarizes.df = purrr::map2_df(summarizes, names(summarizes), ~purrr::update_list(.x, sid = .y))
-      return(summarizes.df)
-    }
-    summarized_by_sid = dataset_by_sid %>%
-      purrr::modify_depth(1, summarize_by_sid)
+    # transpose_sid_date = function(l){
+    #   l =  purrr::map2(l, names(l), ~purrr::update_list(.x, datetime = .y))
+    #   l = l %>%
+    #     dplyr::bind_rows() %>%
+    #     dplyr::group_split(sid, keep = TRUE)
+    #   names(l) = purrr::map(l, ~unique(.$sid))
+    #   return(l)
+    # }
+    #
+    # dataset_by_sid = dataset %>%
+    #   purrr::modify_depth(1, transpose_sid_date)
+    # summarize_by_sid = function(l){
+    #   summarize = function(df){
+    #     summary = df %>%
+    #       dplyr::group_by(sid) %>%
+    #       dplyr::summarise(
+    #         min_obs = min(truth),
+    #         min_pred = min(response),
+    #         min_diff_op = min(truth) - min(response),
+    #         min_ratio_op = min(truth)/min(response),
+    #         max_obs = max(truth),
+    #         max_pred = max(response),
+    #         max_diff_op = max(truth) - max(response),
+    #         max_ratio_op = max(truth)/max(response),
+    #         mean_obs = mean(truth),
+    #         mean_pred = mean(response),
+    #         var_obs = var(truth),
+    #         var_pred = var(response),
+    #         stdev_obs = sd(truth),
+    #         stdev_pred = sd(response),
+    #         min_rmse = min(rmse),
+    #         max_rmse = max(rmse),
+    #         mean_rmse = mean(rmse),
+    #         min_abs_res = mean(abs(residuals), na.rm = TRUE),
+    #         max_abs_res = max(abs(residuals), na.rm = TRUE),
+    #         mean_abs_res = min(abs(residuals), na.rm = TRUE),
+    #         mean_se = mean(se, na.rm = TRUE))
+    #   }
+    #   summarizes = l %>%
+    #     purrr::map(summarize)
+    #   summarizes.df = purrr::map2_df(summarizes, names(summarizes), ~purrr::update_list(.x, sid = .y))
+    #   return(summarizes.df)
+    # }
+    # summarized_by_sid = dataset_by_sid %>%
+    #   purrr::modify_depth(1, summarize_by_sid)
 
     #####
     ## making a single big dataframe for plots
@@ -167,15 +168,25 @@ makeBmrsExtraction <- function(
     #####
     ##return all the analysis results in a list
     analysis = list(
-      dataset = dataset,
-      summarized_by_sid = summarized_by_sid,
-      summarized_by_datetime = summarized_by_datetime
+      dataset = dataset#,
+      # summarized_by_sid = summarized_by_sid,
+      # summarized_by_datetime = summarized_by_datetime
     )
 
   }
 
   tryCatch(
     expr = {
+
+
+      # in case the names of bmrs and tasks do not correspond, lets filter to only keep the matching items
+      benchmark_perfs = benchmark_perfs %>% purrr::keep(., names(.) %in% names(tasks))
+      benchmark_preds = benchmark_preds %>% purrr::keep(., names(.) %in% names(tasks))
+      tasks = tasks %>% purrr::keep(., names(.) %in% names(benchmark_perfs))
+      warning(paste0(
+        "Some of your tasks do not have a corresponding benchmark result. "
+      ))
+
 
       # check if passed tasks and bmr outputs are corresponding
       stopifnot(identical(getBMRTaskIds(benchmarkResult), names(tasks)))
