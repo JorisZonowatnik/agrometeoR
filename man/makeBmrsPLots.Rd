@@ -7,7 +7,7 @@
 makeBmrsPLots(bmrsExtraction)
 }
 \arguments{
-\item{bmrsExtraction}{a list}
+\item{bmrsExtraction}{a dataframe}
 }
 \value{
 a list of plots

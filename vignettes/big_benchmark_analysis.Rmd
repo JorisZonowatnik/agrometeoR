@@ -8,6 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
+library(mlr)
+library(purrr)
 ```
 
 Using the benchmark results to compute bmr analysis
@@ -72,5 +74,69 @@ PamesebIrmstats.residuals.df = PamesebIrmBmrPlots$output$value$stats_residuals$l
 PamesebIrm.stats.rmse.df = PamesebIrmBmrPlots$output$value$stats_rmse$learner %>% purrr::map_df(.,c, .id = "learner")
 
 # 
+```
+```{r daily_Pameseb}
+daily_tsamax_Pameseb_bmrsResult_2019_04_19 = readRDS("~/Documents/code/pokyah/agrometeoR/data-raw/extdata/AGROMET/bmr_results/daily_tsa_Pameseb2019_04_18_bmrsResult.rds")
+
+daily_tsa_Pameseb_bmrsResult_2019_04_19_perfs = mlr::getBMRPerformances(daily_tsa_Pameseb_bmrsResult_2019_04_19$output$value)
+
+daily_tsa_Pameseb_bmrsResult_2019_04_19_preds = mlr::getBMRPredictions(daily_tsa_Pameseb_bmrsResult_2019_04_19$output$value)
+
+rm(daily_tsamax_Pameseb_bmrsResult_2019_04_19)
+
+daily_tsa_Pameseb_tasks_2019_04_19 = readRDS("~/Documents/code/pokyah/agrometeoR/data-raw/extdata/AGROMET/bmr_results/tasksdataPamesebDailyForBmrs.rds")
+
+dailyPamesebAnalysis = makeBmrsExtraction(
+  benchmark_perfs = daily_tsa_Pameseb_bmrsResult_2019_04_19_perfs,
+  benchmark_preds = daily_tsa_Pameseb_bmrsResult_2019_04_19_preds,
+  tasks = daily_tsa_Pameseb_tasks_2019_04_19, as.df = TRUE)
+
+dailyPamesebBmrExtractionDataset = dailyPamesebAnalysis$output$value$dataset
+dailyPamesebBmrPlots = makeBmrsPLots(dailyPamesebBmrExtractionDataset)
+
+# Q1, Q2, median, ymin, ymax
+# https://www.r-bloggers.com/exploring-ggplot2-boxplots-defining-limits-and-adjusting-style/
+#pameseb.stats.rmse = boxplot.stats(PamesebBmrExtractionDataset$rmse)$stats
+#pameseb.stats.residuals = boxplot.stats(PamesebBmrExtractionDataset$residuals)$stats
+
+dailyPameseb.stats.residuals.df = dailyPamesebBmrPlots$output$value$stats_residuals$learner %>% purrr::map_df(.,c, .id = "learner")
+
+dailyPameseb.stats.rmse.df = dailyPamesebBmrPlots$output$value$stats_rmse$learner %>% purrr::map_df(.,c, .id = "learner")
+
+intdailyPamesebBmrPlots = dailyPamesebBmrPlots$output$value[3:6]
+intdailyPamesebBmrPlots = intdailyPamesebBmrPlots %>% purrr::map(ggplotly)
+intdailyPamesebBmrPlots %>% purrr::map(function(x){
+  browser(x)
+  htmlwidgets::saveWidget(x, file = paste0("~/Desktop/", names(intdailyPamesebBmrPlots)[.]))}
+  )
+```
+
+```{r daily_PamesebIrm}
+daily_tsamax_PamesebIrm_bmrsResult_2019_04_19 = readRDS("~/Documents/code/pokyah/agrometeoR/data-raw/extdata/AGROMET/bmr_results/daily_tsa_PamesebIRm2019-04-18_bmrsResult.rds")
+
+daily_tsamax_PamesebIrm_bmrsResult_2019_04_19_perfs = mlr::getBMRPerformances(daily_tsamax_PamesebIrm_bmrsResult_2019_04_19$output$value)
+
+daily_tsamax_PamesebIrm_bmrsResult_2019_04_19_preds = mlr::getBMRPredictions(daily_tsamax_PamesebIrm_bmrsResult_2019_04_19$output$value)
+
+rm(daily_tsamax_PamesebIrm_bmrsResult_2019_04_19)
+
+daily_tsamax_PamesebIrm_tasks_2019_04_19 = readRDS("~/Documents/code/pokyah/agrometeoR/data-raw/extdata/AGROMET/bmr_results/tasksdataPamesebIrmDailyForBmrs.rds")
+
+dailyPamesebIrmAnalysis = makeBmrsExtraction(
+  benchmark_perfs = daily_tsamax_PamesebIrm_bmrsResult_2019_04_19_perfs,
+  benchmark_preds = daily_tsamax_PamesebIrm_bmrsResult_2019_04_19_preds,
+  tasks = daily_tsamax_PamesebIrm_tasks_2019_04_19, as.df = TRUE)
+
+dailyPamesebIrmBmrExtractionDataset = dailyPamesebIrmAnalysis$output$value$dataset
+dailyPamesebIrmBmrPlots = makeBmrsPLots(dailyPamesebIrmBmrExtractionDataset)
+
+# Q1, Q2, median, ymin, ymax
+# https://www.r-bloggers.com/exploring-ggplot2-boxplots-defining-limits-and-adjusting-style/
+#pameseb.stats.rmse = boxplot.stats(PamesebBmrExtractionDataset$rmse)$stats
+#pameseb.stats.residuals = boxplot.stats(PamesebBmrExtractionDataset$residuals)$stats
+
+dailyPamesebIrm.stats.residuals.df = dailyPamesebIrmBmrPlots$output$value$stats_residuals$learner %>% purrr::map_df(.,c, .id = "learner")
+
+dailyPamesebIrm.stats.rmse.df = dailyPamesebIrmBmrPlots$output$value$stats_rmse$learner %>% purrr::map_df(.,c, .id = "learner")
 ```
 

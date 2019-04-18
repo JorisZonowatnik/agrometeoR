@@ -16,8 +16,16 @@ makeBmrsPLots <- function(
 
     dataset = bmrsExtraction %>%
       dplyr::left_join(stations.df, by = "sid") %>%
-      dplyr::mutate_at(vars("sid", "poste", "datetime"), as.factor) %>%
-      dplyr::mutate_at(vars("datetime"), lubridate::ymd_hms)
+      dplyr::mutate_at(vars("sid", "poste"), as.factor)
+
+    if (length(dataset$datetime[1]) > 8){
+      dataset = dataset %>%
+        dplyr::mutate_at(vars("datetime"), lubridate::ymd_hms)
+    }else{
+      dataset = dataset %>%
+        dplyr::mutate_at(vars("datetime"), lubridate::ymd)
+    }
+
 
     # # making df for distribution vlines
     # Int_residuals_stations = dataset %>%
@@ -40,7 +48,6 @@ makeBmrsPLots <- function(
     doBoxPlot = function(param, group){
 
       # filtering the NA values
-
       bp = ggplot(dataset,
         aes_string(x=group, y= param, color = group)) +
         stat_boxplot(geom ='errorbar') +
@@ -65,66 +72,76 @@ makeBmrsPLots <- function(
 
     doBoxPlotStats = function(param, group){
       doStatsBylearner = function(l){
-
         dataset = dataset %>%
           dplyr::filter(learner == l )
         stats = as.data.frame(as.list(boxplot.stats(dataset[[param]])$stats))
-        colnames(stats) = c("Q1", "Q2", "median", "min", "max")
+        colnames(stats) = c("min", "q25", "median", "q75", "max")
         return(stats)
       }
       learners = unique(dataset$learner)
       statsByLearner = learners %>% purrr::map(., doStatsBylearner)
       names(statsByLearner) = learners
+
       return(statsByLearner)
     }
 
     # function for timeseries
-    # n_learners = seq(1,length(unique(dataset$learner)),1)
-    # names(n_learners) = sort(unique(dataset$learner))
-    #
-    # doTimeSerie = function(param, group, global = FALSE){
-    #   doTimeSerieByStation = function(p){
-    #     df = dataset %>% dplyr::filter(poste %in% p)
-    #     ggplot2::ggplot(data = df) +
-    #       geom_line(aes_string(x = "datetime", y = param, color = group),
-    #         alpha = 0.6,
-    #         size = 0.6) +
-    #       labs(x = "Datetime",
-    #         y = param,
-    #         title = paste0("Timeserie of ", param, " for station ",  p, " by ", group)) +
-    #       theme_minimal()
-    #   }
-    #   if (isTRUE(global)) {
-    #     postes = unique(dataset$poste)
-    #     timeseries_by_sid = postes %>% purrr::map(doTimeSerieByStation)
-    #     names(timeseries_by_sid) = postes
-    #   }
-    #   else{
-    #     browser()
-    #     summary_by_learner = dataset %>%
-    #       dplyr::group_by(learner) %>%
-    #       dplyr::summarise_at(param, min, max, mean, median, var)
-    #   }
-    #   return(timeseries_by_sid)
-    # }
-    #
+    n_learners = seq(1,length(unique(dataset$learner)),1)
+    names(n_learners) = sort(unique(dataset$learner))
+
+    doTimeSerie = function(param, group, global = TRUE){
+      # doTimeSerieByStation = function(p){
+      #   df = dataset %>% dplyr::filter(poste %in% p)
+      #   ggplot2::ggplot(data = df) +
+      #     geom_line(aes_string(x = "datetime", y = param, color = group),
+      #       alpha = 0.6,
+      #       size = 0.6) +
+      #     labs(x = "Datetime",
+      #       y = param,
+      #       title = paste0("Timeserie of ", param, " for station ",  p, " by ", group)) +
+      #     theme_minimal()
+      # }
+
+      if (!isTRUE(global)) {
+        postes = unique(dataset$poste)
+        timeseries_by_sid = postes %>% purrr::map(doTimeSerieByStation)
+        names(timeseries_by_sid) = postes
+      }
+      else{
+        summary_by_learner = dataset %>%
+          dplyr::group_by_("datetime", group) %>%
+          dplyr::summarise_at(param, list(min = min, max = max, mean = mean, median = median, var = var))
+
+        ts = ggplot2::ggplot(data = summary_by_learner) +
+          geom_line(aes_string(x = "datetime", y = "mean", color = "learner"),
+            alpha = 0.6,
+            size = 0.6) +
+          labs(x = "Datetime",
+            y = paste0("mean(",param,")"),
+            title = paste0("Timeserie of mean ", param, " by learner")) +
+          theme_minimal()
+
+      }
+      return(ts)
+    }
+
     # # function for maps
-    # doLeafletMap = function(dataset){
-    #   params = colnames(dataset)
-    #   dataset = dataset %>% mutate_at("sid", as.numeric)
-    #   maps = params %>% purrr::map(
-    #   ~makeLeafletMap(
-    #     target = .,
-    #     spatialized = NULL,
-    #     polygon_grid = grid.squares.sf,
-    #     stations_data = dataset,
-    #     stations_meta = stations.df,
-    #     key_grid = "px",
-    #     key_stations = "sid",
-    #     stations_coords = c("x", "y"),
-    #     crs = 3812,
-    #     title))
-    # }
+    doLeafletMap = function(dataset){
+      params = colnames(dataset)
+      dataset = dataset %>% mutate_at("sid", as.numeric)
+      maps = params %>% purrr::map(
+      ~makeLeafletMap(
+        target = .,
+        spatialized = NULL,
+        polygon_grid = grid.squares.sf,
+        stations_data = dataset,
+        stations_meta = stations.df,
+        key_grid = "px",
+        key_stations = "sid",
+        stations_coords = c("x", "y"),
+        crs = 3812,
+        title))
+    }
 
     # function for residuals scatters
     doScatterResiduals = function(group){
@@ -153,14 +170,16 @@ makeBmrsPLots <- function(
 
     #groups = list(poste = "poste", learner = "learner")
     groups = list(learner = "learner")
-    boxPlots_rmse = purrr::map(groups, ~doBoxPlot("rmse", .))
-    boxPlots_residuals = purrr::map(groups, ~doBoxPlot("residuals", .))
+    boxPlots_rmse = purrr::map(groups, ~doBoxPlot("rmse", .))[[1]]
+    boxPlots_residuals = purrr::map(groups, ~doBoxPlot("residuals", .))[[1]]
+
     scatter_residuals = purrr::map(groups, ~doScatterResiduals(.))
     stats_residuals = purrr::map(groups, ~doBoxPlotStats("residuals", .))
     stats_rmse = purrr::map(groups, ~doBoxPlotStats("rmse", .))
     # boxPlots_observations = doBoxPlot("truth", "poste")
     # boxPlots_predictions = purrr::map(groups, ~doBoxPlot("response", .))
-    # timeSeries_residuals = doTimeSerie("residuals", "learner")
+    timeSeries_residuals = doTimeSerie("residuals", "learner")
+    timeSeries_rmse = doTimeSerie("rmse", "learner")
     #timeSeries_rmse = doTimeSerie("rmse", "learner")
     # summaries for maps
     #dataTomap = bmrsExtraction$summarized_by_sid
@@ -179,11 +198,13 @@ makeBmrsPLots <- function(
 
     # return all the plots
     return(list(
-      stats_residuals = purrr::map(groups, ~doBoxPlotStats("residuals", .)),
-      stats_rmse = purrr::map(groups, ~doBoxPlotStats("rmse", .)),
+      stats_residuals = stats_residuals,
+      stats_rmse = stats_rmse,
       boxPlots_rmse = boxPlots_rmse,
       boxPlots_residuals = boxPlots_residuals,
-      scatter_residuals = scatter_residuals
+      timeSeries_residuals = timeSeries_residuals,
+      timeSeries_rmse = timeSeries_rmse
+      # scatter_residuals = scatter_residuals
       #timeSeries_residuals = timeSeries_residuals
     ))
 

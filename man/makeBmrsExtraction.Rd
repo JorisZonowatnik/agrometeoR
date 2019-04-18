@@ -4,14 +4,14 @@
 \alias{makeBmrsExtraction}
 \title{analyse batch of benchmark experiments output}
 \usage{
-makeBmrsExtraction(benchmarkResult, tasks, as.df = TRUE)
+makeBmrsExtraction(benchmark_preds, benchmark_perfs, tasks, as.df = TRUE)
 }
 \arguments{
-\item{benchmarkResult}{a list of class BenchmarkResult returned in the outputs of analyzeBatchOfBenchExp}
-
 \item{tasks}{a list of the mlr taks that were passed to analyzeBatchOfBenchExp}
 
 \item{as.df}{a boolean specifying if the result must be returned as a single df rather than list of lists}
+
+\item{benchmarkResult}{a list of class BenchmarkResult returned in the outputs of analyzeBatchOfBenchExp}
 }
 \value{
 a list containing relevant performance indications by learners
