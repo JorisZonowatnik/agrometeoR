@@ -108,21 +108,27 @@ makeBmrsPLots <- function(
         names(timeseries_by_sid) = postes
       }
       else{
+        sum_stats = list(min = min, max = max, mean = mean, median = median, var = var)
         summary_by_learner = dataset %>%
           dplyr::group_by_("datetime", group) %>%
-          dplyr::summarise_at(param, list(min = min, max = max, mean = mean, median = median, var = var))
+          dplyr::summarise_at(param, sum_stats)
 
-        ts = ggplot2::ggplot(data = summary_by_learner) +
-          geom_line(aes_string(x = "datetime", y = "mean", color = "learner"),
+        doTimeSerieBySumStat = function(sum_stat_name){
+          ts = ggplot2::ggplot(data = summary_by_learner) +
+          geom_line(aes_string(x = "datetime", y = sum_stat_name, color = "learner"),
             alpha = 0.6,
             size = 0.6) +
           labs(x = "Datetime",
-            y = paste0("mean(",param,")"),
-            title = paste0("Timeserie of mean ", param, " by learner")) +
+            y = paste0(sum_stat_name, " of ",param),
+            title = paste0("Timeserie of", sum_stat_name, param, " by learner")) +
           theme_minimal()
-
+          return(ts)
+        }
+        timeseries = names(sum_stats) %>% purrr::map
+        names(timeseries) = names(sum_stats)
+        return(timeseries)
       }
-      return(ts)
+
     }
 
     # # function for maps

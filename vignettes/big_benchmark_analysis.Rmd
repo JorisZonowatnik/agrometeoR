@@ -105,9 +105,8 @@ dailyPameseb.stats.rmse.df = dailyPamesebBmrPlots$output$value$stats_rmse$learne
 
 intdailyPamesebBmrPlots = dailyPamesebBmrPlots$output$value[3:6]
 intdailyPamesebBmrPlots = intdailyPamesebBmrPlots %>% purrr::map(ggplotly)
-intdailyPamesebBmrPlots %>% purrr::map(function(x){
-  browser(x)
-  htmlwidgets::saveWidget(x, file = paste0("~/Desktop/", names(intdailyPamesebBmrPlots)[.]))}
+names(intdailyPamesebBmrPlots) %>% purrr::map(function(x){
+  htmlwidgets::saveWidget(intdailyPamesebBmrPlots[x], title = paste0("~/Desktop/", x))}
   )
 ```
 
