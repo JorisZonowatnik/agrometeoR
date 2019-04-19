@@ -127,7 +127,7 @@ dailyPamesebIrmAnalysis = makeBmrsExtraction(
   tasks = daily_tsamax_PamesebIrm_tasks_2019_04_19, as.df = TRUE)
 
 dailyPamesebIrmBmrExtractionDataset = dailyPamesebIrmAnalysis$output$value$dataset
-dailyPamesebIrmBmrPlots = makeBmrsPLots(dailyPamesebIrmBmrExtractionDataset)
+dailyPamesebIrmBmrPlots = makeBmrsPLots(bmrsExtraction = dailyPamesebIrmBmrExtractionDataset, param = "tsa max", timeRes = "daily", networks = "Pameseb & IRM")
 
 # Q1, Q2, median, ymin, ymax
 # https://www.r-bloggers.com/exploring-ggplot2-boxplots-defining-limits-and-adjusting-style/
