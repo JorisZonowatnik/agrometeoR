@@ -13,7 +13,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Creation of the interpolation Grid">
 <meta property="og:description" content="">
@@ -37,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">agrometeoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
       </span>
     </div>
 
@@ -45,7 +46,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -63,6 +64,15 @@
       <a href="../articles/Development_roadmap.html">Development Roadmap</a>
     </li>
     <li>
+      <a href="../articles/Partners.html">Partners</a>
+    </li>
+    <li>
+      <a href="../articles/Presentation_agromet_project.html">Presentation of the Agromet Project</a>
+    </li>
+    <li>
+      <a href="../articles/Spatialization_method_approach.html">A methodological approach to assess the best weather spatialization technique</a>
+    </li>
+    <li>
       <a href="../articles/benchmarking_example.html">Benchmarking example</a>
     </li>
     <li>
@@ -72,25 +82,16 @@
       <a href="../articles/interpolation_grid_creation.html">Creation of the interpolation Grid</a>
     </li>
     <li>
-      <a href="../articles/networks_intercomparison.html">Networks Intercomparison</a>
-    </li>
-    <li>
-      <a href="../articles/optimizing_benchmarking.html">Optimizing benchmarking speed</a>
-    </li>
-    <li>
-      <a href="../articles/presentation-agromet-project.html">Presentation of the Agromet Project</a>
-    </li>
-    <li>
       <a href="../articles/spatialization_example.html">A simple spatialization example using agrometeoR</a>
-    </li>
-    <li>
-      <a href="../articles/two_years_benchmark.html">a 2 years benchmark</a>
     </li>
     <li>
       <a href="../articles/understanding_knn.html">Verifying 5nn interpolation with gstat implemented in mlr</a>
     </li>
     <li>
       <a href="../articles/using_packrat.html">Using packrat</a>
+    </li>
+    <li>
+      <a href="../articles/weather_spatialisation_review.html">Agromet : Weather Spatialization Review and Benchmark</a>
     </li>
   </ul>
 </li>
@@ -113,7 +114,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/pokyah/agrometeoR">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -150,22 +151,22 @@
 <h2 class="hasAnchor">
 <a href="#loading-the-grid-points" class="anchor"></a>loading the grid points</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># this is generated in data-raw/makeData.R and uses raw data provided by RMI</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(grid.sf)
+<span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(grid.sf)
 grid.sf =<span class="st"> </span>grid.sf[<span class="st">"px"</span>]
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(grid.sf)</code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(grid.sf)</code></pre></div>
 <pre><code>## Simple feature collection with 6 features and 1 field
 ## geometry type:  POINT
 ## dimension:      XY
-## bbox:           xmin: 542637.5 ymin: 657200.5 xmax: 544645.1 ymax: 661204.6
+## bbox:           xmin: 542637.5 ymin: 658201.5 xmax: 543641.4 ymax: 661204.6
 ## epsg (SRID):    3812
 ## proj4string:    +proj=lcc +lat_1=49.83333333333334 +lat_2=51.16666666666666 +lat_0=50.797815 +lon_0=4.359215833333333 +x_0=649328 +y_0=665262 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
-##     px                  geometry
-## 2 1099 POINT (543641.3 659202.5)
-## 3 1100 POINT (543641.4 658201.5)
-## 4 1101 POINT (543641.3 660203.5)
-## 5 1103 POINT (542637.5 661204.6)
-## 6 1138 POINT (543641.2 661204.5)
-## 7 1415 POINT (544645.1 657200.5)</code></pre>
+##      px                  geometry
+## 57 1095 POINT (542637.6 659202.6)
+## 61 1099 POINT (543641.3 659202.5)
+## 62 1100 POINT (543641.4 658201.5)
+## 63 1101 POINT (543641.3 660203.5)
+## 65 1103 POINT (542637.5 661204.6)
+## 74 1138 POINT (543641.2 661204.5)</code></pre>
 <p>We see that this <code>grid.sf</code> dataset contains the RMI <code>px</code> reference and the location of the grid points stored in the geometry attribute.</p>
 <p>We will now inject the static explanatory variables <code>aspect</code>, <code>slope</code> and <code>elevation</code></p>
 </div>
@@ -174,69 +175,48 @@ grid.sf =<span class="st"> </span>grid.sf[<span class="st">"px"</span>]
 <a href="#adding-explanatory-variables-to-the-grid" class="anchor"></a>adding explanatory variables to the grid</h2>
 <p>The explanatory static variabels are stored into the <code>grid.df</code> dataset. It also contains the <code>px</code> attribute that will allow us to make the join with the <code>grid.sf</code> object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># loading the explanatroy var dataset</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"grid.df"</span>)
+<span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"grid.df"</span>)
 <span class="co"># removing X and Y cols</span>
 grid.df =<span class="st"> </span>grid.df <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>)
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>)
 <span class="co"># excerpt of the data </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(grid.df)</code></pre></div>
-<pre><code>##     px elevation       slope   aspect Agricultural_areas
-## 1 1099  16.73109 0.006285769 2.289892           99.95431
-## 2 1100  16.80623 0.002238894 3.094462           95.12771
-## 3 1101  18.35830 0.023760735 2.891225           73.49445
-## 4 1103  33.42897 0.019199268 1.196516           92.49177
-## 5 1138  27.63995 0.018148860 2.776093           95.99715
-## 6 1415  16.84042 0.002510676 4.865386           98.19756
-##   Artificials_surfaces    Forest Herbaceous_vegetation
-## 1             0.000000 0.0000000              0.000000
-## 2             4.826604 0.0000000              0.000000
-## 3             0.000000 0.6551617             25.804701
-## 4             0.000000 0.0000000              7.462547
-## 5             0.000000 0.0000000              3.957165
-## 6             1.756750 0.0000000              0.000000</code></pre>
+<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(grid.df)</code></pre></div>
+<pre><code>##     px elevation       slope    aspect
+## 1 1095  17.94022 0.005416685 2.9149646
+## 2 1099  17.18044 0.005172263 2.8028516
+## 3 1100  16.78849 0.001571409 2.9351396
+## 4 1101  22.92133 0.029130087 3.5349818
+## 5 1103  33.63418 0.018501288 0.8627245
+## 6 1138  29.21407 0.017228471 3.0819196</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># joining to grid.sf</span>
 grid.sf =<span class="st"> </span>grid.sf <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(grid.df, <span class="dt">by =</span> <span class="st">"px"</span>)
 <span class="co"># excerpt of the data </span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(grid.sf)</code></pre></div>
-<pre><code>## Simple feature collection with 6 features and 8 fields
+<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(grid.sf)</code></pre></div>
+<pre><code>## Simple feature collection with 6 features and 4 fields
 ## geometry type:  POINT
 ## dimension:      XY
-## bbox:           xmin: 542637.5 ymin: 657200.5 xmax: 544645.1 ymax: 661204.6
+## bbox:           xmin: 542637.5 ymin: 658201.5 xmax: 543641.4 ymax: 661204.6
 ## epsg (SRID):    3812
 ## proj4string:    +proj=lcc +lat_1=49.83333333333334 +lat_2=51.16666666666666 +lat_0=50.797815 +lon_0=4.359215833333333 +x_0=649328 +y_0=665262 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
-##     px elevation       slope   aspect Agricultural_areas
-## 1 1099  16.73109 0.006285769 2.289892           99.95431
-## 2 1100  16.80623 0.002238894 3.094462           95.12771
-## 3 1101  18.35830 0.023760735 2.891225           73.49445
-## 4 1103  33.42897 0.019199268 1.196516           92.49177
-## 5 1138  27.63995 0.018148860 2.776093           95.99715
-## 6 1415  16.84042 0.002510676 4.865386           98.19756
-##   Artificials_surfaces    Forest Herbaceous_vegetation
-## 1             0.000000 0.0000000              0.000000
-## 2             4.826604 0.0000000              0.000000
-## 3             0.000000 0.6551617             25.804701
-## 4             0.000000 0.0000000              7.462547
-## 5             0.000000 0.0000000              3.957165
-## 6             1.756750 0.0000000              0.000000
-##                    geometry
-## 1 POINT (543641.3 659202.5)
-## 2 POINT (543641.4 658201.5)
-## 3 POINT (543641.3 660203.5)
-## 4 POINT (542637.5 661204.6)
-## 5 POINT (543641.2 661204.5)
-## 6 POINT (544645.1 657200.5)</code></pre>
+##     px elevation       slope    aspect                  geometry
+## 1 1095  17.94022 0.005416685 2.9149646 POINT (542637.6 659202.6)
+## 2 1099  17.18044 0.005172263 2.8028516 POINT (543641.3 659202.5)
+## 3 1100  16.78849 0.001571409 2.9351396 POINT (543641.4 658201.5)
+## 4 1101  22.92133 0.029130087 3.5349818 POINT (543641.3 660203.5)
+## 5 1103  33.63418 0.018501288 0.8627245 POINT (542637.5 661204.6)
+## 6 1138  29.21407 0.017228471 3.0819196 POINT (543641.2 661204.5)</code></pre>
 </div>
 <div id="writing-to-file" class="section level2">
 <h2 class="hasAnchor">
 <a href="#writing-to-file" class="anchor"></a>Writing to file</h2>
 <p>We can now write our spatial object that contains the explanatory variables to a geojson file.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># transforming to proj EPSG = 4326 (geojson standard)</span>
-grid.sf =<span class="st"> </span>sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_transform">st_transform</a></span>(grid.sf, <span class="dv">4326</span>)
-sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_write">st_write</a></span>(<span class="dt">obj =</span> grid.sf, <span class="dt">dsn =</span> <span class="st">"incagridExplVars.geojson"</span>)</code></pre></div>
+grid.sf =<span class="st"> </span>sf<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/sf/man/st_transform.html">st_transform</a></span>(grid.sf, <span class="dv">4326</span>)
+sf<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/sf/man/st_write.html">st_write</a></span>(<span class="dt">obj =</span> grid.sf, <span class="dt">dsn =</span> <span class="st">"incagridExplVars.geojson"</span>)</code></pre></div>
 <pre><code>## Writing layer `incagridExplVars' to data source `incagridExplVars.geojson' using driver `GeoJSON'
-## features:       16534
-## fields:         8
+## features:       16818
+## fields:         4
 ## geometry type:  Point</code></pre>
 <p>You can download this geojson file <a href="https://github.com/pokyah/agrometeoR/blob/master/vignettes/incagridExplVars.geojson">here</a></p>
 </div>
@@ -263,7 +243,7 @@ sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9000.</p>
 </div>
       </footer>
 </div>

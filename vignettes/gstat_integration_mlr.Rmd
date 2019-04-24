@@ -24,8 +24,6 @@ library("dplyr")
 library("gridExtra")
 library("mlr")
 
-
-
 ## show grouped code output instead of single lines
 knitr::opts_chunk$set(collapse = FALSE)
 knitr::knit_hooks$set(document = function(x){

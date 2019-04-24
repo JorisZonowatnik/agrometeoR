@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeDataset.R
 \name{makeDataset}
 \alias{makeDataset}
-\title{make a dataframe of stations records}
+\title{make a dataframe of stations records for each requested hour}
 \usage{
 makeDataset(user_token = Sys.getenv("AGROMET_API_V1_KEY"),
   api_request = "https://app.pameseb.be/agromet/api/v2/sp/cleandata",
@@ -10,15 +10,15 @@ makeDataset(user_token = Sys.getenv("AGROMET_API_V1_KEY"),
   json = NULL, staticExpl = "elevation", dynExpl = NULL)
 }
 \arguments{
-\item{sensors}{a character vector specifying the sensor data you want to spatialize.
-One of tsa, hct, hra, ens, plu, vvt, sunrise, sunset}
+\item{sensors}{a character vector specifying the name of the sensors for which you data.
+One of tsa, hct, hra, ens, plu, vvt.}
 
 \item{stations}{a character vector specifying the sid's of the stations to use}
 
-\item{dfrom}{a datetime string specifying the dateTime
+\item{dfrom}{a datetime string specifying the dateTime from which you want data
 Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 
-\item{dto}{a datetime string specifying the dateTime
+\item{dto}{a datetime string specifying the dateTime to which you want data
 Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
 
 \item{json}{a character specifying the path of a json file constructed from a batch db export.
@@ -39,10 +39,20 @@ a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function 
 (3) message : the message relative to the condition
 }
 \examples{
+# get the dataset
 myDataset = makeDataset(
   dfrom = "2017-03-04T15:00:00Z",
   dto = "2017-03-04T15:00:00Z",
   sensor = "tsa")
+
+# extract the data
+myDataset = myDataset$output$value
+
+# each dataframe is stored in a list
+class(myDataset)
+
+# show the head of the first dataframe
+head(myDataset[[1]])
 
 }
 \author{

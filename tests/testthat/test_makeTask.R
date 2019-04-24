@@ -123,7 +123,7 @@ test_NA_values = function(){test_that("Expected behaviour in case of  NA values"
 #####
 ## execution of the tests. If you want to skip a test, simply comment it :)
 #
-# test_outputStrucure()
-# test_badInput()
-# test_goodInput()
+test_outputStrucure()
+test_badInput()
+test_goodInput()
 test_NA_values()

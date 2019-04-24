@@ -5,24 +5,59 @@
 \title{export a spatialized object either to csv, json or geojson}
 \usage{
 exportSpatialization(spatialized, path = getwd(), filename = NULL,
-  format = "csv", write = FALSE)
+  format = "csv")
 }
 \arguments{
 \item{spatialized}{a dataframe containing the gridded predicted values}
 
-\item{path}{a character specifying the path where you want your geosonfile to be stored. Default = wd}
+\item{path}{a character specifying the path where you want your geosonfile to be stored. Default = working directory}
 
-\item{filename}{a character specifying the name you want to give to the file. Default = NULL}
+\item{filename}{a character specifying the name you want to give to the file. If NULL the output is returned as a character. Default = NULL}
 
 \item{format}{a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"}
-
-\item{write}{a snitchean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)}
 }
 \value{
 a 2 elements named list : (1) bool and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains :
 (1) value : a character vector containing the data encoded into the desired exportation format
 (2) condition : a character specifying if the functions has encountered success, warning, error
 (3) message : the message relative to the condition
+# create the dataset
+myDataset = makeDataset(
+  dfrom = "2017-03-04T15:00:00Z",
+  dto = "2017-03-04T15:00:00Z",
+  sensor = "tsa")
+
+# extract a single hour of the dataset
+myDataset = myDataset$output$value
+
+# create the tasks
+tasks = purrr::map(dataset, makeTask, target = "tsa")
+
+# extract the required part of the tasks
+tasks = tasks %>% purrr::modify_depth(1, ~.$"output"$"value"$"task")
+
+# show 1 task
+myTask = tasks[[1]]
+
+# create the model
+myModel = makeModel(
+  task = myTask,
+  learner = agrometeorLearners$mulLR_lonLatAlt_NA)
+
+# extract the relevant information
+myModel = myModel$output$value
+
+# spatialize using the trained model
+mySpatialization = makeSpatialization(model = myModel$trained)
+
+# get the relevant information
+mySpatialization = mySpatialization$output$value
+
+# export the spatialized data a json as a character returned into console
+exportSpatialization(spatialized = mySpatialization, format = "json)
+
+# export as a csv file
+exportSpatialization(spatialized = mySpatialization, format = "json, filename = "spatialization", format = "csv)
 }
 \description{
 you can both store the encoded string in a variable and in a file by specifying write = TRUE

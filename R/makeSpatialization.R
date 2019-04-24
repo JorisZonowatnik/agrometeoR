@@ -9,15 +9,40 @@
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition
 #' @examples
+#' # create the dataset
 #' myDataset = makeDataset(
 #'   dfrom = "2017-03-04T15:00:00Z",
 #'   dto = "2017-03-04T15:00:00Z",
 #'   sensor = "tsa")
-#' myTask = makeTask(dataset = myDataset$output$value, target = "tsa")
+#'
+#' # extract a single hour of the dataset
+#' myDataset = myDataset$output$value
+#'
+#' # create the tasks
+#' tasks = purrr::map(dataset, makeTask, target = "tsa")
+#'
+#' # extract the required part of the tasks
+#' tasks = tasks %>% purrr::modify_depth(1, ~.$"output"$"value"$"task")
+#'
+#' # show 1 task
+#' myTask = tasks[[1]]
+#'
+#' # create the model
 #' myModel = makeModel(
-#'   task = mytask$out$value,
-#'   learner = learners$baseLearners$lrn.lm.alt)
-#' mySpatialization = makeSpatialization(model = myModel$output$value)
+#'   task = myTask,
+#'   learner = agrometeorLearners$mulLR_lonLatAlt_NA)
+#'
+#' # extract the relevant information
+#' myModel = myModel$output$value
+#'
+#' # spatialize using the trained model
+#' mySpatialization = makeSpatialization(model = myModel$trained)
+#'
+#' # get the relevant information
+#' mySpatialization = mySpatialization$output$value
+#'
+#' # show an excerpt
+#' head(mySpatialization)
 
 makeSpatialization <- function(
   model,

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spatial interpolation for Agromet • agrometeoR</title>
+<title>Spatial interpolation for Agromet project @ CRA-W • agrometeoR</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -13,9 +13,10 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Spatial interpolation for Agromet">
+<script src="pkgdown.js"></script><meta property="og:title" content="Spatial interpolation for Agromet project @ CRA-W">
 <meta property="og:description" content="Makes a spatial (hourly/daily) interpolation of AGROMET weather parameters using machine learning">
 <meta property="og:image" content="/logo.png">
 <meta name="twitter:card" content="summary">
@@ -25,7 +26,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-home">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -37,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">agrometeoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
       </span>
     </div>
 
@@ -45,7 +46,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -61,9 +62,6 @@
   <ul class="dropdown-menu" role="menu">
 <li>
       <a href="articles/Development_roadmap.html">Development Roadmap</a>
-    </li>
-    <li>
-      <a href="articles/Humain_intercomparison_model.html">Intercomparison at Humain</a>
     </li>
     <li>
       <a href="articles/Partners.html">Partners</a>
@@ -84,13 +82,7 @@
       <a href="articles/interpolation_grid_creation.html">Creation of the interpolation Grid</a>
     </li>
     <li>
-      <a href="articles/package_structuration.html">Package structuration</a>
-    </li>
-    <li>
       <a href="articles/spatialization_example.html">A simple spatialization example using agrometeoR</a>
-    </li>
-    <li>
-      <a href="articles/two_years_benchmark.html">a 2 years benchmark</a>
     </li>
     <li>
       <a href="articles/understanding_knn.html">Verifying 5nn interpolation with gstat implemented in mlr</a>
@@ -122,7 +114,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/pokyah/agrometeoR">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -136,7 +128,11 @@
 
       
       </header><div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
+    
+
+    
+    
 <div id="agrometeor" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#agrometeor" class="anchor"></a>AgrometeoR <img src="reference/figures/logo.png" align="right" alt="" width="120">
@@ -168,9 +164,9 @@
 <p>To do this, in debian, simply open a terminal, paste and execute the following line :</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># installation of OS dependencies</span>
 <span class="fu">sudo</span> apt-get update \
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">sudo</span> apt-get install -y software-properties-common \
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">sudo</span> apt-get update -q \
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">sudo</span> apt-get install -y \
+    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">sudo</span> apt-get install -y software-properties-common \
+    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">sudo</span> apt-get update -q \
+    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">sudo</span> apt-get install -y \
       texlive-full \
       jq \
       libjq-dev \
@@ -193,9 +189,9 @@
       mesa-common-dev \
       default-jdk \
       r-cran-rjava \
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">sudo</span> apt-get clean <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">sudo</span> rm -rf /var/lib/apt/lists/ <span class="dt">\ </span>
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Logic">&amp;&amp;</a></span> <span class="fu">sudo</span> rm -rf /tmp/downloaded_packages/ /tmp/*.rds \</code></pre></div>
+    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">sudo</span> apt-get clean <span class="dt">\ </span>
+    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">sudo</span> rm -rf /var/lib/apt/lists/ <span class="dt">\ </span>
+    <span class="kw"><a href="https://rdrr.io/r/base/Logic.html">&amp;&amp;</a></span> <span class="fu">sudo</span> rm -rf /tmp/downloaded_packages/ /tmp/*.rds \</code></pre></div>
 </div>
 <div id="install-r" class="section level4">
 <h4 class="hasAnchor">
@@ -210,8 +206,8 @@
 <h4 class="hasAnchor">
 <a href="#install-the-two-system-wide-required-packages" class="anchor"></a>Install the two system wide required packages</h4>
 <p><code>devtools</code> (to install packages from github) and <code>packrat</code> (to install all the other packages in a sandbox environment). To do so, open your R console and type the following :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"devtools"</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"packrat"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)
+<span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"packrat"</span>)</code></pre></div>
 </div>
 <div id="create-a-folder-for-your-project-" class="section level4">
 <h4 class="hasAnchor">
@@ -223,14 +219,14 @@
 <h4 class="hasAnchor">
 <a href="#enable-packrat-for-this-folder-" class="anchor"></a>Enable packrat for this folder.</h4>
 <p>Open your R console in this folder and initialize packrat :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">packrat<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/packrat/topics/init">init</a></span>()</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">packrat<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/packrat/man/init.html">init</a></span>()</code></pre></div>
 <p>You are now in packrat mode for this folder. All the package you will install from this folder will be installed in the folder private library (see <a href="https://rstudio.github.io/packrat/">packrat doc</a> for more information).</p>
 </div>
 <div id="install-the-agrometeor-package-" class="section level4">
 <h4 class="hasAnchor">
 <a href="#install-the-agrometeor-package-" class="anchor"></a>Install the agrometeoR package.</h4>
 <p>In your R console :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"pokyah/agrometeoR"</span>, <span class="dt">ref =</span> <span class="st">"master"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/install_github.html">install_github</a></span>(<span class="st">"pokyah/agrometeoR"</span>, <span class="dt">ref =</span> <span class="st">"master"</span>)</code></pre></div>
 <p>This command will also automatically install all the required R packages needed to make this package work (these are specified in the <a href="./DESCRIPTION">DESCRIPTION</a> file of the package) into your project packrat private library.</p>
 </div>
 <div id="add-your-agromet-api-key-" class="section level4">
@@ -245,55 +241,7 @@
 <div id="packages-datasets" class="section level2">
 <h2 class="hasAnchor">
 <a href="#packages-datasets" class="anchor"></a>Packages datasets</h2>
-<p>Multiple objects are availble with the package. We have created a serie of examplative datasets that correspond to functions outputs. Their names are always prefixed by <code>ex_</code>. These examplative objects are used in our unit tests performed using <code>testthat</code> package. You can laod those using the command <code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data("ex_&lt;DATASET&gt;")</a></code>. Rstudio should automatically suggest you the names.</p>
-</div>
-<div id="features" class="section level2">
-<h2 class="hasAnchor">
-<a href="#features" class="anchor"></a>Features</h2>
-<div id="main-functionalities" class="section level3">
-<h3 class="hasAnchor">
-<a href="#main-functionalities" class="anchor"></a>Main functionalities</h3>
-<ul>
-<li>Query the agromet DB using the AGROMET API</li>
-<li>Create explanatory datasets both for training and predicting</li>
-<li>Spatialize hourly our daily (soon) dataset using any of the 60 + <a href="https://mlr.mlr-org.com/articles/tutorial/integrated_learners.html#regression-60">mlr learners</a>
-</li>
-<li>Export your spatialized data to various formats (csv, json, geojson)</li>
-<li>Conduct benchmark experiment to compare and rank various learners, hyperparameters and features (explanatory variables) according to your desired performance metrics</li>
-<li>Quickly create an interactive leaflet map for data vizualization (soon)</li>
-<li>Compare stations 2 by 2 using a <a href="https://pokyah.github.io/AWS-Humain-comparison/reporting/Humain-SC-presentation.html#/a-potential-explanation-station-design">blandAltman analysis</a>
-</li>
-<li>Interactive tutorial about the use of R as a GIS</li>
-</ul>
-</div>
-</div>
-<div id="datasets" class="section level2">
-<h2 class="hasAnchor">
-<a href="#datasets" class="anchor"></a>Datasets</h2>
-<p>The package is provided with multiple datasets required to build the explanatory variables used for weather param predictions.</p>
-<p>The target weather parameter values at the stations are</p>
-</div>
-<div id="explanatory-variables" class="section level2">
-<h2 class="hasAnchor">
-<a href="#explanatory-variables" class="anchor"></a>explanatory variables</h2>
-<div id="static" class="section level3">
-<h3 class="hasAnchor">
-<a href="#static" class="anchor"></a>static</h3>
-<p>All the static explanatory variables were prepared both for the stations locations and the RMI inca grid points locations. The script used to generate these datasets is available under <code>./data-raw/makeData.R</code></p>
-<p>The currently available static explanatory variables are :</p>
-<p><code>elevation</code>, <code>aspect</code>, <code>slope</code>, <code>Y</code> (lat), <code>X</code> (lon), <code>Agricultural_areas</code>, <code>Artificials_surfaces</code>, <code>Forest</code>, <code>Herbaceous_vegetation</code>, <code>Water</code></p>
-<p>The script used to generate the static explanatory variables datasets (<code>grid.df</code> and <code>stations.df</code>) are available under <code>./raw-data/makeData.R</code></p>
-</div>
-<div id="dynamic" class="section level3">
-<h3 class="hasAnchor">
-<a href="#dynamic" class="anchor"></a>dynamic</h3>
-<p>These are not yet implemented as they require a working API to make queries in our Agromet DB.</p>
-</div>
-</div>
-<div id="learners" class="section level2">
-<h2 class="hasAnchor">
-<a href="#learners" class="anchor"></a>learners</h2>
-<p>The package will allow you to use a configuration file where you can list the various learning algorithms you want to use to spatialize data</p>
+<p>Multiple objects are availble with the package. We have created a serie of examplative datasets that correspond to functions outputs. Their names are always prefixed by <code>ex_</code>. These examplative objects are used in our unit tests performed using <code>testthat</code> package. You can laod those using the command <code><a href="https://rdrr.io/r/utils/data.html">data("ex_&lt;DATASET&gt;")</a></code>. Rstudio should automatically suggest you the names.</p>
 </div>
 <div id="logo" class="section level2">
 <h2 class="hasAnchor">
@@ -303,7 +251,7 @@
 </div>
   </div>
 
-  <div class="col-md-3" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
@@ -326,7 +274,8 @@
 </ul>
 </div>
 
-  </div>
+      </div>
+
 </div>
 
 
@@ -335,7 +284,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9000.</p>
 </div>
       </footer>
 </div>

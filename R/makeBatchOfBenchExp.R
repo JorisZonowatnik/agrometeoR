@@ -94,37 +94,37 @@ makeBatchOfBenchExp <- function(
         }
 
         # save the bmr object to a file
-        saveRDS(object = bmr, file = paste0(temp_dir,
-          "/",
-          prefix,
-          "_bmr_",
-          mlr::getTaskId(tasks[[tasks.groups.start[x]]]),
-          "_",
-          mlr::getTaskId(tasks[[tasks.groups.end[x]]]),
-          ".rds"))
-
-        # remove the object stored in RAM
-        rm(bmr)
+        # saveRDS(object = bmr, file = paste0(temp_dir,
+        #   "/",
+        #   prefix,
+        #   "_bmr_",
+        #   mlr::getTaskId(tasks[[tasks.groups.start[x]]]),
+        #   "_",
+        #   mlr::getTaskId(tasks[[tasks.groups.end[x]]]),
+        #   ".rds"))
+        #
+        # # remove the object stored in RAM
+        # rm(bmr)
 
         # success message
-        message(paste0(
-          "Results of batch of Benchmark experiments for tasks " ,
-          mlr::getTaskId(tasks[[tasks.groups.start[x]]]), " - ",
-          mlr::getTaskId(tasks[[tasks.groups.end[x]]]), "written to file. "))
+        # message(paste0(
+        #   "Results of batch of Benchmark experiments for tasks " ,
+        #   mlr::getTaskId(tasks[[tasks.groups.start[x]]]), " - ",
+        #   mlr::getTaskId(tasks[[tasks.groups.end[x]]]), "written to file. "))
 
       })
 
-        # loading all the temp bmr files and merging in a single big bmr object
-        bmr_files = list.files(path = temp_dir, pattern = prefix, full.names = TRUE)
-        bmrs = lapply(bmr_files, readRDS)
-
-        # deleting temporary .rds files is removeTemp = true
-        if (isTRUE(removeTemp)) {
-          file.remove(bmr_files)
-        }
-
-        if (length(bmrs) > 1) {bmrs = mergeBenchmarkResults(bmrs)}
-        else {bmrs = bmrs[[1]]}
+        # # loading all the temp bmr files and merging in a single big bmr object
+        # bmr_files = list.files(path = temp_dir, pattern = prefix, full.names = TRUE)
+        # bmrs = lapply(bmr_files, readRDS)
+        #
+        # # deleting temporary .rds files is removeTemp = true
+        # if (isTRUE(removeTemp)) {
+        #   file.remove(bmr_files)
+        # }
+        #
+        # if (length(bmrs) > 1) {bmrs = mergeBenchmarkResults(bmrs)}
+        # else {bmrs = bmrs[[1]]}
 
         # Throw a success message
         message("Success, batch of benchmark experiment conducted")
@@ -133,13 +133,14 @@ makeBatchOfBenchExp <- function(
         mlr::configureMlr(on.learner.error = "stop", on.error.dump = FALSE)
 
         # return the bmrs results
-        return(benchmarkResult = bmrs)
+        #return(benchmarkResult = bmrs)
+        return(bmr)
   }
 
   tryCatch(
     expr = {
       # check if output dir exists
-      stopifnot(dir.exists(temp_dir))
+      #stopifnot(dir.exists(temp_dir))
 
       # in case everything went fine, do makeBatchOfBenchExp
       output$value = doBenchmark()

@@ -4,20 +4,55 @@
 #' @author Thomas Goossens
 #' @importFrom magrittr %>%
 #' @param spatialized a dataframe containing the gridded predicted values
-#' @param path a character specifying the path where you want your geosonfile to be stored. Default = wd
-#' @param filename a character specifying the name you want to give to the file. Default = NULL
+#' @param path a character specifying the path where you want your geosonfile to be stored. Default = working directory
+#' @param filename a character specifying the name you want to give to the file. If NULL the output is returned as a character. Default = NULL
 #' @param format a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"
-#' @param write a snitchean specifying if formatted data must be written to file (TRUE) or printed to console (FALSE)
 #' @return a 2 elements named list : (1) bool and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains :
 #' (1) value : a character vector containing the data encoded into the desired exportation format
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition
+#' # create the dataset
+#' myDataset = makeDataset(
+#'   dfrom = "2017-03-04T15:00:00Z",
+#'   dto = "2017-03-04T15:00:00Z",
+#'   sensor = "tsa")
+#'
+#' # extract a single hour of the dataset
+#' myDataset = myDataset$output$value
+#'
+#' # create the tasks
+#' tasks = purrr::map(dataset, makeTask, target = "tsa")
+#'
+#' # extract the required part of the tasks
+#' tasks = tasks %>% purrr::modify_depth(1, ~.$"output"$"value"$"task")
+#'
+#' # show 1 task
+#' myTask = tasks[[1]]
+#'
+#' # create the model
+#' myModel = makeModel(
+#'   task = myTask,
+#'   learner = agrometeorLearners$mulLR_lonLatAlt_NA)
+#'
+#' # extract the relevant information
+#' myModel = myModel$output$value
+#'
+#' # spatialize using the trained model
+#' mySpatialization = makeSpatialization(model = myModel$trained)
+#'
+#' # get the relevant information
+#' mySpatialization = mySpatialization$output$value
+#'
+#' # export the spatialized data a json as a character returned into console
+#' exportSpatialization(spatialized = mySpatialization, format = "json)
+#'
+#' # export as a csv file
+#' exportSpatialization(spatialized = mySpatialization, format = "json, filename = "spatialization", format = "csv)
 exportSpatialization <- function(
   spatialized,
   path = getwd(),
   filename = NULL,
-  format = "csv",
-  write = FALSE){
+  format = "csv"){
 
   output = list(value = NULL, condition = list(type = NULL, message = NULL))
   snitch = FALSE
@@ -32,7 +67,7 @@ exportSpatialization <- function(
 
     if (format == "csv") {
       message("Encoding data to csv...")
-      if (isTRUE(write)) {
+      if (!is.null(filename)) {
         write.csv(data.frame(spatializedNoCoords), paste0(path, "/", filename, ".", format), row.names = FALSE)
         message(paste0("File written to", path, "/", filename, ".", format))
       } else{
@@ -45,7 +80,7 @@ exportSpatialization <- function(
     }
     if (format == "json") {
       message("Encoding data to json...")
-      if (isTRUE(write)) {
+      if (!is.null(filename)) {
         jsonlite::write_json(x = spatializedNoCoords, path = paste0(path, "/", filename, ".", format))
         message(paste0("File written to", path, "/", filename, ".", format))
       } else{
@@ -57,7 +92,7 @@ exportSpatialization <- function(
     if (format == "geojson") {
       message("Encoding data to geojson...")
       string = geojsonio::geojson_json(spatialized, lat = "Y", lon = "X")
-      if (isTRUE(write)) {
+      if (!is.null(filename)) {
         geojsonio::geojson_write(string, file = paste0(path, "/", filename, ".", format))
         message(paste0("File written to", path, "/", filename, ".", format))
       }else{
@@ -75,8 +110,6 @@ exportSpatialization <- function(
       stopifnot(all(colnames(spatialized) == c("px", "response", "X", "Y")))
       # check if good export format specified
       stopifnot(format %in% c("csv","json","geojson"))
-      # check filename specified if write = TRUE
-      stopifnot(!isTRUE(write) && is.null(filename))
 
       # in case everything went fine, do exportSpatialisation
       output$value = doExportSpatialisation()

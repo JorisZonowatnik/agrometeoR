@@ -71,20 +71,20 @@ tasks = lapply(tasks, function(x) x = x$output$value )
 # loading the learners preconfigured with the package
 data("learners")
 # conduct the bmr on 2 tasks
-bmr = makeBenchmark(tasks = tasks, prefix = "test", learners = learners$baseLearners, grouping = 1, cpus = 4, path = "./outputs/",keep.pred = TRUE)
+# bmr = makeBenchmark(tasks = tasks, prefix = "test", learners = learners$baseLearners, grouping = 1, cpus = 4, path = "./outputs/",keep.pred = TRUE)
 ```
 
 
 ### vizualize performance 
 ```{r}
 # box plots
-plotBMRBoxplots(bmr$output$value$bmr, pretty.names = FALSE)
+#plotBMRBoxplots(bmr$output$value$bmr, pretty.names = FALSE)
 
 # summary plots
-plotBMRSummary(bmr$output$value$bmr, pretty.names = FALSE)
+#plotBMRSummary(bmr$output$value$bmr, pretty.names = FALSE)
 
 # summary table
-bmr$output$value$summary
+#bmr$output$value$summary
 ```
 
 ## Check if parallelization improves computing speed

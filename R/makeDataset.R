@@ -1,16 +1,16 @@
 #' @export
-#' @title make a dataframe of stations records
+#' @title make a dataframe of stations records for each requested hour
 #' @author Thomas Goossens
 #' @param token a character specifying your agrometAPI token
 #' @param stations a character vector specifying the sid's of the stations to use
 #' @param json a character specifying the path of a json file constructed from a batch db export.
 #' If NULL the API will be called.
-#' @param dfrom a datetime string specifying the dateTime
+#' @param dfrom a datetime string specifying the dateTime from which you want data
 #' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
-#' @param dto a datetime string specifying the dateTime
+#' @param dto a datetime string specifying the dateTime to which you want data
 #' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
-#' @param sensors a character vector specifying the sensor data you want to spatialize.
-#' One of tsa, hct, hra, ens, plu, vvt, sunrise, sunset
+#' @param sensors a character vector specifying the name of the sensors for which you data.
+#' One of tsa, hct, hra, ens, plu, vvt.
 #' @param dynExpl a character vector specifying the dynamic explanatory variables you want to add to the task.
 #' Any combinations of inca, ens
 #' @param staticExpl a character vector specifying the desired static explanatory variables
@@ -20,10 +20,20 @@
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition
 #' @examples
+#' # get the dataset
 #' myDataset = makeDataset(
 #'   dfrom = "2017-03-04T15:00:00Z",
 #'   dto = "2017-03-04T15:00:00Z",
 #'   sensor = "tsa")
+#'
+#' # extract the data
+#' myDataset = myDataset$output$value
+#'
+#' # each dataframe is stored in a list
+#' class(myDataset)
+#'
+#' # show the head of the first dataframe
+#' head(myDataset[[1]])
 #'
 makeDataset <- function(
   user_token = Sys.getenv("AGROMET_API_V1_KEY"),

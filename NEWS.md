@@ -1,3 +1,7 @@
+# agrometeoR 0.0.3
+
+* Vizualization functions are into new package agrometeoR.extras
+
 # agrometeoR 0.0.2
 
 * maketTasks ignore stations with missing data

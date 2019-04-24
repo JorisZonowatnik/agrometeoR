@@ -2,14 +2,14 @@
 % Please edit documentation in R/makeTask.R
 \name{makeTask}
 \alias{makeTask}
-\title{make one mlr regr task for a single set of hourly/daily records}
+\title{make a single mlr regr task for a single set of hourly/daily records}
 \usage{
 makeTask(dataset, drop = NULL, target)
 }
 \arguments{
 \item{dataset}{a dataframe containing an hourly/daily set of records you want to transform to a mlr task}
 
-\item{drop}{a character vector specifying the explanatory variables you wan to drop.}
+\item{drop}{a character vector specifying the explanatory variables you want to drop.}
 
 \item{target}{a charachter specifying the name of the target variable}
 }
@@ -18,14 +18,30 @@ a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function 
 (1) value : an object which classes are "RegrTask" "SupervisedTask" "Task"
 (2) condition : a character specifying if the functions has encountered success, warning, error
 (3) message : the message relative to the condition
-(4) stations : a numeric vector containing the sids of the used stations
+(4) stations : a numeric vector containing the sids of the stations that were kept to build the task
 }
 \examples{
+
+# create the dataset
 myDataset = makeDataset(
   dfrom = "2017-03-04T15:00:00Z",
   dto = "2017-03-04T15:00:00Z",
   sensor = "tsa")
-myTask = makeTask(dataset = myDataset$output$value, target = "tsa")
+
+# extract a single hour of the dataset
+myDataset = myDataset$output$value
+
+# create the tasks
+tasks = purrr::map(dataset, makeTask, target = "tsa")
+
+# show the stations kept for the first task
+tasks[[1]]$stations
+
+# extract the required part of the tasks
+tasks = tasks \%>\% purrr::modify_depth(1, ~.$"output"$"value"$"task")
+
+# show 1 task
+tasks[[1]]
 }
 \author{
 Thomas Goossens

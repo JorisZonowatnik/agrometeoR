@@ -47,7 +47,7 @@ The explanatory static variabels are stored into the `grid.df` dataset. It also 
 data("grid.df")
 # removing X and Y cols
 grid.df = grid.df %>%
-  dplyr::select(1:8)
+  dplyr::select(1:4)
 # excerpt of the data 
 head(grid.df)
 # joining to grid.sf

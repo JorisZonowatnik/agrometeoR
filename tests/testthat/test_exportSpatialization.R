@@ -18,23 +18,20 @@ groups = list(
       spatialized = ex_makeSpatialization$output$value$spatialized,
       path = paste0(getwd(), "/test/testthat/exports/"),
       filename = NULL,
-      format = "csv",
-      write = FALSE
+      format = "csv"
     )),
   bad = list(
     bad_spatialized = list(
       spatialized = ex_bad_makeSpatialization,
       path = paste0(getwd(), "/test/testthat/exports/"),
       filename = NULL,
-      format = "csv",
-      write = FALSE
+      format = "csv"
     ),
     bad_format = list(
       spatialized = ex_makeSpatialization$output$value$spatialized,
       path = paste0(getwd(), "/test/testthat/exports/"),
       filename = NULL,
-      format = "xls",
-      write = FALSE
+      format = "xls"
     )
   ))
 
