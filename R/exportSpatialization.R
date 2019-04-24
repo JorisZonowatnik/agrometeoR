@@ -9,11 +9,11 @@
 #' @param format a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"
 #' @return A 2 elements named list : \code{snitch} (2) output. \cr
 #' \code{snitch} is \code{TRUE} if function has provided the expected result. \cr
-#' output is a named list which contains : \cr
+#' \code{output} is a named list which contains :
 #' \itemize{
-#'   \value is a character vector containing the data encoded into the desired exportation format
-#'   \condition is a character specifying if the function has encountered success, warning, error
-#'   \message is the message relative to the condition
+#'   \item value is a character vector containing the data encoded into the desired exportation format.
+#'   \item condition is a character specifying if the function has encountered success, warning, error.
+#'   \item message is the message relative to the condition.
 #' }
 #' @examples
 #'\dontrun{
