@@ -20,6 +20,7 @@
 #' (2) condition : a character specifying if the functions has encountered success, warning, error
 #' (3) message : the message relative to the condition
 #' @examples
+#'\dontrun{
 #' # get the dataset
 #' myDataset = makeDataset(
 #'   dfrom = "2017-03-04T15:00:00Z",
@@ -34,6 +35,7 @@
 #'
 #' # show the head of the first dataframe
 #' head(myDataset[[1]])
+#'}
 #'
 makeDataset <- function(
   user_token = Sys.getenv("AGROMET_API_V1_KEY"),

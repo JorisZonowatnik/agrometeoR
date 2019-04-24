@@ -21,27 +21,31 @@ a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function 
 (4) stations : a numeric vector containing the sids of the stations that were kept to build the task
 }
 \examples{
-
+\dontrun{
 # create the dataset
 myDataset = makeDataset(
   dfrom = "2017-03-04T15:00:00Z",
-  dto = "2017-03-04T15:00:00Z",
+  dto = "2017-03-04T18:00:00Z",
   sensor = "tsa")
 
-# extract a single hour of the dataset
+# extract the list of hourly sets of records
 myDataset = myDataset$output$value
 
 # create the tasks
-tasks = purrr::map(dataset, makeTask, target = "tsa")
+myTasks = purrr::map(myDataset, makeTask, target = "tsa")
+
+# extract the tasks from the outputs
+myTasks = myTasks \%>\% purrr::modify_depth(1, ~.$"output"$"value"$"task")
+
+# show the first task information
+myTasks[[1]]
+
+# extract the lists of stations kept for each task
+stations_kept = myTasks \%>\% purrr::modify_depth(1, ~.$"output"$"value"$"stations")
 
 # show the stations kept for the first task
-tasks[[1]]$stations
-
-# extract the required part of the tasks
-tasks = tasks \%>\% purrr::modify_depth(1, ~.$"output"$"value"$"task")
-
-# show 1 task
-tasks[[1]]
+stations_kept[[1]]
+}
 }
 \author{
 Thomas Goossens

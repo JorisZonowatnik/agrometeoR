@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>make a dataframe of stations records — makeDataset • agrometeoR</title>
+<title>make a dataframe of stations records for each requested hour — makeDataset • agrometeoR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -38,7 +38,7 @@
 
 
 
-<meta property="og:title" content="make a dataframe of stations records — makeDataset" />
+<meta property="og:title" content="make a dataframe of stations records for each requested hour — makeDataset" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -115,15 +115,6 @@
       <a href="../articles/interpolation_grid_creation.html">Creation of the interpolation Grid</a>
     </li>
     <li>
-      <a href="../articles/spatialization_example.html">A simple spatialization example using agrometeoR</a>
-    </li>
-    <li>
-      <a href="../articles/understanding_knn.html">Verifying 5nn interpolation with gstat implemented in mlr</a>
-    </li>
-    <li>
-      <a href="../articles/using_packrat.html">Using packrat</a>
-    </li>
-    <li>
       <a href="../articles/weather_spatialisation_review.html">Agromet : Weather Spatialization Review and Benchmark</a>
     </li>
   </ul>
@@ -164,7 +155,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>make a dataframe of stations records</h1>
+    <h1>make a dataframe of stations records for each requested hour</h1>
     <small class="dont-index">Source: <a href='https://github.com/pokyah/agrometeoR/blob/master/R/makeDataset.R'><code>R/makeDataset.R</code></a></small>
     <div class="hidden name"><code>makeDataset.Rd</code></div>
     </div>
@@ -183,8 +174,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>sensors</th>
-      <td><p>a character vector specifying the sensor data you want to spatialize.
-One of tsa, hct, hra, ens, plu, vvt, sunrise, sunset</p></td>
+      <td><p>a character vector specifying the name of the sensors for which you data.
+One of tsa, hct, hra, ens, plu, vvt.</p></td>
     </tr>
     <tr>
       <th>stations</th>
@@ -192,12 +183,12 @@ One of tsa, hct, hra, ens, plu, vvt, sunrise, sunset</p></td>
     </tr>
     <tr>
       <th>dfrom</th>
-      <td><p>a datetime string specifying the dateTime
+      <td><p>a datetime string specifying the dateTime from which you want data
 Must have the form "YYYY-MM-DDTHH:MM:SSZ"</p></td>
     </tr>
     <tr>
       <th>dto</th>
-      <td><p>a datetime string specifying the dateTime
+      <td><p>a datetime string specifying the dateTime to which you want data
 Must have the form "YYYY-MM-DDTHH:MM:SSZ"</p></td>
     </tr>
     <tr>
@@ -230,12 +221,22 @@ Any combinations of inca, ens</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'>makeDataset</span>(
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># get the dataset</span>
+<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'>makeDataset</span>(
   <span class='kw'>dfrom</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T15:00:00Z"</span>,
   <span class='kw'>dto</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T15:00:00Z"</span>,
-  <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)</div><div class='output co'>#&gt; <span class='message'>Making dataset...</span></div><div class='output co'>#&gt; <span class='message'>Calling Agromet API...</span></div><div class='output co'>#&gt; <span class='message'>Your API URL call is :  https://app.pameseb.be/agromet/api/v2/sp/cleandata/tsa/all/2017-03-04T15:00:00Z/2017-03-04T15:00:00Z  </span></div><div class='output co'>#&gt; <span class='message'>The API responded with a status code 200. </span>
-#&gt; <span class='message'> Data has been downloaded. </span></div><div class='output co'>#&gt; <span class='message'>makeDataset has encountered : success. </span>
-#&gt; <span class='message'>All done with makeDataset. </span></div><div class='input'>
+  <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
+
+<span class='co'># extract the data</span>
+<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='no'>myDataset</span>$<span class='no'>output</span>$<span class='no'>value</span>
+
+<span class='co'># each dataframe is stored in a list</span>
+<span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span>(<span class='no'>myDataset</span>)
+
+<span class='co'># show the head of the first dataframe</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>myDataset</span><span class='kw'>[[</span><span class='fl'>1</span>]])
+<span class='co'># }</span><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

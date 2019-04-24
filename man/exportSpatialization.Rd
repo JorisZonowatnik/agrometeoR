@@ -21,23 +21,29 @@ a 2 elements named list : (1) bool and (2) output. snitch is TRUE if function ha
 (1) value : a character vector containing the data encoded into the desired exportation format
 (2) condition : a character specifying if the functions has encountered success, warning, error
 (3) message : the message relative to the condition
+}
+\description{
+you can both store the encoded string in a variable and in a file by specifying write = TRUE
+}
+\examples{
+\dontrun{
 # create the dataset
 myDataset = makeDataset(
   dfrom = "2017-03-04T15:00:00Z",
-  dto = "2017-03-04T15:00:00Z",
+  dto = "2017-03-04T18:00:00Z",
   sensor = "tsa")
 
-# extract a single hour of the dataset
+# extract the list of hourly sets of records
 myDataset = myDataset$output$value
 
 # create the tasks
-tasks = purrr::map(dataset, makeTask, target = "tsa")
+myTasks = purrr::map(myDataset, makeTask, target = "tsa")
 
-# extract the required part of the tasks
-tasks = tasks %>% purrr::modify_depth(1, ~.$"output"$"value"$"task")
+# extract the tasks from the outputs
+myTasks = myTasks \%>\% purrr::modify_depth(1, ~.$"output"$"value"$"task")
 
-# show 1 task
-myTask = tasks[[1]]
+# keep the first task
+myTask = myTasks[[1]]
 
 # create the model
 myModel = makeModel(
@@ -48,19 +54,23 @@ myModel = makeModel(
 myModel = myModel$output$value
 
 # spatialize using the trained model
-mySpatialization = makeSpatialization(model = myModel$trained)
+mySpatialization = makeSpatialization(
+model = myModel$trained,
+pred.grid = grid.df) # grid.df comes precompiled with the package
 
 # get the relevant information
 mySpatialization = mySpatialization$output$value
 
-# export the spatialized data a json as a character returned into console
-exportSpatialization(spatialized = mySpatialization, format = "json)
+# export the spatialized data a json as a character returned into myJson variable
+myJson = exportSpatialization(spatialized = mySpatialization$spatialized, format = "json")
+
+# show myJson
+myJson
 
 # export as a csv file
-exportSpatialization(spatialized = mySpatialization, format = "json, filename = "spatialization", format = "csv)
+exportSpatialization(spatialized = mySpatialization$spatialized, filename = "test", format = "csv")
 }
-\description{
-you can both store the encoded string in a variable and in a file by specifying write = TRUE
+
 }
 \author{
 Thomas Goossens

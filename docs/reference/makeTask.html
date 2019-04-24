@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>make one mlr regr task for a single set of hourly/daily records — makeTask • agrometeoR</title>
+<title>make a single mlr regr task for a single set of hourly/daily records — makeTask • agrometeoR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -38,7 +38,7 @@
 
 
 
-<meta property="og:title" content="make one mlr regr task for a single set of hourly/daily records — makeTask" />
+<meta property="og:title" content="make a single mlr regr task for a single set of hourly/daily records — makeTask" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -115,15 +115,6 @@
       <a href="../articles/interpolation_grid_creation.html">Creation of the interpolation Grid</a>
     </li>
     <li>
-      <a href="../articles/spatialization_example.html">A simple spatialization example using agrometeoR</a>
-    </li>
-    <li>
-      <a href="../articles/understanding_knn.html">Verifying 5nn interpolation with gstat implemented in mlr</a>
-    </li>
-    <li>
-      <a href="../articles/using_packrat.html">Using packrat</a>
-    </li>
-    <li>
       <a href="../articles/weather_spatialisation_review.html">Agromet : Weather Spatialization Review and Benchmark</a>
     </li>
   </ul>
@@ -164,7 +155,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>make one mlr regr task for a single set of hourly/daily records</h1>
+    <h1>make a single mlr regr task for a single set of hourly/daily records</h1>
     <small class="dont-index">Source: <a href='https://github.com/pokyah/agrometeoR/blob/master/R/makeTask.R'><code>R/makeTask.R</code></a></small>
     <div class="hidden name"><code>makeTask.Rd</code></div>
     </div>
@@ -184,7 +175,7 @@
     </tr>
     <tr>
       <th>drop</th>
-      <td><p>a character vector specifying the explanatory variables you wan to drop.</p></td>
+      <td><p>a character vector specifying the explanatory variables you want to drop.</p></td>
     </tr>
     <tr>
       <th>target</th>
@@ -198,17 +189,35 @@
 (1) value : an object which classes are "RegrTask" "SupervisedTask" "Task"
 (2) condition : a character specifying if the functions has encountered success, warning, error
 (3) message : the message relative to the condition
-(4) stations : a numeric vector containing the sids of the used stations</p>
+(4) stations : a numeric vector containing the sids of the stations that were kept to build the task</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'>makeDataset</span>(
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># create the dataset</span>
+<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'>makeDataset</span>(
   <span class='kw'>dfrom</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T15:00:00Z"</span>,
-  <span class='kw'>dto</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T15:00:00Z"</span>,
-  <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)</div><div class='output co'>#&gt; <span class='message'>Making dataset...</span></div><div class='output co'>#&gt; <span class='message'>Calling Agromet API...</span></div><div class='output co'>#&gt; <span class='message'>Your API URL call is :  https://app.pameseb.be/agromet/api/v2/sp/cleandata/tsa/all/2017-03-04T15:00:00Z/2017-03-04T15:00:00Z  </span></div><div class='output co'>#&gt; <span class='message'>The API responded with a status code 200. </span>
-#&gt; <span class='message'> Data has been downloaded. </span></div><div class='output co'>#&gt; <span class='message'>makeDataset has encountered : success. </span>
-#&gt; <span class='message'>All done with makeDataset. </span></div><div class='input'><span class='no'>myTask</span> <span class='kw'>=</span> <span class='fu'>makeTask</span>(<span class='kw'>dataset</span> <span class='kw'>=</span> <span class='no'>myDataset</span>$<span class='no'>output</span>$<span class='no'>value</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)</div><div class='output co'>#&gt; <span class='message'>makeTask has encountered : error. </span>
-#&gt; <span class='message'>All done with makeTask. </span></div></pre>
+  <span class='kw'>dto</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T18:00:00Z"</span>,
+  <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
+
+<span class='co'># extract the list of hourly sets of records</span>
+<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='no'>myDataset</span>$<span class='no'>output</span>$<span class='no'>value</span>
+
+<span class='co'># create the tasks</span>
+<span class='no'>myTasks</span> <span class='kw'>=</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span>(<span class='no'>myDataset</span>, <span class='no'>makeTask</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
+
+<span class='co'># extract the tasks from the outputs</span>
+<span class='no'>myTasks</span> <span class='kw'>=</span> <span class='no'>myTasks</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/modify.html'>modify_depth</a></span>(<span class='fl'>1</span>, ~<span class='no'>.</span>$<span class='st'>"output"</span>$<span class='st'>"value"</span>$<span class='st'>"task"</span>)
+
+<span class='co'># show the first task information</span>
+<span class='no'>myTasks</span><span class='kw'>[[</span><span class='fl'>1</span>]]
+
+<span class='co'># extract the lists of stations kept for each task</span>
+<span class='no'>stations_kept</span> <span class='kw'>=</span> <span class='no'>myTasks</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/modify.html'>modify_depth</a></span>(<span class='fl'>1</span>, ~<span class='no'>.</span>$<span class='st'>"output"</span>$<span class='st'>"value"</span>$<span class='st'>"stations"</span>)
+
+<span class='co'># show the stations kept for the first task</span>
+<span class='no'>stations_kept</span><span class='kw'>[[</span><span class='fl'>1</span>]]
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

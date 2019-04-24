@@ -18,24 +18,24 @@ a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function 
 (3) message : the message relative to the condition
 }
 \examples{
-
+\dontrun{
 # create the dataset
 myDataset = makeDataset(
   dfrom = "2017-03-04T15:00:00Z",
-  dto = "2017-03-04T15:00:00Z",
+  dto = "2017-03-04T18:00:00Z",
   sensor = "tsa")
 
-# extract a single hour of the dataset
+# extract the list of hourly sets of records
 myDataset = myDataset$output$value
 
 # create the tasks
-tasks = purrr::map(dataset, makeTask, target = "tsa")
+myTasks = purrr::map(myDataset, makeTask, target = "tsa")
 
-# extract the required part of the tasks
-tasks = tasks \%>\% purrr::modify_depth(1, ~.$"output"$"value"$"task")
+# extract the tasks from the outputs
+myTasks = myTasks \%>\% purrr::modify_depth(1, ~.$"output"$"value"$"task")
 
-# show 1 task
-myTask = tasks[[1]]
+# keep the first task
+myTask = myTasks[[1]]
 
 # create the model
 myModel = makeModel(
@@ -46,11 +46,12 @@ myModel = makeModel(
 myModel = myModel$output$value
 
 # show the results of the LOOCV of this hour forthe choosen learner
-head(model$predictions)
-head(model$perfs$iters)
+head(myModel$predictions)
+head(myModel$perfs$iters)
 
 # show the model information
-model$trained
+myModel$trained
+}
 }
 \author{
 Thomas Goossens

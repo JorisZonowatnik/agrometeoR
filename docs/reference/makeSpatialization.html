@@ -115,15 +115,6 @@
       <a href="../articles/interpolation_grid_creation.html">Creation of the interpolation Grid</a>
     </li>
     <li>
-      <a href="../articles/spatialization_example.html">A simple spatialization example using agrometeoR</a>
-    </li>
-    <li>
-      <a href="../articles/understanding_knn.html">Verifying 5nn interpolation with gstat implemented in mlr</a>
-    </li>
-    <li>
-      <a href="../articles/using_packrat.html">Using packrat</a>
-    </li>
-    <li>
       <a href="../articles/weather_spatialisation_review.html">Agromet : Weather Spatialization Review and Benchmark</a>
     </li>
   </ul>
@@ -197,17 +188,47 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'>makeDataset</span>(
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># create the dataset</span>
+<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'>makeDataset</span>(
   <span class='kw'>dfrom</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T15:00:00Z"</span>,
-  <span class='kw'>dto</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T15:00:00Z"</span>,
-  <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)</div><div class='output co'>#&gt; <span class='message'>Making dataset...</span></div><div class='output co'>#&gt; <span class='message'>Calling Agromet API...</span></div><div class='output co'>#&gt; <span class='message'>Your API URL call is :  https://app.pameseb.be/agromet/api/v2/sp/cleandata/tsa/all/2017-03-04T15:00:00Z/2017-03-04T15:00:00Z  </span></div><div class='output co'>#&gt; <span class='message'>The API responded with a status code 200. </span>
-#&gt; <span class='message'> Data has been downloaded. </span></div><div class='output co'>#&gt; <span class='message'>makeDataset has encountered : success. </span>
-#&gt; <span class='message'>All done with makeDataset. </span></div><div class='input'><span class='no'>myTask</span> <span class='kw'>=</span> <span class='fu'>makeTask</span>(<span class='kw'>dataset</span> <span class='kw'>=</span> <span class='no'>myDataset</span>$<span class='no'>output</span>$<span class='no'>value</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)</div><div class='output co'>#&gt; <span class='message'>makeTask has encountered : error. </span>
-#&gt; <span class='message'>All done with makeTask. </span></div><div class='input'><span class='no'>myModel</span> <span class='kw'>=</span> <span class='fu'>makeModel</span>(
-  <span class='kw'>task</span> <span class='kw'>=</span> <span class='no'>mytask</span>$<span class='no'>out</span>$<span class='no'>value</span>,
-  <span class='kw'>learner</span> <span class='kw'>=</span> <span class='no'>learners</span>$<span class='no'>baseLearners</span>$<span class='no'>lrn.lm.alt</span>)</div><div class='output co'>#&gt; <span class='message'>makeModel has encountered : error. </span>
-#&gt; <span class='message'>All done with makeModel. </span></div><div class='input'><span class='no'>mySpatialization</span> <span class='kw'>=</span> <span class='fu'>makeSpatialization</span>(<span class='kw'>model</span> <span class='kw'>=</span> <span class='no'>myModel</span>$<span class='no'>output</span>$<span class='no'>value</span>)</div><div class='output co'>#&gt; <span class='message'>makeSpatialisation has encountered : error. </span>
-#&gt; <span class='message'>All done with makeSpatialisation. </span></div></pre>
+  <span class='kw'>dto</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T18:00:00Z"</span>,
+  <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
+
+<span class='co'># extract the list of hourly sets of records</span>
+<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='no'>myDataset</span>$<span class='no'>output</span>$<span class='no'>value</span>
+
+<span class='co'># create the tasks</span>
+<span class='no'>myTasks</span> <span class='kw'>=</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span>(<span class='no'>myDataset</span>, <span class='no'>makeTask</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
+
+<span class='co'># extract the tasks from the outputs</span>
+<span class='no'>myTasks</span> <span class='kw'>=</span> <span class='no'>myTasks</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/modify.html'>modify_depth</a></span>(<span class='fl'>1</span>, ~<span class='no'>.</span>$<span class='st'>"output"</span>$<span class='st'>"value"</span>$<span class='st'>"task"</span>)
+
+<span class='co'># keep the first task</span>
+<span class='no'>myTask</span> <span class='kw'>=</span> <span class='no'>myTasks</span><span class='kw'>[[</span><span class='fl'>1</span>]]
+
+<span class='co'># create the model</span>
+<span class='no'>myModel</span> <span class='kw'>=</span> <span class='fu'>makeModel</span>(
+  <span class='kw'>task</span> <span class='kw'>=</span> <span class='no'>myTask</span>,
+  <span class='kw'>learner</span> <span class='kw'>=</span> <span class='no'>agrometeorLearners</span>$<span class='no'>mulLR_lonLatAlt_NA</span>)
+
+<span class='co'># extract the relevant information</span>
+<span class='no'>myModel</span> <span class='kw'>=</span> <span class='no'>myModel</span>$<span class='no'>output</span>$<span class='no'>value</span>
+
+<span class='co'># spatialize using the trained model</span>
+<span class='no'>mySpatialization</span> <span class='kw'>=</span> <span class='fu'>makeSpatialization</span>(
+<span class='kw'>model</span> <span class='kw'>=</span> <span class='no'>myModel</span>$<span class='no'>trained</span>,
+<span class='kw'>pred.grid</span> <span class='kw'>=</span> <span class='no'>grid.df</span>) <span class='co'># grid.df comes precompiled with the package</span>
+
+<span class='co'># get the relevant information</span>
+<span class='no'>mySpatialization</span> <span class='kw'>=</span> <span class='no'>mySpatialization</span>$<span class='no'>output</span>$<span class='no'>value</span>
+
+<span class='co'># show an excerpt of the spatialized data</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>mySpatialization</span>$<span class='no'>spatialized</span>)
+
+<span class='co'># show the summary stats of spatialized data</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>mySpatialization</span>$<span class='no'>summary</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

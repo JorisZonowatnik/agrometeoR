@@ -39,6 +39,7 @@ a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function 
 (3) message : the message relative to the condition
 }
 \examples{
+\dontrun{
 # get the dataset
 myDataset = makeDataset(
   dfrom = "2017-03-04T15:00:00Z",
@@ -53,6 +54,7 @@ class(myDataset)
 
 # show the head of the first dataframe
 head(myDataset[[1]])
+}
 
 }
 \author{
