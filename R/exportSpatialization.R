@@ -50,8 +50,11 @@
 #' # export the spatialized data a json as a character returned into myJson variable
 #' myJson = exportSpatialization(spatialized = mySpatialization$spatialized, format = "json")
 #'
+#' # show th json string
+#' myJson$output$value
+#'
 #' # show myJson
-#' myJson
+#' myJson$output$value
 #'
 #' # export as a csv file
 #' exportSpatialization(spatialized = mySpatialization$spatialized, filename = "test", format = "csv")
@@ -72,7 +75,7 @@ exportSpatialization <- function(
     message("Exporting spatialized data...")
 
     spatializedNoCoords = spatialized %>%
-      dplyr::select(c("px", "response" ,"se"))
+      dplyr::select(one_of(c("px", "response" ,"se")))
 
     if (format == "csv") {
       message("Encoding data to csv...")
@@ -85,6 +88,7 @@ exportSpatialization <- function(
         string = textConnectionValue(csv.con)
         close(csv.con)
         message("Success ! Data encoded")
+        return(string)
       }
     }
     if (format == "json") {
@@ -96,6 +100,7 @@ exportSpatialization <- function(
         string = jsonlite::toJSON(spatializedNoCoords)
         #cat(jsonString)
         message("Success ! Data encoded")
+        return(string)
       }
     }
     if (format == "geojson") {
@@ -107,16 +112,17 @@ exportSpatialization <- function(
       }else{
         #cat(geojsonString)
         message("Success ! Data encoded")
+        return(string)
       }
     }
-    return(string)
+
   }
   tryCatch(
     expr = {
       # check if Argument spatialized has class data.frame.
       stopifnot(class(spatialized) == "data.frame")
       # check if Colnames of spatialized argument do match \"px\", \"response\", \"X\", \"Y\
-      stopifnot(all(colnames(spatialized) == c("px", "response", "X", "Y")))
+      stopifnot(all(colnames(spatialized) %in% c("px", "response", "se", "X", "Y")))
       # check if good export format specified
       stopifnot(format %in% c("csv","json","geojson"))
 

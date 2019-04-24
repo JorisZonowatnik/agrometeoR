@@ -236,8 +236,14 @@
 <span class='co'># get the relevant information</span>
 <span class='no'>mySpatialization</span> <span class='kw'>=</span> <span class='no'>mySpatialization</span>$<span class='no'>output</span>$<span class='no'>value</span>
 
-<span class='co'># export the spatialized data a json as a character returned into console</span>
-<span class='fu'>exportSpatialization</span>(<span class='kw'>spatialized</span> <span class='kw'>=</span> <span class='no'>mySpatialization</span>$<span class='no'>spatialized</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='st'>"json"</span>)
+<span class='co'># export the spatialized data a json as a character returned into myJson variable</span>
+<span class='no'>myJson</span> <span class='kw'>=</span> <span class='fu'>exportSpatialization</span>(<span class='kw'>spatialized</span> <span class='kw'>=</span> <span class='no'>mySpatialization</span>$<span class='no'>spatialized</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='st'>"json"</span>)
+
+<span class='co'># show th json string</span>
+<span class='no'>myJson</span>$<span class='no'>output</span>$<span class='no'>value</span>
+
+<span class='co'># show myJson</span>
+<span class='no'>myJson</span>$<span class='no'>output</span>$<span class='no'>value</span>
 
 <span class='co'># export as a csv file</span>
 <span class='fu'>exportSpatialization</span>(<span class='kw'>spatialized</span> <span class='kw'>=</span> <span class='no'>mySpatialization</span>$<span class='no'>spatialized</span>, <span class='kw'>filename</span> <span class='kw'>=</span> <span class='st'>"test"</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='st'>"csv"</span>)

@@ -64,8 +64,11 @@ mySpatialization = mySpatialization$output$value
 # export the spatialized data a json as a character returned into myJson variable
 myJson = exportSpatialization(spatialized = mySpatialization$spatialized, format = "json")
 
+# show th json string
+myJson$output$value
+
 # show myJson
-myJson
+myJson$output$value
 
 # export as a csv file
 exportSpatialization(spatialized = mySpatialization$spatialized, filename = "test", format = "csv")
