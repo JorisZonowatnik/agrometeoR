@@ -7,10 +7,14 @@
 #' @param path a character specifying the path where you want your geosonfile to be stored. Default = working directory
 #' @param filename a character specifying the name you want to give to the file. If NULL the output is returned as a character. Default = NULL
 #' @param format a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"
-#' @return a 2 elements named list : (1) bool and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains :
-#' (1) value : a character vector containing the data encoded into the desired exportation format
-#' (2) condition : a character specifying if the functions has encountered success, warning, error
-#' (3) message : the message relative to the condition
+#' @return A 2 elements named list : \code{snitch} (2) output. \cr
+#' \code{snitch} is \code{TRUE} if function has provided the expected result. \cr
+#' output is a named list which contains : \cr
+#' \itemize{
+#'   \value is a character vector containing the data encoded into the desired exportation format
+#'   \condition is a character specifying if the function has encountered success, warning, error
+#'   \message is the message relative to the condition
+#' }
 #' @examples
 #'\dontrun{
 #' # create the dataset

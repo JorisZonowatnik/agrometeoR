@@ -17,10 +17,14 @@ exportSpatialization(spatialized, path = getwd(), filename = NULL,
 \item{format}{a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"}
 }
 \value{
-a 2 elements named list : (1) bool and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains :
-(1) value : a character vector containing the data encoded into the desired exportation format
-(2) condition : a character specifying if the functions has encountered success, warning, error
-(3) message : the message relative to the condition
+A 2 elements named list : \code{snitch} (2) output. \cr
+\code{snitch} is \code{TRUE} if function has provided the expected result. \cr
+output is a named list which contains : \cr
+\itemize{
+  \value is a character vector containing the data encoded into the desired exportation format
+  \condition is a character specifying if the function has encountered success, warning, error
+  \message is the message relative to the condition
+}
 }
 \description{
 you can both store the encoded string in a variable and in a file by specifying write = TRUE
