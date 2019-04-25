@@ -185,11 +185,15 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains 4 elements :
-(1) value : an object which classes are "RegrTask" "SupervisedTask" "Task"
-(2) condition : a character specifying if the functions has encountered success, warning, error
-(3) message : the message relative to the condition
-(4) stations : a numeric vector containing the sids of the stations that were kept to build the task</p>
+    <p>A 2 elements named list : <code>snitch</code> &amp; <code>output</code>. <br />
+<code>snitch</code> is <code>TRUE</code> if function has provided the expected result. <br />
+<code>output</code> is a named list which contains :</p><ul>
+<li><p><code>value</code> is a list which objects are of classes <code><a href='https://rdrr.io/pkg/mlr/man/Task.html'>mlr::RegrTask()</a></code></p></li>
+<li><p><code>condition</code> is a character specifying if the function has encountered success, warning, error.</p></li>
+<li><p><code>message</code> is the message relative to the condition.</p></li>
+<li><p><code>stations</code> is a numeric vector containing the sids of the stations that were kept to build the task</p></li>
+</ul>
+
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

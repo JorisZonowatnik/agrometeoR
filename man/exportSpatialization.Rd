@@ -17,7 +17,7 @@ exportSpatialization(spatialized, path = getwd(), filename = NULL,
 \item{format}{a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"}
 }
 \value{
-A 2 elements named list : \code{snitch} (2) output. \cr
+A 2 elements named list : \code{snitch} & \code{output}. \cr
 \code{snitch} is \code{TRUE} if function has provided the expected result. \cr
 \code{output} is a named list which contains :
 \itemize{

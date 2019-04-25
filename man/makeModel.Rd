@@ -12,10 +12,15 @@ makeModel(task, learner)
 \item{learner}{an object of class mlr::makeLearner()}
 }
 \value{
-a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains :
-(1) value : an object of class list made of 3 elements which are of classes "Model", "dataframe", and "list"
-(2) condition : a character specifying if the functions has encountered success, warning, error
-(3) message : the message relative to the condition
+A 2 elements named list : \code{snitch} (2) output. \cr
+
+A 2 elements named list : \code{snitch} & \code{output}. \cr
+\code{output} is a named list which contains :
+\itemize{
+  \item \code{value} is an object of class list made of 3 elements which are of classes \code{mlr::makeWrappedMode()}, "dataframe", and "list"
+  \item \code{condition} is a character specifying if the function has encountered success, warning, error.
+  \item \code{message} is the message relative to the condition.
+}
 }
 \examples{
 \dontrun{

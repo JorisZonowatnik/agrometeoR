@@ -15,10 +15,14 @@
 #' Any combinations of inca, ens
 #' @param staticExpl a character vector specifying the desired static explanatory variables
 #' Any combinations of "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided. Default = "Elevation"
-#' @return a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains 3 elements :
-#' (1) value : a list of dataframes where each dataframe contains the sid, the mtime, the sensor data, x position (longitude), y position (latitude) and the explanatory variables
-#' (2) condition : a character specifying if the functions has encountered success, warning, error
-#' (3) message : the message relative to the condition
+#' @return A 2 elements named list : \code{snitch} & \code{output}. \cr
+#' \code{snitch} is \code{TRUE} if function has provided the expected result. \cr
+#' \code{output} is a named list which contains :
+#' \itemize{
+#'   \item \code{value} is a list of dataframes where each dataframe contains the sid, the mtime, the sensor data, x position (longitude), y position (latitude) and the explanatory variables
+#'   \item \code{condition} is a character specifying if the function has encountered success, warning, error.
+#'   \item \code{message} is the message relative to the condition.
+#' }
 #' @examples
 #'\dontrun{
 #' # get the dataset

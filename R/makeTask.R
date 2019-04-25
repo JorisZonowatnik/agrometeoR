@@ -4,11 +4,15 @@
 #' @param dataset a dataframe containing an hourly/daily set of records you want to transform to a mlr task
 #' @param target a charachter specifying the name of the target variable
 #' @param drop a character vector specifying the explanatory variables you want to drop.
-#' @return a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains 4 elements :
-#' (1) value : an object which classes are "RegrTask" "SupervisedTask" "Task"
-#' (2) condition : a character specifying if the functions has encountered success, warning, error
-#' (3) message : the message relative to the condition
-#' (4) stations : a numeric vector containing the sids of the stations that were kept to build the task
+#' @return A 2 elements named list : \code{snitch} & \code{output}. \cr
+#' \code{snitch} is \code{TRUE} if function has provided the expected result. \cr
+#' \code{output} is a named list which contains :
+#' \itemize{
+#'   \item \code{value} is a list which objects are of classes \code{mlr::RegrTask()}
+#'   \item \code{condition} is a character specifying if the function has encountered success, warning, error.
+#'   \item \code{message} is the message relative to the condition.
+#'   \item \code{stations} is a numeric vector containing the sids of the stations that were kept to build the task
+#' }
 #' @examples
 #'\dontrun{
 #' # create the dataset

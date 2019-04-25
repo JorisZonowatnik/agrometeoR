@@ -12,10 +12,14 @@ makeSpatialization(model, pred.grid = grid.df)
 \item{pred.grid}{an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained}
 }
 \value{
-a 2 elements named list : (1) snitch and (2) output. snitch is TRUE if function has provided the expected result. output is a named list which contains
-(1) value : an object of class list where first element is a data.frame containing the spatialized data and the second element is a data.frame containing the summary data
-(2) condition : a character specifying if the functions has encountered success, warning, error
-(3) message : the message relative to the condition
+A 2 elements named list : \code{snitch} & \code{output}. \cr
+\code{snitch} is \code{TRUE} if function has provided the expected result. \cr
+\code{output} is a named list which contains :
+\itemize{
+  \item \code{value} is an object of class list where first element is a dataframe containing the spatialized data and the second element is a data.frame containing the summary data
+  \item \code{condition} is a character specifying if the function has encountered success, warning, error.
+  \item \code{message} is the message relative to the condition.
+}
 }
 \examples{
 \dontrun{

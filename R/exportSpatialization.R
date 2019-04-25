@@ -7,7 +7,7 @@
 #' @param path a character specifying the path where you want your geosonfile to be stored. Default = working directory
 #' @param filename a character specifying the name you want to give to the file. If NULL the output is returned as a character. Default = NULL
 #' @param format a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"
-#' @return A 2 elements named list : \code{snitch} (2) output. \cr
+#' @return A 2 elements named list : \code{snitch} & \code{output}. \cr
 #' \code{snitch} is \code{TRUE} if function has provided the expected result. \cr
 #' \code{output} is a named list which contains :
 #' \itemize{
