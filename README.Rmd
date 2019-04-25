@@ -99,7 +99,8 @@ local({r <- getOption("repos")
 `devtools` (to install packages from github) and `packrat` (to install all the other packages in a sandbox environment). To do so, open your R console and type the following : 
 
 ```r
-install.packages("devtools")
+# remotes version 2.0.4 is bugged ! 
+install.packages("remotes", version = "2.0.2")
 install.packages("packrat")
 ```
 
@@ -126,7 +127,7 @@ You are now in packrat mode for this folder. All the package you will install fr
 In your R console : 
 
 ```r
-devtools::install_github("pokyah/agrometeoR", ref = "master")
+remotes::install_github("pokyah/agrometeoR", ref = "master")
 ```
 
 This command will also automatically install all the required R packages needed to make this package work (these are specified in the [DESCRIPTION](./DESCRIPTION) file of the package) into your project packrat private library.
@@ -150,7 +151,6 @@ Multiple objects come precompiled with the package :
 * `agrometeorLearners`
 * `grid.df` & `grid.sf` & `grid.squares.sf`
 * `stations.df` $ `stations.sf` 
-
 
 ## Logo
 
