@@ -14,7 +14,7 @@ makeDataset(user_token = Sys.getenv("AGROMET_API_V1_KEY"),
 \item{sensors}{a character vector specifying the name of the sensors for which you data.
 One of tsa, hct, hra, ens, plu, vvt.}
 
-\item{stations}{a character vector specifying the sid's of the stations to use}
+\item{stations}{a character vector specifying the sid's of the stations to use.}
 
 \item{dfrom}{a datetime string specifying the dateTime from which you want data
 Must have the form "YYYY-MM-DDTHH:MM:SSZ"}
