@@ -40,6 +40,8 @@ A 2 elements named list : \code{snitch} & \code{output}. \cr
 you can both store the encoded string in a variable and in a file by specifying write = TRUE
 }
 \examples{
+# load magrittr for pipe use : \%>\%
+library(magrittr)
 \dontrun{
 # create the dataset
 myDataset = makeDataset(

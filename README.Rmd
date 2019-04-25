@@ -81,6 +81,19 @@ sudo apt update
 sudo apt install r-base
 ```
 
+#### Specify your CRAN repository mirror
+
+In your home folder create a file named `.Rprofile` and paste these lines into it : 
+
+```
+## Default repo
+local({r <- getOption("repos")
+       r["CRAN"] <- "https://cloud.r-project.org"
+       options(repos=r)
+})
+```
+
+
 #### Install the two system wide required packages
 
 `devtools` (to install packages from github) and `packrat` (to install all the other packages in a sandbox environment). To do so, open your R console and type the following : 
@@ -103,7 +116,7 @@ mkdir <YOUR_PROJECT>
 Open your R console in this folder and initialize packrat :
 
 ```r
-packrat::init()
+packrat::init( infer.dependencies = FALSE)
 ```
 
 You are now in packrat mode for this folder. All the package you will install from this folder will be installed in the folder private library (see [packrat doc](https://rstudio.github.io/packrat/) for more information).
@@ -125,6 +138,10 @@ This API key is required to get data from the PAMESEB database. At the root of y
 `AGROMET_API_V1_KEY = <YOUR_TOKEN>`
 
 You are now ready to go ! 
+
+#### Run an example
+
+`example(topic = makeDataset, package = "agrometeoR", run.dontrun = TRUE)`
 
 ## Packages datasets 
 

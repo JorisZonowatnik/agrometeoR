@@ -6,8 +6,8 @@
 \usage{
 makeBatchOfBenchExp(tasks, learners, measures = list(rmse),
   keep.pred = TRUE, models = FALSE, grouping = 1000,
-  level = "mlr.benchmark", resamplings = "LOO", cpus = 1, prefix = "",
-  temp_dir = "bmrs", removeTemp = FALSE)
+  level = "mlr.benchmark", resamplings = "LOO", cpus = 1,
+  prefix = "", temp_dir = "bmrs", removeTemp = FALSE)
 }
 \arguments{
 \item{tasks}{a list which elements are object of class mlr::makeRegrTask()}
@@ -37,6 +37,9 @@ Default to FALSE}
 }
 \value{
 a list which elements are objects of class mlr::benchmark()
+}
+\description{
+make a multicore parallelized mlr benchmark experiment for various learners on multiple tasks
 }
 \author{
 Thomas Goossens

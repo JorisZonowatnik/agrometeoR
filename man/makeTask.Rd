@@ -29,8 +29,14 @@ A 2 elements named list
     }
  }
 }
+\description{
+make a single mlr regression task for a single set of hourly/daily records
+}
 \examples{
 \dontrun{
+# load magrittr for pipe use : \%>\%
+library(magrittr)
+
 # create the dataset
 myDataset = makeDataset(
   dfrom = "2017-03-04T15:00:00Z",

@@ -45,6 +45,9 @@ A 2 elements named list
     }
  }
 }
+\description{
+make a dataframe of stations records for each requested hour
+}
 \examples{
 \dontrun{
 # get the dataset

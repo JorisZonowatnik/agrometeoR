@@ -25,6 +25,8 @@
 #'   \item message is the message relative to the condition.
 #' }
 #' @examples
+#' # load magrittr for pipe use : %>%
+#' library(magrittr)
 #'\dontrun{
 #' # create the dataset
 #' myDataset = makeDataset(

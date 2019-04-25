@@ -25,8 +25,13 @@ A 2 elements named list
     }
  }
 }
+\description{
+make a spatialization of a gridded dataset using a mlr model
+}
 \examples{
 \dontrun{
+# load magrittr for pipe use : \%>\%
+library(magrittr)
 # create the dataset
 myDataset = makeDataset(
   dfrom = "2017-03-04T15:00:00Z",
