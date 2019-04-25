@@ -178,6 +178,15 @@ As shown in the previous tables, the hyper-parameters values for the kriging lea
 
 In a next future, it might be interesting to use an hyper-tuning loop in order to find the best-hyperparameters values to use. Note that this is a very computationnaly intensive step.
 
+# Metadata of makeSpatialization to store in the database
+
+* RMSE de la LOOCV de l'EC utilisée (retour)
+* l'EC utilisée parmi range d'EC benchmarkées (input)
+* par réseau, les stations gardées (retour)
+* summary (retour)
+*
+
+
 # References
 
 
