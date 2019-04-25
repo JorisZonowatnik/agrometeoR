@@ -85,7 +85,7 @@ sudo apt install r-base
 
 In your home folder create a file named `.Rprofile` and paste these lines into it : 
 
-```
+```r
 ## Default repo
 local({r <- getOption("repos")
        r["CRAN"] <- "https://cloud.r-project.org"
