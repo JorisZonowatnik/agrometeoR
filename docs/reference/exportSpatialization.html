@@ -180,11 +180,11 @@
     </tr>
     <tr>
       <th>path</th>
-      <td><p>a character specifying the path where you want your geosonfile to be stored. Default = working directory</p></td>
+      <td><p>a character specifying the path where you want your export file to be stored. Default = working directory</p></td>
     </tr>
     <tr>
       <th>filename</th>
-      <td><p>a character specifying the name you want to give to the file. If NULL the output is returned as a character. Default = NULL</p></td>
+      <td><p>a character specifying the name you want to give to the file. If NULL the exportation is not printed into a file and the output is returned as a character. Default = NULL</p></td>
     </tr>
     <tr>
       <th>format</th>
@@ -194,7 +194,16 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A 2 elements named list : <code>snitch</code> &amp; <code>output</code>. <br />
+    <p>A 2 elements named list</p><ul>
+<li><p><code>snitch</code> : a boolean. Is <code>TRUE</code> if function has provided the expected result. Is <code>FALSE</code> is function throws an error</p></li>
+<li><p><code>output</code> : a named list which elements are :</p><ul>
+<li><p><code>value</code> : a character vector containing the data encoded into the desired exportation format</p></li>
+<li><p><code>condition</code> : a character specifying the condition encountered by the : success, warning, or error.</p></li>
+<li><p><code>message</code> : a character specifying the message relative to the condition.</p></li>
+</ul></li>
+</ul>
+
+<p>A 2 elements named list : <code>snitch</code> &amp; <code>output</code>. <br />
 <code>snitch</code> is <code>TRUE</code> if function has provided the expected result. <br />
 <code>output</code> is a named list which contains :</p><ul>
 <li><p>value is a character vector containing the data encoded into the desired exportation format.</p></li>

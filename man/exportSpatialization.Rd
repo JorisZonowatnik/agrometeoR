@@ -10,13 +10,23 @@ exportSpatialization(spatialized, path = getwd(), filename = NULL,
 \arguments{
 \item{spatialized}{a dataframe containing the gridded predicted values}
 
-\item{path}{a character specifying the path where you want your geosonfile to be stored. Default = working directory}
+\item{path}{a character specifying the path where you want your export file to be stored. Default = working directory}
 
-\item{filename}{a character specifying the name you want to give to the file. If NULL the output is returned as a character. Default = NULL}
+\item{filename}{a character specifying the name you want to give to the file. If NULL the exportation is not printed into a file and the output is returned as a character. Default = NULL}
 
 \item{format}{a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"}
 }
 \value{
+A 2 elements named list
+\itemize{
+  \item \code{snitch} : a boolean. Is \code{TRUE} if function has provided the expected result. Is \code{FALSE} is function throws an error
+  \item \code{output} : a named list which elements are :\itemize{
+    \item \code{value} : a character vector containing the data encoded into the desired exportation format
+    \item \code{condition} : a character specifying the condition encountered by the : success, warning, or error.
+    \item \code{message} : a character specifying the message relative to the condition.
+    }
+ }
+
 A 2 elements named list : \code{snitch} & \code{output}. \cr
 \code{snitch} is \code{TRUE} if function has provided the expected result. \cr
 \code{output} is a named list which contains :

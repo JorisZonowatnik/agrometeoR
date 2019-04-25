@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>make a mlr model + model metadata for a specific task using a specific learner — makeModel • agrometeoR</title>
+<title>make a mlr model + its metadata for a specific task using a specific learner — makeModel • agrometeoR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -38,7 +38,7 @@
 
 
 
-<meta property="og:title" content="make a mlr model + model metadata for a specific task using a specific learner — makeModel" />
+<meta property="og:title" content="make a mlr model + its metadata for a specific task using a specific learner — makeModel" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -155,7 +155,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>make a mlr model + model metadata for a specific task using a specific learner</h1>
+    <h1>make a mlr model + its metadata for a specific task using a specific learner</h1>
     <small class="dont-index">Source: <a href='https://github.com/pokyah/agrometeoR/blob/master/R/makeModel.R'><code>R/makeModel.R</code></a></small>
     <div class="hidden name"><code>makeModel.Rd</code></div>
     </div>
@@ -181,12 +181,20 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A 2 elements named list : <code>snitch</code> (2) output. <br /></p>
-<p>A 2 elements named list : <code>snitch</code> &amp; <code>output</code>. <br />
-<code>output</code> is a named list which contains :</p><ul>
-<li><p><code>value</code> is an object of class list made of 3 elements which are of classes <code>mlr::makeWrappedMode()</code>, "dataframe", and "list"</p></li>
-<li><p><code>condition</code> is a character specifying if the function has encountered success, warning, error.</p></li>
-<li><p><code>message</code> is the message relative to the condition.</p></li>
+    <p>A 2 elements named list</p><ul>
+<li><p><code>snitch</code> : a boolean. Is <code>TRUE</code> if function has provided the expected result. Is <code>FALSE</code> is function throws an error</p></li>
+<li><p><code>output</code> : a named list which elements are :</p><ul>
+<li><p><code>value</code> : a named list which elements are :</p><ul>
+<li><p><code>trained</code> : an element of class <code>mlr::makeWrappedMode()</code></p></li>
+<li><p><code>predictions</code> an element of class <code>data.frame</code> containing the predictions made by the trained model at station locations. Colnames are <code>truth</code> (= observations), <code>response</code> (= predictions), <code>se</code> (= standard error) and <code>residuals</code> (= truth - response)</p></li>
+<li><p><code>perfs</code> : a named list which elements are :</p><ul>
+<li><p><code>iters</code> : a dataframe containing the information relative to the leave-one-out cross validation of the model. Colnames are <code>learner.id</code>, <code>iter</code>, <code>rmse</code>, <code>mse</code>, <code>mae</code>, <code>timetrain</code></p></li>
+<li><p><code>agg</code> : a dataframe containing the aggregated performances of the LOOCV. Same colnames as <code>iters</code></p></li>
+</ul></li>
+</ul></li>
+<li><p><code>condition</code> : a character specifying the condition encountered by the : success, warning, or error.</p></li>
+<li><p><code>message</code> : a character specifying the message relative to the condition.</p></li>
+</ul></li>
 </ul>
 
     

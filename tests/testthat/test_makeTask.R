@@ -75,17 +75,15 @@ test_goodInput = function(){test_that("Expected behaviour in case of good parame
     if (names(groups[group]) == "good") {
       for (case in 1:length(group)) {
         object = do.call(what = makeTask, args = groups[[group]][[case]])
-        # browser()
+
+        browser()
         # the snitch is at TRUE
         expect_true(object$snitch)
-        # the returned object at slot output value is of class RegrTask
-        expect_is(object$output$value, class = "RegrTask")
-        # the returned object at slot output stations used is not NULL and has length >= 1
+        # the returned object at slot output value as an element of class RegrTask
+        expect_is(object$output$value$task, class = "RegrTask")
+        # the returned object at slot output stations$used is not NULL and has length >= 1
         expect_is(object$output$stations$used, class = "integer")
         expect_gte(length(object$output$stations$used), 1)
-        # the returned object at slot output stations ignored is NULL
-        expect_null(object$output$stations$ignored)
-
       }
     }
   }

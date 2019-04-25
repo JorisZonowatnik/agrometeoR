@@ -1,17 +1,25 @@
 #' @export
-#' @title make a mlr model + model metadata for a specific task using a specific learner
+#' @title make a mlr model + its metadata for a specific task using a specific learner
 #' @author Thomas Goossens
 #' @import mlr
 #' @param task an object of class mlr::makeRegrTask()
 #' @param learner an object of class mlr::makeLearner()
-#' @return A 2 elements named list : \code{snitch} (2) output. \cr
-#' @return A 2 elements named list : \code{snitch} & \code{output}. \cr
-#' \code{output} is a named list which contains :
+#' @return A 2 elements named list
 #' \itemize{
-#'   \item \code{value} is an object of class list made of 3 elements which are of classes \code{mlr::makeWrappedMode()}, "dataframe", and "list"
-#'   \item \code{condition} is a character specifying if the function has encountered success, warning, error.
-#'   \item \code{message} is the message relative to the condition.
-#' }
+#'   \item \code{snitch} : a boolean. Is \code{TRUE} if function has provided the expected result. Is \code{FALSE} is function throws an error
+#'   \item \code{output} : a named list which elements are :\itemize{
+#'     \item \code{value} : a named list which elements are : \itemize{
+#'       \item \code{trained} : an element of class \code{mlr::makeWrappedMode()}
+#'       \item \code{predictions} an element of class \code{data.frame} containing the predictions made by the trained model at station locations. Colnames are \code{truth} (= observations), \code{response} (= predictions), \code{se} (= standard error) and \code{residuals} (= truth - response)
+#'       \item \code{perfs} : a named list which elements are : \itemize{
+#'         \item \code{iters} : a dataframe containing the information relative to the leave-one-out cross validation of the model. Colnames are \code{learner.id}, \code{iter}, \code{rmse}, \code{mse}, \code{mae}, \code{timetrain}
+#'         \item \code{agg} : a dataframe containing the aggregated performances of the LOOCV. Same colnames as \code{iters}
+#'         }
+#'      }
+#'       \item \code{condition} : a character specifying the condition encountered by the : success, warning, or error.
+#'       \item \code{message} : a character specifying the message relative to the condition.
+#'     }
+#'  }
 #' @examples
 #'\dontrun{
 #' # create the dataset

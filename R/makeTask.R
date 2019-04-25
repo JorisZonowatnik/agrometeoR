@@ -1,18 +1,23 @@
 #' @export
-#' @title make a single mlr regr task for a single set of hourly/daily records
+#' @title make a single mlr regression task for a single set of hourly/daily records
 #' @author Thomas Goossens
 #' @param dataset a dataframe containing an hourly/daily set of records you want to transform to a mlr task
 #' @param target a charachter specifying the name of the target variable
 #' @param drop a character vector specifying the explanatory variables you want to drop.
-#' @return A 2 elements named list : \code{snitch} & \code{output}. \cr
-#' \code{snitch} is \code{TRUE} if function has provided the expected result. \cr
-#' \code{output} is a named list which contains :
+#' @return A 2 elements named list
 #' \itemize{
-#'   \item \code{value} is a list which objects are of classes \code{mlr::RegrTask()}
-#'   \item \code{condition} is a character specifying if the function has encountered success, warning, error.
-#'   \item \code{message} is the message relative to the condition.
-#'   \item \code{stations} is a numeric vector containing the sids of the stations that were kept to build the task
-#' }
+#'   \item \code{snitch} : a boolean. Is \code{TRUE} if function has provided the expected result. Is \code{FALSE} is function throws an error
+#'   \item \code{output} : a named list which elements are :
+#'     \itemize{
+#'       \item \code{value} : a list which elements are of classes \code{mlr::RegrTask()}
+#'       \item \code{condition} : a character specifying the condition encountered by the : success, warning, or error.
+#'       \item \code{message} : a character specifying the message relative to the condition.
+#'       \item \code{stations} : a named list which elements are  \itemize{
+#'         \item \code{used} : an integer vector of the sids of the used stations for the task creation
+#'         \item \code{ignored} an integer vector of the sids of the ignored stations for the task creation
+#'         }
+#'     }
+#'  }
 #' @examples
 #'\dontrun{
 #' # create the dataset

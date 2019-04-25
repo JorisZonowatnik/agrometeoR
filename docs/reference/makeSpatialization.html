@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>spatialize a gridded dataset using a mlr model — makeSpatialization • agrometeoR</title>
+<title>make a spatialization of a gridded dataset using a mlr model — makeSpatialization • agrometeoR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -38,7 +38,7 @@
 
 
 
-<meta property="og:title" content="spatialize a gridded dataset using a mlr model — makeSpatialization" />
+<meta property="og:title" content="make a spatialization of a gridded dataset using a mlr model — makeSpatialization" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -155,7 +155,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>spatialize a gridded dataset using a mlr model</h1>
+    <h1>make a spatialization of a gridded dataset using a mlr model</h1>
     <small class="dont-index">Source: <a href='https://github.com/pokyah/agrometeoR/blob/master/R/makeSpatialization.R'><code>R/makeSpatialization.R</code></a></small>
     <div class="hidden name"><code>makeSpatialization.Rd</code></div>
     </div>
@@ -181,12 +181,16 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A 2 elements named list : <code>snitch</code> &amp; <code>output</code>. <br />
-<code>snitch</code> is <code>TRUE</code> if function has provided the expected result. <br />
-<code>output</code> is a named list which contains :</p><ul>
-<li><p><code>value</code> is an object of class list where first element is a dataframe containing the spatialized data and the second element is a data.frame containing the summary data</p></li>
-<li><p><code>condition</code> is a character specifying if the function has encountered success, warning, error.</p></li>
-<li><p><code>message</code> is the message relative to the condition.</p></li>
+    <p>A 2 elements named list</p><ul>
+<li><p><code>snitch</code> : a boolean. Is <code>TRUE</code> if function has provided the expected result. Is <code>FALSE</code> is function throws an error</p></li>
+<li><p><code>output</code> : a named list which elements are :</p><ul>
+<li><p><code>value</code> : a named list which elements are :</p><ul>
+<li><p><code>spatialized</code> : an element of class <code>data.frame</code>. colnames are <code>px</code> (= reference of the pixel), <code>response</code> (= prediction value), <code>se</code> (= prediction standard error)</p></li>
+<li><p><code>summary</code> an element of class <code>data.frame</code> containing summary information about grid prediction. colnames are <code>min.response</code>, <code>max.response</code>, <code>mean.response</code>, <code>min.se</code>, <code>max.se</code>, <code>mean.se</code></p></li>
+</ul></li>
+<li><p><code>condition</code> : a character specifying the condition encountered by the : success, warning, or error.</p></li>
+<li><p><code>message</code> : a character specifying the message relative to the condition.</p></li>
+</ul></li>
 </ul>
 
     

@@ -2,7 +2,7 @@
 #' @title make a dataframe of stations records for each requested hour
 #' @author Thomas Goossens
 #' @param token a character specifying your agrometAPI token
-#' @param stations a character vector specifying the sid's of the stations to use
+#' @param stations a character vector specifying the sid's of the stations to use.
 #' @param json a character specifying the path of a json file constructed from a batch db export.
 #' If NULL the API will be called.
 #' @param dfrom a datetime string specifying the dateTime from which you want data
@@ -15,14 +15,16 @@
 #' Any combinations of inca, ens
 #' @param staticExpl a character vector specifying the desired static explanatory variables
 #' Any combinations of "elevation", "slope", "aspect", "Agricultural_areas", "Artificials_surfaces", "Forest", "Herbaceous_vegetation". Latitude and longitude are always provided. Default = "Elevation"
-#' @return A 2 elements named list : \code{snitch} & \code{output}. \cr
-#' \code{snitch} is \code{TRUE} if function has provided the expected result. \cr
-#' \code{output} is a named list which contains :
+#' @return A 2 elements named list
 #' \itemize{
-#'   \item \code{value} is a list of dataframes where each dataframe contains the sid, the mtime, the sensor data, x position (longitude), y position (latitude) and the explanatory variables
-#'   \item \code{condition} is a character specifying if the function has encountered success, warning, error.
-#'   \item \code{message} is the message relative to the condition.
-#' }
+#'   \item \code{snitch} : a boolean. Is \code{TRUE} if function has provided the expected result. Is \code{FALSE} is function throws an error
+#'   \item \code{output} : a named list which elements are :
+#'     \itemize{
+#'       \item \code{value} : a list which elements are of classes \code{data.frame} which colnames correspond to sid, mtime, the sensors, x (latitude), y (longitude) and the explanatory variables
+#'       \item \code{condition} : a character specifying the condition encountered by the : success, warning, or error.
+#'       \item \code{message} : a character specifying the message relative to the condition.
+#'     }
+#'  }
 #' @examples
 #'\dontrun{
 #' # get the dataset
@@ -46,6 +48,7 @@ makeDataset <- function(
   api_request = "https://app.pameseb.be/agromet/api/v2/sp/cleandata",
   sensors = "tsa",
   stations = "all",
+  stations_meta = stations.df,
   dfrom = NULL,
   dto = NULL,
   json = NULL,
@@ -132,7 +135,7 @@ makeDataset <- function(
 
       # Transform mtime column to posix format for easier time handling
       dataset = dataset %>%
-        dplyr::mutate_at(.vars = vars(mtime), as.POSIXct, format = "%Y-%m-%dT%H:%M:%S", tz = "GMT-2")
+        dplyr::mutate_at(.vars = dplyr::vars(mtime), as.POSIXct, format = "%Y-%m-%dT%H:%M:%S", tz = "GMT-2")
 
       # Transform sid, sensors cols, altitude, longitude, latitude columns from character to numeric
       dataset = suppressWarnings(

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>make a single mlr regr task for a single set of hourly/daily records — makeTask • agrometeoR</title>
+<title>make a single mlr regression task for a single set of hourly/daily records — makeTask • agrometeoR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -38,7 +38,7 @@
 
 
 
-<meta property="og:title" content="make a single mlr regr task for a single set of hourly/daily records — makeTask" />
+<meta property="og:title" content="make a single mlr regression task for a single set of hourly/daily records — makeTask" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -155,7 +155,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>make a single mlr regr task for a single set of hourly/daily records</h1>
+    <h1>make a single mlr regression task for a single set of hourly/daily records</h1>
     <small class="dont-index">Source: <a href='https://github.com/pokyah/agrometeoR/blob/master/R/makeTask.R'><code>R/makeTask.R</code></a></small>
     <div class="hidden name"><code>makeTask.Rd</code></div>
     </div>
@@ -185,13 +185,17 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A 2 elements named list : <code>snitch</code> &amp; <code>output</code>. <br />
-<code>snitch</code> is <code>TRUE</code> if function has provided the expected result. <br />
-<code>output</code> is a named list which contains :</p><ul>
-<li><p><code>value</code> is a list which objects are of classes <code><a href='https://rdrr.io/pkg/mlr/man/Task.html'>mlr::RegrTask()</a></code></p></li>
-<li><p><code>condition</code> is a character specifying if the function has encountered success, warning, error.</p></li>
-<li><p><code>message</code> is the message relative to the condition.</p></li>
-<li><p><code>stations</code> is a numeric vector containing the sids of the stations that were kept to build the task</p></li>
+    <p>A 2 elements named list</p><ul>
+<li><p><code>snitch</code> : a boolean. Is <code>TRUE</code> if function has provided the expected result. Is <code>FALSE</code> is function throws an error</p></li>
+<li><p><code>output</code> : a named list which elements are :</p><ul>
+<li><p><code>value</code> : a list which elements are of classes <code><a href='https://rdrr.io/pkg/mlr/man/Task.html'>mlr::RegrTask()</a></code></p></li>
+<li><p><code>condition</code> : a character specifying the condition encountered by the : success, warning, or error.</p></li>
+<li><p><code>message</code> : a character specifying the message relative to the condition.</p></li>
+<li><p><code>stations</code> : a named list which elements are</p><ul>
+<li><p><code>used</code> : an integer vector of the sids of the used stations for the task creation</p></li>
+<li><p><code>ignored</code> an integer vector of the sids of the ignored stations for the task creation</p></li>
+</ul></li>
+</ul></li>
 </ul>
 
     

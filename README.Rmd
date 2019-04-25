@@ -128,7 +128,11 @@ You are now ready to go !
 
 ## Packages datasets 
 
-Multiple objects are availble with the package. We have created a serie of examplative datasets that correspond to functions outputs. Their names are always prefixed by `ex_`. These examplative objects are used in our unit tests performed using `testthat` package. You can laod those using the command `data("ex_<DATASET>")`. Rstudio should automatically suggest you the names. 
+Multiple objects come precompiled with the package : 
+
+* `agrometeorLearners`
+* `grid.df` & `grid.sf` & `grid.squares.sf`
+* `stations.df` $ `stations.sf` 
 
 
 ## Logo

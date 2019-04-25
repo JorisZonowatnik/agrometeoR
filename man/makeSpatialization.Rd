@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeSpatialization.R
 \name{makeSpatialization}
 \alias{makeSpatialization}
-\title{spatialize a gridded dataset using a mlr model}
+\title{make a spatialization of a gridded dataset using a mlr model}
 \usage{
 makeSpatialization(model, pred.grid = grid.df)
 }
@@ -12,14 +12,18 @@ makeSpatialization(model, pred.grid = grid.df)
 \item{pred.grid}{an object of class sf::st_makegrid(). This object must contains the same column names as the task on which the model has been trained}
 }
 \value{
-A 2 elements named list : \code{snitch} & \code{output}. \cr
-\code{snitch} is \code{TRUE} if function has provided the expected result. \cr
-\code{output} is a named list which contains :
+A 2 elements named list
 \itemize{
-  \item \code{value} is an object of class list where first element is a dataframe containing the spatialized data and the second element is a data.frame containing the summary data
-  \item \code{condition} is a character specifying if the function has encountered success, warning, error.
-  \item \code{message} is the message relative to the condition.
-}
+  \item \code{snitch} : a boolean. Is \code{TRUE} if function has provided the expected result. Is \code{FALSE} is function throws an error
+  \item \code{output} : a named list which elements are :\itemize{
+    \item \code{value} : a named list which elements are : \itemize{
+      \item \code{spatialized} : an element of class \code{data.frame}. colnames are \code{px} (= reference of the pixel), \code{response} (= prediction value), \code{se} (= prediction standard error)
+      \item \code{summary} an element of class \code{data.frame} containing summary information about grid prediction. colnames are \code{min.response}, \code{max.response}, \code{mean.response}, \code{min.se}, \code{max.se}, \code{mean.se}
+     }
+      \item \code{condition} : a character specifying the condition encountered by the : success, warning, or error.
+      \item \code{message} : a character specifying the message relative to the condition.
+    }
+ }
 }
 \examples{
 \dontrun{

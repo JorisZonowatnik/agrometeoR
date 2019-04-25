@@ -91,7 +91,7 @@ devtools::use_data(
   ex_makeModel,
   ex_makeSpatialization,
   overwrite = TRUE,
-  internal = FALSE)
+  internal = TRUE)
 
 devtools::use_data(
   ex_bad_user_token,

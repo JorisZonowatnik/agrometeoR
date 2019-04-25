@@ -6,8 +6,9 @@
 \usage{
 makeDataset(user_token = Sys.getenv("AGROMET_API_V1_KEY"),
   api_request = "https://app.pameseb.be/agromet/api/v2/sp/cleandata",
-  sensors = "tsa", stations = "all", dfrom = NULL, dto = NULL,
-  json = NULL, staticExpl = "elevation", dynExpl = NULL)
+  sensors = "tsa", stations = "all", stations_meta = stations.df,
+  dfrom = NULL, dto = NULL, json = NULL, staticExpl = "elevation",
+  dynExpl = NULL)
 }
 \arguments{
 \item{sensors}{a character vector specifying the name of the sensors for which you data.
@@ -33,14 +34,16 @@ Any combinations of inca, ens}
 \item{token}{a character specifying your agrometAPI token}
 }
 \value{
-A 2 elements named list : \code{snitch} & \code{output}. \cr
-\code{snitch} is \code{TRUE} if function has provided the expected result. \cr
-\code{output} is a named list which contains :
+A 2 elements named list
 \itemize{
-  \item \code{value} is a list of dataframes where each dataframe contains the sid, the mtime, the sensor data, x position (longitude), y position (latitude) and the explanatory variables
-  \item \code{condition} is a character specifying if the function has encountered success, warning, error.
-  \item \code{message} is the message relative to the condition.
-}
+  \item \code{snitch} : a boolean. Is \code{TRUE} if function has provided the expected result. Is \code{FALSE} is function throws an error
+  \item \code{output} : a named list which elements are :
+    \itemize{
+      \item \code{value} : a list which elements are of classes \code{data.frame} which colnames correspond to sid, mtime, the sensors, x (latitude), y (longitude) and the explanatory variables
+      \item \code{condition} : a character specifying the condition encountered by the : success, warning, or error.
+      \item \code{message} : a character specifying the message relative to the condition.
+    }
+ }
 }
 \examples{
 \dontrun{
