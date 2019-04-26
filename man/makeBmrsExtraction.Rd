@@ -46,7 +46,7 @@ myDataset = myDataset$output$value
 # create the tasks
 myTasks = purrr::map(myDataset, makeTask, target = "tsa")
 
-#' # extract the used sids of each task from the outputs
+# extract the used sids of each task from the outputs
 myUsedSids = myTasks \%>\% purrr::modify_depth(1, ~.$output$stations$used)
 
 # extract the tasks from the outputs
@@ -71,10 +71,13 @@ removeTemp = FALSE)
 myBmrsBatch = myBmrsBatch$output$value
 
 # Get the extraction from myBmrsBatch
-myBrmsExtraction = makeBmrsExtraction(myBmrsBatch, myTasks, myUsedSids, as.df = TRUE)
+myBmrsExtraction = makeBmrsExtraction(myBmrsBatch, myTasks, myUsedSids, as.df = TRUE)
+
+# Keeping the relevant information
+myBmrsExtraction = myBmrsExtraction$output$value
 
 # Get an excerpt of the output
-head(myBmrsExtraction$output$value)
+head(myBmrsExtraction)
 }
 }
 \author{

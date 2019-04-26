@@ -256,7 +256,7 @@ Default to FALSE</p></td>
 <span class='co'># create the tasks</span>
 <span class='no'>myTasks</span> <span class='kw'>=</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span>(<span class='no'>myDataset</span>, <span class='no'>makeTask</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
 
-<span class='co'>#' # extract the used sids of each task from the outputs</span>
+<span class='co'># extract the used sids of each task from the outputs</span>
 <span class='no'>myUsedSids</span> <span class='kw'>=</span> <span class='no'>myTasks</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/modify.html'>modify_depth</a></span>(<span class='fl'>1</span>, ~<span class='no'>.</span>$<span class='no'>output</span>$<span class='no'>stations</span>$<span class='no'>used</span>)
 
 <span class='co'># extract the tasks from the outputs</span>

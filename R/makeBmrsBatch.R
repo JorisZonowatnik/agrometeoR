@@ -43,7 +43,7 @@
 #' # create the tasks
 #' myTasks = purrr::map(myDataset, makeTask, target = "tsa")
 #'
-#'#' # extract the used sids of each task from the outputs
+#' # extract the used sids of each task from the outputs
 #' myUsedSids = myTasks %>% purrr::modify_depth(1, ~.$output$stations$used)
 #'
 #' # extract the tasks from the outputs

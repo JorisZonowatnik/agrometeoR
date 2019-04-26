@@ -220,7 +220,7 @@
 <span class='co'># create the tasks</span>
 <span class='no'>myTasks</span> <span class='kw'>=</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span>(<span class='no'>myDataset</span>, <span class='no'>makeTask</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
 
-<span class='co'>#' # extract the used sids of each task from the outputs</span>
+<span class='co'># extract the used sids of each task from the outputs</span>
 <span class='no'>myUsedSids</span> <span class='kw'>=</span> <span class='no'>myTasks</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/modify.html'>modify_depth</a></span>(<span class='fl'>1</span>, ~<span class='no'>.</span>$<span class='no'>output</span>$<span class='no'>stations</span>$<span class='no'>used</span>)
 
 <span class='co'># extract the tasks from the outputs</span>
@@ -245,10 +245,13 @@
 <span class='no'>myBmrsBatch</span> <span class='kw'>=</span> <span class='no'>myBmrsBatch</span>$<span class='no'>output</span>$<span class='no'>value</span>
 
 <span class='co'># Get the extraction from myBmrsBatch</span>
-<span class='no'>myBrmsExtraction</span> <span class='kw'>=</span> <span class='fu'>makeBmrsExtraction</span>(<span class='no'>myBmrsBatch</span>, <span class='no'>myTasks</span>, <span class='no'>myUsedSids</span>, <span class='kw'>as.df</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>myBmrsExtraction</span> <span class='kw'>=</span> <span class='fu'>makeBmrsExtraction</span>(<span class='no'>myBmrsBatch</span>, <span class='no'>myTasks</span>, <span class='no'>myUsedSids</span>, <span class='kw'>as.df</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='co'># Keeping the relevant information</span>
+<span class='no'>myBmrsExtraction</span> <span class='kw'>=</span> <span class='no'>myBmrsExtraction</span>$<span class='no'>output</span>$<span class='no'>value</span>
 
 <span class='co'># Get an excerpt of the output</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>myBmrsExtraction</span>$<span class='no'>output</span>$<span class='no'>value</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>myBmrsExtraction</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

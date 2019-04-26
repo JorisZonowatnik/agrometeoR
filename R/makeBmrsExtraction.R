@@ -33,7 +33,7 @@
 #' # create the tasks
 #' myTasks = purrr::map(myDataset, makeTask, target = "tsa")
 #'
-#'#' # extract the used sids of each task from the outputs
+#' # extract the used sids of each task from the outputs
 #' myUsedSids = myTasks %>% purrr::modify_depth(1, ~.$output$stations$used)
 #'
 #' # extract the tasks from the outputs
@@ -58,10 +58,13 @@
 #' myBmrsBatch = myBmrsBatch$output$value
 #'
 #' # Get the extraction from myBmrsBatch
-#' myBrmsExtraction = makeBmrsExtraction(myBmrsBatch, myTasks, myUsedSids, as.df = TRUE)
+#' myBmrsExtraction = makeBmrsExtraction(myBmrsBatch, myTasks, myUsedSids, as.df = TRUE)
+#'
+#' # Keeping the relevant information
+#' myBmrsExtraction = myBmrsExtraction$output$value
 #'
 #' # Get an excerpt of the output
-#' head(myBmrsExtraction$output$value)
+#' head(myBmrsExtraction)
 #' }
 
 
@@ -132,6 +135,20 @@ makeBmrsExtraction <- function(
         purrr::map_df(.,c, .id = "learner")
     }
 
+    ## converting the colmuns to the proprer classes and removing useless information
+    dataset = dataset %>%
+      dplyr::select(dplyr::one_of(c("learner", "datetime", "iter", "rmse", "id", "truth", "response", "se", "residuals", "sid"))) %>%
+      dplyr::mutate_at(dplyr::vars("id", "sid", "learner"), as.factor)
+
+    if (nchar(dataset$datetime[1]) > 8){
+      dataset = dataset %>%
+        dplyr::mutate_at(dplyr::vars("datetime"), lubridate::ymd_hms)
+    }else{
+      dataset = dataset %>%
+        dplyr::mutate_at(dplyr::vars("datetime"), lubridate::ymd)
+    }
+
+
     # Throw a success message
     message("Success, Analysis of batch of benchmark experiments performed")
 
@@ -165,7 +182,7 @@ makeBmrsExtraction <- function(
     },
     warning = function(w){
       warning = paste0(
-        "AgrometeoR::analyzeBatchOfBenchExp raised a warning -> ",
+        "AgrometeoR::makeBmrsExtraction raised a warning -> ",
         w)
       snitch <<- TRUE
       output$value <<- doExtraction()
@@ -174,17 +191,17 @@ makeBmrsExtraction <- function(
     },
     error = function(e){
       error = paste0(
-        "AgrometeoR::analyzeBatchOfBenchExp raised an error -> ",
+        "AgrometeoR::makeBmrsExtraction raised an error -> ",
         e)
       output$condition$type <<- "error"
       output$condition$message <<- error
     },
     finally = {
       finalMessage = paste0(
-        "analyzeBatchOfBenchExp has encountered : ",
+        "makeBmrsExtraction has encountered : ",
         output$condition$type,
         ". \n",
-        "All done with analyzeBatchOfBenchExp "
+        "All done with makeBmrsExtraction "
       )
       message(finalMessage)
       return(list(snitch = snitch, output = output))
