@@ -202,15 +202,11 @@
        <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">repos=</span>r)
 })</code></pre></div>
 </div>
-<div id="install-the-two-system-wide-required-packages" class="section level4">
+<div id="install-the-packrat-package-manager" class="section level4">
 <h4 class="hasAnchor">
-<a href="#install-the-two-system-wide-required-packages" class="anchor"></a>Install the two system wide required packages</h4>
-<p><code>devtools</code> (to install packages from github) and <code>packrat</code> (to install all the other packages in a sandbox environment). To do so, open your R console and type the following :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># remotes version 2.0.4 is bugged so need to use this trick to install required version :</span>
-<span class="co"># https://stackoverflow.com/questions/17082341/installing-older-version-of-r-package</span>
-package =<span class="st"> "https://cran.r-project.org/package=remotes&amp;version=2.0.2"</span>
-utils<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="dt">pkgs =</span> package, <span class="dt">repos =</span> <span class="ot">NULL</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"packrat"</span>)</code></pre></div>
+<a href="#install-the-packrat-package-manager" class="anchor"></a>Install the packrat package manager</h4>
+<p><code>packrat</code> allows you to install all the other packages in a sandbox environment. To do so, open your R console and type the following :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"packrat"</span>)</code></pre></div>
 <p>If you are prompted to update packages, simply select <code>none</code></p>
 </div>
 <div id="create-a-folder-for-your-project-" class="section level4">
@@ -225,6 +221,15 @@ utils<span class="op">::</span><span class="kw"><a href="https://www.rdocumentat
 <p>Open your R console in this folder and initialize packrat :</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">packrat<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/packrat/topics/init">init</a></span>( <span class="dt">infer.dependencies =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>You are now in packrat mode for this folder. All the package you will install from this folder will be installed in the folder private library (see <a href="https://rstudio.github.io/packrat/">packrat doc</a> for more information).</p>
+</div>
+<div id="install-the-remotes-package" class="section level4">
+<h4 class="hasAnchor">
+<a href="#install-the-remotes-package" class="anchor"></a>Install the remotes package</h4>
+<p>This package will allow you to download the agrometeoR package from Github.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># remotes version 2.0.4 is bugged so need to use this trick to install required version :</span>
+<span class="co"># https://stackoverflow.com/questions/17082341/installing-older-version-of-r-package</span>
+package =<span class="st"> "https://cran.r-project.org/package=remotes&amp;version=2.0.2"</span>
+utils<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="dt">pkgs =</span> package, <span class="dt">repos =</span> <span class="ot">NULL</span>)</code></pre></div>
 </div>
 <div id="install-the-agrometeor-package-" class="section level4">
 <h4 class="hasAnchor">
