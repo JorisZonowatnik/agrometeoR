@@ -206,7 +206,8 @@
 <h4 class="hasAnchor">
 <a href="#install-the-two-system-wide-required-packages" class="anchor"></a>Install the two system wide required packages</h4>
 <p><code>devtools</code> (to install packages from github) and <code>packrat</code> (to install all the other packages in a sandbox environment). To do so, open your R console and type the following :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"devtools"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># remotes version 2.0.4 is bugged ! </span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"remotes"</span>, <span class="dt">version =</span> <span class="st">"2.0.2"</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"packrat"</span>)</code></pre></div>
 </div>
 <div id="create-a-folder-for-your-project-" class="section level4">
@@ -226,7 +227,7 @@
 <h4 class="hasAnchor">
 <a href="#install-the-agrometeor-package-" class="anchor"></a>Install the agrometeoR package.</h4>
 <p>In your R console :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"pokyah/agrometeoR"</span>, <span class="dt">ref =</span> <span class="st">"master"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"pokyah/agrometeoR"</span>, <span class="dt">ref =</span> <span class="st">"master"</span>)</code></pre></div>
 <p>This command will also automatically install all the required R packages needed to make this package work (these are specified in the <a href="./DESCRIPTION">DESCRIPTION</a> file of the package) into your project packrat private library.</p>
 </div>
 <div id="add-your-agromet-api-key-" class="section level4">
