@@ -99,8 +99,10 @@ local({r <- getOption("repos")
 `devtools` (to install packages from github) and `packrat` (to install all the other packages in a sandbox environment). To do so, open your R console and type the following : 
 
 ```r
-# remotes version 2.0.4 is bugged ! 
-install.packages("remotes", version = "2.0.2")
+# remotes version 2.0.4 is bugged so need to use this trick to install required version :
+# https://stackoverflow.com/questions/17082341/installing-older-version-of-r-package
+package = "https://cran.r-project.org/package=remotes&version=2.0.2"
+utils::install.packages(pkgs = package, repos = NULL)
 install.packages("packrat")
 ```
 
