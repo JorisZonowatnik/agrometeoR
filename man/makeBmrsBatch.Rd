@@ -49,6 +49,9 @@ A 2 elements named list
 \description{
 make a (multicore) mlr benchmark experiment of your learner(s) on your task(s)
 }
+\details{
+The function handles learners error. See \code{mlr::configureMlr()}.
+}
 \examples{
 \dontrun{
 # load magrittr for pipe use : \%>\%

@@ -26,6 +26,7 @@
 #'     \item \code{message} : a character specifying the message relative to the condition.
 #'     }
 #'  }
+#' @details The function handles learners error. See \code{mlr::configureMlr()}.
 #' @examples
 #'\dontrun{
 #' # load magrittr for pipe use : %>%
