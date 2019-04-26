@@ -1,0 +1,131 @@
+---
+title: "Run a benchmark from the terminal"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE , warning = FALSE)
+library(dplyr)
+library(parallelMap)
+library(mlr)
+devtools::load_all()
+```
+
+
+# Création du jeu de donnnées.
+
+Appel à l'API Agromet `spcleandata`. Cette appel permet de récupérer les darta hourly pameseb + IRM.
+Ici nous récupérons un extract de la db au format json que nous chargeons dans un object R que nous appelerons `dataset`.
+```{r}
+
+dataset = makeDataset(json = "../data-raw/extdata/AGROMET/spCleandataSensorstsaForallFm2016-01-01To2017-12-31.json", sensors = "tsa" )
+dataset = dataset$output$value
+```
+
+Création d'un subset de 20 jeux d'enregistrements horaires pour phase de test
+```{r}
+dataset_100 = dataset[1000:1099]
+dataset_20 = dataset_100
+```
+
+Création jeu de donnée PAmeseb only
+```{r}
+filterIRM = function(x){
+  x = x %>%
+    dplyr::filter(sid < 1000)
+}
+
+dataset_20_pameseb = lapply(dataset_20, filterIRM)
+```
+
+# Implémentation des learners
+
+Les learners viennent précompilés avec le package agrometeoR
+```{r}
+data(agrometeorLearners)
+learners = agrometeorLearners
+```
+
+
+# Exécution des 2 batch of benchmarks experiments
+
+## bmr Pameseb + IRM
+
+Création des tâches et récupération de l'information pertinente.
+
+la fonction makeTask() supprime les observations pour lesquelles il y a une donnée manquante. Donnée manquante gérée par API de JP : tsa state != 1 ou trou dans les data
+
+```{bash}
+ssh agromet
+tmux ls #list
+
+tmux new-session -s bmr
+
+cd Rprojects/currentProject/
+
+tmux attach
+
+path2script=$(Rscript -e "cat(system.file('server_scripts/script_prepare_bmr.R', package = 'agrometeoR'))")
+
+chmod +x $path2script
+
+chmod +x script_execute_bmr.R # must load it via system.file
+
+./makeBenchmark
+
+# type ctrl+b et puis d => hide the plex
+
+tmux attach
+
+# type exit to kill a plex
+```
+
+
+```{r}
+tasks_20_pameseb = purrr::map(dataset_20_pameseb, makeTask, target = "tsa")
+
+
+# removing the useless part of each task - subsetting list elements
+tasks_20_pameseb_2bmr =  tasks_20_pameseb %>% modify_depth(1, ~.$"output"$"value"$"task")
+
+```
+
+Exécution à proprement parlé du bmr. Attention si gros benchmark de deux ans, il faut lancer le calcul depuis un terminal et non depuis rstudio server. Voir # https://stackoverflow.com/questions/15668893/r-multicore-mcfork-unable-to-fork-cannot-allocate-memory.
+::TODO:: expliqué comment rendre fichier R exécutable depuis terminal
+```{r echo = T, results='hide'}
+bmrs_20_pameseb = makeBatchOfBenchExp(
+  tasks = tasks_20_pameseb_2bmr[1:5],
+  learners = learners,
+  measures = list(rmse, mae, mse),
+  keep.pred = TRUE, # necessary to compute residuals
+  models = FALSE,
+  grouping = 10,
+  level = "mlr.benchmark",
+  resamplings = "LOO",
+  cpus = 4,
+  prefix = "test_20_pameseb_",
+  temp_dir = "./outputs",
+  removeTemp = FALSE
+)
+```
+
+Using the benchmark results to compute bmr analysis
+```{r}
+bmrs_20_pameseb_result = bmrs_20_pameseb$output$value
+
+bmrs_20_pameseb_result_analysis = makeBmrsExtraction(benchmarkResult = bmrs_20_pameseb_result, tasks = tasks_20_pameseb[1:5], as.df = TRUE)
+```
+
+
+# plots from bmr analysis
+```{r}
+
+all_plots = makeBmrsPLots(bmrs_20_pameseb_result_analysis$output$value)
+
+
+```
+
+
+*
+
+
