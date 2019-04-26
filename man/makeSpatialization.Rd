@@ -20,7 +20,7 @@ A 2 elements named list
       \item \code{spatialized} : an element of class \code{data.frame}. colnames are \code{px} (= reference of the pixel), \code{response} (= prediction value), \code{se} (= prediction standard error)
       \item \code{summary} an element of class \code{data.frame} containing summary information about grid prediction. colnames are \code{min.response}, \code{max.response}, \code{mean.response}, \code{min.se}, \code{max.se}, \code{mean.se}
      }
-      \item \code{condition} : a character specifying the condition encountered by the : success, warning, or error.
+      \item \code{condition} : a character specifying the condition encountered by the function: success, warning, or error.
       \item \code{message} : a character specifying the message relative to the condition.
     }
  }

@@ -24,7 +24,7 @@ A 2 elements named list
         \item \code{agg} : a dataframe containing the aggregated performances of the LOOCV. Same colnames as \code{iters}
         }
      }
-      \item \code{condition} : a character specifying the condition encountered by the : success, warning, or error.
+      \item \code{condition} : a character specifying the condition encountered by the function : success, warning, or error.
       \item \code{message} : a character specifying the message relative to the condition.
     }
  }

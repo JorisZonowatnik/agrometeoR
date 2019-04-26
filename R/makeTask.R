@@ -10,7 +10,7 @@
 #'   \item \code{output} : a named list which elements are :
 #'     \itemize{
 #'       \item \code{value} : a list which elements are of classes \code{mlr::RegrTask()}
-#'       \item \code{condition} : a character specifying the condition encountered by the : success, warning, or error.
+#'       \item \code{condition} : a character specifying the condition encountered by the function: success, warning, or error.
 #'       \item \code{message} : a character specifying the message relative to the condition.
 #'       \item \code{stations} : a named list which elements are  \itemize{
 #'         \item \code{used} : an integer vector of the sids of the used stations for the task creation

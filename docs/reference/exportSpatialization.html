@@ -197,7 +197,7 @@
 <li><p><code>snitch</code> : a boolean. Is <code>TRUE</code> if function has provided the expected result. Is <code>FALSE</code> is function throws an error</p></li>
 <li><p><code>output</code> : a named list which elements are :</p><ul>
 <li><p><code>value</code> : a character vector containing the data encoded into the desired exportation format</p></li>
-<li><p><code>condition</code> : a character specifying the condition encountered by the : success, warning, or error.</p></li>
+<li><p><code>condition</code> : a character specifying the condition encountered by the function : success, warning, or error.</p></li>
 <li><p><code>message</code> : a character specifying the message relative to the condition.</p></li>
 </ul></li>
 </ul>
@@ -214,10 +214,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># load magrittr for pipe use : %&gt;%</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>magrittr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘magrittr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:testthat’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    equals, is_less_than, not</span></div><span class='co'># NOT RUN {</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>magrittr</span>)</div><span class='co'># NOT RUN {</span>
 <span class='co'># create the dataset</span>
 <span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'><a href='makeDataset.html'>makeDataset</a></span>(
   <span class='kw'>dfrom</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T15:00:00Z"</span>,

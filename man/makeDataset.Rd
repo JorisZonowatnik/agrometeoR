@@ -40,7 +40,7 @@ A 2 elements named list
   \item \code{output} : a named list which elements are :
     \itemize{
       \item \code{value} : a list which elements are of classes \code{data.frame} which colnames correspond to sid, mtime, the sensors, x (latitude), y (longitude) and the explanatory variables
-      \item \code{condition} : a character specifying the condition encountered by the : success, warning, or error.
+      \item \code{condition} : a character specifying the condition encountered by the function : success, warning, or error.
       \item \code{message} : a character specifying the message relative to the condition.
     }
  }

@@ -41,7 +41,7 @@ A 2 elements named list
   \item \code{snitch} : a boolean. Is \code{TRUE} if function has provided the expected result. Is \code{FALSE} is function throws an error
   \item \code{output} : a named list which elements are :\itemize{
     \item \code{value} : an element of class \code{mlr::benchmark()}
-    \item \code{condition} : a character specifying the condition encountered by the : success, warning, or error.
+    \item \code{condition} : a character specifying the condition encountered by the function : success, warning, or error.
     \item \code{message} : a character specifying the message relative to the condition.
     }
  }
