@@ -2,22 +2,80 @@
 % Please edit documentation in R/makeBmrsExtraction.R
 \name{makeBmrsExtraction}
 \alias{makeBmrsExtraction}
-\title{analyse batch of benchmark experiments output}
+\title{Compute and extract relevant information from a batch of benchmark experiments. This extraction can then be used to produce various plots.}
 \usage{
-makeBmrsExtraction(benchmark_preds, benchmark_perfs, tasks, as.df = TRUE)
+makeBmrsExtraction(benchmarkResult, tasks, tasks_sids, as.df = TRUE)
 }
 \arguments{
-\item{tasks}{a list of the mlr taks that were passed to analyzeBatchOfBenchExp}
+\item{benchmarkResult}{an object of class \code{mlr::benchmark()} produced by \code{agrometeoR::makeBrmsBatch}}
 
-\item{as.df}{a boolean specifying if the result must be returned as a single df rather than list of lists}
+\item{tasks}{a list which elements are of class \code{mlr::makeRegrTask()}. These tasks must be the same that were passed to makeBmrsBatch}
 
-\item{benchmarkResult}{a list of class BenchmarkResult returned in the outputs of analyzeBatchOfBenchExp}
+\item{tasks_sids}{a list which elements are integer vectors containing the sids of the used stations of each task. This list is provided as an output element of the \code{agrometeoR::makeTaks()} function.}
+
+\item{as.df}{a boolean specifying if the result must be returned as a single dataframe rather than list of lists. Default is \code{TRUE}}
 }
 \value{
-a list containing relevant performance indications by learners
+A 2 elements named list
+\itemize{
+  \item \code{snitch} : a boolean. Is \code{TRUE} if function has provided the expected result. Is \code{FALSE} is function throws an error
+  \item \code{output} : a named list which elements are : \itemize{
+    \item \code{value} : an element of class \code{data.frame} if parameter \code{as.df} is set to \code{TRUE}. If set to \code{FALSE}, the function returns a list which elements are dataframes
+    \item \code{condition} : a character specifying the condition encountered by the function : success, warning, or error.
+    \item \code{message} : a character specifying the message relative to the condition.
+    }
+ }
 }
 \description{
-analyse batch of benchmark experiments output
+Compute and extract relevant information from a batch of benchmark experiments. This extraction can then be used to produce various plots.
+}
+\examples{
+\dontrun{
+# load magrittr for pipe use : \%>\%
+library(magrittr)
+
+# create the dataset
+myDataset = makeDataset(
+  dfrom = "2017-03-04T15:00:00Z",
+  dto = "2017-03-04T18:00:00Z",
+  sensor = "tsa")
+
+# extract the list of hourly sets of records
+myDataset = myDataset$output$value
+
+# create the tasks
+myTasks = purrr::map(myDataset, makeTask, target = "tsa")
+
+#' # extract the used sids of each task from the outputs
+myUsedSids = myTasks \%>\% purrr::modify_depth(1, ~.$output$stations$used)
+
+# extract the tasks from the outputs
+myTasks = myTasks \%>\% purrr::modify_depth(1, ~.$output$value$task)
+
+# Conduct a batch of benchmarks experiments without saving temp files
+myBmrsBatch = makeBmrsBatch(
+tasks = myTasks,
+learners = agrometeorLearners,
+measures = list(mlr::rmse),
+keep.pred = TRUE,
+models = FALSE,
+groupSize  = NULL,
+level = "mlr.benchmark",
+resamplings = "LOO",
+cpus = 1,
+prefix = NULL,
+temp_dir = NULL,
+removeTemp = FALSE)
+
+# Keep the relevant information
+myBmrsBatch = myBmrsBatch$output$value
+
+# Get the extraction from myBmrsBatch
+myBrmsExtraction = makeBmrsExtraction(myBmrsBatch, myTasks, myUsedSids, as.df = TRUE)
+
+# Get an excerpt of the output
+head(myBmrsExtraction$output$value)
+}
 }
 \author{
 Thomas Goossens

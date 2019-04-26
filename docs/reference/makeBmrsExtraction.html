@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>analyse batch of benchmark experiments output — makeBmrsExtraction • agrometeoR</title>
+<title>Compute and extract relevant information from a batch of benchmark experiments. This extraction can then be used to produce various plots. — makeBmrsExtraction • agrometeoR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -37,9 +37,9 @@
 
 
 
-<meta property="og:title" content="analyse batch of benchmark experiments output — makeBmrsExtraction" />
+<meta property="og:title" content="Compute and extract relevant information from a batch of benchmark experiments. This extraction can then be used to produce various plots. — makeBmrsExtraction" />
 
-<meta property="og:description" content="analyse batch of benchmark experiments output" />
+<meta property="og:description" content="Compute and extract relevant information from a batch of benchmark experiments. This extraction can then be used to produce various plots." />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -156,41 +156,100 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>analyse batch of benchmark experiments output</h1>
+    <h1>Compute and extract relevant information from a batch of benchmark experiments. This extraction can then be used to produce various plots.</h1>
     <small class="dont-index">Source: <a href='https://github.com/pokyah/agrometeoR/blob/master/R/makeBmrsExtraction.R'><code>R/makeBmrsExtraction.R</code></a></small>
     <div class="hidden name"><code>makeBmrsExtraction.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>analyse batch of benchmark experiments output</p>
+    <p>Compute and extract relevant information from a batch of benchmark experiments. This extraction can then be used to produce various plots.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>makeBmrsExtraction</span>(<span class='no'>benchmark_preds</span>, <span class='no'>benchmark_perfs</span>, <span class='no'>tasks</span>, <span class='kw'>as.df</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>makeBmrsExtraction</span>(<span class='no'>benchmarkResult</span>, <span class='no'>tasks</span>, <span class='no'>tasks_sids</span>, <span class='kw'>as.df</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>benchmarkResult</th>
+      <td><p>an object of class <code><a href='https://www.rdocumentation.org/packages/mlr/topics/benchmark'>mlr::benchmark()</a></code> produced by <code>agrometeoR::makeBrmsBatch</code></p></td>
+    </tr>
+    <tr>
       <th>tasks</th>
-      <td><p>a list of the mlr taks that were passed to analyzeBatchOfBenchExp</p></td>
+      <td><p>a list which elements are of class <code><a href='https://www.rdocumentation.org/packages/mlr/topics/Task'>mlr::makeRegrTask()</a></code>. These tasks must be the same that were passed to makeBmrsBatch</p></td>
+    </tr>
+    <tr>
+      <th>tasks_sids</th>
+      <td><p>a list which elements are integer vectors containing the sids of the used stations of each task. This list is provided as an output element of the <code>agrometeoR::makeTaks()</code> function.</p></td>
     </tr>
     <tr>
       <th>as.df</th>
-      <td><p>a boolean specifying if the result must be returned as a single df rather than list of lists</p></td>
-    </tr>
-    <tr>
-      <th>benchmarkResult</th>
-      <td><p>a list of class BenchmarkResult returned in the outputs of analyzeBatchOfBenchExp</p></td>
+      <td><p>a boolean specifying if the result must be returned as a single dataframe rather than list of lists. Default is <code>TRUE</code></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list containing relevant performance indications by learners</p>
+    <p>A 2 elements named list</p><ul>
+<li><p><code>snitch</code> : a boolean. Is <code>TRUE</code> if function has provided the expected result. Is <code>FALSE</code> is function throws an error</p></li>
+<li><p><code>output</code> : a named list which elements are :</p><ul>
+<li><p><code>value</code> : an element of class <code>data.frame</code> if parameter <code>as.df</code> is set to <code>TRUE</code>. If set to <code>FALSE</code>, the function returns a list which elements are dataframes</p></li>
+<li><p><code>condition</code> : a character specifying the condition encountered by the function : success, warning, or error.</p></li>
+<li><p><code>message</code> : a character specifying the message relative to the condition.</p></li>
+</ul></li>
+</ul>
+
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'># load magrittr for pipe use : %&gt;%</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>magrittr</span>)
+
+<span class='co'># create the dataset</span>
+<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'><a href='makeDataset.html'>makeDataset</a></span>(
+  <span class='kw'>dfrom</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T15:00:00Z"</span>,
+  <span class='kw'>dto</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T18:00:00Z"</span>,
+  <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
+
+<span class='co'># extract the list of hourly sets of records</span>
+<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='no'>myDataset</span>$<span class='no'>output</span>$<span class='no'>value</span>
+
+<span class='co'># create the tasks</span>
+<span class='no'>myTasks</span> <span class='kw'>=</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span>(<span class='no'>myDataset</span>, <span class='no'>makeTask</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
+
+<span class='co'>#' # extract the used sids of each task from the outputs</span>
+<span class='no'>myUsedSids</span> <span class='kw'>=</span> <span class='no'>myTasks</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/modify.html'>modify_depth</a></span>(<span class='fl'>1</span>, ~<span class='no'>.</span>$<span class='no'>output</span>$<span class='no'>stations</span>$<span class='no'>used</span>)
+
+<span class='co'># extract the tasks from the outputs</span>
+<span class='no'>myTasks</span> <span class='kw'>=</span> <span class='no'>myTasks</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/modify.html'>modify_depth</a></span>(<span class='fl'>1</span>, ~<span class='no'>.</span>$<span class='no'>output</span>$<span class='no'>value</span>$<span class='no'>task</span>)
+
+<span class='co'># Conduct a batch of benchmarks experiments without saving temp files</span>
+<span class='no'>myBmrsBatch</span> <span class='kw'>=</span> <span class='fu'><a href='makeBmrsBatch.html'>makeBmrsBatch</a></span>(
+<span class='kw'>tasks</span> <span class='kw'>=</span> <span class='no'>myTasks</span>,
+<span class='kw'>learners</span> <span class='kw'>=</span> <span class='no'>agrometeorLearners</span>,
+<span class='kw'>measures</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw pkg'>mlr</span><span class='kw ns'>::</span><span class='no'><a href='https://www.rdocumentation.org/packages/mlr/topics/measures'>rmse</a></span>),
+<span class='kw'>keep.pred</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+<span class='kw'>models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+<span class='kw'>groupSize</span>  <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='kw'>level</span> <span class='kw'>=</span> <span class='st'>"mlr.benchmark"</span>,
+<span class='kw'>resamplings</span> <span class='kw'>=</span> <span class='st'>"LOO"</span>,
+<span class='kw'>cpus</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+<span class='kw'>prefix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='kw'>removeTemp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='co'># Keep the relevant information</span>
+<span class='no'>myBmrsBatch</span> <span class='kw'>=</span> <span class='no'>myBmrsBatch</span>$<span class='no'>output</span>$<span class='no'>value</span>
+
+<span class='co'># Get the extraction from myBmrsBatch</span>
+<span class='no'>myBrmsExtraction</span> <span class='kw'>=</span> <span class='fu'>makeBmrsExtraction</span>(<span class='no'>myBmrsBatch</span>, <span class='no'>myTasks</span>, <span class='no'>myUsedSids</span>, <span class='kw'>as.df</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='co'># Get an excerpt of the output</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>myBmrsExtraction</span>$<span class='no'>output</span>$<span class='no'>value</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -198,7 +257,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
     <h2>Author</h2>
     <p>Thomas Goossens</p>

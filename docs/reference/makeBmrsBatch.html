@@ -169,8 +169,8 @@
 
     <pre class="usage"><span class='fu'>makeBmrsBatch</span>(<span class='no'>tasks</span>, <span class='no'>learners</span>, <span class='kw'>measures</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>rmse</span>), <span class='kw'>keep.pred</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='st'>"mlr.benchmark"</span>, <span class='kw'>resamplings</span> <span class='kw'>=</span> <span class='st'>"LOO"</span>,
-  <span class='kw'>cpus</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>prefix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>grouping</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>tasks</span>), <span class='kw'>removeTemp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>cpus</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>prefix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>groupSize</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>removeTemp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -212,8 +212,8 @@
       <td><p>a character specifying the prefix you want to add to each bmr temporary file name.</p></td>
     </tr>
     <tr>
-      <th>grouping</th>
-      <td><p>a numeric specifying the number of tasks you want to benchamrk in a single batch. Default is equal to the number of tasks</p></td>
+      <th>groupSize</th>
+      <td><p>a numeric specifying the number of tasks you want to benchamrk in a single batch. If <code>NULL</code> the value will be set to the length of <code>tasks</code> argument. Default is <code>NULL</code></p></td>
     </tr>
     <tr>
       <th>removeTemp</th>
@@ -256,23 +256,26 @@ Default to FALSE</p></td>
 <span class='co'># create the tasks</span>
 <span class='no'>myTasks</span> <span class='kw'>=</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span>(<span class='no'>myDataset</span>, <span class='no'>makeTask</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
 
+<span class='co'>#' # extract the used sids of each task from the outputs</span>
+<span class='no'>myUsedSids</span> <span class='kw'>=</span> <span class='no'>myTasks</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/modify.html'>modify_depth</a></span>(<span class='fl'>1</span>, ~<span class='no'>.</span>$<span class='no'>output</span>$<span class='no'>stations</span>$<span class='no'>used</span>)
+
 <span class='co'># extract the tasks from the outputs</span>
-<span class='no'>myTasks</span> <span class='kw'>=</span> <span class='no'>myTasks</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/modify.html'>modify_depth</a></span>(<span class='fl'>1</span>, ~<span class='no'>.</span>$<span class='st'>"output"</span>$<span class='st'>"value"</span>$<span class='st'>"task"</span>)
+<span class='no'>myTasks</span> <span class='kw'>=</span> <span class='no'>myTasks</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/modify.html'>modify_depth</a></span>(<span class='fl'>1</span>, ~<span class='no'>.</span>$<span class='no'>output</span>$<span class='no'>value</span>$<span class='no'>task</span>)
 
 <span class='co'># Conduct a batch of benchmarks experiments without saving temp files</span>
 <span class='no'>myBmrsBatch</span> <span class='kw'>=</span> <span class='fu'>makeBmrsBatch</span>(
-  <span class='kw'>tasks</span> <span class='kw'>=</span> <span class='no'>myTasks</span>[<span class='fl'>1</span>:<span class='fl'>3</span>],
-  <span class='kw'>learners</span> <span class='kw'>=</span> <span class='no'>agrometeorLearners</span>,
-  <span class='kw'>measures</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw pkg'>mlr</span><span class='kw ns'>::</span><span class='no'><a href='https://www.rdocumentation.org/packages/mlr/topics/measures'>rmse</a></span>),
-  <span class='kw'>keep.pred</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>grouping</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>tasks</span>),
-  <span class='kw'>level</span> <span class='kw'>=</span> <span class='st'>"mlr.benchmark"</span>,
-  <span class='kw'>resamplings</span> <span class='kw'>=</span> <span class='st'>"LOO"</span>,
-  <span class='kw'>cpus</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>prefix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>removeTemp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='kw'>tasks</span> <span class='kw'>=</span> <span class='no'>myTasks</span>,
+<span class='kw'>learners</span> <span class='kw'>=</span> <span class='no'>agrometeorLearners</span>,
+<span class='kw'>measures</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw pkg'>mlr</span><span class='kw ns'>::</span><span class='no'><a href='https://www.rdocumentation.org/packages/mlr/topics/measures'>rmse</a></span>),
+<span class='kw'>keep.pred</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+<span class='kw'>models</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+<span class='kw'>groupSize</span>  <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='kw'>level</span> <span class='kw'>=</span> <span class='st'>"mlr.benchmark"</span>,
+<span class='kw'>resamplings</span> <span class='kw'>=</span> <span class='st'>"LOO"</span>,
+<span class='kw'>cpus</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+<span class='kw'>prefix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='kw'>temp_dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='kw'>removeTemp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># Keep the relevant information</span>
 <span class='no'>myBmrsBatch</span> <span class='kw'>=</span> <span class='no'>myBmrsBatch</span>$<span class='no'>output</span>$<span class='no'>value</span>
