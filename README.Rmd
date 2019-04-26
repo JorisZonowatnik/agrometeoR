@@ -105,6 +105,7 @@ package = "https://cran.r-project.org/package=remotes&version=2.0.2"
 utils::install.packages(pkgs = package, repos = NULL)
 install.packages("packrat")
 ```
+If you are prompted to update packages, simply select `none`
 
 #### Create a folder for your project.
 
