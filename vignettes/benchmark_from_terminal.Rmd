@@ -4,7 +4,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE , warning = FALSE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE , warning = FALSE)
 library(dplyr)
 library(parallelMap)
 library(mlr)
@@ -14,46 +14,290 @@ devtools::load_all()
 
 # Création du jeu de donnnées.
 
-Appel à l'API Agromet `spcleandata`. Cette appel permet de récupérer les darta hourly pameseb + IRM.
+## Charger l'extract hourly de la database
+
 Ici nous récupérons un extract de la db au format json que nous chargeons dans un object R que nous appelerons `dataset`.
 ```{r}
-
 dataset = makeDataset(json = "../data-raw/extdata/AGROMET/spCleandataSensorstsaForallFm2016-01-01To2017-12-31.json", sensors = "tsa" )
 dataset = dataset$output$value
 ```
 
-Création d'un subset de 20 jeux d'enregistrements horaires pour phase de test
-```{r}
-dataset_100 = dataset[1000:1099]
-dataset_20 = dataset_100
-```
+## Appel API
 
-Création jeu de donnée PAmeseb only
+Appel à l'API Agromet `spcleandata`. Cette appel permet de récupérer les data hourly pameseb + IRM.
+
+## Création des jeux de données daily
+
+Ceux-ci doivent évidemment être créés avant de réaliser l'échantillonage des subsets (sinon nous ne disposons pas de série de 24h continues nécessaires au calcul des informations journalières).
+
 ```{r}
-filterIRM = function(x){
-  x = x %>%
-    dplyr::filter(sid < 1000)
+## create the daily datasets and tasks for Pameseb and Pameseb + IRm
+summarize_by_day= function(l){
+  
+  split_tibble = function(tibble, column = 'col') {
+  tibble %>% split(., .[,column]) %>% lapply(., function(x) x[,setdiff(names(x),column)])
+  }
+  
+  dataset = l %>% purrr::map_df(.,c, .id = "datetime")
+  a = dataset %>%
+    dplyr::mutate_at("datetime", function(x){
+      x = substr(x, start = 1, stop = 8)
+    })
+
+  b = a %>% group_by(datetime, sid) %>%
+    summarise(
+      tsa_min = min(tsa, na.rm = TRUE),
+      tsa_max = max(tsa, na.rm = TRUE),
+      tsa_mean = mean(tsa, na.rm = TRUE))
+
+  b = b %>%
+    dplyr::rename("mtime" = "datetime")
+
+  b = b %>%
+    dplyr::left_join(dplyr::select(stations.df, one_of(c("x", "y", "elevation", "sid"))), by = "sid")
+
+  c = b %>% split_tibble("mtime")
+
+  d = lapply(seq_along(c), function(x){
+    mtime = names(c)[x]
+    mtime = rep.int(mtime, nrow(c[[x]]))
+    df = c[[x]] %>%
+      dplyr::mutate(mtime = mtime)
+    return(df)
+  })
+
+  names(d)= names(c)
+  d = d %>% purrr::map(as.data.frame)
+  return(d)
 }
 
-dataset_20_pameseb = lapply(dataset_20, filterIRM)
+
+subsets_without_IRM_daily = lapply(subsets_without_IRM, function(x){x %>% summarize_by_day()})
+
 ```
+
+## Génération de plusieurs subsets 
+
+Réaliser un benchmark sur deux ans de données horaires est très couteux en terme de puissance et temps de calcul.
+On choisit donc de réaliser plusieurs sous-benchmarks sur 10 % des data tirées aléatoirement.
+Pour assurer la reproductibilité des benchmarks, il est nécessaire de réaliser les tirages aléatoires en se basant sur une "seed".
+
+```{r}
+# definition of the function to create the subsamples
+create_subset = function(seed, percentage){
+  set.seed(seed)
+dataset_sample = sample(
+  x = dataset,
+  size = as.integer(percentage*length(dataset)/100))
+}
+
+# creating the vector of the seeds that will be used to generate 5 subsets
+seeds = c(2019, 2018, 2017, 2016, 2015)
+
+# creating the 5 subsets of 0.1 % of the whole dataset (we choose 0.1% as an example here)
+subsets = lapply(seeds, create_subset, 0.1)
+```
+
+Visualisons le premier jeu de données horaires du premier subset
+
+```{r}
+DT::datatable(subsets[[1]][[1]])
+# in your console, you can use :
+subsets[[1]][[1]]
+```
+
+## Création de doublons ne contenant que les data Pameseb
+
+A partir de ces subsets, nous pouvons maintenant construire nos tâches de machine learning.
+Comme nous souhaitons également évaluer l'apport de l'intégration des data IRM, nous allons dédoubler les datasets en passant un filtre excluant les données des stations IRM.
+
+```{r}
+subsets_without_IRM = lapply(subsets, function(x){ # each x correspond to one of our 5 subsets
+  x_without_irm = x %>% purrr::map(., ~dplyr::filter(.,sid < 1000))
+})
+```
+
+Visualisons le premier jeu de données horaires du premier subset filtré IRM
+
+```{r}
+DT::datatable(subsets_without_IRM[[1]][[1]])
+# in your console, you can use :
+subsets_without_IRM[[1]][[1]]
+```
+
+## Conclusion concernant la création de jeux de données
+
+Nous disposons maintenant de deux jeux de 5 subsets tirés aléatoirement et contenant chacun 0.1 % des data originales. L'un contient les data Pameseb + IRM, l'autre uniquement les data Pameseb. Nous pouvons maintenant convertir chacun des subsets de ces deux grands ensembles en tâches de machine learning
+
+# Tâches de machine learning
+
+## Création des tâches
+
+Pour chacun des subsets de nos deux groupes Pameseb et Pameseb + IRM, nous pouvons créer nos tâches de machine learning.
+
+```{r}
+# creation of the tasks for each of the subsets from Pameseb + IRM
+tasks = lapply(subsets, function(x){ # each x correspond to one of our 5 subsets
+  task = x %>% purrr::map(makeTask, target = "tsa")
+})
+
+# creatin of the tasks for each of the subsets from Pameseb
+tasks_without_IRM = lapply(subsets_without_IRM, function(x){ # each x correspond to one of our 5 subsets
+  task = x %>% purrr::map(makeTask, target = "tsa")
+})
+
+# extract the tasks from the outputs
+tasks_data = lapply(tasks, function(x){ # each x correspond to one of our 5 subsets
+  x = x %>% purrr::modify_depth(1, ~.$output$value$task)
+}) 
+
+# extract the tasks from the outputs
+tasks_without_IRM_data = lapply(tasks_without_IRM, function(x){ # each x correspond to one of our 5 subsets
+  x = x %>% purrr::modify_depth(1, ~.$output$value$task)
+}) 
+```
+
+Visualisons la première tâche du premier de nos subsets : 
+
+```{r}
+tasks_data[[1]][[1]]
+tasks_without_IRM_data[[1]][[1]]
+```
+
+Nous voyons qu'en ayant passer un filter supprimant les data des stations IRM, nous passons de 43 à 27 observations.
+
+## Récupération des metadata concernant la création de tâches
+
+La fonction `makeTask()` supprime automatiquement les observations pour lesquelles il y a une donnée manquante. A noter que c'est le backend de JP qui détermine les données manquantes (ex : tsa state qui n'est pas égal à 1). 
+
+Voici la liste des stations retenues pour la première tâche du premier subset pour le jeu de données Pameseb 
++ IRM :
+
+```{r}
+tasks[[1]][[1]]$output$stations$used
+```
+
+Et la même information pour le jeu de données excluant les stations IRM: 
+
+```{r}
+tasks_without_IRM[[1]][[1]]$output$stations$used
+```
+
 
 # Implémentation des learners
 
-Les learners viennent précompilés avec le package agrometeoR
+Plusieurs learners viennent précompilés avec le package agrometeoR :
+
 ```{r}
 data(agrometeorLearners)
 learners = agrometeorLearners
 ```
 
+# Exécution du benchmark
 
-# Exécution des 2 batch of benchmarks experiments
+Une fois que les learners et les tâches ont été créées, nous les sauvegardons sur disque, afin de pouvir les ré-utiliser autant de fois que sans avoir à les recompiler/recalculer.  
 
-## bmr Pameseb + IRM
+Pour réaliser le benchmark, il est [préférable](https://stackoverflow.com/questions/15668893/r-multicore-mcfork-unable-to-fork-cannot-allocate-memory) de travailler depuis un terminal.
 
-Création des tâches et récupération de l'information pertinente.
+La stratégie est la suivante. Il s'agit de créer un petit script R [exécutable depuis le terminal](https://github.com/IARCbioinfo/R-tricks#use-rscript-to-run-r-from-bash) qui va charger les fichiers .rds contenant les tâches et s'en servir pour créer le benchmark. Le nom du fichier contenant les tâches à soumettre à un benchmark doit être un paramètre passé à bash et que notre script R sera capable d'intercepter.
 
-la fonction makeTask() supprime les observations pour lesquelles il y a une donnée manquante. Donnée manquante gérée par API de JP : tsa state != 1 ou trou dans les data
+Ce script sera ensuite appelé depuis une session bash ouverte sur le serveur de calcul et lancée depuis une session tmux.
+
+Voici un exemple de script R exéctuable depuis bash qui permet de réalisr un benchmark. Il nous suffit de le copier et de l'enregistrer dans le dossier où nous souhaitons sauvegarder nos données de benchmark.
+
+```{r, eval=FALSE}
+#!/usr/bin/env Rscript
+
+# to execute it from terminal, simply type the following command :
+
+# Rscript ./script_execute_bmr.R ./data-created/tasksdataPamesebIrmDailyForBmrs.rds daily_tsa_PamesebIrm
+
+# https://github.com/IARCbioinfo/R-tricks#use-rscript-to-run-r-from-bash
+# http://www.milanor.net/blog/bashr-howto-pass-parameters-from-bash-script-to-r/
+
+# parsing the args passed to bash CLI 
+args = commandArgs(trailingOnly = TRUE)
+message(paste0("The current working directory is ", getwd()))
+message("The demanded task file is ", args[1])
+message("Your output file will be prefixed by : ", args[2])
+message("Your output file will be stored into : ", args[3])
+message("Your temporary files will be stored into : ", args[4])
+
+tasks.file = args[1]
+output.name = args[2]
+output.folder = args[3]
+output.tempdir = args[4]
+
+# test if the task file exist else return an error
+stopifnot(file.exists(paste0(tasks.file)))
+
+# load the required libraries to perform the benchmark
+message("loading the required libs")
+suppressMessages(library(parallelMap))
+suppressMessages(library(mlr))
+suppressMessages(library(agrometeoR))
+suppressMessages(library(dplyr))
+
+# load the data for the bmrs
+message(paste0("Reading and loading the tasks file", tasks.file))
+tasks = readRDS(tasks.file)
+
+# perform the benchmarks
+message("Starting to conduct the benchmarks")
+bmrsResult = makeBmrsBatch(
+  tasks = tasks,
+  learners = agrometeorLearners,
+  measures = list(rmse, mae, mse),
+  keep.pred = TRUE,
+  models = FALSE,
+  groupSize = 100,
+  level = "mlr.benchmark",
+  resamplings = "LOO",
+  cpus = 8,
+  prefix = output.name,
+  temp_dir = paste0("./temp_files/", as.character(Sys.Date())),
+  removeTemp = FALSE
+)
+
+# save the bmrs result
+message("Saving the result...")
+saveRDS(object = bmrsResult, file = paste0(
+  output.folder,# "./data-created/",
+  output.name,
+  as.character(Sys.Date()),
+  "_bmrsResult.rds"))
+
+# purge the memory
+rm(list = ls())
+```
+
+Maintenant nous pouvons l'exécuter depuis notre terminal 
+
+```{bash}
+# 
+# ```{bash}
+# ssh agromet
+# tmux ls #list
+# 
+# tmux new-session -s bmr
+# 
+# cd Rprojects/currentProject/
+#   
+#   tmux attach
+# 
+# chmod +x script_execute_bmr.R # must load it via system.file
+# 
+# ./makeBenchmark
+# 
+# # type ctrl+b et puis d => hide the plex
+# 
+# tmux attach
+# 
+# # type exit to kill a plex
+# ```
+```
+
+
 
 ```{bash}
 ssh agromet
@@ -67,7 +311,7 @@ tmux attach
 
 path2script=$(Rscript -e "cat(system.file('server_scripts/script_prepare_bmr.R', package = 'agrometeoR'))")
 
-chmod +x $path2script
+chmod +x $path2script # make the file executable
 
 chmod +x script_execute_bmr.R # must load it via system.file
 
@@ -90,7 +334,7 @@ tasks_20_pameseb_2bmr =  tasks_20_pameseb %>% modify_depth(1, ~.$"output"$"value
 
 ```
 
-Exécution à proprement parlé du bmr. Attention si gros benchmark de deux ans, il faut lancer le calcul depuis un terminal et non depuis rstudio server. Voir # https://stackoverflow.com/questions/15668893/r-multicore-mcfork-unable-to-fork-cannot-allocate-memory.
+Exécution à proprement parlé du bmr. Attention si gros benchmark de deux ans, il faut lancer le calcul depuis un terminal et non depuis rstudio server. Voir # .
 ::TODO:: expliqué comment rendre fichier R exécutable depuis terminal
 ```{r echo = T, results='hide'}
 bmrs_20_pameseb = makeBatchOfBenchExp(
@@ -109,23 +353,6 @@ bmrs_20_pameseb = makeBatchOfBenchExp(
 )
 ```
 
-Using the benchmark results to compute bmr analysis
-```{r}
-bmrs_20_pameseb_result = bmrs_20_pameseb$output$value
 
-bmrs_20_pameseb_result_analysis = makeBmrsExtraction(benchmarkResult = bmrs_20_pameseb_result, tasks = tasks_20_pameseb[1:5], as.df = TRUE)
-```
-
-
-# plots from bmr analysis
-```{r}
-
-all_plots = makeBmrsPLots(bmrs_20_pameseb_result_analysis$output$value)
-
-
-```
-
-
-*
 
 

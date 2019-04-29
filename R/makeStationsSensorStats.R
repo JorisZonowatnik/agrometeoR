@@ -1,19 +1,18 @@
 #' @export
-#' @title make the descriptive stats of a sensor for a station for a specific period of time
+#' @title make the descriptive stats of sensors of a set of stations for a specific period of time
 #' @author Thomas Goossens
 #' @import mlr
-#' @import ggplot2
 #' @importFrom magrittr %>%
-#' @param records a list of hourly dataframes or a single dataframe ::TODO ::Must contain sunset and sunrise !
+#' @param records a list of hourly dataframes or a single dataframe
 #' @param sensor a character vector specifying the name of the sensors you want to get the descriptive statistics
-#' @param stations a character vector specifying the sid's of the stations to use
+#' @param stations a character vector specifying the sid's of the stations to characterize
 #' @param dfrom a datetime string specifying the dateTime
-#' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
+#' Must have the form \code{"YYYY-MM-DDTHH:MM:SSZ"}
 #' @param dto a datetime string specifying the dateTime
-#' Must have the form "YYYY-MM-DDTHH:MM:SSZ"
-#' @return a list
+#' Must have the form \code{"YYYY-MM-DDTHH:MM:SSZ"}
+#' @return a dataframe
 
-makeStationSensorStats = function(
+makeStationsSensorStats = function(
   records,
   sensors,
   stations = unique(records$sid),
@@ -24,7 +23,23 @@ makeStationSensorStats = function(
   # Make it a big dataframe if it is a list of dataframes
   if (class(records) == "list") {
     records = records %>%
-      purrr::reduce(bind_rows)
+      purrr::reduce(dplyr::bind_rows)
+  }
+
+  # check which sensor are available compared to those wanted
+  checkSensors = function(records, sensors){
+    sensorsInRecords = colnames(records)[colnames(records) %in% sensors]
+    stopifnot(length(sensorsInRecords) > 0)
+    if (length(sensorsInRecords) < length(sensors)) {
+      warning("agrometeor::makeDescStat warning : Not all the sensors are available in the records.",
+        "\n",
+        "Here are the missing sensors : ",
+        paste(sensors[!sensors %in% sensorsInRecords], collapse = ", "),
+        ". ",
+        "\n",
+        "The analysis will ignore these missing sensors. ")
+    }
+    sensors = sensorsInRecords
   }
 
   # check which sensors are available compared to those wanted
