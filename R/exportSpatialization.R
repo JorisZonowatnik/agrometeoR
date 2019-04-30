@@ -90,7 +90,7 @@ exportSpatialization <- function(
     message("Exporting spatialized data...")
 
     spatializedNoCoords = spatialized %>%
-      dplyr::select(one_of(c("px", "response" ,"se")))
+      dplyr::select(dplyr::one_of(c("px", "response" ,"se")))
 
     if (format == "csv") {
       message("Encoding data to csv...")
