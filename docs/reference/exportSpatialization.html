@@ -167,7 +167,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>exportSpatialization</span>(<span class='no'>spatialized</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/getwd'>getwd</a></span>(), <span class='kw'>filename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>exportSpatialization</span>(<span class='no'>spatialized</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>filename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>format</span> <span class='kw'>=</span> <span class='st'>"csv"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -179,7 +179,7 @@
     </tr>
     <tr>
       <th>path</th>
-      <td><p>a character specifying the path where you want your export file to be stored. Default = working directory</p></td>
+      <td><p>a character specifying the path where you want your export file to be stored. Default = <code>NULL</code></p></td>
     </tr>
     <tr>
       <th>filename</th>
@@ -214,12 +214,9 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># load magrittr for pipe use : %&gt;%</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>magrittr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘magrittr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:testthat’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    equals, is_less_than, not</span></div><span class='co'># NOT RUN {</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>magrittr</span>)</div><span class='co'># NOT RUN {</span>
 <span class='co'># create the dataset</span>
-<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'>makeDataset</span>(
+<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'><a href='makeDataset.html'>makeDataset</a></span>(
   <span class='kw'>dfrom</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T15:00:00Z"</span>,
   <span class='kw'>dto</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T18:00:00Z"</span>,
   <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
@@ -237,7 +234,7 @@
 <span class='no'>myTask</span> <span class='kw'>=</span> <span class='no'>myTasks</span><span class='kw'>[[</span><span class='fl'>1</span>]]
 
 <span class='co'># create the model</span>
-<span class='no'>myModel</span> <span class='kw'>=</span> <span class='fu'>makeModel</span>(
+<span class='no'>myModel</span> <span class='kw'>=</span> <span class='fu'><a href='makeModel.html'>makeModel</a></span>(
   <span class='kw'>task</span> <span class='kw'>=</span> <span class='no'>myTask</span>,
   <span class='kw'>learner</span> <span class='kw'>=</span> <span class='no'>agrometeorLearners</span>$<span class='no'>mulLR_lonLatAlt_NA</span>)
 
@@ -245,7 +242,7 @@
 <span class='no'>myModel</span> <span class='kw'>=</span> <span class='no'>myModel</span>$<span class='no'>output</span>$<span class='no'>value</span>
 
 <span class='co'># spatialize using the trained model</span>
-<span class='no'>mySpatialization</span> <span class='kw'>=</span> <span class='fu'>makeSpatialization</span>(
+<span class='no'>mySpatialization</span> <span class='kw'>=</span> <span class='fu'><a href='makeSpatialization.html'>makeSpatialization</a></span>(
 <span class='kw'>model</span> <span class='kw'>=</span> <span class='no'>myModel</span>$<span class='no'>trained</span>,
 <span class='kw'>pred.grid</span> <span class='kw'>=</span> <span class='no'>grid.df</span>) <span class='co'># grid.df comes precompiled with the package</span>
 
@@ -262,7 +259,7 @@
 <span class='no'>myJson</span>$<span class='no'>output</span>$<span class='no'>value</span>
 
 <span class='co'># export as a csv file</span>
-<span class='fu'>exportSpatialization</span>(<span class='kw'>spatialized</span> <span class='kw'>=</span> <span class='no'>mySpatialization</span>$<span class='no'>spatialized</span>, <span class='kw'>filename</span> <span class='kw'>=</span> <span class='st'>"test"</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='st'>"csv"</span>)
+<span class='fu'>exportSpatialization</span>(<span class='kw'>spatialized</span> <span class='kw'>=</span> <span class='no'>mySpatialization</span>$<span class='no'>spatialized</span>, <span class='kw'>filename</span> <span class='kw'>=</span> <span class='st'>"test"</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/getwd'>getwd</a></span>(), <span class='kw'>format</span> <span class='kw'>=</span> <span class='st'>"csv"</span>)
 <span class='co'># }</span><div class='input'>
 </div></pre>
   </div>

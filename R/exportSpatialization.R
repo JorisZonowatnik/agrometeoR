@@ -72,7 +72,7 @@
 #' myJson$output$value
 #'
 #' # export as a csv file
-#' exportSpatialization(spatialized = mySpatialization$spatialized, filename = "test", format = "csv")
+#' exportSpatialization(spatialized = mySpatialization$spatialized, filename = "test", path = getwd(), format = "csv")
 #'}
 #'
 exportSpatialization <- function(
