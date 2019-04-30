@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>make a mlr model + its metadata for a specific task using a specific learner — makeModel • agrometeoR</title>
+<title>make the descriptive stats of sensors of a set of stations for a specific period of time — makeStationsSensorStats • agrometeoR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -37,9 +37,9 @@
 
 
 
-<meta property="og:title" content="make a mlr model + its metadata for a specific task using a specific learner — makeModel" />
+<meta property="og:title" content="make the descriptive stats of sensors of a set of stations for a specific period of time — makeStationsSensorStats" />
 
-<meta property="og:description" content="make a mlr model + its metadata for a specific task using a specific learner" />
+<meta property="og:description" content="make the descriptive stats of sensors of a set of stations for a specific period of time" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -156,89 +156,52 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>make a mlr model + its metadata for a specific task using a specific learner</h1>
-    <small class="dont-index">Source: <a href='https://github.com/pokyah/agrometeoR/blob/master/R/makeModel.R'><code>R/makeModel.R</code></a></small>
-    <div class="hidden name"><code>makeModel.Rd</code></div>
+    <h1>make the descriptive stats of sensors of a set of stations for a specific period of time</h1>
+    <small class="dont-index">Source: <a href='https://github.com/pokyah/agrometeoR/blob/master/R/makeStationsSensorStats.R'><code>R/makeStationsSensorStats.R</code></a></small>
+    <div class="hidden name"><code>makeStationsSensorStats.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>make a mlr model + its metadata for a specific task using a specific learner</p>
+    <p>make the descriptive stats of sensors of a set of stations for a specific period of time</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>makeModel</span>(<span class='no'>task</span>, <span class='no'>learner</span>)</pre>
+    <pre class="usage"><span class='fu'>makeStationsSensorStats</span>(<span class='no'>records</span>, <span class='no'>sensors</span>, <span class='kw'>stations</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/unique'>unique</a></span>(<span class='no'>records</span>$<span class='no'>sid</span>),
+  <span class='kw'>dfrom</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dto</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>task</th>
-      <td><p>an object of class mlr::makeRegrTask()</p></td>
+      <th>records</th>
+      <td><p>a list of hourly dataframes or a single dataframe</p></td>
     </tr>
     <tr>
-      <th>learner</th>
-      <td><p>an object of class mlr::makeLearner()</p></td>
+      <th>stations</th>
+      <td><p>a character vector specifying the sid's of the stations to characterize</p></td>
+    </tr>
+    <tr>
+      <th>dfrom</th>
+      <td><p>a datetime string specifying the dateTime
+Must have the form <code>"YYYY-MM-DDTHH:MM:SSZ"</code></p></td>
+    </tr>
+    <tr>
+      <th>dto</th>
+      <td><p>a datetime string specifying the dateTime
+Must have the form <code>"YYYY-MM-DDTHH:MM:SSZ"</code></p></td>
+    </tr>
+    <tr>
+      <th>sensor</th>
+      <td><p>a character vector specifying the name of the sensors you want to get the descriptive statistics</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A 2 elements named list</p><ul>
-<li><p><code>snitch</code> : a boolean. Is <code>TRUE</code> if function has provided the expected result. Is <code>FALSE</code> is function throws an error</p></li>
-<li><p><code>output</code> : a named list which elements are :</p><ul>
-<li><p><code>value</code> : a named list which elements are :</p><ul>
-<li><p><code>trained</code> : an element of class <code>mlr::makeWrappedMode()</code></p></li>
-<li><p><code>predictions</code> an element of class <code>data.frame</code> containing the predictions made by the trained model at station locations. Colnames are <code>truth</code> (= observations), <code>response</code> (= predictions), <code>se</code> (= standard error) and <code>residuals</code> (= truth - response)</p></li>
-<li><p><code>perfs</code> : a named list which elements are :</p><ul>
-<li><p><code>iters</code> : a dataframe containing the information relative to the leave-one-out cross validation of the model. Colnames are <code>learner.id</code>, <code>iter</code>, <code>rmse</code>, <code>mse</code>, <code>mae</code>, <code>timetrain</code></p></li>
-<li><p><code>agg</code> : a dataframe containing the aggregated performances of the LOOCV. Same colnames as <code>iters</code></p></li>
-</ul></li>
-</ul></li>
-<li><p><code>condition</code> : a character specifying the condition encountered by the function : success, warning, or error.</p></li>
-<li><p><code>message</code> : a character specifying the message relative to the condition.</p></li>
-</ul></li>
-</ul>
-
+    <p>a dataframe</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='co'># load magrittr for pipe use : %&gt;%</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>magrittr</span>)
-<span class='co'># create the dataset</span>
-<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'>makeDataset</span>(
-  <span class='kw'>dfrom</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T15:00:00Z"</span>,
-  <span class='kw'>dto</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T18:00:00Z"</span>,
-  <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
-
-<span class='co'># extract the list of hourly sets of records</span>
-<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='no'>myDataset</span>$<span class='no'>output</span>$<span class='no'>value</span>
-
-<span class='co'># create the tasks</span>
-<span class='no'>myTasks</span> <span class='kw'>=</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/map.html'>map</a></span>(<span class='no'>myDataset</span>, <span class='no'>makeTask</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
-
-<span class='co'># extract the tasks from the outputs</span>
-<span class='no'>myTasks</span> <span class='kw'>=</span> <span class='no'>myTasks</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>purrr</span><span class='kw ns'>::</span><span class='fu'><a href='https://purrr.tidyverse.org/reference/modify.html'>modify_depth</a></span>(<span class='fl'>1</span>, ~<span class='no'>.</span>$<span class='st'>"output"</span>$<span class='st'>"value"</span>$<span class='st'>"task"</span>)
-
-<span class='co'># keep the first task</span>
-<span class='no'>myTask</span> <span class='kw'>=</span> <span class='no'>myTasks</span><span class='kw'>[[</span><span class='fl'>1</span>]]
-
-<span class='co'># create the model</span>
-<span class='no'>myModel</span> <span class='kw'>=</span> <span class='fu'>makeModel</span>(
-  <span class='kw'>task</span> <span class='kw'>=</span> <span class='no'>myTask</span>,
-  <span class='kw'>learner</span> <span class='kw'>=</span> <span class='no'>agrometeorLearners</span>$<span class='no'>mulLR_lonLatAlt_NA</span>)
-
-<span class='co'># extract the relevant information</span>
-<span class='no'>myModel</span> <span class='kw'>=</span> <span class='no'>myModel</span>$<span class='no'>output</span>$<span class='no'>value</span>
-
-<span class='co'># show the results of the LOOCV of this hour forthe choosen learner</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>myModel</span>$<span class='no'>predictions</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>myModel</span>$<span class='no'>perfs</span>$<span class='no'>iters</span>)
-
-<span class='co'># show the model information</span>
-<span class='no'>myModel</span>$<span class='no'>trained</span>
-<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -246,9 +209,7 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
     <h2>Author</h2>
     <p>Thomas Goossens</p>

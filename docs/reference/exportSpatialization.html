@@ -107,7 +107,7 @@
       <a href="../articles/Spatialization_method_approach.html">A methodological approach to assess the best weather spatialization technique</a>
     </li>
     <li>
-      <a href="../articles/benchmarking_example.html">Benchmarking example</a>
+      <a href="../articles/benchmark_from_terminal.html">Run a benchmark from the terminal</a>
     </li>
     <li>
       <a href="../articles/gstat_integration_mlr.html">Integration of gstat into mlr</a>
@@ -214,9 +214,12 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># load magrittr for pipe use : %&gt;%</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>magrittr</span>)</div><span class='co'># NOT RUN {</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>magrittr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘magrittr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:testthat’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    equals, is_less_than, not</span></div><span class='co'># NOT RUN {</span>
 <span class='co'># create the dataset</span>
-<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'><a href='makeDataset.html'>makeDataset</a></span>(
+<span class='no'>myDataset</span> <span class='kw'>=</span> <span class='fu'>makeDataset</span>(
   <span class='kw'>dfrom</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T15:00:00Z"</span>,
   <span class='kw'>dto</span> <span class='kw'>=</span> <span class='st'>"2017-03-04T18:00:00Z"</span>,
   <span class='kw'>sensor</span> <span class='kw'>=</span> <span class='st'>"tsa"</span>)
@@ -234,7 +237,7 @@
 <span class='no'>myTask</span> <span class='kw'>=</span> <span class='no'>myTasks</span><span class='kw'>[[</span><span class='fl'>1</span>]]
 
 <span class='co'># create the model</span>
-<span class='no'>myModel</span> <span class='kw'>=</span> <span class='fu'><a href='makeModel.html'>makeModel</a></span>(
+<span class='no'>myModel</span> <span class='kw'>=</span> <span class='fu'>makeModel</span>(
   <span class='kw'>task</span> <span class='kw'>=</span> <span class='no'>myTask</span>,
   <span class='kw'>learner</span> <span class='kw'>=</span> <span class='no'>agrometeorLearners</span>$<span class='no'>mulLR_lonLatAlt_NA</span>)
 
@@ -242,7 +245,7 @@
 <span class='no'>myModel</span> <span class='kw'>=</span> <span class='no'>myModel</span>$<span class='no'>output</span>$<span class='no'>value</span>
 
 <span class='co'># spatialize using the trained model</span>
-<span class='no'>mySpatialization</span> <span class='kw'>=</span> <span class='fu'><a href='makeSpatialization.html'>makeSpatialization</a></span>(
+<span class='no'>mySpatialization</span> <span class='kw'>=</span> <span class='fu'>makeSpatialization</span>(
 <span class='kw'>model</span> <span class='kw'>=</span> <span class='no'>myModel</span>$<span class='no'>trained</span>,
 <span class='kw'>pred.grid</span> <span class='kw'>=</span> <span class='no'>grid.df</span>) <span class='co'># grid.df comes precompiled with the package</span>
 
