@@ -1,3 +1,7 @@
+# agrometeoR 0.0.4
+
+* option to choose if benchamrk should crash or not added
+
 # agrometeoR 0.0.3
 
 * Vizualization functions are into new package agrometeoR.extras
