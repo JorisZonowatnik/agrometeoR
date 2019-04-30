@@ -4,13 +4,13 @@
 \alias{exportSpatialization}
 \title{export a spatialized object either to csv, json or geojson}
 \usage{
-exportSpatialization(spatialized, path = getwd(), filename = NULL,
+exportSpatialization(spatialized, path = NULL, filename = NULL,
   format = "csv")
 }
 \arguments{
 \item{spatialized}{a dataframe containing the gridded predicted values}
 
-\item{path}{a character specifying the path where you want your export file to be stored. Default = working directory}
+\item{path}{a character specifying the path where you want your export file to be stored. Default = \code{NULL}}
 
 \item{filename}{a character specifying the name you want to give to the file. If NULL the exportation is not printed into a file and the output is returned as a character. Default = NULL}
 

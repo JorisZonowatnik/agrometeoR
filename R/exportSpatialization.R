@@ -4,7 +4,7 @@
 #' @author Thomas Goossens
 #' @importFrom magrittr %>%
 #' @param spatialized a dataframe containing the gridded predicted values
-#' @param path a character specifying the path where you want your export file to be stored. Default = working directory
+#' @param path a character specifying the path where you want your export file to be stored. Default = \code{NULL}
 #' @param filename a character specifying the name you want to give to the file. If NULL the exportation is not printed into a file and the output is returned as a character. Default = NULL
 #' @param format a character specifying the type of export format. One of "csv", "json" or "geojson". Default = "csv"
 #' @return A 2 elements named list
@@ -77,7 +77,7 @@
 #'
 exportSpatialization <- function(
   spatialized,
-  path = getwd(),
+  path = NULL,
   filename = NULL,
   format = "csv"){
 
