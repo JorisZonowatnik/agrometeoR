@@ -137,7 +137,7 @@ Visualisons le premier jeu de données horaires du premier subset
 ```{r}
 DT::datatable(subsets_hourly[[1]][[1]])
 # in your console, you can simply use :
-subsets[[1]][[1]]
+subsets_hourly[[1]][[1]]
 ```
 
 ## Création de doublons ne contenant que les data Pameseb
@@ -182,7 +182,7 @@ tasks_hourly_without_IRM = lapply(subsets_hourly_without_IRM, function(x){ # eac
 })
 
 # extract the tasks from the outputs
-tasks_hourly_data = lapply(tasks, function(x){ # each x correspond to one of our 5 subsets
+tasks_hourly_data = lapply(tasks_hourly, function(x){ # each x correspond to one of our 5 subsets
   x = x %>% purrr::modify_depth(1, ~.$output$value$task)
 }) 
 
